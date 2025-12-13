@@ -12,7 +12,7 @@ module.exports = {
     async execute(interaction) {
 		let mitteneduser = interaction.options.getUser('user')
         if (interaction.options.getUser('user') == interaction.user) {
-            interaction.reply({ content: `You can't take your own mittens off!`, flags: MessageFlags.Ephemeral })
+            interaction.reply(`${interaction.user} tries to take their mittens off, but can't get a good grip on the straps!`)
         }
 		else if (getMitten(mitteneduser)) {
             deleteMitten(mitteneduser)

@@ -92,18 +92,27 @@ const garbleMessage = async (msg) => {
                 console.log(messageparts);
                 let outtext = '';
                 if (gaggarble.messagebegin) {
-                    outtext = `${gaggarble.messagebegin(msg.content, intensity)}`
+                    try {
+                        outtext = `${gaggarble.messagebegin(msg.content, intensity)}`
+                    }
+                    catch (err) { console.log(err) }
                 }
                 for (let i = 0; i < messageparts.length; i++) {
-                    if (messageparts[i].garble) {
-                        outtext = `${outtext}${gaggarble.garbleText(messageparts[i].text, intensity)}`
+                    try {
+                        if (messageparts[i].garble) {
+                            outtext = `${outtext}${gaggarble.garbleText(messageparts[i].text, intensity)}`
+                        }
+                        else {
+                            outtext = `${outtext}${messageparts[i].text}`
+                        }
                     }
-                    else {
-                        outtext = `${outtext}${messageparts[i].text}`
-                    }
+                    catch (err) { console.log(err) }
                 }
                 if (gaggarble.messageend) {
-                    outtext = `${outtext}${gaggarble.messageend(msg.content, intensity)}`
+                    try {
+                        outtext = `${outtext}${gaggarble.messageend(msg.content, intensity)}`
+                    }
+                    catch (err) { console.log(err) }
                 }
                 if (msg.channel.id == process.env.CHANNELIDDEV) {
                     let sentmessage = messageSendDev(outtext, msg.member.displayAvatarURL(), msg.member.displayName).then(() => {

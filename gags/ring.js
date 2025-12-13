@@ -8,7 +8,7 @@ const garbleText = (text) => {
                     outtext = `${outtext}g`
                 }
                 else {
-                    outtext = `${outtext}g`
+                    outtext = `${outtext}h`
                 }
             }
             else if (newtextparts[i].charAt(t).match(/[A-Z]/i)) {

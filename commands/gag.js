@@ -40,6 +40,19 @@ module.exports = {
 		let gaggeduser = interaction.options.getUser('user')
 		let gagtype = interaction.options.getString('gag') ? interaction.options.getString('gag') : 'ball'
 		let gagintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
+		let intensitytext = "loosely"
+		if (gagintensity > 2) {
+			intensitytext = "moderately loosely"
+		}
+		if (gagintensity > 4) {
+			intensitytext = "moderately tightly"
+		}
+		if (gagintensity > 7) {
+			intensitytext = "tightly"
+		}
+		if (gagintensity > 9) {
+			intensitytext = "as tightly as possible"
+		}
 		if ((interaction.user.id != gaggeduser.id) && (getMitten(interaction.user))) {
 			interaction.reply(`${interaction.user} attempts to gag someone, but fumbles at holding the gag in their mittens!`)
 			return;
@@ -50,10 +63,10 @@ module.exports = {
 		let gagname = gagtypes.find(g => g.value == gagtype).name;
 		// We gagged ourselves!
 		if (interaction.user.id == gaggeduser.id) {
-			interaction.reply(`${interaction.user} inserts a ${gagname} in their own mouth!`)
+			interaction.reply(`${interaction.user} inserts a ${gagname} ${intensitytext} in their own mouth!`)
 		}
 		else {
-			interaction.reply(`${interaction.user} gagged ${gaggeduser} with a ${gagname}!`)
+			interaction.reply(`${interaction.user} gagged ${gaggeduser} ${intensitytext} with a ${gagname}!`)
 		}
     }
 }
