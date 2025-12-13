@@ -29,16 +29,23 @@ module.exports = {
 			opt.setName('gag')
 			.setDescription('Type of gag to use')
 			.addChoices(...gagtypes)
+		)
+		.addNumberOption((opt) => 
+			opt.setName('intensity')
+			.setDescription("How intense to gag. Range 1-10")
+			.setMinValue(1)
+			.setMaxValue(10)
 		),
     async execute(interaction) {
 		let gaggeduser = interaction.options.getUser('user')
 		let gagtype = interaction.options.getString('gag') ? interaction.options.getString('gag') : 'ball'
+		let gagintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
 		if ((interaction.user.id != gaggeduser.id) && (getMitten(interaction.user))) {
 			interaction.reply(`${interaction.user} attempts to gag someone, but fumbles at holding the gag in their mittens!`)
 			return;
 		}
 		else {
-			assignGag(gaggeduser, gagtype)
+			assignGag(gaggeduser, gagtype, gagintensity)
 		}
 		let gagname = gagtypes.find(g => g.value == gagtype).name;
 		// We gagged ourselves!
