@@ -61,6 +61,15 @@ try {
 catch (err) { 
     console.log(err);
 }
+try {
+    if (!fs.existsSync(`./usersdata.txt`)) {
+        fs.writeFileSync(`./usersdata.txt`, JSON.stringify({}))
+    }
+    process.usersdata = JSON.parse(fs.readFileSync(`./usersdata.txt`))
+}
+catch (err) { 
+    console.log(err);
+}
 
 // Grab all the command files from the commands directory
 const commands = [];

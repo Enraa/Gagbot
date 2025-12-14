@@ -111,18 +111,32 @@ const garbleMessage = async (msg) => {
         let outtext = '';
         let messageparts = splitMessage(msg.content);
         let modifiedmessage = false;
+
         // Vibrators first
-        if (getVibe(msg.author.id)) {
-            modifiedmessage = true;
-            for (let i = 0; i < messageparts.length; i++) {
-                try {
-                    if (messageparts[i].garble) {
-                        messageparts[i].text = vibeText(messageparts[i].text, msg.author.id)
+        if (process.vibe == undefined) { process.vibe = {} }
+        if (process.vibe[msg.author.id]) {
+            const vibetypes = [];
+            const commandsPath = path.join(__dirname, '..', 'vibes');
+            const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+            console.log(commandFiles)
+            
+            if (commandFiles.includes(process.vibe[msg.author.id].vibetype + ".js")) {
+                modifiedmessage = true;
+                let vibegarble = require(path.join(commandsPath, `${process.vibe[msg.author.id].vibetype}.js`))
+                let vibeintensity = process.vibe[msg.author.id].intensity || 5
+                for (let i = 0; i < messageparts.length; i++) {
+                    try {
+                        if (messageparts[i].garble) {
+                            console.log(messageparts[i].text);
+                            messageparts[i].text = vibegarble.garbleText(messageparts[i].text, msg.author.id, vibeintensity)
+                            console.log(messageparts[i].text);
+                        }
                     }
+                    catch (err) { console.log(err) }
                 }
-                catch (err) { console.log(err) }
             }
         }
+
         console.log(messageparts)
         // Gags now
         if (process.gags == undefined) { process.gags = {} }
@@ -167,7 +181,8 @@ const garbleMessage = async (msg) => {
             let messagetexts = messageparts.map(m => m.text);
             outtext = messagetexts.join(" ");
         }
-        if (modifiedmessage) {
+
+        if (modifiedmessage) { //Fake reply with a ping
             if (msg.type == "19") {
                 const replied = await msg.fetchReference();
                 outtext = `${replied.author.toString()}\n${outtext}`

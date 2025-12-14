@@ -1,6 +1,19 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getChastity, getVibe, assignVibe } = require('./../functions/vibefunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
+const fs = require('fs');
+const path = require('path');
+
+const vibetypes = [];
+const commandsPath = path.join(__dirname, '..', 'vibes');
+const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
+
+for (const file of commandFiles) {
+    const vibe = require(`./../vibes/${file}`);
+	vibetypes.push(
+        { name: vibe.choicename, value: file.replace('.js', '') }
+    );
+};
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -9,6 +22,11 @@ module.exports = {
         .addUserOption(opt =>
             opt.setName('user')
             .setDescription('Who to add a fun vibrator to')
+        )
+        .addStringOption(opt =>
+            opt.setName('type')
+            .setDescription('What kind of vibe to add')
+            .addChoices(...vibetypes)
         )
 		.addNumberOption(opt => 
             opt.setName('intensity')
@@ -19,6 +37,8 @@ module.exports = {
     async execute(interaction) {
         let vibeuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user
 		let vibeintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
+        let vibetype = interaction.options.getString('type') ? interaction.options.getString('type') : "bullet"
+
         if (getHeavy(interaction.user.id)) {
             if (vibeuser == interaction.user) {
                 if (getChastity(vibeuser.id)) {
@@ -46,11 +66,11 @@ module.exports = {
                     if (getVibe(vibeuser.id)) {
                         // User already has a vibrator on
                         interaction.reply(`${interaction.user} unlocks their belt, changing the vibrator setting to ${vibeintensity} and then locks it back up!`)
-                        assignVibe(vibeuser.id, vibeintensity)
+                        assignVibe(vibeuser.id, vibeintensity, vibetype)
                     }
                     else {
                         interaction.reply(`${interaction.user} unlocks their belt, adding a vibrator set to ${vibeintensity} and then locks it back up!`)
-                        assignVibe(vibeuser.id, vibeintensity)
+                        assignVibe(vibeuser.id, vibeintensity, vibetype)
                     }
                 }
                 else {
@@ -58,11 +78,11 @@ module.exports = {
                     if (getVibe(vibeuser.id)) {
                         // User already has a vibrator on
                         interaction.reply(`${interaction.user} unlocks ${vibeuser}'s belt, changing the vibrator setting to ${vibeintensity} and then locks it back up!`)
-                        assignVibe(vibeuser.id, vibeintensity)
+                        assignVibe(vibeuser.id, vibeintensity, vibetype)
                     }
                     else {
                         interaction.reply(`${interaction.user} unlocks ${vibeuser}'s belt, adding a vibrator set to ${vibeintensity} and then locks it back up!`)
-                        assignVibe(vibeuser.id, vibeintensity)
+                        assignVibe(vibeuser.id, vibeintensity, vibetype)
                     }
                 }
             }
@@ -91,11 +111,11 @@ module.exports = {
                 if (getVibe(vibeuser.id)) {
                     // User already has a vibrator on
                     interaction.reply(`${interaction.user} changes their vibrator setting to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
+                    assignVibe(vibeuser.id, vibeintensity, vibetype)
                 }
                 else {
                     interaction.reply(`${interaction.user} slips on a vibrator set to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
+                    assignVibe(vibeuser.id, vibeintensity, vibetype)
                 }
             }
             else {
@@ -103,11 +123,11 @@ module.exports = {
                 if (getVibe(vibeuser.id)) {
                     // User already has a vibrator on
                     interaction.reply(`${interaction.user} changes ${vibeuser}'s vibrator to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
+                    assignVibe(vibeuser.id, vibeintensity, vibetype)
                 }
                 else {
                     interaction.reply(`${interaction.user} slips a vibrator on ${vibeuser} set to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
+                    assignVibe(vibeuser.id, vibeintensity, vibetype)
                 }
             }
         }

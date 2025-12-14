@@ -37,7 +37,7 @@ module.exports = {
         }
         // Vibe status
         if (getVibe(inspectuser.id)) {
-            outtext = `${outtext}<:MagicWand:1073504682540011520> Vibrator: **Set to Speed ${getVibe(inspectuser.id).intensity}**\n`
+            outtext = `${outtext}<:MagicWand:1073504682540011520> Vibrator: **${getVibe(inspectuser.id).vibetype}** **Set to Speed ${getVibe(inspectuser.id).intensity}**\n`
         }
         else {
             outtext = `${outtext}<:MagicWand:1073504682540011520> Vibrator: Not currently worn.\n`
