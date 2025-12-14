@@ -3,42 +3,11 @@
  * ~ DollLia
  ***************************/
 
-const ballGagCharMaps = require('./ball/ballCharMap.js')
-
-// Object storing a one-to-one character mapping for lowercase only.
-// > Code handles changing cases so we don't need to handle 'a' and 'A' separately here.
-const highSecGagCharMap = new Map([
-    ['a',"h"],
-    ['b',"b"],
-    ['c',"g"],
-    ['d',"d"],
-    ['e',"m"],
-    ['f',"f"],
-    ['g',"g"],
-    ['h',"h"],
-    ['i',"hm"],       // Unique two-char case
-    ['j',"j"],
-    ['k',"g"],
-    ['l',"l"],
-    ['m',"m"],
-    ['n',"n"],
-    ['o',"h"],
-    ['p',"p"],
-    ['q',"g"],
-    ['r',"r"],
-    ['s',"f"],
-    ['t',"t"],
-    ['u',"h"],
-    ['v',"v"],
-    ['w',"w"],
-    ['x',"m"],
-    ['y',"n"],
-    ['z',"m"],
-]);
-
+// Character maps stored in an array in a separate file for code cleanliness
+const {ballGagCharMaps} = require('./ball/ballCharMap.js')
 
 // Helper function to garble a text segment.
-const garbleText = (text) => {
+const garbleText = (text, intensity) => {
 
     //console.log("Text Seg: " + text)
 
@@ -58,8 +27,9 @@ const garbleText = (text) => {
         // Test for uppercase.
         let isUppercase = (char != char.toLowerCase())
 
-        // Get the new character using the above map.
-        let newChar = highSecGagCharMap.get(char.toLowerCase());
+        // Get the new character using the array of character maps.
+        // 10 intensities, only five maps.
+        let newChar = ballGagCharMaps[intensity / 2 - 1].get(char.toLowerCase());
 
         // Edit the text if we are not escaped 
         if(newChar){ //(!escapedText && newChar){
@@ -111,10 +81,18 @@ exports.choicename = "High-Security Ball Gag"
 
 // Test Gag Intensities
 let intensityTestMsg = "This unit is a good doll, and will wear all possible ball gags for Mistress."
+let intensityTestMsg2 = "The quick brown fox jumped over the lazy dog."
 
-console.log(`Original: ${intensityTestMsg}\n`)
-console.log(`Intensity 1:  ${garbleText(intensityTestMsg, 1)}`)
-console.log(`Intensity 2:  ${garbleText(intensityTestMsg, 2)}`)
-console.log(`Intensity 3:  ${garbleText(intensityTestMsg, 3)}`)
-console.log(`Intensity 4:  ${garbleText(intensityTestMsg, 4)}`)
-console.log(`Intensity 5:  ${garbleText(intensityTestMsg, 5)}`)
+console.log(`Original:     ${intensityTestMsg}\n`)
+console.log(`Intensity 1-2:   ${garbleText(intensityTestMsg, 2)}`)
+console.log(`Intensity 3-4:   ${garbleText(intensityTestMsg, 4)}`)
+console.log(`Intensity 5-6:   ${garbleText(intensityTestMsg, 6)}`)
+console.log(`Intensity 7-8:   ${garbleText(intensityTestMsg, 8)}`)
+console.log(`Intensity 9-10:  ${garbleText(intensityTestMsg, 10)}`)
+
+console.log(`\nOriginal:     ${intensityTestMsg2}\n`)
+console.log(`Intensity 1-2:   ${garbleText(intensityTestMsg2, 2)}`)
+console.log(`Intensity 3-4:   ${garbleText(intensityTestMsg2, 4)}`)
+console.log(`Intensity 5-6:   ${garbleText(intensityTestMsg2, 6)}`)
+console.log(`Intensity 7-8:   ${garbleText(intensityTestMsg2, 8)}`)
+console.log(`Intensity 9-10:  ${garbleText(intensityTestMsg2, 10)}`)
