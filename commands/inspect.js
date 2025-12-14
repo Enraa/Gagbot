@@ -44,7 +44,13 @@ module.exports = {
         }
         // Chastity status
         if (getChastity(inspectuser.id)) {
-            outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: **Key held by <@${getChastity(inspectuser.id).keyholder}>**\n`
+            if (getChastity(inspectuser.id).keyholder == inspectuser.id) {
+                // Self bound!
+                outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: **Self-bound!**\n`
+            }
+            else {
+                outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: **Key held by <@${getChastity(inspectuser.id).keyholder}>**\n`
+            }
         }
         else {
             outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: Not currently worn.\n`
