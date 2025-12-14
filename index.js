@@ -8,36 +8,54 @@ const { garbleMessage } = require(`./functions/gagfunctions.js`)
 dotenv.config()
 
 try {
+    if (!fs.existsSync(`./gaggedusers.txt`)) {
+        fs.writeFileSync(`./gaggedusers.txt`, JSON.stringify({}))
+    }
     process.gags = JSON.parse(fs.readFileSync(`./gaggedusers.txt`))
 }
 catch (err) { 
     console.log(err);
 }
 try {
+    if (!fs.existsSync(`./mittenedusers.txt`)) {
+        fs.writeFileSync(`./mittenedusers.txt`, JSON.stringify({}))
+    }
     process.mitten = JSON.parse(fs.readFileSync(`./mittenedusers.txt`))
 }
 catch (err) { 
     console.log(err);
 }
 try {
+    if (!fs.existsSync(`./chastityusers.txt`)) {
+        fs.writeFileSync(`./chastityusers.txt`, JSON.stringify({}))
+    }
     process.chastity = JSON.parse(fs.readFileSync(`./chastityusers.txt`))
 }
 catch (err) { 
     console.log(err);
 }
 try {
+    if (!fs.existsSync(`./vibeusers.txt`)) {
+        fs.writeFileSync(`./vibeusers.txt`, JSON.stringify({}))
+    }
     process.vibe = JSON.parse(fs.readFileSync(`./vibeusers.txt`))
 }
 catch (err) { 
     console.log(err);
 }
 try {
+    if (!fs.existsSync(`./collarusers.txt`)) {
+        fs.writeFileSync(`./collarusers.txt`, JSON.stringify({}))
+    }
     process.collar = JSON.parse(fs.readFileSync(`./collarusers.txt`))
 }
 catch (err) { 
     console.log(err);
 }
 try {
+    if (!fs.existsSync(`./heavyusers.txt`)) {
+        fs.writeFileSync(`./heavyusers.txt`, JSON.stringify({}))
+    }
     process.heavy = JSON.parse(fs.readFileSync(`./heavyusers.txt`))
 }
 catch (err) { 
