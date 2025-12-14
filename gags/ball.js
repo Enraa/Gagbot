@@ -39,7 +39,7 @@ const highSecGagCharMap = new Map([
 ///const regexOLD = /\*{1}(\*{2})?([^\*]|\*{2})+\*/g
 const regex = /\*{1}(\*{2})?([^\*]|\*{2})+\*|[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)|https?\:\/\//g
 
-const garbleText = (text) => {
+const garbleText = (text, intensity) => {
 
     let output = "";
     let deepCopy = text.split()[0]
