@@ -23,7 +23,7 @@ module.exports = {
         if (getHeavy(interaction.user.id)) {
             if (vibeuser == interaction.user) {
                 if (getChastity(vibeuser.id)) {
-                    interaction.reply(`${interaction.user} bats around a vibrator despite ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but ${getPronouns(interaction.user.id, "subject")} can't insert it because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt! And well, they don't have arms!`)
+                    interaction.reply(`${interaction.user} bats around a vibrator despite ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but ${getPronouns(interaction.user.id, "subject")} can't insert it because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt! And well, ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "doesn't" : "don't"} have arms!`)
                 }
                 else {
                     interaction.reply(`${interaction.user} stares at a vibrator, longing to feel its wonderful vibrations, but sighing in frustration because they are in a ${getHeavy(interaction.user.id).type} and can't put it on!`)
