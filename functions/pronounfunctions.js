@@ -95,6 +95,13 @@ const setPronouns = (user, pronouns) => {
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/pronounsusers.txt`, JSON.stringify(process.pronouns));
 }
 
+exports.they = (user, capitalise = false) => getPronouns(user, "subject", capitalise);
+exports.them = (user, capitalise = false) => getPronouns(user, "object", capitalise);
+exports.theirs = (user, capitalise = false) => getPronouns(user, "possessive", capitalise);
+exports.their = (user, capitalise = false) => getPronouns(user, "possessiveDeterminer", capitalise);
+exports.themself = (user, capitalise = false) => getPronouns(user, "reflexive", capitalise);
+exports.theyre = (user, capitalise = false) => getPronouns(user, "subjectIs", capitalise);
+exports.theyll = (user, capitalise = false) => getPronouns(user, "subjectWill", capitalise);
 
 exports.setPronouns = setPronouns
 exports.getPronouns = getPronouns
