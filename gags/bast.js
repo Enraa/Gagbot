@@ -2,31 +2,8 @@ const garbleText = (text, intensity) => {
     let newtextparts = text.split(" ");
     let outtext = '';
     for (let i = 0; i < newtextparts.length; i++) {
-        if (Math.random() > (0.50 - (0.05 * intensity))) {
-            /*if (newtextparts[i].length < 3) {
-                { outtext = `${outtext} ` }
-                for (let t = 0; t < newtextparts[i].length; t++) {
-                    if (newtextparts[i].charAt(t).search(/[A-z]|\d]/)) {
-                        let repletter;
-                        if (t == 0) repletter = "n"
-                        else if (t == 1) if (t == 0) repletter = "y"
-                        else repletter = "a"
-                        if ((newtextparts[i].charAt(t)).isUppercase()) {
-                            
-                        }
-                        if (t == 0) { outtext = `${outtext}N` }
-                        else if (t == 1) { outtext = `${outtext}y` }
-                        else { outtext = `${outtext}a` }
-                    }
-                    else {
-                        { outtext = `${outtext}${newtextparts[i].charAt(t)}` }
-                    }
-                }
-                let firstletter = (newtextparts[i].charAt(0)).isUppercase()
-                if (firstletter) { outtext = `${outtext} Nya` }
-                else { outtext = `${outtext} nya` }
-            }
-            else {*/
+        if (Math.random() > (0.50 - (0.05 * intensity))) { // 55-100% chance to nyah
+            // We're modifying this word! 
             outtext = `${outtext} `
             for (let t = 0; t < newtextparts[i].length; t++) {
                 let repletter;
@@ -41,6 +18,12 @@ const garbleText = (text, intensity) => {
                 else {
                     outtext = `${outtext}${newtextparts[i].charAt(t)}`
                 }
+            }
+            if (Math.random() > (0.80 - (0.04 * intensity))) { // 24-60% chance to add an additonal sound
+                let additionalsounds = [
+                    "purrrrr", "meow", "mew", "mrrp", "mrrrrrrrrrp", "purr<3", "mrrl"
+                ]
+                outtext = `${outtext}${additionalsounds[Math.floor(Math.random() * additionalsounds.length)]} `
             }
         }
         else {

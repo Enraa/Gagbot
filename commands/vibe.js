@@ -15,7 +15,7 @@ module.exports = {
             opt.setName('intensity')
             .setDescription("How intensely to stimulate")
             .setMinValue(1)
-            .setMaxValue(10)
+            .setMaxValue(30)
         ),
     async execute(interaction) {
         let vibeuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user

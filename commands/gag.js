@@ -25,7 +25,6 @@ module.exports = {
 		.addUserOption(opt =>
 			opt.setName('user')
 			.setDescription('The user to gag')
-			.setRequired(true)
         )
 		.addStringOption(opt =>
 			opt.setName('gag')
@@ -39,7 +38,7 @@ module.exports = {
 			.setMaxValue(10)
 		),
     async execute(interaction) {
-		let gaggeduser = interaction.options.getUser('user')
+		let gaggeduser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user
 		let gagtype = interaction.options.getString('gag') ? interaction.options.getString('gag') : 'ball'
 		let gagintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
 		let gagname = gagtypes.find(g => g.value == gagtype).name;
