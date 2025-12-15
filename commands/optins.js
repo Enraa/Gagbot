@@ -21,16 +21,22 @@ module.exports = {
       components: buildComponents(interaction.user.id),
     });
   },
-  async handleInteraction(interaction) {
-    [_, offset, action] = interaction.customId.split("-");
-    if (action == "e") {
-      setOptin(interaction.user.id, Number(offset));
-    } else {
-      unsetOptin(interaction.user.id, Number(offset));
-    }
+  componentHandlers: [
+    {
+      key: "optins",
+      async handle(interaction, offset, action) {
+        if (action == "e") {
+          setOptin(interaction.user.id, Number(offset));
+        } else {
+          unsetOptin(interaction.user.id, Number(offset));
+        }
 
-    interaction.update({ components: buildComponents(interaction.user.id) });
-  },
+        interaction.update({
+          components: buildComponents(interaction.user.id),
+        });
+      },
+    },
+  ],
 };
 
 function buildComponents(user) {
