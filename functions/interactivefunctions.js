@@ -1,7 +1,8 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { SlashCommandBuilder, MessageFlags, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
+const { SlashCommandBuilder, MessageFlags, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder } = require('discord.js');
+const { getPronouns } = require('./../functions/pronounfunctions.js')
 
 // Generates a consent button which the user will have to agree to. 
 const consentMessage = (interaction, user) => {
@@ -49,13 +50,114 @@ const handleConsent = async (interaction, user) => {
         const confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 180_000 });
         console.log(confirmation);
         await interaction.editReply({ content: `Consent form agreed to by <@${testusertarget}>! Please re-run the command to tie!`, components: [] });
-        assignConsent(user)
+        assignConsent(testusertarget)
     } catch (err) {
         console.log(err);
         await interaction.editReply({ content: `Consent form was not agreed to for <@${testusertarget}>!`, components: [] });
     }
 }
 
+const collarPermModal = (interaction, keyholder, freeuse) => {
+    const modal = new ModalBuilder().setCustomId(`collar_${keyholder.id}_${freeuse ? "f" : "t"}`).setTitle('Collar Permissions');
+
+    let restrictionWarningText = new TextDisplayBuilder()
+    let othertext = "others"
+    let warningText = `# WARNING 
+This restraint is intended to allow **others** to use /chastity, /mittens and /heavy on you!`
+    if (freeuse) { 
+        warningText = `${warningText}\nYou have designated yourself as free use and will allow *everyone* to play with you.` 
+    }
+    else {
+        warningText = `${warningText}\nYou have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(keyholder.id, "object")} to play with you.` 
+        othertext = getPronouns(keyholder.id, "object")
+    }
+    warningText = `${warningText}\nCollars may result in unintended situations such as someone holding your chastity key other than you, or you becoming unable to remove restraints because of heavy bondage. Use with caution!`
+
+    restrictionWarningText.setContent(warningText)
+
+    const restrictionsInputmitten = new StringSelectMenuBuilder()
+        .setCustomId('mitten')
+        .setPlaceholder('Select Permission')
+        .setRequired(true)
+        .addOptions(
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Yes')
+                // Description of option
+                .setDescription('Allows the use of /mitten on you')
+                // Value returned to you in modal submission
+                .setValue('mitten_yes'),
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('No')
+                // Description of option
+                .setDescription('Disallows the use of /mitten on you')
+                // Value returned to you in modal submission
+                .setValue('mitten_no'),
+        )
+
+    const restrictionsInputchastity = new StringSelectMenuBuilder()
+        .setCustomId('chastity')
+        .setPlaceholder('Select Permission')
+        .setRequired(true)
+        .addOptions(
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Yes')
+                // Description of option
+                .setDescription('Allows the use of /chastity on you')
+                // Value returned to you in modal submission
+                .setValue('chastity_yes'),
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('No')
+                // Description of option
+                .setDescription('Disallows the use of /chastity on you')
+                // Value returned to you in modal submission
+                .setValue('chastity_no'),
+        )
+
+    const restrictionsInputheavy = new StringSelectMenuBuilder()
+        .setCustomId('heavy')
+        .setPlaceholder('Select Permission')
+        .setRequired(true)
+        .addOptions(
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Yes')
+                // Description of option
+                .setDescription('Allows the use of /heavy on you')
+                // Value returned to you in modal submission
+                .setValue('heavy_yes'),
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('No')
+                // Description of option
+                .setDescription('Disallows the use of /heavy on you')
+                // Value returned to you in modal submission
+                .setValue('heavy_no'),
+        )
+
+    const restrictionsLabelmitten = new LabelBuilder()
+        .setLabel(`Allow ${othertext} to mitten you?`)
+        .setStringSelectMenuComponent(restrictionsInputmitten)
+
+    const restrictionsLabelchastity = new LabelBuilder()
+        .setLabel(`Allow ${othertext} to put you in chastity?`)
+        .setStringSelectMenuComponent(restrictionsInputchastity)
+
+    const restrictionsLabelheavy = new LabelBuilder()
+        .setLabel(`Allow ${othertext} to put you in heavy bondage?`)
+        .setStringSelectMenuComponent(restrictionsInputheavy)
+
+    // Add labels to modal
+    modal.addTextDisplayComponents(restrictionWarningText)
+        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy); 
+
+    return modal;
+}
+
 exports.consentMessage = consentMessage
 exports.getConsent = getConsent
 exports.handleConsent = handleConsent
+exports.collarPermModal = collarPermModal

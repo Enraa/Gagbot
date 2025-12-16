@@ -25,7 +25,12 @@ module.exports = {
 			.setRequired(true)
 		),
     async execute(interaction) {
-		interaction.reply({ content: `Your pronouns have been set to "${interaction.options.getString('pronouns')}"`, flags: MessageFlags.Ephemeral })
-		setPronouns(interaction.user.id, interaction.options.getString('pronouns'))
+		try {
+			interaction.reply({ content: `Your pronouns have been set to "${interaction.options.getString('pronouns')}"`, flags: MessageFlags.Ephemeral })
+			setPronouns(interaction.user.id, interaction.options.getString('pronouns'))
+		}
+		catch (err) {
+			console.log(err);
+		}
     }
 }

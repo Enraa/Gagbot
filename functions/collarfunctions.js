@@ -2,11 +2,14 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 
-const assignCollar = (user, keyholder, only) => {
+const assignCollar = (user, keyholder, restraints, only) => {
     if (process.collar == undefined) { process.collar = {} }
     process.collar[user] = {
         keyholder: keyholder,
-        keyholder_only: only
+        keyholder_only: only,
+        mitten: restraints.mitten,
+        chastity: restraints.chastity,
+        heavy: restraints.heavy
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
 }
@@ -14,6 +17,11 @@ const assignCollar = (user, keyholder, only) => {
 const getCollar = (user) => {
     if (process.collar == undefined) { process.collar = {} }
     return process.collar[user];
+}
+
+const getCollarPerm = (user, perm) => {
+    if (process.collar == undefined) { process.collar = {} }
+    return process.collar[user][perm];
 }
 
 const removeCollar = (user) => {
@@ -37,3 +45,4 @@ exports.assignCollar = assignCollar
 exports.getCollar = getCollar
 exports.removeCollar = removeCollar
 exports.getCollarKeys = getCollarKeys
+exports.getCollarPerm = getCollarPerm

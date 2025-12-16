@@ -19,44 +19,95 @@ module.exports = {
             .setMaxValue(30)
         ),
     async execute(interaction) {
-        let vibeuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user
-        // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-        if (!getConsent(vibeuser.id)) {
-            await handleConsent(interaction, vibeuser.id);
-            return;
-        }
-		let vibeintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
-        if (getHeavy(interaction.user.id)) {
-            if (vibeuser == interaction.user) {
-                if (getChastity(vibeuser.id)) {
-                    interaction.reply(`${interaction.user} bats around a vibrator despite ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but ${getPronouns(interaction.user.id, "subject")} can't insert it because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt! And well, ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "doesn't" : "don't"} have arms!`)
+        try {
+            let vibeuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user
+            // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
+            if (!getConsent(vibeuser.id)) {
+                await handleConsent(interaction, vibeuser.id);
+                return;
+            }
+            // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
+            if (!getConsent(interaction.user.id)) {
+                await handleConsent(interaction, interaction.user.id);
+                return;
+            }
+            let vibeintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
+            if (getHeavy(interaction.user.id)) {
+                if (vibeuser == interaction.user) {
+                    if (getChastity(vibeuser.id)) {
+                        interaction.reply(`${interaction.user} bats around a vibrator despite ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but ${getPronouns(interaction.user.id, "subject")} can't insert it because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt! And well, ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "doesn't" : "don't"} have arms!`)
+                    }
+                    else {
+                        interaction.reply(`${interaction.user} stares at a vibrator, longing to feel its wonderful vibrations, but sighing in frustration because ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "is" : "are"} in a ${getHeavy(interaction.user.id).type} and can't put it on!`)
+                    }
                 }
                 else {
-                    interaction.reply(`${interaction.user} stares at a vibrator, longing to feel its wonderful vibrations, but sighing in frustration because ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "is" : "are"} in a ${getHeavy(interaction.user.id).type} and can't put it on!`)
+                    if (getChastity(vibeuser.id)) {
+                        interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} chin to move a vibrator towards ${vibeuser} before realizing ${getPronouns(interaction.user.id, "subject")} can't put it on ${getPronouns(vibeuser.id, "object")} because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type} and ${vibeuser}'s chastity belt!`)
+                    }
+                    else {
+                        interaction.reply(`${interaction.user} rubs ${getPronouns(interaction.user.id, "possessiveDeterminer")} cheek on the vibrator, trying to move it and put it on ${vibeuser}. It's a shame ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "doesn't" : "don't"} have arms because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}!`)
+                    }
+                }
+            }
+            else if (getChastity(vibeuser.id)) {
+                // The target is in a chastity belt
+                if ((getChastity(vibeuser.id)?.keyholder == interaction.user.id)) {
+                    // User tries to modify the vibe settings for someone in chastity that they do have the key for
+                    if (vibeuser == interaction.user) {
+                        // User tries to modify their own vibe settings while in chastity
+                        if (getVibe(vibeuser.id)) {
+                            // User already has a vibrator on
+                            interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, changing the vibrator setting to ${vibeintensity} and then locks it back up!`)
+                            assignVibe(vibeuser.id, vibeintensity)
+                        }
+                        else {
+                            interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, adding a vibrator set to ${vibeintensity} and then locks it back up!`)
+                            assignVibe(vibeuser.id, vibeintensity)
+                        }
+                    }
+                    else {
+                        // User tries to modify another user's vibe settings
+                        if (getVibe(vibeuser.id)) {
+                            // User already has a vibrator on
+                            interaction.reply(`${interaction.user} unlocks ${vibeuser}'s belt, changing the vibrator setting to ${vibeintensity} and then locks it back up!`)
+                            assignVibe(vibeuser.id, vibeintensity)
+                        }
+                        else {
+                            interaction.reply(`${interaction.user} unlocks ${vibeuser}'s belt, adding a vibrator set to ${vibeintensity} and then locks it back up!`)
+                            assignVibe(vibeuser.id, vibeintensity)
+                        }
+                    }
+                }
+                else {
+                    // User tries to modify vibe settings but does not have the key for the belt
+                    if (vibeuser == interaction.user) {
+                        // User tries to modify their own vibe settings while in chastity
+                        if (getVibe(vibeuser.id)) {
+                            // User already has a vibrator on
+                            interaction.reply(`${interaction.user} claws at ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, feverishly trying to change the vibrator settings, but can't!`)
+                        }
+                        else {
+                            interaction.reply(`${interaction.user} runs ${getPronouns(interaction.user.id, "possessiveDeterminer")} fingers on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, trying to turn on a vibrator, but can't!`)
+                        }
+                    }
+                    else {
+                        // User tries to modify another user's vibe settings
+                        interaction.reply({ content: `You do not have the key for ${vibeuser}'s chastity belt!`, flags: MessageFlags.Ephemeral })
+                    }
                 }
             }
             else {
-                if (getChastity(vibeuser.id)) {
-                    interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} chin to move a vibrator towards ${vibeuser} before realizing ${getPronouns(interaction.user.id, "subject")} can't put it on ${getPronouns(vibeuser.id, "object")} because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type} and ${vibeuser}'s chastity belt!`)
-                }
-                else {
-                    interaction.reply(`${interaction.user} rubs ${getPronouns(interaction.user.id, "possessiveDeterminer")} cheek on the vibrator, trying to move it and put it on ${vibeuser}. It's a shame ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "doesn't" : "don't"} have arms because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}!`)
-                }
-            }
-        }
-        else if (getChastity(vibeuser.id)) {
-            // The target is in a chastity belt
-            if ((getChastity(vibeuser.id)?.keyholder == interaction.user.id)) {
-                // User tries to modify the vibe settings for someone in chastity that they do have the key for
+                // Target is NOT in a chastity belt!
                 if (vibeuser == interaction.user) {
-                    // User tries to modify their own vibe settings while in chastity
+                    // User tries to modify their own vibe settings
                     if (getVibe(vibeuser.id)) {
                         // User already has a vibrator on
-                        interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, changing the vibrator setting to ${vibeintensity} and then locks it back up!`)
+                        interaction.reply(`${interaction.user} changes ${getPronouns(interaction.user.id, "possessiveDeterminer")} vibrator setting to ${vibeintensity}!`)
                         assignVibe(vibeuser.id, vibeintensity)
                     }
                     else {
-                        interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, adding a vibrator set to ${vibeintensity} and then locks it back up!`)
+                        interaction.reply(`${interaction.user} slips on a vibrator set to ${vibeintensity}!`)
                         assignVibe(vibeuser.id, vibeintensity)
                     }
                 }
@@ -64,59 +115,18 @@ module.exports = {
                     // User tries to modify another user's vibe settings
                     if (getVibe(vibeuser.id)) {
                         // User already has a vibrator on
-                        interaction.reply(`${interaction.user} unlocks ${vibeuser}'s belt, changing the vibrator setting to ${vibeintensity} and then locks it back up!`)
+                        interaction.reply(`${interaction.user} changes ${vibeuser}'s vibrator to ${vibeintensity}!`)
                         assignVibe(vibeuser.id, vibeintensity)
                     }
                     else {
-                        interaction.reply(`${interaction.user} unlocks ${vibeuser}'s belt, adding a vibrator set to ${vibeintensity} and then locks it back up!`)
+                        interaction.reply(`${interaction.user} slips a vibrator on ${vibeuser} set to ${vibeintensity}!`)
                         assignVibe(vibeuser.id, vibeintensity)
                     }
-                }
-            }
-            else {
-                // User tries to modify vibe settings but does not have the key for the belt
-                if (vibeuser == interaction.user) {
-                    // User tries to modify their own vibe settings while in chastity
-                    if (getVibe(vibeuser.id)) {
-                        // User already has a vibrator on
-                        interaction.reply(`${interaction.user} claws at ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, feverishly trying to change the vibrator settings, but can't!`)
-                    }
-                    else {
-                        interaction.reply(`${interaction.user} runs ${getPronouns(interaction.user.id, "possessiveDeterminer")} fingers on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, trying to turn on a vibrator, but can't!`)
-                    }
-                }
-                else {
-                    // User tries to modify another user's vibe settings
-                    interaction.reply({ content: `You do not have the key for ${vibeuser}'s chastity belt!`, flags: MessageFlags.Ephemeral })
                 }
             }
         }
-        else {
-            // Target is NOT in a chastity belt!
-            if (vibeuser == interaction.user) {
-                // User tries to modify their own vibe settings
-                if (getVibe(vibeuser.id)) {
-                    // User already has a vibrator on
-                    interaction.reply(`${interaction.user} changes ${getPronouns(interaction.user.id, "possessiveDeterminer")} vibrator setting to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
-                }
-                else {
-                    interaction.reply(`${interaction.user} slips on a vibrator set to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
-                }
-            }
-            else {
-                // User tries to modify another user's vibe settings
-                if (getVibe(vibeuser.id)) {
-                    // User already has a vibrator on
-                    interaction.reply(`${interaction.user} changes ${vibeuser}'s vibrator to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
-                }
-                else {
-                    interaction.reply(`${interaction.user} slips a vibrator on ${vibeuser} set to ${vibeintensity}!`)
-                    assignVibe(vibeuser.id, vibeintensity)
-                }
-            }
+        catch (err) {
+            console.log(err)
         }
     }
 }

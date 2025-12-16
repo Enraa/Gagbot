@@ -21,7 +21,7 @@ module.exports = {
             deleteMitten(resetuser)
             removeChastity(resetuser.id)
             removeVibe(resetuser.id)
-            //removeCollar(resetuser.id)
+            removeCollar(resetuser.id)
             removeHeavy(resetuser.id)
         } else {
             if (interaction.member.roles.cache.has("1073505965619564604")) { 

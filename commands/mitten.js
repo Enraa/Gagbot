@@ -10,20 +10,25 @@ module.exports = {
 		.setName('mitten')
 		.setDescription('Put mittens on yourself, preventing /ungag on yourself and /gag on others'),
     async execute(interaction) {
-        // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-        if (!getConsent(interaction.user.id)) {
-            await handleConsent(interaction, interaction.user.id);
-            return;
+        try {
+            // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
+            if (!getConsent(interaction.user.id)) {
+                await handleConsent(interaction, interaction.user.id);
+                return;
+            }
+            if (getHeavy(interaction.user.id)) {
+                interaction.reply(`${interaction.user} nuzzles a pair of mittens, but can't put them on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}.`)
+            }
+            else if (getMitten(interaction.user)) {
+                interaction.reply({ content: `You are already wearing mittens!`, flags: MessageFlags.Ephemeral })
+            }
+            else {
+                assignMitten(interaction.user);
+                interaction.reply(`${interaction.user} puts on a pair of mittens with a pair of padlocks. ${getPronouns(interaction.user.id, "subjectWill", true)} be unable to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag!`)
+            }
         }
-        if (getHeavy(interaction.user.id)) {
-            interaction.reply(`${interaction.user} nuzzles a pair of mittens, but can't put them on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}.`)
-        }
-		else if (getMitten(interaction.user)) {
-            interaction.reply({ content: `You are already wearing mittens!`, flags: MessageFlags.Ephemeral })
-        }
-        else {
-            assignMitten(interaction.user);
-            interaction.reply(`${interaction.user} puts on a pair of mittens with a pair of padlocks. ${getPronouns(interaction.user.id, "subjectWill", true)} be unable to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag!`)
+        catch (err) {
+            console.log(err)
         }
     }
 }
