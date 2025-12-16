@@ -15,6 +15,7 @@ Restraints and toys used include the following:
 - Collars: Allow others to perform more significant actions on you.
 You can access these commands by typing / to bring up a list of what can be done.
 *Where possible, the bot's design philosophy is **"Consent First,"** meaning that you will have to make an active choice to give up control. Examples of this include mittens, chastity and heavy bondage. Collars can override this, if you wear them. Please use these at your own risk and leverage the **keyholder** and **other controls** presented as necessary.*
+
 <@${user}>, by clicking the button below, you acknowledge the above risks and considerations and users will be able to play with you using the bot.`
     const confirm = new ButtonBuilder().setCustomId('confirm').setLabel('I Accept').setStyle(ButtonStyle.Success);
     const row = new ActionRowBuilder().addComponents(confirm);
@@ -31,7 +32,11 @@ const assignConsent = (user) => {
     process.consented[user] = {
         mainconsent: true
     }
+    console.log(process.consented)
+    console.log(fs.readFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`))
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`, JSON.stringify(process.consented));
+    console.log(fs.readFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`))
+    console.log("I SWEAR TO GOD IF YOU DIDNT SAVE")
 }
 
 const getConsent = (user) => {
@@ -49,11 +54,11 @@ const handleConsent = async (interaction, user) => {
     try {
         const confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 180_000 });
         console.log(confirmation);
-        await interaction.editReply({ content: `Consent form agreed to by <@${testusertarget}>! Please re-run the command to tie!`, components: [] });
         assignConsent(testusertarget)
+        await interaction.editReply({ content: `Consent form agreed to by <@${testusertarget}>! Please re-run the command to tie!`, components: [] });
     } catch (err) {
         console.log(err);
-        await interaction.editReply({ content: `Consent form was not agreed to for <@${testusertarget}>!`, components: [] });
+        await interaction.editReply({ content: `Consent form was not agreed to for <@${testusertarget}>! Please try to bind again to bring this form back up.`, components: [] });
     }
 }
 

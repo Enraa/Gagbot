@@ -87,6 +87,18 @@ const getPronouns = (user, form, capitalize=false) => {
     return output
 }
 
+/********************************************
+ * getPronounsSet()
+ * Get a user's pronouns in typical slash format
+ * Ex: "she/her"
+ * NOTE: "it/it" is grammatically correct, but repetitive. Opted for "it/its" as a stylistic choice.
+ *******************************************/
+const getPronounsSet =  (user) => {
+    if (process.pronouns == undefined) { process.pronouns = {} }
+    if(process.pronouns[user]){return `${process.pronouns[user]["subject"]}/${process.pronouns[user]["subject"] != "it" ? process.pronouns[user]["object"] : process.pronouns[user]["possessive"]}`}
+    return `no pronouns set`
+}
+
 const setPronouns = (user, pronouns) => {
     if (process.pronouns == undefined) { process.pronouns = {} }
 
@@ -98,4 +110,5 @@ const setPronouns = (user, pronouns) => {
 
 exports.setPronouns = setPronouns
 exports.getPronouns = getPronouns
+exports.getPronounsSet = getPronounsSet
 exports.pronounsMap = pronounsMap

@@ -89,7 +89,10 @@ try {
     if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`)) {
         fs.writeFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`, JSON.stringify({}))
     }
+    // PLEASE GOD READ THIS
     process.consented = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`))
+
+    console.log(process.consented)
 } catch (err) { 
     console.log(err);
 }

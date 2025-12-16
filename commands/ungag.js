@@ -16,7 +16,7 @@ module.exports = {
         try {
             let gaggeduser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user;
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(interaction.user.id)) {
+            if (!getConsent(interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }

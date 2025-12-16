@@ -4,6 +4,7 @@ const https = require('https');
 
 const heavytypes = [
     { name: "Latex Armbinder", value: "armbinder_latex" },
+    { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex" },
     { name: "Wolfbinder", value: "armbinder_wolf" },
     { name: "Ancient Armbinder", value: "armbinder_ancient" },
     { name: "High Security Armbinder", value: "armbinder_secure" },
@@ -14,6 +15,9 @@ const heavytypes = [
     { name: "Black Hole Boxbinder", value: "boxbinder_blackhole" },
     { name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex" },
     { name: "Bast Petsuit", value: "petsuit_bast" },
+    { name: "Display Stand", value: "displaystand" },
+    { name: "Latex Sleepsack", value: "sleepsack_latex" },
+    { name: "Scavenger's Daughter", value: "scavengersdaughter" }
 ];
 
 const convertheavy = (type) => {

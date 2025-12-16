@@ -22,7 +22,7 @@ module.exports = {
             let chastityuser = interaction.user
             let chastitykeyholder = interaction.options.getUser('keyholder')
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(interaction.user.id)) {
+            if (!getConsent(interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }

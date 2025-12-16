@@ -42,12 +42,12 @@ module.exports = {
             let vibeintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
             let vibetype = interaction.options.getString('type') ? interaction.options.getString('type') : "bullet vibe"
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(vibeuser.id)) {
+            if (!getConsent(vibeuser.id)?.mainconsent) {
                 await handleConsent(interaction, vibeuser.id);
                 return;
             }
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(interaction.user.id)) {
+            if (!getConsent(interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
