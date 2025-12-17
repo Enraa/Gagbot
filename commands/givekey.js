@@ -49,147 +49,152 @@ module.exports = {
         )
     ),
   async execute(interaction) {
-    const keyType = interaction.options.getSubcommand();
+    try {
+      const keyType = interaction.options.getSubcommand();
 
-    const lockedUser = interaction.options.getUser("user") ?? interaction.user;
-    const restraint = getRestraintName(keyType, lockedUser.id);
+      const lockedUser = interaction.options.getUser("user") ?? interaction.user;
+      const restraint = getRestraintName(keyType, lockedUser.id);
 
-    if (!restraint) {
-      interaction.reply({
-        content: "Unknown restraint, blame <@458684324653301770>",
-        flags: MessageFlags.Ephemeral,
-      });
-      return;
-    }
-
-    const newKeyholder =
-      interaction.options.getUser("keyholder") ?? interaction.user;
-
-    if (interaction.user.id == newKeyholder.id) {
-      interaction.reply({
-        content: "You cannot give keys to yourself",
-        flags: MessageFlags.Ephemeral,
-      });
-      return;
-    }
-
-    let getKeyholderFunction;
-    let transferFunction;
-    switch (keyType) {
-      case "chastity":
-        getKeyholderFunction = getChastityKeyholder;
-        transferFunction = transferChastityKey;
-        break;
-      case "collar":
-        getKeyholderFunction = getCollarKeyholder;
-        transferFunction = transferCollarKey;
-        break;
-      default:
+      if (!restraint) {
         interaction.reply({
           content: "Unknown restraint, blame <@458684324653301770>",
           flags: MessageFlags.Ephemeral,
         });
         return;
-    }
-
-    if (!getKeyholderFunction(lockedUser.id)) {
-      if (lockedUser.id == interaction.user.id) {
-        interaction.reply({
-          content: "You are not locked in that type of restraint",
-          flags: MessageFlags.Ephemeral,
-        });
-      } else {
-        interaction.reply({
-          content: `${lockedUser} is not locked in that type of restraint`,
-          flags: MessageFlags.Ephemeral,
-        });
       }
 
-      return;
-    }
+      const newKeyholder =
+        interaction.options.getUser("keyholder") ?? interaction.user;
 
-    if (getHeavy(interaction.user.id)) {
-      interaction.reply(
-        `${interaction.user} tugs against ${their(interaction.user.id)} ${
-          getHeavy(interaction.user.id).type
-        }, trying to give ${their(
-          interaction.user.id
-        )} keys to ${lockedUser}'s ${restraint} to someone else, but it is futile!`
-      );
-      return;
-    }
-
-    if (getKeyholderFunction(lockedUser.id) != interaction.user.id) {
-      interaction.reply({
-        content: `You do not have the key to ${lockedUser}'s ${restraint}`,
-        flags: MessageFlags.Ephemeral,
-      });
-      return;
-    }
-
-    if (lockedUser.id == newKeyholder.id) {
-      if (transferFunction(lockedUser.id, newKeyholder.id)) {
-        interaction.reply(
-          `${
-            interaction.user
-          } gives the keys to ${lockedUser}'s ${restraint} to ${them(
-            lockedUser.id
-          )}`
-        );
-      } else {
+      if (interaction.user.id == newKeyholder.id) {
         interaction.reply({
-          content: "Failed to transfer key",
+          content: "You cannot give keys to yourself",
           flags: MessageFlags.Ephemeral,
         });
+        return;
       }
-    } else if (lockedUser.id == interaction.user.id) {
-      if (transferFunction(lockedUser.id, newKeyholder.id)) {
+
+      let getKeyholderFunction;
+      let transferFunction;
+      switch (keyType) {
+        case "chastity":
+          getKeyholderFunction = getChastityKeyholder;
+          transferFunction = transferChastityKey;
+          break;
+        case "collar":
+          getKeyholderFunction = getCollarKeyholder;
+          transferFunction = transferCollarKey;
+          break;
+        default:
+          interaction.reply({
+            content: "Unknown restraint, blame <@458684324653301770>",
+            flags: MessageFlags.Ephemeral,
+          });
+          return;
+      }
+
+      if (!getKeyholderFunction(lockedUser.id)) {
+        if (lockedUser.id == interaction.user.id) {
+          interaction.reply({
+            content: "You are not locked in that type of restraint",
+            flags: MessageFlags.Ephemeral,
+          });
+        } else {
+          interaction.reply({
+            content: `${lockedUser} is not locked in that type of restraint`,
+            flags: MessageFlags.Ephemeral,
+          });
+        }
+
+        return;
+      }
+
+      if (getHeavy(interaction.user.id)) {
         interaction.reply(
-          `${interaction.user} gives the keys to ${their(
+          `${interaction.user} tugs against ${their(interaction.user.id)} ${
+            getHeavy(interaction.user.id).type
+          }, trying to give ${their(
             interaction.user.id
-          )} ${restraint} to ${newKeyholder}`
+          )} keys to ${lockedUser}'s ${restraint} to someone else, but it is futile!`
         );
-      } else {
-        interaction.reply({
-          content: "Failed to transfer key",
-          flags: MessageFlags.Ephemeral,
-        });
-      }
-    } else if (optins.getKeyGiving(lockedUser)) {
-      if (transferFunction(lockedUser.id, newKeyholder.id)) {
-        interaction.reply(
-          `${interaction.user} gives the keys to ${lockedUser}'s ${restraint} to ${newKeyholder}`
-        );
-      } else {
-        interaction.reply({
-          content: "Failed to transfer key",
-          flags: MessageFlags.Ephemeral,
-        });
-      }
-    } else {
-      if (lockedUser.dmChannel) {
-        sendKeyTransferRequest(
-          lockedUser.dmChannel,
-          keyType,
-          restraint,
-          interaction.user,
-          newKeyholder
-        );
-      } else {
-        let dmChannel = await lockedUser.createDM();
-        sendKeyTransferRequest(
-          dmChannel,
-          keyType,
-          restraint,
-          interaction.user,
-          newKeyholder
-        );
+        return;
       }
 
-      interaction.reply({
-        content: "Key transfer request was sent",
-        flags: MessageFlags.Ephemeral,
-      });
+      if (getKeyholderFunction(lockedUser.id) != interaction.user.id) {
+        interaction.reply({
+          content: `You do not have the key to ${lockedUser}'s ${restraint}`,
+          flags: MessageFlags.Ephemeral,
+        });
+        return;
+      }
+
+      if (lockedUser.id == newKeyholder.id) {
+        if (transferFunction(lockedUser.id, newKeyholder.id)) {
+          interaction.reply(
+            `${
+              interaction.user
+            } gives the keys to ${lockedUser}'s ${restraint} to ${them(
+              lockedUser.id
+            )}`
+          );
+        } else {
+          interaction.reply({
+            content: "Failed to transfer key",
+            flags: MessageFlags.Ephemeral,
+          });
+        }
+      } else if (lockedUser.id == interaction.user.id) {
+        if (transferFunction(lockedUser.id, newKeyholder.id)) {
+          interaction.reply(
+            `${interaction.user} gives the keys to ${their(
+              interaction.user.id
+            )} ${restraint} to ${newKeyholder}`
+          );
+        } else {
+          interaction.reply({
+            content: "Failed to transfer key",
+            flags: MessageFlags.Ephemeral,
+          });
+        }
+      } else if (optins.getKeyGiving(lockedUser)) {
+        if (transferFunction(lockedUser.id, newKeyholder.id)) {
+          interaction.reply(
+            `${interaction.user} gives the keys to ${lockedUser}'s ${restraint} to ${newKeyholder}`
+          );
+        } else {
+          interaction.reply({
+            content: "Failed to transfer key",
+            flags: MessageFlags.Ephemeral,
+          });
+        }
+      } else {
+        if (lockedUser.dmChannel) {
+          sendKeyTransferRequest(
+            lockedUser.dmChannel,
+            keyType,
+            restraint,
+            interaction.user,
+            newKeyholder
+          );
+        } else {
+          let dmChannel = await lockedUser.createDM();
+          sendKeyTransferRequest(
+            dmChannel,
+            keyType,
+            restraint,
+            interaction.user,
+            newKeyholder
+          );
+        }
+
+        interaction.reply({
+          content: "Key transfer request was sent",
+          flags: MessageFlags.Ephemeral,
+        });
+      }
+    }
+    catch (err) {
+      console.log("I don't know why this crashes.")
     }
   },
   componentHandlers: [
@@ -229,6 +234,10 @@ module.exports = {
           channel.send(
             `<@${oldKeyholder}> gives the keys to ${interaction.user}'s ${restraint} to <@${newKeyholder}>`
           );
+          interaction.reply({
+            content: "Transfer successful",
+            flags: MessageFlags.Ephemeral,
+          });
         } else {
           interaction.reply({
             content: "Failed to transfer key, are you still locked?",
