@@ -92,6 +92,9 @@ try {
     process.optins = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/optinusers.txt`))
 }
 catch (err) { 
+    console.log(err);
+}
+try {
     if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`)) {
         fs.writeFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`, JSON.stringify({}))
     }

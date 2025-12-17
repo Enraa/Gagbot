@@ -13,7 +13,7 @@ const {
   transferChastityKey,
   getChastityKeyholder,
 } = require("../functions/vibefunctions.js");
-const { their } = require("../functions/pronounfunctions.js");
+const { their, them, getPronouns } = require("../functions/pronounfunctions.js");
 const { optins } = require("../functions/optinfunctions.js");
 
 module.exports = {
@@ -25,13 +25,13 @@ module.exports = {
         .setName("chastity")
         .setDescription("Give chastity key...")
         .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys for who?")
-        )
-        .addUserOption((opt) =>
           opt
             .setName("keyholder")
             .setDescription("Who should own them instead?")
             .setRequired(true)
+        )
+        .addUserOption((opt) =>
+          opt.setName("user").setDescription("Keys for who?")
         )
     )
     .addSubcommand((subcommand) =>
@@ -39,13 +39,13 @@ module.exports = {
         .setName("collar")
         .setDescription("Give collar key...")
         .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys for who?")
-        )
-        .addUserOption((opt) =>
           opt
             .setName("keyholder")
             .setDescription("Who should own them instead?")
             .setRequired(true)
+        )
+        .addUserOption((opt) =>
+          opt.setName("user").setDescription("Keys for who?")
         )
     ),
   async execute(interaction) {
