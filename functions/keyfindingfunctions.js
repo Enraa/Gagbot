@@ -15,7 +15,7 @@ function rollKeyFumble(user) {
   }
   const now = Date.now();
   if (process.keyfumbling[user]?.timeoutEnd > now) {
-    process.keyfumbling[user].timeoutEnd += process.keyfumbling[user]?.timeoutEnd - now;
+    process.keyfumbling[user].timeoutEnd += MIN_FUMBLE_TIMEOUT + Math.floor(Math.random() * (MAX_FUMBLE_TIMEOUT - MIN_FUMBLE_TIMEOUT));
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`, JSON.stringify(process.keyfumbling));
     return true;
   } else {
@@ -45,7 +45,7 @@ function rollKeyFumbleN(user, n) {
   }
   const now = Date.now();
   if (process.keyfumbling[user]?.timeoutEnd > now) {
-    process.keyfumbling[user].timeoutEnd += process.keyfumbling[user]?.timeoutEnd - now;
+    process.keyfumbling[user].timeoutEnd += MIN_FUMBLE_TIMEOUT + Math.floor(Math.random() * (MAX_FUMBLE_TIMEOUT - MIN_FUMBLE_TIMEOUT));
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`, JSON.stringify(process.keyfumbling));
     return Array(n).fill(true);
   } else {
