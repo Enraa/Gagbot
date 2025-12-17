@@ -122,7 +122,9 @@ const commandsPath = path.join(__dirname, 'commands');
 const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 for (const file of commandFiles) {
     const cmd = require(path.join(commandsPath, file));
-    commands.set(cmd.data.name, cmd);
+    if ((cmd.execute) && (cmd.data)) {
+        commands.set(cmd.data.name, cmd);
+    }
     if (cmd.modalexecute) modalHandlers.set(file, cmd);
     cmd.componentHandlers?.forEach((handler) => {
         componentHandlers.set(handler.key, handler);

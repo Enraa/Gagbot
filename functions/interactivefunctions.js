@@ -163,7 +163,7 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
 }
 
 const timelockChastityModal = (interaction, keyholder) => {
-    const modal = new ModalBuilder().setCustomId(`chastity_${keyholder.id}`).setTitle('Collar Permissions');
+    const modal = new ModalBuilder().setCustomId(`chastitytimelock_${keyholder.id}`).setTitle('Collar Permissions');
 
     let restrictionWarningText = new TextDisplayBuilder()
     let warningText = `# Timelock (Chastity Belt)
