@@ -2,8 +2,9 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/messagefunctions.js`)
-const { getVibe, stutterText } = require(`./../functions/vibefunctions.js`)
 const { getCorset, corsetLimitWords } = require(`./../functions/corsetfunctions.js`)
+const { vibeText } = require(`./../functions/vibefunctions.js`);
+const { getStutterChance } = require('./arousal.js');
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -143,9 +144,7 @@ const garbleMessage = async (msg) => {
         console.log(msg.content)
         
         // Vibrators first
-        if (process.vibe == undefined) { process.vibe = {} }
-        if (process.vibe[msg.author.id]) {
-
+        if (getStutterChance(msg.author.id)) {
             modifiedmessage = true;
 
             totalwords = 0 // recalculate eligible word count because they're stimmed out of their mind. 

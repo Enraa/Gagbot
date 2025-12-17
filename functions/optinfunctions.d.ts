@@ -1,4 +1,4 @@
-export type OptinTypes = "SlimeSpreading" | "KeyGiving" | "CursedRestraints";
+export type OptinTypes = "SlimeSpreading" | "KeyGiving" | "CursedRestraints" | "KeyDiscarding" | "AnyFinders";
 export type OptinMap = { [key: OptinTypes]: [number, string, string] };
 export type Optins = {
   [Optin in OptinTypes as `set${Optin}`]: (user: number) => undefined;

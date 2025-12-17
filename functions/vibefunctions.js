@@ -2,11 +2,16 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { arousedtexts, arousedtextshigh } = require('../vibes/aroused/aroused_texts.js')
+const { getArousal, getStutterChance } = require('./arousal');
+const { optins } = require('./optinfunctions');
 
 const assignChastity = (user, keyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
+    // catch up with arousal before arousal-affecting restraints change
+    getArousal(user);
     process.chastity[user] = {
-        keyholder: keyholder ? keyholder : "unlocked"
+        keyholder: keyholder ? keyholder : "unlocked",
+        timestamp: Date.now()
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
 }
@@ -18,12 +23,16 @@ const getChastity = (user) => {
 
 const removeChastity = (user) => {
     if (process.chastity == undefined) { process.chastity = {} }
+    // catch up with arousal before arousal-affecting restraints change
+    getArousal(user);
     delete process.chastity[user];
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
 }
 
 const assignVibe = (user, intensity, vibetype = "bullet vibe") => {
     if (process.vibe == undefined) { process.vibe = {} }
+    // catch up with arousal before arousal-affecting restraints change
+    getArousal(user);
     if (!process.vibe[user]) {        
         process.vibe[user] = [{
             vibetype: vibetype,
@@ -50,6 +59,8 @@ const getVibe = (user) => {
 
 const removeVibe = (user, vibetype) => {
     if (process.vibe == undefined) { process.vibe = {} }
+    // catch up with arousal before arousal-affecting restraints change
+    getArousal(user);
     if (!vibetype) {
         delete process.vibe[user];
     } else {
@@ -91,6 +102,83 @@ const transferChastityKey = (lockedUser, newKeyholder) => {
     return false;
 }
 
+const discardChastityKey = (user) => {
+    if (process.chastity == undefined) { process.chastity = {} }
+    if (process.chastity[user]) {
+        process.chastity[user].keyFindChance = 0.01;
+        process.chastity[user].oldKeyholder = process.chastity[user].keyholder;
+        process.chastity[user].keyholder = "discarded";
+    }
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+}
+
+const findChastityKey = (user, newKeyholder) => {
+    if (process.chastity == undefined) { process.chastity = {} }
+    if (process.chastity[user]) {
+        process.chastity[user].keyholder = newKeyholder;
+        process.chastity[user].keyFindChance = null;
+        process.chastity[user].oldKeyholder = null;
+    }
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+}
+
+const getFindableChastityKeys = (user) => {
+    if (process.chastity == undefined) { process.chastity = {} }
+    const findable = [];
+    for (const lockedUser in process.chastity) {
+        const data = process.chastity[lockedUser];
+
+        if ((data.keyFindChance ?? 0) > 0) {
+            if (user == lockedUser || user == data.oldKeyholder) {
+                findable.push([lockedUser, data.keyFindChance]);
+            }
+
+            // reduce chance to find keys for others
+            if (optins.getAnyFinders(lockedUser)) {
+                findable.push([lockedUser, data.keyFindChance / 10]);
+            }
+        }
+    }
+
+    return findable;
+}
+
+const arousedtexts = [
+  "ah~", "mm~", "ahh~", "mmm~", "ooh!~",
+  "mmmf~", "aah! <3", "aaahh!~", "mmm!~ <3", "aahhhhh!~",
+  "oooohhff!!~", "aaahaahhh!~", "mmmff~  so good...", "oohf!~  t-thank youuu~  <3", "ahh mmf ahhh!!!~",
+  "mmff more... aahh!!~"
+]
+const arousedtextshigh = [
+  "MMMM~ <3", "OOOOHHHF~", "AAHHH!!~",
+  "AAH! YES!~", "MMMFF...  MORE PLEAASEEE!!~", "MMMFFF AAHH AAHHHH!!!~  <3"
+]
+
+// Given a string, randomly provides a stutter and rarely provides an arousal text per word.
+const stutterText = (text, userid) => {
+    const stutterChance = getStutterChance(userid);
+    let outtext = `${text}`;
+    if (Math.random() < stutterChance) { // 2-20% to cause a stutter
+        let stuttertimes = Math.max(Math.floor(Math.random() * 3 * stutterChance), 1) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
+        outtext = '';
+        for (let i = 0; i < stuttertimes; i++) {
+            outtext = `${outtext}${text.charAt(0)}-`
+        }
+        outtext = `${outtext}${text}`
+    }
+    if (Math.random() < stutterChance / 4) { // 0.5-5% to insert an arousal text
+        let arousedlist = arousedtexts;
+        if (stutterChance > 0.7) {
+            for (let i = 0; i < arousedtextshigh; i++) { // Remove the first 5 elements to give the high arousal texts higher chance to show up
+                arousedlist[i] = arousedtextshigh[i]
+            }
+        }
+        let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)]
+        outtext = `${outtext}${arousedtext}`
+    }
+    return outtext
+}
+
 function stutterText(text, intensity=5) {
     function aux(text) {
         outtext = '';
@@ -120,7 +208,7 @@ function stutterText(text, intensity=5) {
             return text;
         }
     }
-
+    
     let newtextparts = text.split(" ");
     let outtext = ''
     for (let i = 0; i < newtextparts.length; i++) {
@@ -140,5 +228,8 @@ exports.stutterText = stutterText
 exports.getChastityKeys = getChastityKeys;
 exports.getChastityKeyholder = getChastityKeyholder;
 exports.transferChastityKey = transferChastityKey
+exports.discardChastityKey = discardChastityKey;
+exports.findChastityKey = findChastityKey;
+exports.getFindableChastityKeys = getFindableChastityKeys;
 
 console.log(getChastityKeys("125093095405518850"))

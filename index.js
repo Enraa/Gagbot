@@ -3,7 +3,8 @@ const dotenv = require('dotenv')
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { garbleMessage } = require(`./functions/gagfunctions.js`)
+const { garbleMessage } = require(`./functions/gagfunctions.js`);
+const { handleKeyFinding } = require('./functions/keyfinding.js');
 
 dotenv.config()
 
@@ -36,6 +37,11 @@ try {
         fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify({}))
     }
     process.chastity = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`))
+    // handle belts locked before frustration was being tracked, can be removed once this has been ran once
+    for (const key in process.chastity) {
+        const value = process.chastity[key];
+        if (!value.timestamp) value.timestamp = Date.now();
+    }
 }
 catch (err) { 
     console.log(err);
@@ -113,6 +119,15 @@ try {
 } catch (err) { 
     console.log(err);
 }
+try {
+    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/arousal.txt`)) {
+        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify({}))
+    }
+    process.arousal = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`))
+}
+catch (err) { 
+    console.log(err);
+}
 
 // Grab all the command files from the commands directory
 const commands = new Map();
@@ -157,6 +172,7 @@ client.on("messageCreate", async (msg) => {
         //console.log(msg.member.displayAvatarURL())
         //console.log(msg.member.displayName)
         garbleMessage(msg);
+        handleKeyFinding(msg);
     }
     catch (err) {
         console.log(err);

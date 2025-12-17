@@ -1,9 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getChastity, removeChastity } = require('./../functions/vibefunctions.js')
+const { getChastity, removeChastity, discardChastityKey } = require('./../functions/vibefunctions.js')
 const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
-const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js');
+const { getFumbleChance } = require('../functions/arousal.js');
+const { optins } = require('../functions/optinfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -44,16 +46,44 @@ module.exports = {
                     }
                 }
                 else {
-                    // User IS the keyholder for the belt. 
-                    if (interaction.user == chastitywearer) {
-                        // Wearer unlocks themselves
-                        interaction.reply(`${interaction.user} puts the key in the lock on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt and unlocks it, letting it fall as ${getPronouns(interaction.user.id, "subjectIs")} freed from ${getPronouns(interaction.user.id, "possessiveDeterminer")} prison!`)
-                        removeChastity(chastitywearer.id)
-                    }
-                    else {
-                        // User unlocks someone else
-                        interaction.reply(`${interaction.user} unlocks ${chastitywearer}'s belt and unwraps it from ${getPronouns(interaction.user.id, "possessiveDeterminer")} waist!`)
-                        removeChastity(chastitywearer.id)
+                    // User fumbles with the key due to their arousal and frustration
+                    if (Math.random() < getFumbleChance(interaction.user.id)) {
+                        // if they fumble again they can lose the key
+                        if (optins.getKeyDiscarding(chastitywearer.id) && Math.random() < getFumbleChance(interaction.user.id)) {
+                            // User IS the keyholder for the belt. 
+                            if (interaction.user == chastitywearer) {
+                                // Wearer loses key
+                                interaction.reply(`${interaction.user} tries to put the key in the lock on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt but fumbles so much with the key that they drop it somewhere and will remain in ${getPronouns(interaction.user.id, "possessiveDeterminer")} prison!`)
+                                discardChastityKey(chastitywearer.id);
+                            }
+                            else {
+                                // User loses key
+                                interaction.reply(`${interaction.user} tries to unlock ${chastitywearer}'s belt but fumbles so much with the key that they drop it somewhere so ${getPronouns(interaction.user.id, "subject")} will remain in their prison!`)
+                                discardChastityKey(chastitywearer.id);                            
+                            }
+                        } else {
+                            // User IS the keyholder for the belt. 
+                            if (interaction.user == chastitywearer) {
+                                // Wearer fails to unlock themselves
+                                interaction.reply(`${interaction.user} tries to put the key in the lock on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt but fumbles with the key and will remain in ${getPronouns(interaction.user.id, "possessiveDeterminer")} prison!`)
+                            }
+                            else {
+                                // User fails to unlock someone else
+                                interaction.reply(`${interaction.user} tries to unlock ${chastitywearer}'s belt but fumbles with the key so ${getPronouns(interaction.user.id, "subject")} will remain in their prison!`)
+                            }
+                        }
+                    } else {                        
+                        // User IS the keyholder for the belt. 
+                        if (interaction.user == chastitywearer) {
+                            // Wearer unlocks themselves
+                            interaction.reply(`${interaction.user} puts the key in the lock on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt and unlocks it, letting it fall as ${getPronouns(interaction.user.id, "subjectIs")} freed from ${getPronouns(interaction.user.id, "possessiveDeterminer")} prison!`)
+                            removeChastity(chastitywearer.id)
+                        }
+                        else {
+                            // User unlocks someone else
+                            interaction.reply(`${interaction.user} unlocks ${chastitywearer}'s belt and unwraps it from ${getPronouns(interaction.user.id, "possessiveDeterminer")} waist!`)
+                            removeChastity(chastitywearer.id)
+                        }
                     }
                 }
             }

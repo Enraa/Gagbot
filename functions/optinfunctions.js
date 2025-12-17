@@ -21,6 +21,22 @@ const optins = new Map([
       "Allows restraints equipped on you to be cursed variants",
     ],
   ],
+  [
+    "KeyDiscarding",
+    [
+      3,
+      "Key Discarding",
+      "Allows keys for your restraints to be discarded or lost",
+    ],
+  ],
+  [
+    "AnyFinders",
+    [
+      4,
+      "Any Finders",
+      "Allows discarded or lost keys for your restraints to be found by anyone",
+    ],
+  ],
 ]);
 
 function setOptin(user, offset) {
