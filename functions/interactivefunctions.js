@@ -164,7 +164,7 @@ This will lock ${wearer}'s belt for a set period of time. Please configure your 
                 // Label displayed to user
                 .setLabel('Keyholder Only')
                 // Description of option
-                .setDescription('Only you can access the wearer\' belt')
+                .setDescription('Only the non-wearer keyholder access the wearer\' belt')
                 // Value returned to you in modal submission
                 .setValue('access_kh'),
             new StringSelectMenuOptionBuilder()
