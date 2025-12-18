@@ -12,6 +12,7 @@ function timelockChastity(client, wearer, unlockTime, access, keyholderAfter) {
     chastity.keyholder = null;
     chastity.keyholderAfter = keyholderAfter ? wearer : null;
   } else chastity.keyholderAfter = [null, wearer, chastity.keyholder][keyholderAfter];
+  if (access == 2) chastity.keyholder = null;
   chastity.unlockTime = unlockTime;
   chastity.access = access;
   setTimeout(() => {
