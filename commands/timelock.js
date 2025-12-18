@@ -1,6 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { timelockChastityModal } = require("./../functions/interactivefunctions.js");
 const { getChastityKeyholder, getChastity } = require("../functions/vibefunctions.js");
+const { their } = require("../functions/pronounfunctions.js");
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -39,15 +40,11 @@ module.exports = {
         if (getHeavy(interaction.user.id)) {
           if (wearer == interaction.user) {
             interaction.reply(
-              `${interaction.user} wriggles ${getPronouns(mitteneduser.id, "possessiveDeterminer")} hands in their ${
-                getHeavy(interaction.user.id).type
-              }, but can't get good leverage to take ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens off!`
+              `${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${their(wearer.id)} chastity belt, but is completely stuck!`
             );
           } else {
             interaction.reply(
-              `${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} nose because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${
-                getHeavy(interaction.user.id).type
-              }, but can't help ${mitteneduser} out of ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens!`
+              `${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).type} trying to apply a timelock to ${wearer}'s chastity belt, but is completely stuck!`
             );
           }
         }
