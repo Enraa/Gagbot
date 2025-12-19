@@ -2,6 +2,7 @@ const { MessageFlags, ComponentType, ButtonStyle } = require("discord.js");
 const { parseTime } = require("../functions/timefunctions.js");
 const { timelockChastity } = require("../functions/timelockfunctions.js");
 const { getChastityKeyholder } = require("../functions/vibefunctions.js");
+const { rollKeyFumbleN } = require("../functions/keyfindingfunctions.js");
 
 module.exports = {
   async modalexecute(interaction) {
@@ -65,7 +66,9 @@ module.exports = {
           return;
         }
 
-        if (timelockChastity(interaction.client, wearer, keyholder, Number(unlockTime), Number(access), Number(keyholderAfter))) {
+        const frustrationMultiplier = 1 + rollKeyFumbleN(interaction.user.id, 20).reduce((a, b) => a + b) / 100;
+
+        if (timelockChastity(interaction.client, wearer, keyholder, Number(unlockTime) * frustrationMultiplier, Number(access), Number(keyholderAfter))) {
           interaction.channel.send(`<@${wearer}>'s chastity belt has been locked with a timelock`);
           interaction.reply({
             content: "Timelock confirmed",
