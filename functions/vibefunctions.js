@@ -3,6 +3,7 @@ const path = require('path');
 const https = require('https');
 const { arousedtexts, arousedtextshigh } = require('../vibes/aroused/aroused_texts.js')
 const { optins } = require('./optinfunctions');
+const { getHeavy, heavyDenialCoefficient } = require("./heavyfunctions.js");
 
 // the arousal under which calculations get reset to avoid long back-calculations
 const RESET_LIMT = 0.1;
@@ -20,9 +21,7 @@ const MAX_FRUSTRATION = 100;
 const FRUSTRATION_COEFFICIENT = 1.06;
 // the portion of maximum frustration where the growth rate reduces
 const FRUSTRATION_BREAKPOINT = 0.8;
-const FRUSTRATION_BREAKPOINT_TIME =
-  Math.log(FRUSTRATION_BREAKPOINT * MAX_FRUSTRATION) /
-  Math.log(FRUSTRATION_COEFFICIENT);
+const FRUSTRATION_BREAKPOINT_TIME = Math.log(FRUSTRATION_BREAKPOINT * MAX_FRUSTRATION) / Math.log(FRUSTRATION_COEFFICIENT);
 // the rate frustration reaches the maximum after the breakpoint
 const FRUSTRATION_MAX_COEFFICIENT = 7;
 
@@ -239,21 +238,14 @@ function getArousal(user) {
   if (process.arousal == undefined) process.arousal = {};
   const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
   const now = Date.now();
+  // skip calculating if last is recent
+  if (now - arousal.timeStep < 1000) return arousal.prev;
   let timeStep = 1;
   if (arousal.timestamp && arousal.prev < RESET_LIMT) {
     timeStep = (now - arousal.timestamp) / (60 * 1000);
   }
   while (timeStep > 1) {
-    const next = calcNextArousal(
-      arousal.prev,
-      arousal.prev2,
-      calcGrowthCoefficient(user),
-      calcDecayCoefficient(user),
-      1,
-      ORGASM_LIMIT,
-      RELEASE_STRENGTH,
-      true
-    );
+    const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), 1);
     arousal.prev2 = arousal.prev;
     arousal.prev = next;
 
@@ -265,24 +257,12 @@ function getArousal(user) {
 
     timeStep -= 1;
   }
-  const next = calcNextArousal(
-    arousal.prev,
-    arousal.prev2,
-    calcGrowthCoefficient(user),
-    calcDecayCoefficient(user),
-    timeStep,
-    ORGASM_LIMIT,
-    RELEASE_STRENGTH,
-    true
-  );
+  const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), timeStep);
   arousal.prev2 = arousal.prev;
   arousal.prev = next;
   arousal.timestamp = now;
   process.arousal[user] = arousal;
-  fs.writeFileSync(
-    `${process.GagbotSavedFileDirectory}/arousal.txt`,
-    JSON.stringify(process.arousal)
-  );
+  fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
   return next;
 }
 
@@ -290,80 +270,62 @@ function addArousal(user, change) {
   if (process.arousal == undefined) process.arousal = {};
   const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
   const now = Date.now();
-  let timeStep = 1;
-  if (arousal.timestamp && arousal.prev < RESET_LIMT) {
-    timeStep = (now - arousal.timestamp) / (60 * 1000);
-  }
-  // for large gaps, calculate it in steps
-  while (timeStep > 1) {
-    const next = calcNextArousal(
-      arousal.prev,
-      arousal.prev2,
-      calcGrowthCoefficient(user),
-      calcDecayCoefficient(user),
-      1,
-      ORGASM_LIMIT,
-      RELEASE_STRENGTH,
-      true
-    );
-    arousal.prev2 = arousal.prev;
-    arousal.prev = next;
-
-    // abort loop early if arousal goes below the reset limit
-    if (next < RESET_LIMT) {
-      timeStep = 1;
-      break;
+  // skip calculating if last is recent
+  let next = arousal.prev + change;
+  if (now - arousal.timeStep >= 1000) {
+    let timeStep = 1;
+    if (arousal.timestamp && arousal.prev < RESET_LIMT) {
+      timeStep = (now - arousal.timestamp) / (60 * 1000);
     }
+    // for large gaps, calculate it in steps
+    while (timeStep > 1) {
+      const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), 1);
+      arousal.prev2 = arousal.prev;
+      arousal.prev = next;
 
-    timeStep -= 1;
+      // abort loop early if arousal goes below the reset limit
+      if (next < RESET_LIMT) {
+        timeStep = 1;
+        break;
+      }
+
+      timeStep -= 1;
+    }
+    next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), timeStep) + change;
+    arousal.prev2 = arousal.prev;
+    arousal.timestamp = now;
   }
-  const next =
-    calcNextArousal(
-      arousal.prev,
-      arousal.prev2,
-      calcGrowthCoefficient(user),
-      calcDecayCoefficient(user),
-      timeStep,
-      ORGASM_LIMIT,
-      RELEASE_STRENGTH,
-      true
-    ) + change;
-  arousal.prev2 = arousal.prev;
   arousal.prev = next;
-  arousal.timestamp = now;
   process.arousal[user] = arousal;
-  fs.writeFileSync(
-    `${process.GagbotSavedFileDirectory}/arousal.txt`,
-    JSON.stringify(process.arousal)
-  );
+  fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
   return next;
 }
 
-function calcNextArousal(
-  prev,
-  prev2,
-  growthCoefficient,
-  decayCoefficient,
-  timeStep,
-  orgasmLimit,
-  releaseStrength,
-  canOrgasm
-) {
-  const noDecay = prev + timeStep * growthCoefficient;
+function calcNextArousal(prev, prev2, growthCoefficient, decayCoefficient, timeStep) {
+  const noDecay = prev + timeStep * growthCoefficient * Math.random();
   let next = noDecay - timeStep * decayCoefficient * (prev + prev2 / 2);
-  if (canOrgasm && prev >= (UNBELTED_DECAY * orgasmLimit) / decayCoefficient) {
-    next -=
-      (decayCoefficient * decayCoefficient * releaseStrength * orgasmLimit) /
-      UNBELTED_DECAY;
-  }
   return next;
+}
+
+// user attempts to orgasm, returns if it succeeds
+function tryOrgasm(user) {
+  const arousal = getArousal(user);
+  const decayCoefficient = calcDecayCoefficient(user);
+  const denialCoefficient = calcDenialCoefficient(user);
+  const orgasmLimit = ORGASM_LIMIT;
+  const releaseStrength = RELEASE_STRENGTH;
+  const canOrgasm = true;
+
+  if (canOrgasm && arousal.prev >= (UNBELTED_DECAY * orgasmLimit) / denialCoefficient) {
+    addArousal(user, -(decayCoefficient * decayCoefficient * releaseStrength * orgasmLimit) / UNBELTED_DECAY);
+  }
 }
 
 // modify when more things affect it
 function calcGrowthCoefficient(user) {
-    const vibes = getVibe(user);
-    if (!vibes) return 0;
-    return vibes.reduce((a, b) => a + b.intensity, 0) / 10;
+  const vibes = getVibe(user);
+  if (!vibes) return 0;
+  return vibes.reduce((a, b) => a + b.intensity, 0) / 10;
 }
 
 // modify when more things affect it
@@ -372,15 +334,19 @@ function calcDecayCoefficient(user) {
 }
 
 // modify when more things affect it
+function calcDenialCoefficient(user) {
+  const heavy = getHeavy(user);
+  if (getChastity(user)) return (heavy ? heavyDenialCoefficient(heavy.typeval) : 0) / 2 + 5;
+  return heavy ? heavyDenialCoefficient(heavy.typeval) : 1;
+}
+
+// modify when more things affect it
 function calcFrustration(hoursBelted) {
   if (hoursBelted <= FRUSTRATION_BREAKPOINT_TIME) {
     return Math.pow(FRUSTRATION_COEFFICIENT, hoursBelted);
   }
 
-  const unbounded =
-    MAX_FRUSTRATION * FRUSTRATION_BREAKPOINT +
-    FRUSTRATION_MAX_COEFFICIENT *
-      Math.log10(hoursBelted - FRUSTRATION_BREAKPOINT_TIME + 1);
+  const unbounded = MAX_FRUSTRATION * FRUSTRATION_BREAKPOINT + FRUSTRATION_MAX_COEFFICIENT * Math.log10(hoursBelted - FRUSTRATION_BREAKPOINT_TIME + 1);
 
   if (unbounded > MAX_FRUSTRATION) return MAX_FRUSTRATION;
   return unbounded;
@@ -390,6 +356,7 @@ exports.getStutterChance = getStutterChance;
 exports.calcFrustration = calcFrustration;
 exports.getArousal = getArousal;
 exports.addArousal = addArousal;
+exports.tryOrgasm = tryOrgasm;
 
 exports.assignChastity = assignChastity
 exports.getChastity = getChastity

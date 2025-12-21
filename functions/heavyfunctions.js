@@ -3,21 +3,21 @@ const path = require('path');
 const https = require('https');
 
 const heavytypes = [
-    { name: "Latex Armbinder", value: "armbinder_latex" },
-    { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex" },
-    { name: "Wolfbinder", value: "armbinder_wolf" },
-    { name: "Ancient Armbinder", value: "armbinder_ancient" },
-    { name: "High Security Armbinder", value: "armbinder_secure" },
-    { name: "Latex Boxbinder", value: "boxbinder_latex" },
-    { name: "Comfy Straitjacket", value: "straitjacket_comfy" },
-    { name: "Maid Punishment Straitjacket", value: "straitjacket_maid" },
-    { name: "Doll Straitjacket", value: "straitjacket_doll" },
-    { name: "Black Hole Boxbinder", value: "boxbinder_blackhole" },
-    { name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex" },
-    { name: "Bast Petsuit", value: "petsuit_bast" },
-    { name: "Display Stand", value: "displaystand" },
-    { name: "Latex Sleepsack", value: "sleepsack_latex" },
-    { name: "Scavenger's Daughter", value: "scavengersdaughter" }
+    { name: "Latex Armbinder", value: "armbinder_latex", denialCoefficient: 2 },
+    { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex", denialCoefficient: 3 },
+    { name: "Wolfbinder", value: "armbinder_wolf", denialCoefficient: 3 },
+    { name: "Ancient Armbinder", value: "armbinder_ancient", denialCoefficient: 3.5 },
+    { name: "High Security Armbinder", value: "armbinder_secure", denialCoefficient: 3.5 },
+    { name: "Latex Boxbinder", value: "boxbinder_latex", denialCoefficient: 2 },
+    { name: "Comfy Straitjacket", value: "straitjacket_comfy", denialCoefficient: 3 },
+    { name: "Maid Punishment Straitjacket", value: "straitjacket_maid", denialCoefficient: 4 },
+    { name: "Doll Straitjacket", value: "straitjacket_doll", denialCoefficient: 3.5 },
+    { name: "Black Hole Boxbinder", value: "boxbinder_blackhole", denialCoefficient: 2 },
+    { name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex", denialCoefficient: 3 },
+    { name: "Bast Petsuit", value: "petsuit_bast", denialCoefficient: 3 },
+    { name: "Display Stand", value: "displaystand", denialCoefficient: 4 },
+    { name: "Latex Sleepsack", value: "sleepsack_latex", denialCoefficient: 4 },
+    { name: "Scavenger's Daughter", value: "scavengersdaughter", denialCoefficient: 4 }
 ];
 
 const convertheavy = (type) => {
@@ -27,6 +27,10 @@ const convertheavy = (type) => {
         convertheavyarr[heavytypes[i].value] = heavytypes[i].name
     }
     return convertheavyarr[type];
+}
+
+const heavyDenialCoefficient = (type) => {
+    return heavytypes.find(h => h.value == type)?.denialCoefficient;
 }
 
 const assignHeavy = (user, type) => {
@@ -54,3 +58,4 @@ exports.getHeavy = getHeavy
 exports.removeHeavy = removeHeavy
 exports.commandsheavy = heavytypes
 exports.convertheavy = convertheavy
+exports.heavyDenialCoefficient = heavyDenialCoefficient;
