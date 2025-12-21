@@ -3,6 +3,7 @@ const { parseTime } = require("../functions/timefunctions.js");
 const { timelockChastity } = require("../functions/timelockfunctions.js");
 const { getChastityKeyholder } = require("../functions/vibefunctions.js");
 const { rollKeyFumbleN, rollKeyFumble } = require("../functions/keyfindingfunctions.js");
+const { optins } = require("../functions/optinfunctions.js");
 
 module.exports = {
   async modalexecute(interaction) {
@@ -59,7 +60,7 @@ module.exports = {
         return;
     }
 
-    if (keyholderAfter == 0 && rollKeyFumble(interaction.user.id)) {
+    if (keyholderAfter == 0 && rollKeyFumble(interaction.user.id) && (wearer == interaction.user.id || optins.getOthersKeyFumbling(wearer))) {
       interaction.reply({
         content: "you are too frustrated to use the unlock action",
         flags: MessageFlags.Ephemeral,

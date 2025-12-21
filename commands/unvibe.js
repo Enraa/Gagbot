@@ -62,7 +62,7 @@ module.exports = {
                 // The target is in a chastity belt
                 if ((getChastity(vibeuser.id)?.keyholder == interaction.user.id || (getChastity(vibeuser.id)?.access === 0 && vibeuser.id != interaction.user.id))) {
                     // User tries to modify the vibe settings for someone in chastity that they do have the key for
-                    const fumbleResults = rollKeyFumbleN(interaction.user.id, 2);
+                    const fumbleResults = (chastitywearer.id == interaction.user.id || optins.getOthersKeyFumbling(chastitywearer.id)) ? rollKeyFumbleN(interaction.user.id, 2) : [false, false];
                     if (fumbleResults[0]) {
                         // User fumbles with the key due to their arousal and frustration
                         if (optins.getKeyDiscarding(vibeuser.id) && fumbleResults[1]) {

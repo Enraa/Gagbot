@@ -1,13 +1,12 @@
 const fs = require("fs");
 
 const optins = new Map([
-  ["SlimeSpreading", [0, "Slime Spreading", "Allows slimy restraints to spread to you"]],
-  ["KeyGiving", [1, "Key Giving", "Allows keyholders to give keys for your restraints to other keyholders"]],
-  ["CursedRestraints", [2, "Cursed Restraints", "Allows restraints equipped on you to be cursed variants"]],
-  ["KeyFumbling", [-3, "Key Fumbling", "Makes it hard to handle keys when aroused or frustrated"]],
-  ["BlessedLuck", [4, "Blessed Luck", "Makes it so failed rolls make future rolls more lucky"]],
-  ["KeyDiscarding", [5, "Key Discarding", "Allows keys for your restraints to be discarded or lost"]],
-  ["AnyFinders", [6, "Any Finders", "Allows discarded or lost keys for your restraints to be found by anyone"]],
+  ["KeyGiving", [0, "Key Giving", "Allows keyholders to give keys for your restraints to other keyholders"]],
+  ["KeyFumbling", [-1, "Key Fumbling", "Makes it hard to handle keys when aroused or frustrated"]],
+  ["OthersKeyFumbling", [2, "Others Key Fumbling", "Allows others to fumble with your keys"]],
+  ["BlessedLuck", [3, "Blessed Luck", "Makes it so failed rolls make future rolls more lucky"]],
+  ["KeyDiscarding", [4, "Key Discarding", "Allows keys for your restraints to be discarded or lost"]],
+  ["AnyFinders", [5, "Any Finders", "Allows discarded or lost keys for your restraints to be found by anyone"]],
 ]);
 
 function setOptin(user, offset) {
@@ -34,7 +33,7 @@ function getOptin(user, offset) {
 
 function optinIsLocked(user, offset) {
   if (process.chastity == undefined) process.chastity = {};
-  if (offset == 3 && process.chastity[user]) return "Key Fumbling cannot be changed while locked in chastity. No cheating~";
+  if (offset == 1 && process.chastity[user]) return "Key Fumbling cannot be changed while locked in chastity. No cheating~";
   return null;
 }
 
