@@ -53,4 +53,4 @@ const garbleText = (text, intensity) => {
 
 
 exports.garbleText = garbleText;
-exports.choicename = "Dildo Gag"
+exports.choicename = "Silent Panel Gag"

@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { calculateTimeout } = require("./../functions/timefunctions.js")
-const { getHeavy, assignHeavy, commandsheavy, convertheavy } = require('./../functions/heavyfunctions.js')
+const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
 
@@ -13,7 +13,11 @@ module.exports = {
 			.setDescription('What flavor of helpless restraint to wear...')
 			//.addChoices(...commandsheavy)
             .setAutocomplete(true)
-		),
+		)
+        .addBooleanOption(opt => 
+            opt.setName('list_all_restraints')
+            .setDescription("Set to true to list all restraints. Does not bind you if TRUE.")
+        ),
     async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
 		if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
@@ -41,6 +45,16 @@ module.exports = {
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
             if (!getConsent(interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
+                return;
+            }
+            // List all heavy restraints if set. 
+            if (interaction.options.getBoolean('list_all_restraints')) {
+                let restraints = heavytypes.map((h) => { return h.name }).sort()
+                let outtext = '## Full list of Heavy Restraints:\n\n';
+                for (let i = 0; i < restraints.length; i++) {
+                    outtext = `${outtext}${restraints[i]}\n`
+                }
+                await interaction.reply({ content: `${outtext}`, flags: MessageFlags.Ephemeral })
                 return;
             }
             let heavychoice = interaction.options.getString('type') ? interaction.options.getString('type') : "armbinder_latex"

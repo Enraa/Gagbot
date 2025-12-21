@@ -39,8 +39,11 @@ const heavytypes = [
     { name: "Doll Processing Facility", value: "doll_processing" },
     { name: "Latex Vaccube", value: "vaccube_latex" },
     { name: "Weighted Blanket", value: "blanket_weighted" },
-    { name: "Silk Cocoon", value: "silk_cocoon" },
-    { name: "Rope Boxtie", value: "rope_boxtie" }
+    // { name: "Silk Cocoon", value: "silk_cocoon" },   Removed due to Arachnophobia
+    { name: "Rope Boxtie", value: "rope_boxtie" },
+    { name: "Shadow Latex Ballsuit", value: "shadow_latex_ball" },
+    { name: "Latex Sphere", value: "sphere_latex" },
+    { name: "Binding Dress", value: "dress_binding" },
 ];
 
 
@@ -82,6 +85,7 @@ const removeHeavy = (user) => {
 }
 
 exports.loadHeavyTypes = loadHeavyTypes
+exports.heavytypes = heavytypes
 exports.assignHeavy = assignHeavy
 exports.getHeavy = getHeavy
 exports.removeHeavy = removeHeavy
