@@ -25,7 +25,7 @@ const FRUSTRATION_BREAKPOINT_TIME = Math.log(FRUSTRATION_BREAKPOINT * MAX_FRUSTR
 // the rate frustration reaches the maximum after the breakpoint
 const FRUSTRATION_MAX_COEFFICIENT = 7;
 // the minimum time between successful orgasms
-const ORGASM_COOLDOWN = 60 * 1000;
+const ORGASM_COOLDOWN = 5 * 1000;
 
 const assignChastity = (user, keyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
