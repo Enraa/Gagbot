@@ -2,7 +2,7 @@ const { MessageFlags, ComponentType, ButtonStyle } = require("discord.js");
 const { parseTime } = require("../functions/timefunctions.js");
 const { timelockChastity } = require("../functions/timelockfunctions.js");
 const { getChastityKeyholder } = require("../functions/vibefunctions.js");
-const { rollKeyFumbleN } = require("../functions/keyfindingfunctions.js");
+const { rollKeyFumbleN, rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 
 module.exports = {
   async modalexecute(interaction) {
@@ -57,6 +57,14 @@ module.exports = {
           flags: MessageFlags.Ephemeral,
         });
         return;
+    }
+
+    if (keyholderAfter == 0 && rollKeyFumble(interaction.user.id)) {
+      interaction.reply({
+        content: "you are too frustrated to use the unlock action",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
     }
 
     if (timeStringSplit.length == 1) {
