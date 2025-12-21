@@ -24,6 +24,8 @@ const FRUSTRATION_BREAKPOINT = 0.8;
 const FRUSTRATION_BREAKPOINT_TIME = Math.log(FRUSTRATION_BREAKPOINT * MAX_FRUSTRATION) / Math.log(FRUSTRATION_COEFFICIENT);
 // the rate frustration reaches the maximum after the breakpoint
 const FRUSTRATION_MAX_COEFFICIENT = 7;
+// the minimum time between successful orgasms
+const ORGASM_COOLDOWN = 60 * 1000;
 
 const assignChastity = (user, keyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
@@ -309,14 +311,16 @@ function calcNextArousal(prev, prev2, growthCoefficient, decayCoefficient, timeS
 
 // user attempts to orgasm, returns if it succeeds
 function tryOrgasm(user) {
+  const now = Date.now();
   const arousal = getArousal(user);
   const decayCoefficient = calcDecayCoefficient(user);
   const denialCoefficient = calcDenialCoefficient(user);
   const orgasmLimit = ORGASM_LIMIT;
   const releaseStrength = RELEASE_STRENGTH;
-  const canOrgasm = true;
+  const canOrgasm = now - (process.arousal[user]?.lastOrgasm ?? 0) >= ORGASM_COOLDOWN;
 
   if (canOrgasm && arousal.prev >= (UNBELTED_DECAY * orgasmLimit) / denialCoefficient) {
+    process.arousal[user].lastOrgasm = now;
     addArousal(user, -(decayCoefficient * decayCoefficient * releaseStrength * orgasmLimit) / UNBELTED_DECAY);
   }
 }
