@@ -183,13 +183,13 @@ const getFindableChastityKeys = (user) => {
 }
 
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
-function stutterText(text, stutterChance) {
+function stutterText(text, intensity) {
     function aux(text) {
         outtext = '';
         if (!((text.charAt(0) == "<" && text.charAt(1) == "@") || (text.charAt(0) == "\n") || (!text.charAt(0).match(/[a-zA-Z0-9]/)))) { //Ignore pings, linebreaks and signs (preventively I dunno)
             let stuttered = false;
-            if (Math.random() < stutterChance) { // 2-20% to cause a stutter
-                let stuttertimes = Math.max(Math.floor(Math.random() * 5 * stutterChance), 1) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
+            if (Math.random() < intensity / 10) { // 2-20% to cause a stutter
+                let stuttertimes = Math.max(Math.floor(Math.random() * 0.3 * intensity), 1) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
                 for (let i = 0; i < stuttertimes; i++) {
                     outtext = `${outtext}${text.charAt(0)}-`
                 }
@@ -198,9 +198,9 @@ function stutterText(text, stutterChance) {
             else {
                 outtext = `${outtext}${text}`
             }
-            if (Math.random() < stutterChance / 4) { // 0.5-5% to insert an arousal text
+            if (Math.random() < intensity / 40) { // 0.5-5% to insert an arousal text
                 let arousedlist = arousedtexts;
-                if (stutterChance > 0.7) {
+                if (intensity > 7) {
                     for (let i = 0; i < arousedtextshigh; i++) { // Remove the first 5 elements to give the high arousal texts higher chance to show up
                         arousedlist[i] = arousedtextshigh[i]
                     }
@@ -222,8 +222,7 @@ function stutterText(text, stutterChance) {
     return outtext
 }
 
-// return of 0 = never, 1+ = always
-function getStutterChance(user) {
+function getVibeEquivalent(user) {
   let chance = getArousal(user);
   if (chance < RESET_LIMT) chance = 0;
   if (chance >= STUTTER_LIMIT) {
@@ -233,7 +232,7 @@ function getStutterChance(user) {
       chance += calcFrustration(hoursBelted) / 10;
     }
   }
-  return chance / 100;
+  return chance;
 }
 
 function getArousalDescription(user) {
@@ -371,7 +370,7 @@ function calcFrustration(hoursBelted) {
   return unbounded;
 }
 
-exports.getStutterChance = getStutterChance;
+exports.getVibeEquivalent = getVibeEquivalent;
 exports.getArousalDescription = getArousalDescription;
 exports.calcFrustration = calcFrustration;
 exports.getArousal = getArousal;

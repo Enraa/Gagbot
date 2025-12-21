@@ -25,15 +25,13 @@ export function findChastityKey(user: Snowflake, newKeyholder: Snowflake): void;
 export function getFindableChastityKeys(user: Snowflake): [Snowflake, number][];
 
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
-export function stutterText(text: string, stutterChance: number): string;
+export function stutterText(text: string, intensity: number): string;
 
 /**
- * Returns a non-negative number representing the base stutter chance for the user.
- * 0 means no stutters, 1+ means always stutters.
- * Note: The returned value may exceed 1.
+ * Returns a value representing arousal in a way that is roughly equivalet to intensity in the prior vibe system.
  * @param user
  */
-export function getStutterChance(user: Snowflake): number;
+export function getVibeEquivalent(user: Snowflake): number;
 
 /**
  * Returns a user-presentable string giving a vague indication of the arousal of the user.
