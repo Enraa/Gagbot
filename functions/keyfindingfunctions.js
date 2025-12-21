@@ -10,6 +10,8 @@ const { getUserVar, setUserVar } = require("./usercontext");
 const MIN_FUMBLE_TIMEOUT = 60000;
 // the maximum time before attempts at using keys can succeed after they fumble
 const MAX_FUMBLE_TIMEOUT = 180000;
+// the minimum time between messages from a user that can find keys
+const KEYFINDING_COOLDOWN = 60 * 1000;
 
 // return true if the user fumbles
 function rollKeyFumble(user) {
