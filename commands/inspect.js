@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
-const { getChastity, getVibe, getChastityKeys, getChastityTimelock } = require('./../functions/vibefunctions.js')
+const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDescription } = require('./../functions/vibefunctions.js')
 const { getCollar, getCollarPerm, getCollarKeys } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getCorset } = require('./../functions/corsetfunctions.js')
@@ -45,6 +45,8 @@ module.exports = {
             else {
                 outtext = `${outtext}<:MagicWand:1073504682540011520> Vibrator: Not currently worn.\n`
             }
+            // Arousal status
+            outtext = `${outtext}Arousal: **${getArousalDescription(inspectuser.id)}**\n`
             // Chastity status
             if (getChastity(inspectuser.id)) {
                 if (getChastityTimelock(inspectuser.id)) {

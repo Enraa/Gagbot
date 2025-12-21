@@ -236,6 +236,21 @@ function getStutterChance(user) {
   return chance / 100;
 }
 
+function getArousalDescription(user) {
+  const arousal = getArousal(user);
+  const denialCoefficient = calcDenialCoefficient(user);
+  const orgasmLimit = (UNBELTED_DECAY * ORGASM_LIMIT) / denialCoefficient;
+  const orgasmProgress = arousal / orgasmLimit;
+  // these numbers are mostly arbitrary
+  if (orgasmProgress > 1.4) return "Overstimulated";
+  if (orgasmProgress > 0.9) return "On edge";
+  if (arousal < RESET_LIMT) return "Not aroused";
+  if (arousal < ORGASM_LIMIT * 0.3) return "A bit aroused";
+  if (arousal < ORGASM_LIMIT * 0.8) return "Moderately aroused";
+  if (arousal < ORGASM_LIMIT * 1.5) return "Very aroused";
+  return "Extremely aroused";
+}
+
 function getArousal(user) {
   if (process.arousal == undefined) process.arousal = {};
   const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
@@ -357,6 +372,7 @@ function calcFrustration(hoursBelted) {
 }
 
 exports.getStutterChance = getStutterChance;
+exports.getArousalDescription = getArousalDescription;
 exports.calcFrustration = calcFrustration;
 exports.getArousal = getArousal;
 exports.addArousal = addArousal;
