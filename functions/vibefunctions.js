@@ -231,7 +231,7 @@ function getVibeEquivalent(user) {
     const chastity = getChastity(user);
     if (chastity) {
       const hoursBelted = (Date.now() - chastity.timestamp) / (60 * 60 * 1000);
-      chance += calcFrustration(hoursBelted) / 10;
+      chance += (calcFrustration(hoursBelted) + chastity.extraFrustration) / 10;
     }
   }
   return chance;
