@@ -36,21 +36,22 @@ module.exports = {
 					return;
 				}
 			}
+			// Block the headgear from being put on if wearing heavy bondage. 
 			if (getHeavy(interaction.user.id)) {
 				if (interaction.options.getUser('user') == interaction.user) {
-					interaction.reply(`${interaction.user} taps a ${headchoice} while wearing ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but it's really difficult to fanagle it onto their head while their arms are so secure!`)
+					interaction.reply(`${interaction.user} taps a ${hoodchoice} while wearing ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but it's really difficult to fanagle it onto their head while their arms are so secure!`)
+				}
+				else {
+					interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} shoulder to try to put a ${hoodchoice} on ${hooduser}, but clearly putting things on ${getPronouns(hooduser, "object")} while ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "is" : "are"} in a ${getHeavy(interaction.user.id).type} isn't ${getPronouns(interaction.user.id, "possessiveDeterminer")} strong suit!`)
+				}
+			}
+			// Block the headgear from being put on if wearing mittens. 
+			else if (getMitten(interaction.user.id)) {
+				if (interaction.options.getUser('user') == interaction.user) {
+					interaction.reply(`${interaction.user} taps a ${hoodchoice} while wearing ${getPronouns(interaction.user.id, "possessiveDeterminer")} mittens, but not having fingers makes it really hard to put a ${hoodchoice} on ${getPronouns(interaction.user.id, "possessiveDeterminer")} head!`)
 				}
 				else {
 					interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} shoulder to try to put a ${headchoice} on ${hooduser}, but clearly putting things on ${getPronouns(hooduser, "object")} while ${getPronouns(interaction.user.id, "subject")} ${getPronouns(interaction.user.id, "subject") != "they" ? "is" : "are"} in a ${getHeavy(interaction.user.id).type} isn't ${getPronouns(interaction.user.id, "possessiveDeterminer")} strong suit!`)
-				}
-			}
-			else if (getMitten(mitteneduser)) {
-				if (mitteneduser != interaction.user) {
-					interaction.reply(`${interaction.user} takes off ${mitteneduser}'s mittens so ${getPronouns(mitteneduser.id, "subject")} can take off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} gag!`)
-					deleteMitten(mitteneduser)
-				}
-				else {
-					interaction.reply(`${interaction.user} tries to pull off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens, but the straps and locks hold them firmly on ${getPronouns(mitteneduser.id, "possessiveDeterminer")} wrists!`)
 				}
 			}
 			else {
