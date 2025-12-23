@@ -162,10 +162,10 @@ client.on("messageCreate", async (msg) => {
         console.log(`${msg.author.bot}`)
         console.log(`${msg.stickers?.first()}`)
         console.log(`${msg.attachments?.first()}`)
-        if ((msg.channel.id != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
+        if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
         //console.log(msg.member.displayAvatarURL())
         //console.log(msg.member.displayName)
-        garbleMessage(msg);
+        garbleMessage(msg.channel.isThread() ? msg.channelId : null, msg);
     }
     catch (err) {
         console.log(err);
