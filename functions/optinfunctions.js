@@ -40,6 +40,7 @@ function onOptinChange(user, offset, newValue) {
   if (offset == 1 && newValue == 1) {
     setOptin(user, 2);
     if (process.vibe && process.vibe[user]) delete process.vibe[user];
+    if (process.arousal && process.arousal[user]) delete process.arousal[user];
   }
 }
 
