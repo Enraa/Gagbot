@@ -1,1 +1,1 @@
-{"185614860942442496":{"prev":0,"prev2":0,"lastChange":0,"lastTimeStep":1,"timestamp":1766594306303}}
+{"185614860942442496":{"prev":0,"prev2":0,"lastChange":0,"lastTimeStep":0.21871666666666667,"timestamp":1766595136101}}
