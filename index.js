@@ -4,6 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { garbleMessage } = require(`./functions/gagfunctions.js`);
+const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js')
 const { assignMemeImages } = require('./functions/interactivefunctions.js')
@@ -39,6 +40,11 @@ try {
         fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify({}))
     }
     process.chastity = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`))
+    // handle belts locked before frustration was being tracked, can be removed once this has been ran once
+    for (const key in process.chastity) {
+        if (!process.chastity[key].timestamp) process.chastity[key].timestamp = Date.now();
+        if (!process.chastity[key].extraFrustration) process.chastity[key].extraFrustration = 0;
+    }
 }
 catch (err) { 
     console.log(err);
@@ -116,6 +122,26 @@ try {
 } catch (err) { 
     console.log(err);
 }
+try {
+    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/arousal.txt`)) {
+        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify({}))
+    }
+    process.arousal = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`))
+}
+catch (err) { 
+    console.log(err);
+}
+try {
+    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`)) {
+        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`, JSON.stringify({}))
+    }
+    process.keyfumbling = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`))
+}
+catch (err) { 
+    console.log(err);
+}
+
+loadHeavyTypes();       // Load heavy types into memory for fast autocomplete access
 
 loadHeavyTypes();       // Load heavy types into memory for fast autocomplete access
 assignMemeImages();
@@ -167,6 +193,7 @@ client.on("messageCreate", async (msg) => {
         if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
         //console.log(msg.member.displayAvatarURL())
         //console.log(msg.member.displayName)
+        handleKeyFinding(msg);
         garbleMessage(msg.channel.isThread() ? msg.channelId : null, msg);
     }
     catch (err) {

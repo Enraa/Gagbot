@@ -3,7 +3,9 @@ const { getChastity } = require('./../functions/vibefunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
-const { getCorset, removeCorset } = require('./../functions/corsetfunctions.js')
+const { getCorset, removeCorset } = require('./../functions/corsetfunctions.js');
+const { optins } = require('../functions/optinfunctions.js');
+const { rollKeyFumbleN } = require('../functions/keyfindingfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -43,26 +45,75 @@ module.exports = {
                 // The target is in a chastity belt
                 if ((getChastity(corsetuser.id)?.keyholder == interaction.user.id || (getChastity(corsetuser.id)?.access === 0 && corsetuser.id != interaction.user.id))) {
                     // User tries to modify the corset settings for someone in chastity that they do have the key for
-                    if (corsetuser == interaction.user) {
-                        // User tries to modify their own corset settings while in chastity
-                        if (getCorset(corsetuser.id)) {
-                            // User already has a corset on
-                            interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, removing ${getPronouns(interaction.user.id, "possessiveDeterminer")} corset and then locks ${getPronouns(interaction.user.id, "reflexive")} back up!`)
-                            removeCorset(corsetuser.id)
+                    const fumbleResults = rollKeyFumbleN(interaction.user.id, corsetuser.id, 2);
+                    if (fumbleResults[0]) {
+                        // User fumbles with the key due to their arousal and frustration
+                        if (optins.getKeyDiscarding(corsetuser.id) && fumbleResults[1]) {
+                            // if they fumble again they can lose the key
+                            if (corsetuser == interaction.user) {
+                                // User tries to modify their own corset settings while in chastity
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain just as out of breath as before!`);
+                                    discardChastityKey(corsetuser.id);
+                                }
+                                else {
+                                    interaction.reply({ content: `You don't have a corset on!`, flags: MessageFlags.Ephemeral })
+                                }
+                            } else {
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${corsetuser}'s belt to remove ${getPronouns(corsetuser.id, "possessiveDeterminer")} corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain just as out of breath as before!`);
+                                    discardChastityKey(corsetuser.id);
+                                }
+                                else {
+                                    interaction.reply({ content: `${corsetuser} does not have a corset on!`, flags: MessageFlags.Ephemeral })
+                                }
+                            }
+                        } else {
+                            if (corsetuser == interaction.user) {
+                                // User tries to modify their own corset settings while in chastity
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} corset but fumbles with the key so ${corsetuser} will remain just as out of breath as before!`);
+                                }
+                                else {
+                                    interaction.reply({ content: `You don't have a corset on!`, flags: MessageFlags.Ephemeral })
+                                }
+                            }
+                            else {
+                                // User tries to modify another user's vibe settings
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${corsetuser}'s belt to remove ${getPronouns(corsetuser.id, "possessiveDeterminer")} corset but fumbles with the key so ${corsetuser} will remain just as out of breath as before!`);
+                                }
+                                else {
+                                    interaction.reply({ content: `${corsetuser} does not have a corset on!`, flags: MessageFlags.Ephemeral })
+                                }
+                            }
+                        }
+                    } else {
+                        if (corsetuser == interaction.user) {
+                            // User tries to modify their own corset settings while in chastity
+                            if (getCorset(corsetuser.id)) {
+                                // User already has a corset on
+                                interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, removing ${getPronouns(interaction.user.id, "possessiveDeterminer")} corset and then locks ${getPronouns(interaction.user.id, "reflexive")} back up!`)
+                                removeCorset(corsetuser.id)
+                            }
+                            else {
+                                interaction.reply({ content: `You don't have a corset on!`, flags: MessageFlags.Ephemeral })
+                            }
                         }
                         else {
-                            interaction.reply({ content: `You don't have a corset on!`, flags: MessageFlags.Ephemeral })
-                        }
-                    }
-                    else {
-                        // User tries to modify another user's corset settings
-                        if (getCorset(corsetuser.id)) {
-                            // User already has a corset on
-                            interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt, undoing and removing ${getPronouns(corsetuser.id, "possessiveDeterminer")} corset and then locks ${getPronouns(corsetuser.id, "object")} back up!`)
-                            removeCorset(corsetuser.id)
-                        }
-                        else {
-                            interaction.reply({ content: `${corsetuser} does not have a corset on!`, flags: MessageFlags.Ephemeral })
+                            // User tries to modify another user's corset settings
+                            if (getCorset(corsetuser.id)) {
+                                // User already has a corset on
+                                interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt, undoing and removing ${getPronouns(corsetuser.id, "possessiveDeterminer")} corset and then locks ${getPronouns(corsetuser.id, "object")} back up!`)
+                                removeCorset(corsetuser.id)
+                            }
+                            else {
+                                interaction.reply({ content: `${corsetuser} does not have a corset on!`, flags: MessageFlags.Ephemeral })
+                            }
                         }
                     }
                 }

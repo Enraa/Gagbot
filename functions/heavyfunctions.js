@@ -3,54 +3,53 @@ const path = require('path');
 const https = require('https');
 
 const heavytypes = [
-    { name: "Latex Armbinder", value: "armbinder_latex" },
-    { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex" },
-    { name: "Wolfbinder", value: "armbinder_wolf" },
-    { name: "Ancient Armbinder", value: "armbinder_ancient" },
-    { name: "High Security Armbinder", value: "armbinder_secure" },
-    { name: "Latex Boxbinder", value: "boxbinder_latex" },
-    { name: "Comfy Straitjacket", value: "straitjacket_comfy" },
-    { name: "Maid Straitjacket", value: "straitjacket_maid" },
-    { name: "Maid Punishment Straitjacket", value: "straitjacket_maidpunishment" },
-    { name: "Doll Straitjacket", value: "straitjacket_doll" },
-    { name: "Black Hole Boxbinder", value: "boxbinder_blackhole" },
-    { name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex" },
-    { name: "Bast Petsuit", value: "petsuit_bast" },
-    { name: "Display Stand", value: "displaystand" },
-    { name: "Latex Sleepsack", value: "sleepsack_latex" },
-    { name: "Scavenger's Daughter", value: "scavengersdaughter" },
-    { name: "Shadow Latex Straitjacket", value: "straitjacket_shadowlatex" },
-    { name: "Dragon Queen Straps", value: "boxbinder_dragon" },
-    { name: "Black Hole Armbinder", value: "armbinder_blackhole" },
-    { name: "Crystal Armbinder", value: "armbinder_crystal" },
-    { name: "Wolf Queenbinder", value: "armbinder_wolfqueen" },
-    { name: "Leather Armbinder", value: "Armbinder_leather" },
-    { name: "High-Security Boxbinder", value: "boxbinder_hisec" },
-    { name: "Experimental Boxtie Binder", value: "boxbinder_experimental" },
-    { name: "Leather Boxbinder", value: "boxbinder_leather" },
-    { name: "Asylum Straitjacket", value: "straitjacket_asylum" },
-    { name: "Black Hole Straitjacket", value: "straitjacket_blackhole" },
-    { name: "Giant Pile of Plushies", value: "plushie_pile" },
-    { name: "Lockdown Virus", value: "lockdown_virus" },
-    { name: "Yoke", value: "yoke" },
-    { name: "Ancient Petsuit", value: "petsuit_ancient" },
-    { name: "Autotape Wrapping", value: "autotape_wrap" },
-    { name: "Latex Vacbed", value: "vacbed_latex" },
-    { name: "Doll Processing Facility", value: "doll_processing" },
-    { name: "Latex Vaccube", value: "vaccube_latex" },
-    { name: "Weighted Blanket", value: "blanket_weighted" },
-    // { name: "Silk Cocoon", value: "silk_cocoon" },   Removed due to Arachnophobia
-    { name: "Rope Boxtie", value: "rope_boxtie" },
-    { name: "Shadow Latex Ballsuit", value: "shadow_latex_ball" },
-    { name: "Latex Sphere", value: "sphere_latex" },
-    { name: "Binding Dress", value: "dress_binding" },
-    { name: "Hogtie", value: "rope_hogtie" },
-    { name: "Latex Sphere", value: "sphere_latex" },
-    { name: "Shrimp Tie", value: "rope_shrimp" },
-    { name: "Blanket Burrito", value: "blanket_burrito" },
-    { name: "Festive Ribbons", value: "ribbons_festive" },
-    { name: "Ribbons", value: "ribbons" },
-    { name: "Wrapping Paper", value: "wrapping_paper" },
+    { name: "Latex Armbinder", value: "armbinder_latex", denialCoefficient: 2 },
+    { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex", denialCoefficient: 3 },
+    { name: "Wolfbinder", value: "armbinder_wolf", denialCoefficient: 3 },
+    { name: "Ancient Armbinder", value: "armbinder_ancient", denialCoefficient: 3.5 },
+    { name: "High Security Armbinder", value: "armbinder_secure", denialCoefficient: 3.5 },
+    { name: "Latex Boxbinder", value: "boxbinder_latex", denialCoefficient: 2 },
+    { name: "Comfy Straitjacket", value: "straitjacket_comfy", denialCoefficient: 3 },
+    { name: "Maid Straitjacket", value: "straitjacket_maid", denialCoefficient: 3.5 },
+    { name: "Maid Punishment Straitjacket", value: "straitjacket_maidpunishment", denialCoefficient: 4.5 },
+    { name: "Doll Straitjacket", value: "straitjacket_doll", denialCoefficient: 3.5 },
+    { name: "Black Hole Boxbinder", value: "boxbinder_blackhole", denialCoefficient: 2 },
+    { name: "Shadow Latex Petsuit", value: "petsuit_shadowlatex", denialCoefficient: 3 },
+    { name: "Bast Petsuit", value: "petsuit_bast", denialCoefficient: 3 },
+    { name: "Display Stand", value: "displaystand", denialCoefficient: 4 },
+    { name: "Latex Sleepsack", value: "sleepsack_latex", denialCoefficient: 4 },
+    { name: "Scavenger's Daughter", value: "scavengersdaughter", denialCoefficient: 4 },
+    { name: "Shadow Latex Straitjacket", value: "straitjacket_shadowlatex", denialCoefficient: 4 },
+    { name: "Dragon Queen Straps", value: "boxbinder_dragon", denialCoefficient: 2.5 },
+    { name: "Black Hole Armbinder", value: "armbinder_blackhole", denialCoefficient: 3.5 },
+    { name: "Crystal Armbinder", value: "armbinder_crystal", denialCoefficient: 3 },
+    { name: "Wolf Queenbinder", value: "armbinder_wolfqueen", denialCoefficient: 3 },
+    { name: "Leather Armbinder", value: "Armbinder_leather", denialCoefficient: 2 },
+    { name: "High-Security Boxbinder", value: "boxbinder_hisec", denialCoefficient: 3.5 },
+    { name: "Experimental Boxtie Binder", value: "boxbinder_experimental", denialCoefficient: 3.5 },
+    { name: "Leather Boxbinder", value: "boxbinder_leather", denialCoefficient: 2.5 },
+    { name: "Asylum Straitjacket", value: "straitjacket_asylum", denialCoefficient: 5 },
+    { name: "Black Hole Straitjacket", value: "straitjacket_blackhole", denialCoefficient: 4.5 },
+    { name: "Giant Pile of Plushies", value: "plushie_pile", denialCoefficient: 1.5 },
+    { name: "Lockdown Virus", value: "lockdown_virus", denialCoefficient: 4 },
+    { name: "Yoke", value: "yoke", denialCoefficient: 2 },
+    { name: "Ancient Petsuit", value: "petsuit_ancient", denialCoefficient: 4 },
+    { name: "Autotape Wrapping", value: "autotape_wrap", denialCoefficient: 2 },
+    { name: "Latex Vacbed", value: "vacbed_latex", denialCoefficient: 3.5 },
+    { name: "Doll Processing Facility", value: "doll_processing", denialCoefficient: 5 },
+    { name: "Latex Vaccube", value: "vaccube_latex", denialCoefficient: 4.5 },
+    { name: "Weighted Blanket", value: "blanket_weighted", denialCoefficient: 1.5 },
+    // { name: "Silk Cocoon", value: "silk_cocoon", denialCoefficient: 2 },   Removed due to Arachnophobia
+    { name: "Rope Boxtie", value: "rope_boxtie", denialCoefficient: 2 },
+    { name: "Shadow Latex Ballsuit", value: "shadow_latex_ball", denialCoefficient: 4 },
+    { name: "Latex Sphere", value: "sphere_latex", denialCoefficient: 3.5 },
+    { name: "Binding Dress", value: "dress_binding", denialCoefficient: 4.5 },
+    { name: "Hogtie", value: "rope_hogtie", denialCoefficient: 3 },
+    { name: "Shrimp Tie", value: "rope_shrimp", denialCoefficient: 3 },
+    { name: "Blanket Burrito", value: "blanket_burrito", denialCoefficient: 2 },
+    { name: "Festive Ribbons", value: "ribbons_festive", denialCoefficient: 1.5 },
+    { name: "Ribbons", value: "ribbons", denialCoefficient: 1.5 },
+    { name: "Wrapping Paper", value: "wrapping_paper", denialCoefficient: 2 },
 ];
 
 
@@ -69,6 +68,10 @@ const convertheavy = (type) => {
         convertheavyarr[heavytypes[i].value] = heavytypes[i].name
     }
     return convertheavyarr[type];
+}
+
+const heavyDenialCoefficient = (type) => {
+    return heavytypes.find(h => h.value == type)?.denialCoefficient;
 }
 
 const assignHeavy = (user, type) => {
@@ -98,3 +101,4 @@ exports.getHeavy = getHeavy
 exports.removeHeavy = removeHeavy
 exports.commandsheavy = heavytypes
 exports.convertheavy = convertheavy
+exports.heavyDenialCoefficient = heavyDenialCoefficient;
