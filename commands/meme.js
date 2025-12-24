@@ -28,7 +28,7 @@ module.exports = {
 			// We really dont need consent for posting images lol
             let choice = interaction.options.getString('image')
 
-            const imagepath = path.join(__dirname, '..', 'meme', `${choice}.png`);
+            const imagepath = path.join(__dirname, '..', 'memes', `${choice}.png`);
             let imageblob = new AttachmentBuilder(imagepath)
             await interaction.reply({
                 files: [imageblob]

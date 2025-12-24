@@ -4,6 +4,7 @@ const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,16 +21,29 @@ module.exports = {
     async execute(interaction) {
         try {
             let chastityuser = interaction.user
-            let chastitykeyholder = interaction.options.getUser('keyholder')
+            let chastitykeyholder = interaction.options.getUser('keyholder') ? interaction.options.getUser('keyholder') : interaction.user
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
             if (!getConsent(interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
+
+            // Build data tree:
+            let data = {
+                textarray: "texts_chastity",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: chastitykeyholder,
+                    c1: getHeavy(interaction.user.id).type // heavy bondage type 
+                }
+            }
+
             // Check if the wearer is in an armbinder - if they are, block them. 
             if (getHeavy(interaction.user.id)) {
+                data.heavy = true
                 if (getChastity(interaction.user.id)) {
-                    interaction.reply(`${interaction.user} squirms in ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, trying to adjust ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt, but it's futile!`)
+                    data.chastity = true
+                    interaction.reply(getText(data))
                 }
                 else {
                     // User is in some form of heavy bondage and cannot put on a chastity belt

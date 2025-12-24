@@ -1,9 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getChastity, getVibe, assignVibe } = require('./../functions/vibefunctions.js')
+const { getChastity, getVibe, assignVibe, discardChastityKey } = require('./../functions/vibefunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
-const { getCorset, assignCorset } = require('./../functions/corsetfunctions.js')
+const { getCorset, assignCorset } = require('./../functions/corsetfunctions.js');
+const { rollKeyFumbleN } = require('../functions/keyfindingfunctions.js');
+const { optins } = require('../functions/optinfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -58,46 +60,101 @@ module.exports = {
                 // The target is in a chastity belt
                 if ((getChastity(corsetuser.id)?.keyholder == interaction.user.id || (getChastity(corsetuser.id)?.access === 0 && corsetuser.id != interaction.user.id))) {
                     // User tries to modify the corset settings for someone in chastity that they do have the key for
-                    if (corsetuser == interaction.user) {
-                        // User tries to modify their own corset settings while in chastity
-                        if (getCorset(corsetuser.id)) {
-                            // User already has a corset on
-                            if (getCorset(corsetuser.id).tightness < tightness) {
-                                // Tightening the corset!
-                                interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, pulling the strings on the corset even tighter! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(interaction.user.id, "reflexive")} back up!`)
-                                assignCorset(corsetuser.id, tightness)
+                    const fumbleResults = rollKeyFumbleN(interaction.user.id, corsetuser.id, 2);
+                    if (fumbleResults[0]) {
+                        // User fumbles with the key due to their arousal and frustration
+                        if (optins.getKeyDiscarding(corsetuser.id) && fumbleResults[1]) {
+                            // if they fumble again they can lose the key
+                            if (corsetuser == interaction.user) {
+                                // User tries to modify their own corset settings while in chastity
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to adjust the corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain just as out of breath as before!`);
+                                    discardChastityKey(corsetuser.id);
+                                }
+                                else {
+                                    // Putting ON a corset!
+                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to put on a corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain without one!`);
+                                    discardChastityKey(corsetuser.id);
+                                }
+                            } else {
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${corsetuser}'s belt to adjust the corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain just as out of breath as before!`);
+                                    discardChastityKey(corsetuser.id);
+                                }
+                                else {
+                                    // Putting ON a corset!
+                                    interaction.reply(`${interaction.user} tries to unlock ${corsetuser}'s belt to put on a corset but fumbles with the key so much with the key that they drop it somewhere so ${corsetuser} will remain without one!`);
+                                    discardChastityKey(corsetuser.id);
+                                }
+                            }
+                        } else {
+                            if (corsetuser == interaction.user) {
+                                // User tries to modify their own corset settings while in chastity
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to adjust the corset but fumbles with the key so ${corsetuser} will remain just as out of breath as before!`);
+                                }
+                                else {
+                                    // Putting ON a corset!
+                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to put on a corset but fumbles with the key so ${corsetuser} will remain without one!`);
+                                }
                             }
                             else {
-                                // Loosening the corset!
-                                interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, carefully loosening the strings on the corset, taking a deep breath as ${getPronouns(interaction.user.id, "subject")} can breathe! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(interaction.user.id, "reflexive")} back up!`)
+                                // User tries to modify another user's vibe settings
+                                if (getCorset(corsetuser.id)) {
+                                    // User already has a corset on
+                                    interaction.reply(`${interaction.user} tries to unlock ${corsetuser}'s belt to adjust the corset but fumbles with the key so ${corsetuser} will remain just as out of breath as before!`);
+                                }
+                                else {
+                                    // Putting ON a corset!
+                                    interaction.reply(`${interaction.user} tries to unlock ${corsetuser}'s belt to put on a corset but fumbles with the key so ${corsetuser} will remain without one!`);
+                                }
+                            }
+                        }
+                    } else {
+                        if (corsetuser == interaction.user) {
+                            // User tries to modify their own corset settings while in chastity
+                            if (getCorset(corsetuser.id)) {
+                                // User already has a corset on
+                                if (getCorset(corsetuser.id).tightness < tightness) {
+                                    // Tightening the corset!
+                                    interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, pulling the strings on the corset even tighter! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(interaction.user.id, "reflexive")} back up!`)
+                                    assignCorset(corsetuser.id, tightness)
+                                }
+                                else {
+                                    // Loosening the corset!
+                                    interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, carefully loosening the strings on the corset, taking a deep breath as ${getPronouns(interaction.user.id, "subject")} can breathe! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(interaction.user.id, "reflexive")} back up!`)
+                                    assignCorset(corsetuser.id, tightness)
+                                }
+                            }
+                            else {
+                                // Putting ON a corset!
+                                interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt and then puts a corset on ${getPronouns(corsetuser.id, "reflexive")}, pulling the strings tightly, leaving the length of the strings at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} then ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(interaction.user.id, "reflexive")} back up!`)
                                 assignCorset(corsetuser.id, tightness)
                             }
                         }
                         else {
-                            // Putting ON a corset!
-                            interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt and then puts a corset on ${getPronouns(corsetuser.id, "reflexive")}, pulling the strings tightly, leaving the length of the strings at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} then ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(interaction.user.id, "reflexive")} back up!`)
-                            assignCorset(corsetuser.id, tightness)
-                        }
-                    }
-                    else {
-                        // User tries to modify another user's vibe settings
-                        if (getCorset(corsetuser.id)) {
-                            // User already has a corset on
-                            if (getCorset(corsetuser.id).tightness < tightness) {
-                                // Tightening the corset!
-                                interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt, pulling the strings on the corset even tighter! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(corsetuser.id, "object")} back up!`)
-                                assignCorset(corsetuser.id, tightness)
+                            // User tries to modify another user's vibe settings
+                            if (getCorset(corsetuser.id)) {
+                                // User already has a corset on
+                                if (getCorset(corsetuser.id).tightness < tightness) {
+                                    // Tightening the corset!
+                                    interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt, pulling the strings on the corset even tighter! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(corsetuser.id, "object")} back up!`)
+                                    assignCorset(corsetuser.id, tightness)
+                                }
+                                else {
+                                    // Loosening the corset!
+                                    interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt, carefully loosening the strings on the corset! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(corsetuser.id, "object")} back up!`)
+                                    assignCorset(corsetuser.id, tightness)
+                                }
                             }
                             else {
-                                // Loosening the corset!
-                                interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt, carefully loosening the strings on the corset! The length of the strings hanging off of the corset is now at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(corsetuser.id, "object")} back up!`)
+                                // Putting ON a corset!
+                                interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt and then puts a corset on ${getPronouns(corsetuser.id, "object")}, pulling the strings tightly, leaving the length of the strings at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} then ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(corsetuser.id, "object")} back up!`)
                                 assignCorset(corsetuser.id, tightness)
                             }
-                        }
-                        else {
-                            // Putting ON a corset!
-                            interaction.reply(`${interaction.user} unlocks ${corsetuser}'s belt and then puts a corset on ${getPronouns(corsetuser.id, "object")}, pulling the strings tightly, leaving the length of the strings at ${tightness}! ${getPronouns(interaction.user.id, "subject", true)} then ${getPronouns(interaction.user.id, "subject") != "they" ? "locks" : "lock"} ${getPronouns(corsetuser.id, "object")} back up!`)
-                            assignCorset(corsetuser.id, tightness)
                         }
                     }
                 }

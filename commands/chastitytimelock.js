@@ -2,6 +2,8 @@ const { MessageFlags, ComponentType, ButtonStyle } = require("discord.js");
 const { parseTime } = require("../functions/timefunctions.js");
 const { timelockChastity } = require("../functions/timelockfunctions.js");
 const { getChastityKeyholder } = require("../functions/vibefunctions.js");
+const { rollKeyFumbleN, rollKeyFumble } = require("../functions/keyfindingfunctions.js");
+const { optins } = require("../functions/optinfunctions.js");
 
 module.exports = {
   async modalexecute(interaction) {
@@ -58,6 +60,14 @@ module.exports = {
         return;
     }
 
+    if (keyholderAfter == 0 && rollKeyFumble(interaction.user.id, wearer)) {
+      interaction.reply({
+        content: "you are too frustrated to use the unlock action",
+        flags: MessageFlags.Ephemeral,
+      });
+      return;
+    }
+
     if (timeStringSplit.length == 1) {
       const unlockTime = parseTime(timeString);
       interaction.reply(buildConfirmMessage(wearer, keyholder, unlockTime.getTime(), null, access, keyholderAfter));
@@ -82,7 +92,9 @@ module.exports = {
           return;
         }
 
-        if (timelockChastity(interaction.client, wearer, keyholder, Number(unlockTime), Number(access), Number(keyholderAfter))) {
+        const frustrationMultiplier = 1 + rollKeyFumbleN(interaction.user.id, wearer, 20).reduce((a, b) => a + b) / 100;
+
+        if (timelockChastity(interaction.client, wearer, keyholder, Number(unlockTime) * frustrationMultiplier, Number(access), Number(keyholderAfter))) {
           interaction.channel.send(`<@${wearer}>'s chastity belt has been locked with a timelock`);
           interaction.reply({
             content: "Timelock confirmed",
