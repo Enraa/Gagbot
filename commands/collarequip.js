@@ -107,12 +107,12 @@ module.exports = {
                     // Either we're a keyholder or it's a free user collar. 
                     if (actiontotake == "mittens") {
                         if (getCollarPerm(collareduser.id, "mitten")) {
-                            if (getMitten(collareduser)) {
+                            if (getMitten(collareduser.id)) {
                                 interaction.reply({ content: `${collareduser} is already wearing mittens!`, flags: MessageFlags.Ephemeral })
                             }
                             else {
                                 interaction.reply(`${interaction.user} grabs ${collareduser}'s hands, shoving a pair of mittens on, and putting a lock on the straps, sealing away ${getPronouns(collareduser.id, "possessiveDeterminer")} hands!`)
-                                assignMitten(collareduser);
+                                assignMitten(collareduser.id);
                             }
                         }
                         else {
@@ -121,7 +121,7 @@ module.exports = {
                     }
                     else if (actiontotake == "heavy") {
                         if (getCollarPerm(collareduser.id, "heavy")) {
-                            if (getHeavy(collareduser)) {
+                            if (getHeavy(collareduser.id)) {
                                 interaction.reply({ content: `${collareduser} is already in bondage, wearing a ${getHeavy(collareduser.id).type}!`, flags: MessageFlags.Ephemeral })
                             }
                             else {

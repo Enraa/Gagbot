@@ -22,6 +22,15 @@ try {
         fs.writeFileSync(`${process.GagbotSavedFileDirectory}/gaggedusers.txt`, JSON.stringify({}))
     }
     process.gags = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/gaggedusers.txt`))
+    // convert gags that were stored by tag instead of snowflake
+    for (const key in process.gags) {
+        const match = key.match(/\<\@(\d+)\>/);
+        if (match) {
+            const gag = process.gags[key];
+            process.gags[match[1]] = gag;
+            delete process.gags[key];
+        }
+    }
 }
 catch (err) { 
     console.log(err);
@@ -31,6 +40,15 @@ try {
         fs.writeFileSync(`${process.GagbotSavedFileDirectory}/mittenedusers.txt`, JSON.stringify({}))
     }
     process.mitten = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/mittenedusers.txt`))
+    // convert mittens that were stored by tag instead of snowflake
+    for (const key in process.mitten) {
+        const match = key.match(/\<\@(\d+)\>/);
+        if (match) {
+            const gag = process.mitten[key];
+            process.mitten[match[1]] = gag;
+            delete process.mitten[key];
+        }
+    }
 }
 catch (err) { 
     console.log(err);

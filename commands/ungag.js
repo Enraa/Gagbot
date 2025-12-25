@@ -22,7 +22,7 @@ module.exports = {
             }
             if (getHeavy(interaction.user.id)) {
                 if (gaggeduser != interaction.user) {
-                    if (getGag(gaggeduser)) {
+                    if (getGag(gaggeduser.id)) {
                         interaction.reply(`${interaction.user} bumps into ${gaggeduser}, trying to use ${getPronouns(interaction.user.id, "possessiveDeterminer")} useless arms to help ${getPronouns(gaggeduser.id, "object")} out of ${getPronouns(gaggeduser.id, "possessiveDeterminer")} gag!`)
                     }
                     else {
@@ -30,7 +30,7 @@ module.exports = {
                     }
                 }
                 else {
-                    if (getGag(gaggeduser)) {
+                    if (getGag(gaggeduser.id)) {
                         interaction.reply(`${interaction.user} chews on ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag, trying to spit it out because ${getPronouns(interaction.user.id, "subject")} can't use ${getPronouns(interaction.user.id, "possessiveDeterminer")} hands and arms!`)
                     }
                     else {
@@ -39,18 +39,18 @@ module.exports = {
                     }
                 }
             }
-            else if (getGag(gaggeduser)) {
+            else if (getGag(gaggeduser.id)) {
                 if (interaction.user == gaggeduser) {
-                    if (!getMitten(interaction.user)) {
+                    if (!getMitten(interaction.user.id)) {
                         interaction.reply(`${interaction.user} has taken ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag out!`)
-                        deleteGag(gaggeduser)
+                        deleteGag(gaggeduser.id)
                     }
                     else {
                         interaction.reply(`${interaction.user} attempts to take ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag off, but struggles with the straps in ${getPronouns(interaction.user.id, "possessiveDeterminer")} mittens!`)
                     }
                 }
                 else {
-                    deleteGag(gaggeduser)
+                    deleteGag(gaggeduser.id)
                     interaction.reply(`${interaction.user} has freed ${gaggeduser} from ${getPronouns(gaggeduser.id, "possessiveDeterminer")} gag!`)
                 }
             }

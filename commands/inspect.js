@@ -25,14 +25,14 @@ module.exports = {
                 outtext = `## ${inspectuser}'s current restraints:\n-# (${getPronounsSet(inspectuser.id)})\n`
             }
             // Gag status
-            if (getGag(inspectuser)) {
-                outtext = `${outtext}<:Gag:1073495437635506216> Gag: **${convertGagText(getGag(inspectuser))}** set to Intensity **${getGagIntensity(inspectuser)}**\n`
+            if (getGag(inspectuser.id)) {
+                outtext = `${outtext}<:Gag:1073495437635506216> Gag: **${convertGagText(getGag(inspectuser.id))}** set to Intensity **${getGagIntensity(inspectuser.id)}**\n`
             }
             else {
                 outtext = `${outtext}<:Gag:1073495437635506216> Gag: Not currently worn.\n`
             }
             // Mitten status
-            if (getMitten(inspectuser)) {
+            if (getMitten(inspectuser.id)) {
                 outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **WORN**\n`
             }
             else {

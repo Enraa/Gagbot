@@ -28,10 +28,10 @@ module.exports = {
 					interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} nose because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but can't help ${mitteneduser} out of ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens!`)
 				}
 			}
-			else if (getMitten(mitteneduser)) {
+			else if (getMitten(mitteneduser.id)) {
 				if (mitteneduser != interaction.user) {
 					interaction.reply(`${interaction.user} takes off ${mitteneduser}'s mittens so ${getPronouns(mitteneduser.id, "subject")} can take off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} gag!`)
-					deleteMitten(mitteneduser)
+					deleteMitten(mitteneduser.id)
 				}
 				else {
 					interaction.reply(`${interaction.user} tries to pull off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens, but the straps and locks hold them firmly on ${getPronouns(mitteneduser.id, "possessiveDeterminer")} wrists!`)

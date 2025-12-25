@@ -19,11 +19,11 @@ module.exports = {
             if (getHeavy(interaction.user.id)) {
                 interaction.reply(`${interaction.user} nuzzles a pair of mittens, but can't put them on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}.`)
             }
-            else if (getMitten(interaction.user)) {
+            else if (getMitten(interaction.user.id)) {
                 interaction.reply({ content: `You are already wearing mittens!`, flags: MessageFlags.Ephemeral })
             }
             else {
-                assignMitten(interaction.user);
+                assignMitten(interaction.user.id);
                 interaction.reply(`${interaction.user} puts on a pair of mittens with a pair of padlocks. ${getPronouns(interaction.user.id, "subjectWill", true)} be unable to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag!`)
             }
         }

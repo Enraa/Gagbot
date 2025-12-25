@@ -79,7 +79,7 @@ module.exports = {
 			if (getHeavy(interaction.user.id)) {
 				interaction.reply(`${interaction.user} eyes a ${gagname}, but cannot put it on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}!`)
 			}
-			else if (getMitten(interaction.user)) {
+			else if (getMitten(interaction.user.id)) {
 				// We are wearing mittens, we can't hold onto the straps!
 				if (interaction.user.id != gaggeduser.id) {
 					interaction.reply(`${interaction.user} attempts to gag someone, but fumbles at holding the gag in ${getPronouns(interaction.user.id, "possessiveDeterminer")} mittens!`)
@@ -92,11 +92,11 @@ module.exports = {
 				// We have fingers! 
 				if (interaction.user.id == gaggeduser.id) {
 					interaction.reply(`${interaction.user} inserts a ${gagname}${intensitytext} in ${getPronouns(interaction.user.id, "possessiveDeterminer")} own mouth!`)
-					assignGag(gaggeduser, gagtype, gagintensity)
+					assignGag(gaggeduser.id, gagtype, gagintensity)
 				}
 				else {
 					interaction.reply(`${interaction.user} gagged ${gaggeduser}${intensitytext} with a ${gagname}!`)
-					assignGag(gaggeduser, gagtype, gagintensity)
+					assignGag(gaggeduser.id, gagtype, gagintensity)
 				}
 			}
 		}
