@@ -3,6 +3,7 @@ const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getCollar, assignCollar } = require('./../functions/collarfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent, collarPermModal } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 
 module.exports = {
@@ -20,21 +21,38 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
+            let collarkeyholder = interaction.options.getUser('keyholder')
+
+            // Build data tree:
+            let data = {
+                textarray: "texts_collar",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: interaction.options.getUser('keyholder'),
+                    c1: getHeavy(interaction.user.id)?.type // heavy bondage type 
+                }
+            }
+
             if (getHeavy(interaction.user.id)) {
+                data.heavy = true
                 if (getCollar(interaction.user.id)) {
-                    await interaction.reply(`${interaction.user} crinks ${getPronouns(interaction.user.id, "possessiveDeterminer")} neck, trying to adjust ${getPronouns(interaction.user.id, "possessiveDeterminer")} collar, but ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type} makes it impossible to adjust!`)
+                    data.collar = true
+                    await interaction.reply(getText(data))
                     return
                 }
                 else {
-                    await interaction.reply(`${interaction.user} shifts ${getPronouns(interaction.user.id, "possessiveDeterminer")} cheek on a collar, yearning to put it on, but ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type} makes it incredibly difficult to put on!`)
+                    data.nocollar = true
+                    await interaction.reply(getText(data))
                     return
                 }
             }
             if (getCollar(interaction.user.id)) {
-                await interaction.reply({ content: `You already have a collar on!`, flags: MessageFlags.Ephemeral })
+                data.noheavy = true
+                data.alreadycollared = true
+                await interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                 return;
             }
-            let collarkeyholder = interaction.options.getUser('keyholder')
+            
             if (collarkeyholder) {
                 //interaction.deferReply();
                 await interaction.showModal(collarPermModal(interaction, collarkeyholder))
@@ -58,23 +76,42 @@ module.exports = {
 
             console.log(`${choice_mitten}, ${choice_chastity}, ${choice_heavy}`);
             //await interaction.reply("Enraa is testing if a collar was put on successfully! She chose: " + `${choice_mitten}, ${choice_chastity}, ${choice_heavy}`)
+            
+            // Build data tree:
+            let data = {
+                textarray: "texts_collar",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: await interaction.client.users.fetch(collarkeyholder), // To fetch the target user object
+                    c1: getHeavy(interaction.user.id)?.type // heavy bondage type 
+                }
+            }
+            
             if (getHeavy(interaction.user.id)) {
+                data.heavy = true
                 if (getCollar(interaction.user.id)) {
-                    interaction.reply(`${interaction.user} crinks ${getPronouns(interaction.user.id, "possessiveDeterminer")} neck, trying to adjust ${getPronouns(interaction.user.id, "possessiveDeterminer")} collar, but ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type} makes it impossible to adjust!`)
+                    data.collar = true
+                    interaction.reply(getText(data))
                 }
                 else {
-                    interaction.reply(`${interaction.user} shifts ${getPronouns(interaction.user.id, "possessiveDeterminer")} cheek on a collar, yearning to put it on, but ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type} makes it incredibly difficult to put on!`)
+                    data.nocollar = true
+                    interaction.reply(getText(data))
                 }
             }
             else if (getCollar(interaction.user.id)) {
                 // This should never happen, because we find out they have a collar on before the modal. 
-                interaction.reply({ content: `You already have a collar on!`, flags: MessageFlags.Ephemeral })
+                data.noheavy = true
+                data.alreadycollared = true
+                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
             }
             else {
+                data.noheavy = true
                 if (collarkeyholder && (collarkeyholderonly == "t")) {
                     if (collarkeyholder != interaction.user.id) {
+                        // Locking collar and giving someone else the key
                         try {
-                            interaction.reply(`${interaction.user} puts a collar on ${getPronouns(interaction.user.id, "possessiveDeterminer")} neck, clicking a little lock in the lockable buckle and then hands <@${collarkeyholder}> the key!`)
+                            data.key_other = true
+                            interaction.reply(getText(data))
                         }
                         catch (err) { console.log(err) }
                         assignCollar(interaction.user.id, collarkeyholder, { 
@@ -84,8 +121,10 @@ module.exports = {
                         }, true);
                     }
                     else {
+                        // Locking collar and keeping the key
                         try {
-                            interaction.reply(`${interaction.user} puts a collar on ${getPronouns(interaction.user.id, "possessiveDeterminer")} neck, clicking a little lock in the lockable buckle and then hiding the key!`)
+                            data.key_self = true
+                            interaction.reply(getText(data))
                         }
                         catch (err) { console.log(err) }
                         assignCollar(interaction.user.id, collarkeyholder, { 
@@ -97,7 +136,9 @@ module.exports = {
                 }
                 else {
                     try {
-                        interaction.reply(`${interaction.user} puts a collar on ${getPronouns(interaction.user.id, "possessiveDeterminer")} neck, but neglects to lock it!`)
+                        // Not locking collar. 
+                        data.unlocked = true
+                        interaction.reply(getText(data))
                     }
                     catch (err) { console.log(err) }
                     assignCollar(interaction.user.id, interaction.user.id, { 

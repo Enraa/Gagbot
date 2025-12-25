@@ -1,10 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { assignGag, getMitten } = require('./../functions/gagfunctions.js')
+const { getGag, assignGag, getMitten } = require('./../functions/gagfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -76,7 +77,29 @@ module.exports = {
 					intensitytext = " as tightly as possible"
 				}
 			}
+
+			// Build data tree:
+            let data = {
+                textarray: "texts_gag",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: gaggeduser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                    c2: intensitytext // gag tightness 
+                }
+            }
+
 			if (getHeavy(interaction.user.id)) {
+				// in heavy bondage, cant equip
+				data.heavy = true
+				if (interaction.user == gaggeduser) {
+					// gagging self
+					data.self = true
+					if (getGag(interaction.user.id)) {
+						interaction.reply(getData(data))
+					}
+				}
+
 				interaction.reply(`${interaction.user} eyes a ${gagname}, but cannot put it on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}!`)
 			}
 			else if (getMitten(interaction.user.id)) {

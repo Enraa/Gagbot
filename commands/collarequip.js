@@ -5,6 +5,7 @@ const { getChastity, assignChastity } = require('./../functions/vibefunctions.js
 const { assignMitten, getMitten } = require('./../functions/gagfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -95,73 +96,110 @@ module.exports = {
             let collareduser = interaction.options.getUser('user')
             let heavybondagetype = interaction.options.getString('type')
             let keyholderuser = interaction.options.getUser('keyholder') ? interaction.options.getUser('keyholder') : interaction.user
+
+            // Build data tree:
+            let data = {
+                textarray: "texts_collarequip",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: collareduser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type 
+                    c2: getHeavy(collareduser.id)?.type,  // collar wearer's heavy bondage type
+                    c3: convertheavy(heavybondagetype), // New heavy bondage
+                    c4: `<@${getChastity(collareduser.id).keyholder}>`, // collar wearer's chastity keyholder
+                    c5: keyholderuser // new chastity belt keyholder, if any
+                }
+            }
+
             if (getHeavy(interaction.user.id)) {
-                interaction.reply(`${interaction.user} tugs against ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, trying to get ${getPronouns(interaction.user.id, "possessiveDeterminer")} hands on ${collareduser}'s collar, but ${getPronouns(collareduser.id, "subject")} can't reach it!`)
+                data.heavy = true
+                interaction.reply(getText(data));
             }
             else if (collareduser == interaction.user) {
                 // Don't be cheeky. 
-                interaction.reply({ content: `You can't do anything with your own collar!\n-# Don't be cheeky.`, flags: MessageFlags.Ephemeral })
+                data.noheavy = true
+                data.tryingself = true
+                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
             }
             else if (getCollar(collareduser.id)) {
+                data.noheavy = true
+                data.collar = true
                 if ((getCollar(collareduser.id).keyholder == interaction.user) || (!getCollar(collareduser.id).keyholder_only)) {
                     // Either we're a keyholder or it's a free user collar. 
+                    data.key = true
                     if (actiontotake == "mittens") {
+                        data.mitten = true
                         if (getCollarPerm(collareduser.id, "mitten")) {
                             if (getMitten(collareduser.id)) {
+                                data.alreadyworn = true
                                 interaction.reply({ content: `${collareduser} is already wearing mittens!`, flags: MessageFlags.Ephemeral })
                             }
                             else {
+                                data.allowed = true
                                 interaction.reply(`${interaction.user} grabs ${collareduser}'s hands, shoving a pair of mittens on, and putting a lock on the straps, sealing away ${getPronouns(collareduser.id, "possessiveDeterminer")} hands!`)
                                 assignMitten(collareduser.id);
                             }
                         }
                         else {
-                            interaction.reply({ content: `${collareduser}'s collar does not allow you to mitten ${getPronouns(collareduser.id, "object")}!`, flags: MessageFlags.Ephemeral })
+                            data.notallowed = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                         }
                     }
                     else if (actiontotake == "heavy") {
+                        data.heavybondage = true
                         if (getCollarPerm(collareduser.id, "heavy")) {
                             if (getHeavy(collareduser.id)) {
+                                data.alreadyworn = true
                                 interaction.reply({ content: `${collareduser} is already in bondage, wearing a ${getHeavy(collareduser.id).type}!`, flags: MessageFlags.Ephemeral })
                             }
                             else {
-                                interaction.reply(`${interaction.user} pulls a ${convertheavy(heavybondagetype)} out and grabs ${collareduser}, forcing ${getPronouns(collareduser.id, "possessiveDeterminer")} arms and hands into the tight restraint! ${getPronouns(collareduser.id, "subject", true)} squirm${(getPronouns(collareduser.id, "subject") != "they") ? "s" : ""} in protest, but ${getPronouns(collareduser.id, "subject")} can't do anything about it!`)
+                                data.allowed = true
+                                interaction.reply(getText(data))
                                 assignHeavy(collareduser.id, heavybondagetype)
                             }
                         }
                         else {
-                            interaction.reply({ content: `${collareduser}'s collar does not allow you to put ${getPronouns(collareduser.id, "object")} in heavy bondage!`, flags: MessageFlags.Ephemeral })
+                            data.notallowed = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                         }
                     }
                     else if (actiontotake == "chastity") {
+                        data.chastity = true
                         if (getCollarPerm(collareduser.id, "chastity")) {
                             if (getChastity(collareduser.id)) {
-                                interaction.reply({ content: `${collareduser} is already in a chastity belt, with keys held by <@${getChastity(collareduser.id).keyholder}>!`, flags: MessageFlags.Ephemeral })
+                                data.alreadyworn = true
+                                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                             }
                             else {
                                 if (keyholderuser == interaction.user) {
-                                    interaction.reply(`${interaction.user} grabs ${collareduser} and wraps a chastity belt around ${getPronouns(collareduser.id, "possessiveDeterminer")} waist and clicking the lock shut before ${getPronouns(collareduser.id, "subject")} can even react!`)
+                                    data.key_self = true
+                                    interaction.reply(getText(data))
                                     assignChastity(collareduser.id, keyholderuser.id)
                                 }
                                 else {
-                                    interaction.reply(`${interaction.user} grabs ${collareduser} and wraps a chastity belt around ${getPronouns(collareduser.id, "possessiveDeterminer")} waist before clicking the lock shut and tossing the key over to ${keyholderuser}! ${getPronouns(collareduser.id, "subject", true)} will no doubt have to earn ${getPronouns(collareduser.id, "possessiveDeterminer")} chastity back!`)
+                                    data.key_other = true
+                                    interaction.reply(getText(data))
                                     assignChastity(collareduser.id, keyholderuser.id)
                                 }
                             }
                         }
                         else {
-                            interaction.reply({ content: `${collareduser}'s collar does not allow you to put ${getPronouns(collareduser.id, "object")} in chastity!`, flags: MessageFlags.Ephemeral })
+                            data.notallowed = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                         }
                     }
                 }
                 else {
+                    data.nokey = true
                     // We don't have permission to play with that collar.
-                    interaction.reply({ content: `You don't have the key to ${collareduser}'s collar!`, flags: MessageFlags.Ephemeral })
+                    interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                 }
             }
             else {
                 // They aren't wearing a collar.
-                interaction.reply({ content: `${collareduser} is not wearing a collar!`, flags: MessageFlags.Ephemeral })
+                data.noheavy = true
+                data.nocollar = true
+                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
             }
         }
         catch (err) {
