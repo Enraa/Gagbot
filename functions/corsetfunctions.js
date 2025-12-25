@@ -1,9 +1,7 @@
 const fs = require("fs");
 
-const MAX_BREATH_TABLE = [2000, 620, 500, 410, 330, 280, 240, 195, 160, 130, 105, 70, 40, 20, 10];
-
-const BREATH_RECOVERY_EXPONENT = 1.1;
-const BREATH_RECOVERY_COEFFICIENT = 0.01;
+const MAX_BREATH_TABLE = [2000, 310, 250, 205, 165, 140, 120, 100, 80, 65, 50, 35, 20, 10, 10, 10];
+const BREATH_RECOVERY_TABLE = [2000, 11.5, 9.5, 8, 6, 5, 4, 3, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.02];
 
 const gaspSounds = ["*hff*", "*hnnf*", "*ahff*", "*hhh*", "*nnn*", "*hnn*"];
 const silenceReplacers = [" ", ".", ",", ""];
@@ -13,7 +11,7 @@ const assignCorset = (user, tightness = 5) => {
   if (process.corset == undefined) process.corset = {};
   const currentBreath = process.corset[user] ? getBreath(user) : null;
   const maxBreath = calcMaxBreath(tightness);
-  const breathRecovery = calcBreathRecovery(maxBreath);
+  const breathRecovery = calcBreathRecovery(tightness);
   process.corset[user] = {
     tightness: tightness,
     maxBreath: maxBreath,
@@ -115,8 +113,9 @@ function calcMaxBreath(tightness) {
   return MAX_BREATH_TABLE[tightness | 0];
 }
 
-function calcBreathRecovery(maxBreath) {
-  return BREATH_RECOVERY_COEFFICIENT * Math.pow(maxBreath, BREATH_RECOVERY_EXPONENT);
+function calcBreathRecovery(tightness) {
+  if ((tightness | 0) >= BREATH_RECOVERY_TABLE.length) return 0;
+  return BREATH_RECOVERY_TABLE[tightness | 0];
 }
 
 // calculates current breath and returns corset. Does not save to file.
