@@ -125,6 +125,9 @@ const splitMessage = (text) => {
 
 const garbleMessage = async (threadId, msg) => {
     try {
+        // fast-track if the message is just emotes and spaces
+        if (msg.content.match(/^((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s|\n)+$/)) return;
+
         let outtext = '';
         let messageparts = splitMessage(msg.content);
         let modifiedmessage = false;
