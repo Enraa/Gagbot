@@ -268,9 +268,35 @@ const texts_gag = {
     },
     noheavy: {
         mitten: {
+            other: {
+                gag: [
+                    `USER_TAG attempts to change TARGET_TAG's gag from the VAR_C4, but fumbles at holding the VAR_C3 in USER_THEIR mittens!`
+                ],
+                nogag: [
+                    `USER_TAG attempts to gag TARGET_TAG, but fumbles at holding the VAR_C3 in USER_THEIR mittens!`
+                ]
+            },
             self: [
-                `USER_TAG attempts to gag TARGET_TAG, but fumbles at holding the gag in USER_THEIR mittens!`
+                `USER_TAG uses both of USER_THEIR mittens to pick up a VAR_C3, but can't secure the straps behind USER_THEIR head anyway.`
             ]
+        },
+        nomitten: {
+            self: {
+                gag: [
+                    `USER_TAG carefully undoes the straps on USER_THEIR VAR_C4, allowing just a moment to let the drool fall out before replacing it with a VAR_C3, pulling the straps on it VAR_C2 before buckling.`
+                ],
+                nogag: [
+                    `USER_TAG picks up a VAR_C3, takes a deep breath, and then pushes it between USER_THEIR teeth and pulling the straps VAR_C2 behind USER_THEIR head.`
+                ]
+            },
+            other: {
+                gag: [
+                    `USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
+                ],
+                nogag: [
+                    `USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY go to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`
+                ]
+            }
         }
     }
 }
