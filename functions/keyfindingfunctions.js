@@ -5,6 +5,7 @@ const { getMitten } = require("./gagfunctions");
 const { optins } = require("./optinfunctions");
 const fs = require("fs");
 const { getUserVar, setUserVar } = require("./usercontext");
+const { getHeavy } = require("./heavyfunctions");
 
 // the minimum time before attempts at using keys can succeed after they fumble
 const MIN_FUMBLE_TIMEOUT = 60000;
@@ -148,7 +149,7 @@ async function sendFindFumbleMessage(message, lockedUser, restraint) {
 }
 
 function calcFindSuccessChance(user) {
-  // currently just make it so mittens might make you fail
+  if (getHeavy(user)) return 0;
   if (getMitten(user)) return 0.5;
   else return 1;
 }
