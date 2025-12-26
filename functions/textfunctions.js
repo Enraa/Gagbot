@@ -341,7 +341,23 @@ const texts_letgo = {
     ]
 }
 
-
+const texts_mitten = {
+    heavy: [
+        `USER_TAG nuzzles a pair of mittens, but can't put them on because of USER_THEIR VAR_C1.`
+    ],
+    // ephemeral
+    mitten: [
+        `You are already wearing mittens!`
+    ],
+    nomitten: {
+        gag: [
+            `USER_TAG puts on a pair of mittens with a pair of padlocks. USER_THEYLL_CAP be unable to remove USER_THEIR gag!`
+        ],
+        nogag: [
+            `USER_TAG puts on a pair of mittens with a pair of padlocks. USER_THEYLL_CAP be unable to remove a gag if someone puts one on USER_THEM!`
+        ]
+    }
+}
 
 
 const textarrays = {
@@ -351,7 +367,9 @@ const textarrays = {
     texts_corset: texts_corset,
     texts_gag: texts_gag,
     texts_heavy: texts_heavy,
-    texts_letgo: texts_letgo
+    texts_letgo: texts_letgo,
+    texts_mitten: texts_mitten,
+
 }
 
 

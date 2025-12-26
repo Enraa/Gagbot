@@ -1,9 +1,10 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { assignMitten, getMitten } = require('./../functions/gagfunctions.js')
+const { getGag, assignMitten, getMitten } = require('./../functions/gagfunctions.js')
 const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,15 +17,40 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
+
+            // Build data tree:
+            let data = {
+                textarray: "texts_mitten",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: interaction.user,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                }
+            }
+
             if (getHeavy(interaction.user.id)) {
-                interaction.reply(`${interaction.user} nuzzles a pair of mittens, but can't put them on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}.`)
+                data.heavy = true
+                interaction.reply(getText(data))
             }
             else if (getMitten(interaction.user.id)) {
-                interaction.reply({ content: `You are already wearing mittens!`, flags: MessageFlags.Ephemeral })
+                data.mitten = true
+                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
             }
             else {
-                assignMitten(interaction.user.id);
-                interaction.reply(`${interaction.user} puts on a pair of mittens with a pair of padlocks. ${getPronouns(interaction.user.id, "subjectWill", true)} be unable to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag!`)
+                // Not mittened
+                data.nomitten = true
+                if (getGag(interaction.user.id)) {
+                    // Wearing a gag already. 
+                    data.gag = true
+                    interaction.reply(getText(data))
+                    assignMitten(interaction.user.id);
+                }
+                else {
+                    // Not wearing a gag
+                    data.nogag = true
+                    interaction.reply(getText(data))
+                    assignMitten(interaction.user.id);
+                }
             }
         }
         catch (err) {

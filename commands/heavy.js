@@ -64,7 +64,7 @@ module.exports = {
                 textarray: "texts_heavy",
                 textdata: {
                     interactionuser: interaction.user,
-                    targetuser: gaggeduser,
+                    targetuser: interaction.user,
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
                     c2: heavychoice // New heavy bondage
                 }
