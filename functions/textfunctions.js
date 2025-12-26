@@ -687,6 +687,34 @@ const texts_unheavy = {
     }
 }
 
+const texts_unmitten = {
+    heavy: {
+        self: [
+            `USER_TAG wriggles USER_THEIR hands in their VAR_C1, but can't get good leverage to take USER_THEIR mittens off!`
+        ],
+        other: [
+            `USER_TAG uses USER_THEIR nose to help TARGET_TAG but can't help TARGET_THEM out of TARGET_THEIR mittens!`
+        ]
+    },
+    noheavy: {
+        other: {
+            gag: [
+                `USER_TAG takes off TARGET_TAG's mittens so TARGET_THEY can take off TARGET_THEIR gag!`
+            ],
+            nogag: [
+                `USER_TAG takes off TARGET_TAG's mittens. Now TARGET_THEY could take off any gag someone wants to put on TARGET_THEM!`
+            ]
+        },
+        self: [
+            `USER_TAG tries to pull off USER_THEIR mittens, but the straps and locks hold them firmly on USER_THEIR wrists!`
+        ]
+    },
+    // Idk why the structure was like this - Ephemeral
+    otherother: [
+        `USER_TAG is not wearing mittens!`
+    ]
+}
+
 const textarrays = {
     texts_chastity: texts_chastity,
     texts_collar: texts_collar,
