@@ -283,7 +283,7 @@ function getArousal(user) {
   const now = Date.now();
   if (arousal.timestamp && arousal.timestamp > now) return arousal.prev;
   let timeStep = 1;
-  if (arousal.timestamp && arousal.prev < RESET_LIMT) {
+  if (arousal.timestamp && arousal.prev > RESET_LIMT) {
     timeStep = (now - arousal.timestamp) / (60 * 1000);
   }
   while (timeStep > 1) {
@@ -319,7 +319,7 @@ function addArousal(user, change) {
     return arousal.prev;
   }
   let timeStep = 1;
-  if (arousal.timestamp && arousal.prev < RESET_LIMT) {
+  if (arousal.timestamp && arousal.prev > RESET_LIMT) {
     timeStep = (now - arousal.timestamp) / (60 * 1000);
   }
   // for large gaps, calculate it in steps
