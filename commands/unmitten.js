@@ -3,6 +3,7 @@ const { getMitten, deleteMitten } = require('./../functions/gagfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

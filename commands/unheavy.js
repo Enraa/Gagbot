@@ -3,6 +3,7 @@ const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy, removeHeavy, convertheavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
