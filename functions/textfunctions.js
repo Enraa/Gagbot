@@ -413,11 +413,11 @@ const texts_unchastity = {
                             `USER_TAG tries to use the key for TARGET_TAG's belt, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
                         ],
                         nodiscard: [
-
+                            `USER_TAG tries to unlock TARGET_TAG's belt, but USER_THEY can't focus enough to guide the key into the keyhole!`
                         ]
                     },
                     nofumble: [
-
+                        `USER_TAG puts the key into TARGET_TAG's belt and turns the lock, letting it fall open and onto the floor. TARGET_THEY_CAP TARGET_ISARE free!`
                     ]
                 },
                 // ephemeral
@@ -433,6 +433,61 @@ const texts_unchastity = {
     }
 }
 
+const texts_uncollar = {
+    heavy: {
+        self: {
+            collar: [
+                `USER_TAG crinks USER_THEIR neck, trying to take off USER_THEIR collar, but without USER_THEIR arms due to USER_THEIR VAR_C1, USER_THEY can't!`
+            ],
+            // Ephemeral
+            nocollar: [
+                `You aren't wearing a collar, but you wouldn't be able to take it off even if you were!`
+            ]
+        },
+        other: {
+            collar: [
+                `USER_TAG wriggles towards TARGET_TAG, trying to take off TARGET_THEIR collar, but USER_THEY needUSER_S arms to unlock and undo the buckle!`
+            ],
+            // Ephemeral
+            nocollar: [
+                `TARGET_TAG is not wearing a collar, but you wouldn't be able to take it off anyway!`
+            ]
+        }
+    },
+    noheavy: {
+        self: {
+            collar: {
+                key: [
+                    `USER_TAG leans forward to let USER_THEIR hair fall forward, then puts a key in the tiny lock and unlocks USER_THEIR collar, undoing the buckle and putting it away!`
+                ],
+                nokey: [
+                    `USER_TAG tugs at USER_THEIR collar, trying to adjust and maybe take it off, but without the key USER_THEY can't really take it off!`
+                ]
+            },
+            nocollar: [
+                
+            ]
+        },
+        other: {
+            collar: {
+                key: [
+                    `USER_TAG leans forward to let USER_THEIR hair fall forward, then puts a key in the tiny lock and unlocks USER_THEIR collar, undoing the buckle and putting it away!`
+                ],
+                nokey: {
+                    nokeyholderonly: [
+                        
+                    ],
+                    keyholderonly: [
+
+                    ]
+                }
+            },
+            nocollar: [
+                
+            ]
+        }
+    }
+}
 
 const textarrays = {
     texts_chastity: texts_chastity,
@@ -443,7 +498,8 @@ const textarrays = {
     texts_heavy: texts_heavy,
     texts_letgo: texts_letgo,
     texts_mitten: texts_mitten,
-    texts_unchastity: texts_unchastity
+    texts_unchastity: texts_unchastity,
+    texts_uncollar: texts_uncollar
 }
 
 
