@@ -464,26 +464,30 @@ const texts_uncollar = {
                     `USER_TAG tugs at USER_THEIR collar, trying to adjust and maybe take it off, but without the key USER_THEY can't really take it off!`
                 ]
             },
+            // Ephemeral
             nocollar: [
-                
+                `You're not wearing a collar!`
             ]
         },
         other: {
             collar: {
                 key: [
-                    `USER_TAG leans forward to let USER_THEIR hair fall forward, then puts a key in the tiny lock and unlocks USER_THEIR collar, undoing the buckle and putting it away!`
+                    `USER_TAG puts a key in TARGET_TAG's collar, unlocking it and undoing the strap around TARGET_THEIR neck.`
                 ],
                 nokey: {
+                    // Ephemeral
                     nokeyholderonly: [
-                        
+                        `TARGET_TAG's collar is unlocked, but it would be impolite to take it off!`
                     ],
+                    // Ephemeral
                     keyholderonly: [
-
+                        `You don't have the key for TARGET_TAG's collar!`
                     ]
                 }
             },
+            // Ephemeral
             nocollar: [
-                
+                `TARGET_TAG is not wearing a collar!`
             ]
         }
     }
