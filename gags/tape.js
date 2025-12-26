@@ -2,6 +2,18 @@
  * Tape Gag
  * Sealing the lips airtight does not leave any way
  *  to really enunciate anything.
+ * 
+ * Intensity
+ * 1
+ * 2
+ * 3
+ * 4
+ * 5
+ * 6
+ * 7 - Only first letter of a word can be capital
+ * 8
+ * 9
+ * 10 - Cannot have ANY capitals, even char 0.
  ***********************************/
 // M - Common
 // P - 
@@ -45,13 +57,31 @@ const garbleText = (text, intensity) => {
     // Go word by word.
     for(let x = 0; x < textParts.length; x++){
         let word = ""
+        let allCaps = (!textParts[x].match(/[a-z]/) && textParts[x].length > 1) ? true : false
 
         for(let itr = 0; itr < textParts[x].length; itr++){
+            let nextChar = "";
             let isUppercase = (textParts[x][itr] != textParts[x][itr].toLowerCase())
             if(tapeCharMap.get(textParts[x][itr].toLowerCase())){
-                word += isUppercase ? tapeCharMap.get(textParts[x][itr].toLowerCase()).toUpperCase() : tapeCharMap.get(textParts[x][itr].toLowerCase())
+                // First letter is capital unless intensity 10. All other letters remain capital if intensity 1-6.
+                nextChar = isUppercase && ((itr == 0 && intensity < 10) || intensity < 7) ? tapeCharMap.get(textParts[x][itr].toLowerCase()).toUpperCase() : tapeCharMap.get(textParts[x][itr].toLowerCase())
+
+                // Trash letters instead
+                if(Math.random() * 10 + 6 < intensity && itr != 0){nextChar = 'm'}
+                word += nextChar
+
+                // Intensity - Add duplicate chars randomly
+                if(Math.random() * 10 > intensity+5){
+                    word += allCaps ? nextChar : nextChar.toLowerCase()
+                }
             }else{
-                word += textParts[x][itr]
+                nextChar = textParts[x][itr]
+                if(nextChar.match(/[0-9]/)){
+                    let randChars = ["m","n","f","p"]
+                    let randInt = Math.floor(Math.random() * randChars.length)
+                    nextChar = randChars[randInt]
+                }
+                word += nextChar
             }
         }
 
@@ -68,30 +98,21 @@ const garbleText = (text, intensity) => {
             if(word[ptr].match(/[a-zA-z]/)){break;}     // Break if we hit alphabetical
         }                                               //  IF we don't hit one, ptr == 0, don't do anything
         //console.log("WORD LEN: " + ptr)
-
+        let endchar = word.match(/[a-z]/) ? "h" : "H"
         switch(ptr){
-            default:
-                // Words should always end in a suitable letter.
-                if(ptr >= 0 && !word[ptr].match(/[fnh]/)){word = word.slice(0,ptr+1) + "h" + word.slice(ptr+1)}
+            default:            // Words should always end in a suitable letter.
+                if(ptr >= 0 && !word[ptr].match(/[fnh]/)){word = word.slice(0,ptr+1) + endchar + word.slice(ptr+1)}
                 break;
             case 1:
-
-                word = word.slice(0,ptr+1) + "h" + word.slice(ptr+1)
+                word = word.slice(0,ptr+1) + endchar + word.slice(ptr+1)
                 break;
             case 0:
-                word = word.slice(0,ptr+1) + "ph" + word.slice(ptr+1)
+                endchar = "ph" //word.match(/[a-z]/) ? "ph" : "PH"
+                word = word.slice(0,ptr+1) + endchar + word.slice(ptr+1)
                 break;
         }
-        // console.log(ptr)
-        // console.log(word)
-
-
-        // if(word[word.length-1] != "h"){
-        //     word += "h"
-        // }
 
         if(x < textParts.length-1){word += " "}     // Trailing space after each word, EXCEPT the last.
-        //console.log(word)
         output += word
     }
 
@@ -111,9 +132,9 @@ exports.choicename = "Tape Gag"
 
 //Test Gag Intensities
 let intensityTestMsg1   = "The quick brown fox jumps over the lazy dog."    // Classic pangram to test all letters.
-let intensityTestMsg2   = "Help me! This crazy woman is trying to turn me into a doll!"
+let intensityTestMsg2   = "HELP ME! This crazy doll is trying to turn me into one too!"
 let intensityTestMsg3   = "This unit is a good doll, and   will wear all possible tape gags for its Adminstrator."
-let intensityTestMsg4   = "Ha! I, in my brattiness, created  test-4, a test. . .  just to anger the Dollminatrix into domming me!!"
+let intensityTestMsg4   = "Ha! I, in my brattiness, created  test-4, a test. . .  just to anger DOLL-0014 into domming me!!"
 
 console.log(`Original:          ${intensityTestMsg1}`)
 console.log(`Intensity 1-2:     ${garbleText(intensityTestMsg1, 1)}`)
