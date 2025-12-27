@@ -14,13 +14,9 @@ const specialCharacterCosts = new Map([
 const assignCorset = (user, tightness = 5) => {
   if (process.corset == undefined) process.corset = {};
   const currentBreath = process.corset[user] ? getBreath(user) : null;
-  const maxBreath = calcMaxBreath(tightness);
-  const breathRecovery = calcBreathRecovery(tightness);
   process.corset[user] = {
     tightness: tightness,
-    maxBreath: maxBreath,
-    breathRecovery: breathRecovery,
-    breath: currentBreath ? (currentBreath > maxBreath ? maxBreath : currentBreath) : maxBreath,
+    breath: currentBreath ? Math.min(currentBreath, MAX_BREATH_TABLE[tightness]) : MAX_BREATH_TABLE[tightness],
     timestamp: Date.now(),
   };
   fs.writeFileSync(`${process.GagbotSavedFileDirectory}/corsetusers.txt`, JSON.stringify(process.corset));
@@ -55,8 +51,6 @@ function corsetLimitWords(user, text) {
   let wordsinmessage = text.split(" ");
   let newwordsinmessage = [];
   for (const i in wordsinmessage) {
-    if (!corset.maxBreath) break;
-
     let word = wordsinmessage[i];
     if (word.length == 0) {
       if (!silence) newwordsinmessage.push(word);
@@ -76,13 +70,17 @@ function corsetLimitWords(user, text) {
 
       if (word.length < 3) corset.breath -= (3 - word.length) * globalMultiplier;
 
-      if (corset.breath < -corset.maxBreath && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
+      if (corset.breath < -MAX_BREATH_TABLE[corset.tightness] && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
 
       // add gasping sounds once at half of max breath
       if (
         !silence &&
-        corset.breath < corset.maxBreath / 2 &&
-        Math.random() < Math.min(corset.tightness / 10, 1 - (Math.max(corset.breath, -corset.maxBreath) + corset.maxBreath) / (corset.tightness * corset.maxBreath * 0.2))
+        corset.breath < MAX_BREATH_TABLE[corset.tightness] / 2 &&
+        Math.random() <
+          Math.min(
+            corset.tightness / 10,
+            1 - (Math.max(corset.breath, -MAX_BREATH_TABLE[corset.tightness]) + MAX_BREATH_TABLE[corset.tightness]) / (corset.tightness * MAX_BREATH_TABLE[corset.tightness] * 0.2)
+          )
       ) {
         newwordsinmessage.push(gaspSounds[Math.floor(Math.random() * gaspSounds.length)]);
       }
@@ -104,25 +102,15 @@ function corsetLimitWords(user, text) {
   return outtext;
 }
 
-function calcMaxBreath(tightness) {
-  if ((tightness | 0) >= MAX_BREATH_TABLE.length) return 0;
-  return MAX_BREATH_TABLE[tightness | 0];
-}
-
-function calcBreathRecovery(tightness) {
-  if ((tightness | 0) >= BREATH_RECOVERY_TABLE.length) return 0;
-  return BREATH_RECOVERY_TABLE[tightness | 0];
-}
-
 // calculates current breath and returns corset. Does not save to file.
 function calcBreath(user) {
   if (process.corset == undefined) process.corset = {};
   const corset = process.corset[user];
   if (!corset) return null;
-  if (corset.breath < -5 * corset.maxBreath) corset.breath = -5 * corset.maxBreath;
+  if (corset.breath < MIN_BREATH_TABLE[corset.tightness]) corset.breath = MIN_BREATH_TABLE[corset.tightness];
   const now = Date.now();
-  const newBreath = corset.breath + corset.breathRecovery * ((now - corset.timestamp) / 1000);
-  if (newBreath > corset.maxBreath) corset.breath = corset.maxBreath;
+  const newBreath = corset.breath + BREATH_RECOVERY_TABLE[corset.tightness] * ((now - corset.timestamp) / 1000);
+  if (newBreath > MAX_BREATH_TABLE[corset.tightness]) corset.breath = MAX_BREATH_TABLE[corset.tightness];
   else corset.breath = newBreath;
   corset.timestamp = now;
   return corset;
