@@ -71,7 +71,7 @@ function corsetLimitWords(user, text) {
 
       if (word.length < 3) corset.breath -= (3 - word.length) * globalMultiplier;
 
-      if (corset.breath < -2 * corset.maxBreath && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
+      if (corset.breath < -1.5 * corset.maxBreath && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
 
       // add gasping sounds once at half of max breath
       if (
@@ -84,22 +84,6 @@ function corsetLimitWords(user, text) {
 
       // SILENCE BOTTOM
       if (!silence && corset.tightness >= 5) word = word.replaceAll("!", "~");
-
-      // remove letters if out of breath
-      if (!silence && corset.breath < 0) {
-        const toRemove = (word.length * -corset.breath) / corset.maxBreath;
-        const removeIdxs = [];
-        for (let i = 0; i < toRemove; i++) {
-          removeIdxs.push(Math.floor(Math.random() * word.length));
-        }
-
-        let newWord = "";
-        for (const idx in word) {
-          if (removeIdxs.includes(Number(idx))) newWord += silenceReplacers[Math.floor(Math.random() * silenceReplacers.length)];
-          else newWord += word[idx];
-        }
-        word = newWord;
-      }
 
       if (!silence) newwordsinmessage.push(word);
     }
