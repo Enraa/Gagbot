@@ -2,7 +2,8 @@ const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits } = require('disc
 const { deleteGag, deleteMitten } = require('./../functions/gagfunctions.js')
 const { removeChastity, removeVibe } = require('./../functions/vibefunctions.js')
 const { removeCollar } = require('./../functions/collarfunctions.js')
-const { removeHeavy } = require('./../functions/heavyfunctions.js')
+const { removeHeavy } = require('./../functions/heavyfunctions.js');
+const { removeCorset } = require('../functions/corsetfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,6 +24,7 @@ module.exports = {
             removeVibe(resetuser.id)
             removeCollar(resetuser.id)
             removeHeavy(resetuser.id)
+            removeCorset(resetuser.id)
         } else {
             if (interaction.member.roles.cache.has("1073505965619564604")) { 
                 // User has the safeword role, we should remove all their restraints because they safeworded
@@ -33,6 +35,7 @@ module.exports = {
                 removeVibe(interaction.user.id)
                 //removeCollar(interaction.user.id)
                 removeHeavy(interaction.user.id)
+                removeCorset(resetuser.id)
             }
             else {
                 // User does not have the permission, send an error message, but only if they don't have the safeworded role. If they do, then 

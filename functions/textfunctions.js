@@ -567,7 +567,7 @@ const texts_uncorset = {
                     ]
                 },
                 nochastity: [
-                    `USER_TAG carefully undoes the laces and USER_THEIR corset, unwrapping it from USER_THEIR waist. USER_THEY_CAP breathe a *huge* breath of relief!`
+                    `USER_TAG carefully undoes the laces and USER_THEIR corset, unwrapping it from USER_THEIR waist. USER_THEY_CAP breatheUSER_S a *huge* breath of relief!`
                 ]
             },
             // Ephemeral

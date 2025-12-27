@@ -82,7 +82,10 @@ module.exports = {
             }
             // Corset status
             if (getCorset(inspectuser.id)) {
-                if (getCorset(inspectuser.id).tightness > 7) {
+                if (getCorset(inspectuser.id).tightness > 10) {
+                    outtext = `${outtext}<:corset:1451126998192881684> Corset: **Laced beyond reason to a string length of ${getCorset(inspectuser.id).tightness}**\n`
+                }
+                else if (getCorset(inspectuser.id).tightness > 7) {
                     outtext = `${outtext}<:corset:1451126998192881684> Corset: **Laced tightly to a string length of ${getCorset(inspectuser.id).tightness}**\n`
                 }
                 else if (getCorset(inspectuser.id).tightness > 4) {

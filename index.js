@@ -6,7 +6,8 @@ const https = require('https');
 const { assignMitten, garbleMessage } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
-const { loadHeavyTypes } = require('./functions/heavyfunctions.js')
+const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
+const { assignCorset } = require('./functions/corsetfunctions.js');
 const { assignMemeImages } = require('./functions/interactivefunctions.js')
 
 dotenv.config()
@@ -43,6 +44,15 @@ processdatatoload.forEach((s) => {
         console.log(err)
     }
 })
+
+try {
+    // add breath values for old corsets, this only needs to run once
+    for (const user in process.corset) {
+        if (!process.corset[user].breath) assignCorset(user, process.corset[user]?.tightness);
+    }
+} catch (err) { 
+    console.log(err);
+}
 
 // Fixing code because I'm a terrible coder
 Object.keys(process.mitten).forEach((m) => {

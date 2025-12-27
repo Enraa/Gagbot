@@ -231,6 +231,7 @@ module.exports = {
             }
             else {
                 // Target is NOT in a chastity belt!
+                data.noheavy = true
                 data.nochastity = true
                 if (corsetuser == interaction.user) {
                     // User tries to add a corset to themselves
