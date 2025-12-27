@@ -21,8 +21,7 @@ export function getChastityKeyholder(user: Snowflake): Snowflake | null;
 // transfer keys and returns whether the transfer was successful
 export function transferChastityKey(lockedUser: Snowflake, newKeyholder: Snowflake): boolean;
 export function discardChastityKey(user: Snowflake): void;
-export function findChastityKey(user: Snowflake, newKeyholder: Snowflake): void;
-export function getFindableChastityKeys(user: Snowflake): [Snowflake, number][];
+export function findChastityKey(index: number, newKeyholder: Snowflake): void;
 
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
 export function stutterText(text: string, intensity: number): string;

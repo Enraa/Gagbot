@@ -1,4 +1,4 @@
-export type OptinTypes = "KeyGiving" | "EnableVibes" | "DynamicArousal" | "KeyFumbling" | "OthersKeyFumbling" | "FumbleOthersKeys" | "BlessedLuck" | "KeyDiscarding" | "AnyFinders";
+export type OptinTypes = "KeyGiving" | "EnableVibes" | "DynamicArousal" | "KeyFumbling" | "OthersKeyFumbling" | "FumbleOthersKeys" | "BlessedLuck" | "KeyDiscarding";
 export type OptinMap = { [Optin in OptinTypes]: [number, string, string] };
 export type Optins = {
   [Optin in OptinTypes as `set${Optin}`]: (user: number) => undefined;

@@ -149,43 +149,30 @@ const transferChastityKey = (lockedUser, newKeyholder) => {
 
 const discardChastityKey = (user) => {
     if (process.chastity == undefined) { process.chastity = {} }
+    if (process.discardedKeys == undefined) { process.discardedKeys = [] }
     if (process.chastity[user]) {
-        process.chastity[user].keyFindChance = 0.01;
-        process.chastity[user].oldKeyholder = process.chastity[user].keyholder;
         process.chastity[user].keyholder = "discarded";
+        process.discardedKeys.push({
+          restraint: "chastity belt",
+          wearer: user
+        })
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
 }
 
-const findChastityKey = (user, newKeyholder) => {
+const findChastityKey = (index, newKeyholder) => {
     if (process.chastity == undefined) { process.chastity = {} }
-    if (process.chastity[user]) {
-        process.chastity[user].keyholder = newKeyholder;
-        process.chastity[user].keyFindChance = null;
-        process.chastity[user].oldKeyholder = null;
+    if (process.discardedKeys == undefined) { process.discardedKeys = [] }
+    const chastity = process.discardedKeys.splice(index, 1);
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
+    if (chastity.length < 1) return false;
+    if (process.chastity[chastity[0].wearer]) {
+      process.chastity[chastity[0].wearer].keyholder = newKeyholder;
+      fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
+      return true;
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
-}
-
-const getFindableChastityKeys = (user) => {
-    if (process.chastity == undefined) { process.chastity = {} }
-    const findable = [];
-    for (const lockedUser in process.chastity) {
-        const data = process.chastity[lockedUser];
-
-        if ((data.keyFindChance ?? 0) > 0) {
-            if (user == lockedUser || user == data.oldKeyholder) {
-                findable.push([lockedUser, data.keyFindChance]);
-            }
-
-            // reduce chance to find keys for others
-            if (optins.getAnyFinders(lockedUser)) {
-                findable.push([lockedUser, data.keyFindChance / 10]);
-            }
-        }
-    }
-
-    return findable;
+    return false;
 }
 
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
@@ -449,6 +436,5 @@ exports.getChastityKeyholder = getChastityKeyholder;
 exports.transferChastityKey = transferChastityKey
 exports.discardChastityKey = discardChastityKey;
 exports.findChastityKey = findChastityKey;
-exports.getFindableChastityKeys = getFindableChastityKeys;
 
 console.log(getChastityKeys("125093095405518850"))

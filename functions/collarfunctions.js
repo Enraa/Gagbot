@@ -63,43 +63,30 @@ const transferCollarKey = (lockedUser, newKeyholder) => {
 
 const discardCollarKey = (user) => {
     if (process.collar == undefined) { process.collar = {} }
+    if (process.discardedKeys == undefined) { process.discardedKeys = [] }
     if (process.collar[user]) {
-        process.collar[user].keyFindChance = 0.01;
-        process.collar[user].oldKeyholder = process.collar[user].keyholder;
         process.collar[user].keyholder = "discarded";
+        process.discardedKeys.push({
+          restraint: "collar",
+          wearer: user
+        })
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
 }
 
-const findCollarKey = (user, newKeyholder) => {
+const findCollarKey = (index, newKeyholder) => {
     if (process.collar == undefined) { process.collar = {} }
-    if (process.collar[user]) {
-        process.collar[user].keyholder = newKeyholder;
-        process.collar[user].keyFindChance = null;
-        process.collar[user].oldKeyholder = null;
+    if (process.discardedKeys == undefined) { process.discardedKeys = [] }
+    const collar = process.discardedKeys.splice(index, 1);
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/discardedkeys.txt`, JSON.stringify(process.discardedKeys));
+    if (collar.length < 1) return false;
+    if (process.collar[collar[0].wearer]) {
+      process.collar[collar[0].wearer].keyholder = newKeyholder;
+      fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
+      return true;
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
-}
-
-const getFindableCollarKeys = (user) => {
-    if (process.collar == undefined) { process.collar = {} }
-    const findable = [];
-    for (const lockedUser in process.collar) {
-        const data = process.collar[lockedUser];
-
-        if ((data.keyFindChance ?? 0) > 0) {
-            if (user == lockedUser || user == data.oldKeyholder) {
-                findable.push([lockedUser, data.keyFindChance]);
-            }
-
-            // reduce chance to find keys for others
-            if (optins.getAnyFinders(lockedUser)) {
-                findable.push([lockedUser, data.keyFindChance / 10]);
-            }
-        }
-    }
-
-    return findable;
+    return false;
 }
 
 exports.assignCollar = assignCollar
@@ -111,4 +98,3 @@ exports.transferCollarKey = transferCollarKey
 exports.getCollarPerm = getCollarPerm
 exports.discardCollarKey = discardCollarKey;
 exports.findCollarKey = findCollarKey;
-exports.getFindableCollarKeys = getFindableCollarKeys;

@@ -9,7 +9,6 @@ const optins = new Map([
   ["FumbleOthersKeys", [5, "Fumble Others Keys", "Allows you to fumble with others keys"]],
   ["BlessedLuck", [6, "Blessed Luck", "Makes it so failed rolls make future rolls more lucky"]],
   ["KeyDiscarding", [7, "Key Discarding", "Allows keys for your restraints to be discarded or lost"]],
-  ["AnyFinders", [8, "Any Finders", "Allows discarded or lost keys for your restraints to be found by anyone"]],
 ]);
 
 function setOptin(user, offset) {

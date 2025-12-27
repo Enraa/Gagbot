@@ -23,12 +23,12 @@ let processdatatoload = [
     { textname: "collarusers.txt", processvar: "collar" },
     { textname: "heavyusers.txt", processvar: "heavy" },
     { textname: "pronounsusers.txt", processvar: "pronouns" },
-    { textname: "usersdata.txt", processvar: "usersdata" },
+    { textname: "usersdata.txt", processvar: "usercontext" },
     { textname: "consentusers.txt", processvar: "consented" },
     { textname: "optinusers.txt", processvar: "optins" },
     { textname: "corsetusers.txt", processvar: "corset" },
     { textname: "arousal.txt", processvar: "arousal" },
-    { textname: "keyfumbling.txt", processvar: "keyfumbling" },
+    { textname: "discardedkeys.txt", processvar: "discardedKeys" },
 ]
 
 processdatatoload.forEach((s) => {
@@ -43,6 +43,19 @@ processdatatoload.forEach((s) => {
         console.log(err)
     }
 })
+  
+try {
+    // return lost keys since keyfinding changed
+    for (const key in process.chastity) {
+        if (process.chastity[key].oldKeyholder) process.chastity[key].keyholder = process.chastity[key].oldKeyholder;
+    }
+    for (const key in process.collar) {
+        if (process.collar[key].oldKeyholder) process.collar[key].keyholder = process.collar[key].oldKeyholder;
+    }
+}
+catch (err) { 
+    console.log(err);
+}
 
 // Fixing code because I'm a terrible coder
 Object.keys(process.mitten).forEach((m) => {

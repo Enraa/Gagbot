@@ -6,7 +6,7 @@ function setUserVar(user, key, value) {
     if (process.usercontext[user] == undefined) { process.usercontext[user] = {} }
     process.usercontext[user][key] = value;
     console.log(process.usercontext);
-    fs.writeFileSync(`./usersdata.txt`, JSON.stringify(process.usercontext));
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/usersdata.txt`, JSON.stringify(process.usercontext));
 }
 
 function getUserVar(user, key) {
