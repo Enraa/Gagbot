@@ -355,12 +355,28 @@ const texts_mitten = {
         `You are already wearing mittens!`
     ],
     nomitten: {
-        gag: [
-            `USER_TAG puts on a pair of mittens with a pair of padlocks. USER_THEYLL_CAP be unable to remove USER_THEIR gag!`
-        ],
-        nogag: [
-            `USER_TAG puts on a pair of mittens with a pair of padlocks. USER_THEYLL_CAP be unable to remove a gag if someone puts one on USER_THEM!`
-        ]
+        namedmitten: {
+            gag: [
+                `USER_TAG puts on a set of VAR_C2. USER_THEYLL_CAP be unable to remove USER_THEIR gag!`,
+                `USER_TAG wriggles their fingers into some VAR_C2. USER_THEIR_CAP gag will be impossible to remove!`,
+                `As if USER_THEY want to stay gagged, USER_TAG renders USER_THEIR hands useless with a pair of VAR_C2!`,
+            ],
+            nogag: [
+                `USER_TAG slips USER_THEIR hands into some VAR_C2! USER_THEYLL_CAP be unable to remove a gag if someone puts one on USER_THEM!`,
+                `USER_TAG wriggles USER_THEIR fingers into some VAR_C2. Gags will be impossible to remove!`,
+                `As if USER_THEY want to be gagged, USER_TAG renders USER_THEIR hands useless with a pair of VAR_C2!`,
+            ]
+        },
+        nonamedmitten: {
+            gag: [
+                `USER_TAG puts on a pair of mittens with a pair of padlocks. USER_THEYLL_CAP be unable to remove USER_THEIR gag!`,
+                `USER_TAG balls up USER_THEIR fist as USER_THEY slip USER_THEIR hands into a pair of bondage mittens and secure them!`
+            ],
+            nogag: [
+                `USER_TAG puts on a pair of mittens with a pair of padlocks. USER_THEYLL_CAP be unable to remove a gag if someone puts one on USER_THEM!`,
+                `USER_TAG balls up USER_THEIR fist as USER_THEY slip USER_THEIR hands into a pair of bondage mittens and secure them!`
+            ]
+        }
     }
 }
 

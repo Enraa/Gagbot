@@ -3,7 +3,7 @@ const dotenv = require('dotenv')
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { garbleMessage } = require(`./functions/gagfunctions.js`);
+const { assignMitten, garbleMessage } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js')
@@ -41,6 +41,13 @@ processdatatoload.forEach((s) => {
     catch (err) {
         console.log(`Error loading ${s.textname}`)
         console.log(err)
+    }
+})
+
+// Fixing code because I'm a terrible coder
+Object.keys(process.mitten).forEach((m) => {
+    if (process.mitten[m] === true) {
+        assignMitten(m, undefined);
     }
 })
 

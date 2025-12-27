@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
+const { getMittenName, getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
 const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDescription, getArousalChangeDescription } = require('./../functions/vibefunctions.js')
 const { getCollar, getCollarPerm, getCollarKeys } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
@@ -33,7 +33,12 @@ module.exports = {
             }
             // Mitten status
             if (getMitten(inspectuser.id)) {
-                outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **WORN**\n`
+                if (getMittenName(inspectuser.id)) {
+                    outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **${getMittenName(inspectuser.id)}**\n`
+                }
+                else {
+                    outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **WORN**\n`
+                }
             }
             else {
                 outtext = `${outtext}<:mittens:1452425463757803783> Mittens: Not currently worn.\n`
