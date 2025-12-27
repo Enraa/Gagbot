@@ -5,7 +5,7 @@ const { heavytypes } = require("./../functions/heavyfunctions.js");
 const PAGE_SIZE = 10;
 
 const restraints = [
-  ["Heavy", heavytypes.map((heavy) => ({ name: heavy.name, value: "-# No description", inline: false }))],
+  ["Heavy", heavytypes.map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
   ["Mittens", mittentypes.map((heavy) => ({ name: heavy.name, value: "-# No description", inline: false }))],
 ];
 
