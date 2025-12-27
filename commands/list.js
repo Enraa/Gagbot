@@ -5,8 +5,8 @@ const { heavytypes } = require("./../functions/heavyfunctions.js");
 const PAGE_SIZE = 10;
 
 const restraints = [
-  ["Heavy", heavytypes.map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
-  ["Mittens", mittentypes.map((heavy) => ({ name: heavy.name, value: "-# No description", inline: false }))],
+  ["Heavy", heavytypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
+  ["Mittens", mittentypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# No description", inline: false }))],
 ];
 
 const restraintOptions = restraints.map(([name, _], idx) => ({ label: name, value: idx }));
@@ -22,9 +22,14 @@ module.exports = {
         .addChoices(restraints.map(([name, _], idx) => ({ name: name, value: String(idx) })))
     ),
   async execute(interaction) {
-    const type = interaction.options.getString("type") ?? 0;
+    try {
+      const type = interaction.options.getString("type") ?? 0;
 
-    interaction.reply(buildMessage(Number(type), 0, false));
+      interaction.reply(buildMessage(Number(type), 0, false));
+    }
+    catch (err) {
+      console.log(err)
+    }
   },
   componentHandlers: [
     {
