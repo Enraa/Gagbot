@@ -3,6 +3,7 @@ const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -58,11 +59,24 @@ module.exports = {
                 return;
             }
             let heavychoice = interaction.options.getString('type') ? interaction.options.getString('type') : "armbinder_latex"
+            // Build data tree:
+            let data = {
+                textarray: "texts_heavy",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: interaction.user,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                    c2: convertheavy(heavychoice) // New heavy bondage
+                }
+            }
+            
             if (getHeavy(interaction.user.id)) {
-                interaction.reply(`${interaction.user} writhes in ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, trying to change ${getPronouns(interaction.user.id, "possessiveDeterminer")} bondage, but may need some help!`)
+                data.heavy = true
+                interaction.reply(getText(data))
             }
             else {
-                interaction.reply(`${interaction.user} slips into a ${convertheavy(heavychoice)}, rendering ${getPronouns(interaction.user.id, "possessiveDeterminer")} arms and hands completely useless!`)
+                data.noheavy = true
+                interaction.reply(getText(data))
                 assignHeavy(interaction.user.id, heavychoice)
             }
         }

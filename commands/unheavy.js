@@ -3,6 +3,7 @@ const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy, removeHeavy, convertheavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,25 +21,45 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
+            let data = {
+                textarray: "texts_unheavy",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: heavyuser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                    c2: getHeavy(heavyuser.id)?.type // Target's heavy bondage
+                }
+            }
+
             if (getHeavy(interaction.user.id)) {
+                // user IS in heavy bondage
+                data.heavy = true
                 if (interaction.user == heavyuser) {
-                    interaction.reply(`${interaction.user} wiggles in ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but obviously ${getPronouns(interaction.user.id, "subjectIs")} *very* helpless and can't get far with taking it off on ${getPronouns(interaction.user.id, "possessiveDeterminer")} own!`)
+                    data.self = true;
+                    interaction.reply(getText(data))
                 }
                 else {
-                    interaction.reply(`${interaction.user} wiggles in ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, wanting to help ${heavyuser} out, but can't with ${getPronouns(interaction.user.id, "possessiveDeterminer")} useless arms and hands!`)
+                    data.other = true;
+                    interaction.reply(getText(data))
                 }
             }
             else {
+                // Not in heavy bondage
+                data.noheavy = true
                 if (getHeavy(heavyuser.id)) {
-                    interaction.reply(`${interaction.user} helps ${heavyuser} out of ${getPronouns(heavyuser.id, "possessiveDeterminer")} ${getHeavy(heavyuser.id).type}! ${getPronouns(heavyuser.id, "subject", true)} stretch${getPronouns(heavyuser.id, "subject") != "they" ? "es" : ""} ${getPronouns(heavyuser.id, "possessiveDeterminer")} arms and sigh${getPronouns(heavyuser.id, "subject") != "they" ? "s" : ""} with gratitude!`)
+                    data.heavyequipped = true
+                    interaction.reply(getText(data))
                     removeHeavy(heavyuser.id)
                 }
                 else {
+                    data.noheavyequipped = true
                     if (heavyuser == interaction.user) {
-                        interaction.reply({ content: `You aren't in any kind of heavy bondage!`, flags: MessageFlags.Ephemeral })
+                        data.self = true
+                        interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                     }
                     else {
-                        interaction.reply({ content: `${heavyuser} is not in any kind of heavy bondage!`, flags: MessageFlags.Ephemeral })
+                        data.other = true
+                        interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                     }
                 }
             }

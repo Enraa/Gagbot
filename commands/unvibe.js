@@ -7,6 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { rollKeyFumbleN } = require('../functions/keyfindingfunctions.js');
 const { optins } = require('../functions/optinfunctions.js');
+const { getText } = require("./../functions/textfunctions.js");
 
 const vibetypes = [];
 const commandsPath = path.join(__dirname, '..', 'vibes');
@@ -40,147 +41,302 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
-            if (getHeavy(interaction.user.id)) {
-                if (vibeuser == interaction.user) {
-                    if (getChastity(vibeuser.id)) {
-                        interaction.reply(`${interaction.user} tries to knock ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${vibetype ? vibetype : "vibrators"} off with ${getPronouns(interaction.user.id, "possessiveDeterminer")} thighs, but ${getPronouns(interaction.user.id, "subject")} can't because ${getPronouns(interaction.user.id, "possessiveDeterminer")} arms are useless from ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}. Well, and ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt of course!`)
-                    }
-                    else {
-                        interaction.reply(`${interaction.user}'s ${getHeavy(interaction.user.id).type} prevents ${getPronouns(interaction.user.id, "object")} from dexterously reaching the ${vibetype ? vibetype : "vibrators"} placed on ${getPronouns(interaction.user.id, "reflexive")}!`)
-                    }
-                }
-                else {
-                    if (getChastity(vibeuser.id)) {
-                        interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} nose to try to shift the ${vibetype ? vibetype : "vibrators"} off of ${vibeuser} because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but is immediately stopped by the metal shield protecting it!`)
-                    }
-                    else {
-                        interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} nose to try to shift the ${vibetype ? vibetype : "vibrators"} off of ${vibeuser} because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}. The move failed!`)
-                    }
+            let data = {
+                textarray: "texts_unvibe",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: vibeuser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                    c2: (vibetype ? vibetype : "vibrator") // the chosen vibe type
                 }
             }
-            else if (getChastity(vibeuser.id)) {
-                // The target is in a chastity belt
-                if ((getChastity(vibeuser.id)?.keyholder == interaction.user.id || (getChastity(vibeuser.id)?.access === 0 && vibeuser.id != interaction.user.id))) {
-                    // User tries to modify the vibe settings for someone in chastity that they do have the key for
-                    const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
-                    if (fumbleResults[0]) {
-                        // User fumbles with the key due to their arousal and frustration
-                        if (optins.getKeyDiscarding(vibeuser.id) && fumbleResults[1]) {
-                            // if they fumble again they can lose the key
-                            if (vibeuser == interaction.user) {
-                                // User tries to modify their own vibe settings while in chastity
-                                if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                                    // User already has a vibrator on
-                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${vibetype ? vibetype : "vibrators"} but fumbles with the key so much with the key that they drop it somewhere and gets no release!`)
-                                    discardChastityKey(vibeuser.id);
-                                }
-                                else {
-                                    interaction.reply({ content: `You don't have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
-                                }
-                            }
-                            else {
-                                // User tries to modify another user's vibe settings
-                                if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                                    // User already has a vibrator on
-                                    interaction.reply(`${interaction.user} tries to unlock ${vibeuser}'s belt to remove the ${vibetype ? vibetype : "vibrators"} but fumbles with the key so much with the key that they drop it somewhere so ${vibeuser} gets no release!`)
-                                    discardChastityKey(vibeuser.id);                                
-                                }
-                                else {
-                                    interaction.reply({ content: `${vibeuser} does not have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
-                                }
-                            }
-                        } else {
-                            if (vibeuser == interaction.user) {
-                                // User tries to modify their own vibe settings while in chastity
-                                if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                                    // User already has a vibrator on
-                                    interaction.reply(`${interaction.user} tries to unlock ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt to remove ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${vibetype ? vibetype : "vibrators"} but fumbles with the key and gets no release!`)
-                                }
-                                else {
-                                    interaction.reply({ content: `You don't have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
-                                }
-                            }
-                            else {
-                                // User tries to modify another user's vibe settings
-                                if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                                    // User already has a vibrator on
-                                    interaction.reply(`${interaction.user} tries to unlock ${vibeuser}'s belt to remove the ${vibetype ? vibetype : "vibrators"} but fumbles with the key so ${vibeuser} gets no release!`)
-                                }
-                                else {
-                                    interaction.reply({ content: `${vibeuser} does not have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
-                                }
-                            }
-                        }
-                    } else {
-                        if (vibeuser == interaction.user) {
-                            // User tries to modify their own vibe settings while in chastity
-                            if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                                // User already has a vibrator of the same type on or type is null
-                                interaction.reply(`${interaction.user} unlocks ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, removing ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${vibetype ? vibetype : "vibrators"} and then locks it back up!`)
-                                removeVibe(vibeuser.id, vibetype)
-                            }
-                            else {
-                                //User doesn't have a vibe of the same type or doesn't have any
-                                interaction.reply({ content: `You don't have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
-                            }
+
+            if (getHeavy(interaction.user.id)) {
+                // We are in heavy bondage
+                data.heavy = true
+                if (vibeuser == interaction.user) {
+                    // ourselves
+                    data.self = true
+                    if (getChastity(vibeuser.id)) {
+                        // in chastity
+                        data.chastity = true
+                        if (vibetype) {
+                            // specific single vibe
+                            data.single = true
+                            interaction.reply(getText(data))
                         }
                         else {
-                            // User tries to modify another user's vibe settings
-                            if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                                // User already has a vibrator of the same type on or type is null
-                                interaction.reply(`${interaction.user} unlocks ${vibeuser}'s belt, removing the ${vibetype ? vibetype : "vibrators"} and then locks it back up!`)
-                                removeVibe(vibeuser.id, vibetype)
-                            }
-                            else {
-                                //User doesn't have a vibe of the same type or doesn't have any
-                            interaction.reply({ content: `${vibeuser} does not have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
-                            }
+                            // removing all vibes
+                            data.both = true
+                            interaction.reply(getText(data))
+                        }
+                    }
+                    else {
+                        // not in chastity
+                        data.nochastity = true
+                        if (vibetype) {
+                            // specific single vibe
+                            data.single = true
+                            interaction.reply(getText(data))
+                        }
+                        else {
+                            // removing all vibes
+                            data.both = true
+                            interaction.reply(getText(data))
                         }
                     }
                 }
                 else {
-                    // User tries to modify vibe settings but does not have the key for the belt
-                    if (vibeuser == interaction.user) {
-                        // User tries to modify their own vibe settings while in chastity
-                        if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                            // User already has a vibrator of the same type on or type is null
-                            interaction.reply(`${interaction.user} claws at ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt, desperately trying to take out the teasing ${vibetype ? vibetype : "vibrators"}, but can't!`)
+                    // someone else
+                    data.other = true
+                    if (getChastity(vibeuser.id)) {
+                        // in chastity
+                        data.chastity = true
+                        if (vibetype) {
+                            // specific single vibe
+                            data.single = true
+                            interaction.reply(getText(data))
                         }
                         else {
-                            //User doesn't have a vibe of the same type or doesn't have any
-                            interaction.reply({ content: `You don't have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
+                            // removing all vibes
+                            data.both = true
+                            interaction.reply(getText(data))
                         }
                     }
                     else {
-                        // User tries to modify another user's vibe settings
-                        interaction.reply({ content: `You do not have the key for ${vibeuser}'s chastity belt!`, flags: MessageFlags.Ephemeral })
+                        // not in chastity
+                        data.nochastity = true
+                        if (vibetype) {
+                            // specific single vibe
+                            data.single = true
+                            interaction.reply(getText(data))
+                        }
+                        else {
+                            // removing all vibes
+                            data.both = true
+                            interaction.reply(getText(data))
+                        }
                     }
                 }
             }
             else {
-                // Target is NOT in a chastity belt!
+                // We are in heavy bondage
+                data.noheavy = true
                 if (vibeuser == interaction.user) {
-                    // User tries to modify their own vibe settings
-                    if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                        // User already has a vibrator of the same type on or type is null
-                        interaction.reply(`${interaction.user} takes ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${vibetype ? vibetype : "vibrators"} out!`)
-                        removeVibe(vibeuser.id, vibetype)
+                    // ourselves
+                    data.self = true
+                    if ((getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype)))) {
+                        data.hasvibe = true
+                        if (getChastity(vibeuser.id)) {
+                            // in chastity
+                            data.chastity = true
+                            if ((getChastity(vibeuser.id)?.access == undefined) && getChastity(vibeuser.id).keyholder == interaction.user.id) {
+                                // We have the key to the belt and it is NOT timelocked
+                                data.key = true
+                                const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
+                                if (fumbleResults[0]) {
+                                    // User fumbles with the key due to their arousal and frustration
+                                    data.fumble = true
+                                    if (optins.getKeyDiscarding(vibeuser.id) && fumbleResults[1]) {
+                                        // lost the key
+                                        data.discard = true;
+                                        if (vibetype) {
+                                            // specific single vibe
+                                            data.single = true
+                                            interaction.reply(getText(data))
+                                            discardChastityKey(vibeuser.id)
+                                        }
+                                        else {
+                                            // removing all vibes
+                                            data.both = true
+                                            interaction.reply(getText(data))
+                                            discardChastityKey(vibeuser.id)
+                                        }
+                                    }
+                                    else {
+                                        // fumbled, but didnt lose key
+                                        data.nodiscard = true;
+                                        if (vibetype) {
+                                            // specific single vibe
+                                            data.single = true
+                                            interaction.reply(getText(data))
+                                        }
+                                        else {
+                                            // removing all vibes
+                                            data.both = true
+                                            interaction.reply(getText(data))
+                                        }
+                                    }
+                                }
+                                else {
+                                    // didnot fumble
+                                    data.nofumble = true;
+                                    if (vibetype) {
+                                        // specific single vibe
+                                        data.single = true
+                                        interaction.reply(getText(data))
+                                        removeVibe(vibeuser.id, vibetype)
+                                    }
+                                    else {
+                                        // removing all vibes
+                                        data.both = true
+                                        interaction.reply(getText(data))
+                                        removeVibe(vibeuser.id, vibetype)
+                                    }
+                                }
+                            }
+                            else {
+                                // We do not have the key
+                                data.nokey = true;
+                            }
+                        }
+                        else {
+                            // not in chastity
+                            data.nochastity = true
+                            if (vibetype) {
+                                // specific single vibe
+                                data.single = true
+                                interaction.reply(getText(data))
+                                removeVibe(vibeuser.id, vibetype)
+                            }
+                            else {
+                                // removing all vibes
+                                data.both = true
+                                interaction.reply(getText(data))
+                                removeVibe(vibeuser.id, vibetype)
+                            }
+                        }
                     }
                     else {
-                        //User doesn't have a vibe of the same type or doesn't have any
-                        interaction.reply({ content: `You don't have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
+                        // not wearing this kind of vibe
+                        data.novibe = true
+                        if (vibetype) {
+                            // specific single vibe
+                            data.single = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
+                        else {
+                            // removing all vibes
+                            data.both = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
                     }
                 }
                 else {
-                    // User tries to modify another user's vibe settings
-                    if (getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype))) {
-                        // User already has a vibrator of the same type on or type is null
-                        interaction.reply(`${interaction.user} takes the ${vibetype ? vibetype : "vibrators"} out from ${vibeuser}!`)
-                        removeVibe(vibeuser.id, vibetype)
+                    // them
+                    data.other = true
+                    if ((getVibe(vibeuser.id) && (getVibe(vibeuser.id).some((vibe) => (vibe.vibetype == vibetype)) || (!vibetype)))) {
+                        data.hasvibe = true
+                        if (getChastity(vibeuser.id)) {
+                            // in chastity
+                            data.chastity = true
+                            if ((getChastity(vibeuser.id)?.access !== 2) && (getChastity(vibeuser.id).keyholder == interaction.user.id)) {
+                                // We have the key to the belt
+                                data.key = true
+                                const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
+                                if (fumbleResults[0]) {
+                                    // User fumbles with the key due to their arousal and frustration
+                                    data.fumble = true
+                                    if (optins.getKeyDiscarding(vibeuser.id) && fumbleResults[1]) {
+                                        // lost the key
+                                        data.discard = true;
+                                        if (vibetype) {
+                                            // specific single vibe
+                                            data.single = true
+                                            interaction.reply(getText(data))
+                                            discardChastityKey(vibeuser.id)
+                                        }
+                                        else {
+                                            // removing all vibes
+                                            data.both = true
+                                            interaction.reply(getText(data))
+                                            discardChastityKey(vibeuser.id)
+                                        }
+                                    }
+                                    else {
+                                        // fumbled, but didnt lose key
+                                        data.nodiscard = true;
+                                        if (vibetype) {
+                                            // specific single vibe
+                                            data.single = true
+                                            interaction.reply(getText(data))
+                                        }
+                                        else {
+                                            // removing all vibes
+                                            data.both = true
+                                            interaction.reply(getText(data))
+                                        }
+                                    }
+                                }
+                                else {
+                                    // didnot fumble
+                                    data.nofumble = true;
+                                    if (vibetype) {
+                                        // specific single vibe
+                                        data.single = true
+                                        interaction.reply(getText(data))
+                                        removeVibe(vibeuser.id, vibetype)
+                                    }
+                                    else {
+                                        // removing all vibes
+                                        data.both = true
+                                        interaction.reply(getText(data))
+                                        removeVibe(vibeuser.id, vibetype)
+                                    }
+                                }
+                            }
+                            else if ((getChastity(corsetuser.id)?.access === 0 && corsetuser.id != interaction.user.id)) {
+                                // public access key
+                                data.public = true
+                                if (vibetype) {
+                                    // specific single vibe
+                                    data.single = true
+                                    interaction.reply(getText(data))
+                                    removeVibe(vibeuser.id, vibetype)
+                                }
+                                else {
+                                    // removing all vibes
+                                    data.both = true
+                                    interaction.reply(getText(data))
+                                    removeVibe(vibeuser.id, vibetype)
+                                }
+                            }
+                            else {
+                                // We do not have the key
+                                data.nokey = true;
+                                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                            }
+                        }
+                        else {
+                            // not in chastity
+                            data.nochastity = true
+                            if (vibetype) {
+                                // specific single vibe
+                                data.single = true
+                                interaction.reply(getText(data))
+                                removeVibe(vibeuser.id, vibetype)
+                            }
+                            else {
+                                // removing all vibes
+                                data.both = true
+                                interaction.reply(getText(data))
+                                removeVibe(vibeuser.id, vibetype)
+                            }
+                        }
                     }
                     else {
-                        //User doesn't have a vibe of the same type or doesn't have any
-                        interaction.reply({ content: `${vibeuser} does not have a ${vibetype ? vibetype : "vibrator"} on!`, flags: MessageFlags.Ephemeral })
+                        // not wearing chosen vibrators or any
+                        data.novibe = true
+                        if (vibetype) {
+                            // specific single vibe
+                            data.single = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
+                        else {
+                            // removing all vibes
+                            data.both = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
                     }
                 }
             }

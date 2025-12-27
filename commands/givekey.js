@@ -203,7 +203,7 @@ module.exports = {
           await interaction.channel.send(
             `${interaction.user} gives the keys to ${their(
               interaction.user.id
-            )} ${restraint} to ${newKeyholder}`
+            )} ${restraint} to ${newKeyholder}.`
           );
         } else {
           await confirmation.update({
@@ -216,7 +216,7 @@ module.exports = {
         console.log("Idk what this does")
         if (transferFunction(lockedUser.id, newKeyholder.id)) {
           await interaction.channel.send(
-            `${interaction.user} gives the keys to ${lockedUser}'s ${restraint} to ${newKeyholder}`
+            `${interaction.user} gives the keys to ${lockedUser}'s ${restraint} to ${newKeyholder}.`
           );
         } else {
           await confirmation.update({
@@ -292,7 +292,7 @@ module.exports = {
             process.env.CHANNELID
           );
           channel.send(
-            `<@${oldKeyholder}> gives the keys to ${interaction.user}'s ${restraint} to <@${newKeyholder}>`
+            `<@${oldKeyholder}> gives the keys to ${interaction.user}'s ${restraint} to <@${newKeyholder}>.`
           );
           interaction.reply({
             content: "Transfer successful",

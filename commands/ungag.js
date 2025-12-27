@@ -3,6 +3,7 @@ const { getGag, deleteGag, getMitten } = require('./../functions/gagfunctions.js
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -20,51 +21,121 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
-            if (getHeavy(interaction.user.id)) {
-                if (gaggeduser != interaction.user) {
-                    if (getGag(gaggeduser)) {
-                        interaction.reply(`${interaction.user} bumps into ${gaggeduser}, trying to use ${getPronouns(interaction.user.id, "possessiveDeterminer")} useless arms to help ${getPronouns(gaggeduser.id, "object")} out of ${getPronouns(gaggeduser.id, "possessiveDeterminer")} gag!`)
-                    }
-                    else {
-                        interaction.reply({ content: `${gaggeduser} is not gagged!`, flags: MessageFlags.Ephemeral })
-                    }
-                }
-                else {
-                    if (getGag(gaggeduser)) {
-                        interaction.reply(`${interaction.user} chews on ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag, trying to spit it out because ${getPronouns(interaction.user.id, "subject")} can't use ${getPronouns(interaction.user.id, "possessiveDeterminer")} hands and arms!`)
-                    }
-                    else {
-                        // User is in some form of heavy bondage and cannot put on a chastity belt
-                        interaction.reply({ content: `You're not gagged, but you wouldn't be able to take it off anyway!`, flags: MessageFlags.Ephemeral })
-                    }
+            let data = {
+                textarray: "texts_ungag",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: gaggeduser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
                 }
             }
-            else if (getGag(gaggeduser)) {
-                if (interaction.user == gaggeduser) {
-                    if (!getMitten(interaction.user)) {
-                        interaction.reply(`${interaction.user} has taken ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag out!`)
-                        deleteGag(gaggeduser)
+
+            // Fuck it, I'm just gonna redo the code path because I've been redoing all the removals anyway. 
+            if (getHeavy(interaction.user.id)) {
+                // We are in heavy bondage
+                data.heavy = true
+                if (gaggeduser == interaction.user) {
+                    // Trying to ungag ourselves. 
+                    data.self = true
+                    if (getGag(gaggeduser.id)) {
+                        // We are wearing a gag
+                        data.gag = true
+                        interaction.reply(getText(data))
                     }
                     else {
-                        interaction.reply(`${interaction.user} attempts to take ${getPronouns(interaction.user.id, "possessiveDeterminer")} gag off, but struggles with the straps in ${getPronouns(interaction.user.id, "possessiveDeterminer")} mittens!`)
+                        // Not gagged! Ephemeral
+                        data.nogag = true
+                        interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                     }
                 }
                 else {
-                    deleteGag(gaggeduser)
-                    interaction.reply(`${interaction.user} has freed ${gaggeduser} from ${getPronouns(gaggeduser.id, "possessiveDeterminer")} gag!`)
+                    // We are trying to ungag someone else
+                    data.other = true
+                    if (getGag(gaggeduser.id)) {
+                        // They are wearing a gag
+                        data.gag = true
+                        interaction.reply(getText(data))
+                    }
+                    else {
+                        // Not gagged! Ephemeral
+                        data.nogag = true
+                        interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                    }
                 }
             }
             else {
-                if (interaction.user != gaggeduser) {
-                    interaction.reply({ content: `${gaggeduser} is not gagged!`, flags: MessageFlags.Ephemeral })
+                // Not in heavy bondage
+                data.noheavy = true
+                if (getMitten(interaction.user.id)) {
+                    // We are wearing mittens!
+                    data.mitten = true
+                    if (gaggeduser == interaction.user) {
+                        // Trying to ungag ourselves. 
+                        data.self = true
+                        if (getGag(gaggeduser.id)) {
+                            // We are wearing a gag
+                            data.gag = true
+                            interaction.reply(getText(data))
+                        }
+                        else {
+                            // Not gagged! Ephemeral
+                            data.nogag = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
+                    }
+                    else {
+                        // We are trying to ungag someone else
+                        data.other = true
+                        if (getGag(gaggeduser.id)) {
+                            // They are wearing a gag
+                            data.gag = true
+                            interaction.reply(getText(data))
+                        }
+                        else {
+                            // Not gagged! Ephemeral
+                            data.nogag = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
+                    }
                 }
                 else {
-                    interaction.reply({ content: `You are not gagged!`, flags: MessageFlags.Ephemeral })
+                    // We are NOT wearing mittens!
+                    data.nomitten = true
+                    if (gaggeduser == interaction.user) {
+                        // Trying to ungag ourselves. 
+                        data.self = true
+                        if (getGag(gaggeduser.id)) {
+                            // We are wearing a gag
+                            data.gag = true
+                            interaction.reply(getText(data))
+                            deleteGag(gaggeduser.id)
+                        }
+                        else {
+                            // Not gagged! Ephemeral
+                            data.nogag = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
+                    }
+                    else {
+                        // We are trying to ungag someone else
+                        data.other = true
+                        if (getGag(gaggeduser.id)) {
+                            // They are wearing a gag
+                            data.gag = true
+                            interaction.reply(getText(data))
+                            deleteGag(gaggeduser.id)
+                        }
+                        else {
+                            // Not gagged! Ephemeral
+                            data.nogag = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
+                    }
                 }
             }
         }
         catch (err) {
-            
+            console.log(err)
         }
     }
 }

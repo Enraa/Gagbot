@@ -1,8 +1,9 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getMitten, deleteMitten } = require('./../functions/gagfunctions.js')
+const { getGag, getMitten, deleteMitten } = require('./../functions/gagfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -20,25 +21,48 @@ module.exports = {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
+			let data = {
+                textarray: "texts_unmitten",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: mitteneduser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                }
+            }
 			if (getHeavy(interaction.user.id)) {
+				data.heavy = true
 				if (interaction.options.getUser('user') == interaction.user) {
-					interaction.reply(`${interaction.user} wriggles ${getPronouns(mitteneduser.id, "possessiveDeterminer")} hands in their ${getHeavy(interaction.user.id).type}, but can't get good leverage to take ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens off!`)
+					data.self = true
+					interaction.reply(getText(data))
 				}
 				else {
-					interaction.reply(`${interaction.user} uses ${getPronouns(interaction.user.id, "possessiveDeterminer")} nose because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, but can't help ${mitteneduser} out of ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens!`)
+					data.other = true
+					interaction.reply(getText(data))
 				}
 			}
-			else if (getMitten(mitteneduser)) {
+			else if (getMitten(mitteneduser.id)) {
+				data.noheavy = true
 				if (mitteneduser != interaction.user) {
-					interaction.reply(`${interaction.user} takes off ${mitteneduser}'s mittens so ${getPronouns(mitteneduser.id, "subject")} can take off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} gag!`)
-					deleteMitten(mitteneduser)
+					data.other = true
+					if (getGag(mitteneduser.id)) {
+						data.gag = true
+						interaction.reply(getText(data))
+						deleteMitten(mitteneduser.id)
+					}
+					else {
+						data.nogag = true
+						interaction.reply(getText(data))
+						deleteMitten(mitteneduser.id)
+					}
 				}
 				else {
-					interaction.reply(`${interaction.user} tries to pull off ${getPronouns(mitteneduser.id, "possessiveDeterminer")} mittens, but the straps and locks hold them firmly on ${getPronouns(mitteneduser.id, "possessiveDeterminer")} wrists!`)
+					data.self = true
+					interaction.reply(getText(data))
 				}
 			}
 			else {
-				interaction.reply({ content: `${mitteneduser} is not wearing mittens!`, flags: MessageFlags.Ephemeral })
+				data.otherother = true
+				interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
 			}
 		}
 		catch (err) {

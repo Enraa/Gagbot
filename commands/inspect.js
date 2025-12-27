@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
+const { getMittenName, getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
 const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDescription, getArousalChangeDescription } = require('./../functions/vibefunctions.js')
 const { getCollar, getCollarPerm, getCollarKeys } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
@@ -25,15 +25,20 @@ module.exports = {
                 outtext = `## ${inspectuser}'s current restraints:\n-# (${getPronounsSet(inspectuser.id)})\n`
             }
             // Gag status
-            if (getGag(inspectuser)) {
-                outtext = `${outtext}<:Gag:1073495437635506216> Gag: **${convertGagText(getGag(inspectuser))}** set to Intensity **${getGagIntensity(inspectuser)}**\n`
+            if (getGag(inspectuser.id)) {
+                outtext = `${outtext}<:Gag:1073495437635506216> Gag: **${convertGagText(getGag(inspectuser.id))}** set to Intensity **${getGagIntensity(inspectuser.id)}**\n`
             }
             else {
                 outtext = `${outtext}<:Gag:1073495437635506216> Gag: Not currently worn.\n`
             }
             // Mitten status
-            if (getMitten(inspectuser)) {
-                outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **WORN**\n`
+            if (getMitten(inspectuser.id)) {
+                if (getMittenName(inspectuser.id)) {
+                    outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **${getMittenName(inspectuser.id)}**\n`
+                }
+                else {
+                    outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **WORN**\n`
+                }
             }
             else {
                 outtext = `${outtext}<:mittens:1452425463757803783> Mittens: Not currently worn.\n`
@@ -58,7 +63,10 @@ module.exports = {
                 let timelockedtext = "Timelocked (Open)"
                 if (chastitykeyaccess == 1) { timelockedtext = "Timelocked (Keyed)" }
                 if (chastitykeyaccess == 2) { timelockedtext = "Timelocked (Sealed)" }
-                if (getChastityTimelock(inspectuser.id)) {
+                if (getChastity(inspectuser.id).keyholder == "discarded") {
+                    outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: ${lockemoji} **Keys are Missing!**\n`
+                }
+                else if (getChastityTimelock(inspectuser.id)) {
                     outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: ${lockemoji} **${timelockedtext} until ${getChastityTimelock(inspectuser.id, true)}**\n`
                 }
                 else if (getChastity(inspectuser.id).keyholder == inspectuser.id) {
@@ -99,7 +107,16 @@ module.exports = {
             }
             // Collar status
             if (getCollar(inspectuser.id)) {
-                if (!getCollar(inspectuser.id).keyholder_only) {
+                if (getCollar(inspectuser.id).keyholder == "discarded") {
+                    // Self bound!
+                    if (getCollar(inspectuser.id).keyholder_only) {
+                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **Keys are Missing!**\n`
+                    }
+                    else {
+                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **Keys are Missing! Free Use!**\n`
+                    }
+                }
+                else if (!getCollar(inspectuser.id).keyholder_only) {
                     // Free use!
                     if (getCollar(inspectuser.id).keyholder == inspectuser.id) {
                         outtext = `${outtext}<:collar:1449984183261986939> Collar: **Self-bound and free use!**\n`

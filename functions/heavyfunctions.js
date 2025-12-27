@@ -50,6 +50,10 @@ const heavytypes = [
     { name: "Festive Ribbons", value: "ribbons_festive", denialCoefficient: 1.5 },
     { name: "Ribbons", value: "ribbons", denialCoefficient: 1.5 },
     { name: "Wrapping Paper", value: "wrapping_paper", denialCoefficient: 2 },
+    { name: "Hardlight Cuffs (loose links)", value: "hardlight_looselink", denialCoefficient: 1.5 },
+    { name: "Hardlight Cuffs (hogtie)", value: "hardlight_hogtie", denialCoefficient: 3 },
+    { name: "Hardlight Cuffs (strict)", value: "hardlight_strict", denialCoefficient: 4.5 },
+    { name: "Bed Restraints", value: "bedrestraints", denialCoefficient: 6 },
 ];
 
 

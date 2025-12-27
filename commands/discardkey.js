@@ -5,8 +5,8 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const { getHeavy } = require("../functions/heavyfunctions.js");
-const { discardCollarKey } = require("../functions/collarfunctions.js");
-const { discardChastityKey } = require("../functions/vibefunctions.js");
+const { discardCollarKey, getCollarKeyholder } = require("../functions/collarfunctions.js");
+const { discardChastityKey, getChastityKeyholder } = require("../functions/vibefunctions.js");
 const { their, they } = require("../functions/pronounfunctions.js");
 const { optins } = require("../functions/optinfunctions.js");
 
@@ -55,12 +55,15 @@ module.exports = {
       return;
     }
 
+    let getKeyholderFunction;
     let discardFunction;
     switch (keyType) {
       case "chastity":
+        getKeyholderFunction = getChastityKeyholder;
         discardFunction = discardChastityKey;
         break;
       case "collar":
+        getKeyholderFunction = getCollarKeyholder;
         discardFunction = discardCollarKey;
         break;
       default:

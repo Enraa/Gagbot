@@ -6,6 +6,7 @@ const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js');
 const { optins } = require('../functions/optinfunctions.js');
 const { rollKeyFumbleN } = require('../functions/keyfindingfunctions.js');
+const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -23,80 +24,138 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
-            if (getHeavy(interaction.user.id)) {
-                if (getChastity(interaction.user.id)) {
-                    interaction.reply(`${interaction.user} shifts in ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}, trying to squirm out of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt, but ${getPronouns(interaction.user.id, "possessiveDeterminer")} metal prison holds firmly to ${getPronouns(interaction.user.id, "possessiveDeterminer")} body!`)
-                }
-                else {
-                    // User is in some form of heavy bondage and cannot put on a chastity belt
-                    interaction.reply({ content: `You're not in a chastity belt, but you wouldn't be able to remove it anyway!`, flags: MessageFlags.Ephemeral })
+            // Build data tree:
+            let data = {
+                textarray: "texts_unchastity",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: chastitywearer,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
                 }
             }
-            else if (getChastity(chastitywearer.id)) {
-                // Target is in a belt
-                if (getChastity(chastitywearer.id).keyholder != interaction.user.id) {
-                    // User is NOT the keyholder for the target belt
-                    if (interaction.user == chastitywearer) {
-                        // Wearer is trying to unlock their own belt
-                        interaction.reply(`${interaction.user} runs ${getPronouns(interaction.user.id, "possessiveDeterminer")} fingers uselessly on the metal of ${getPronouns(interaction.user.id, "possessiveDeterminer")} chastity belt, but ${getPronouns(interaction.user.id, "subject")} can't unlock it without the key!`)
+            if (getHeavy(interaction.user.id)) {
+                // In heavy bondage, cannot take off the belt anyway
+                data.heavy = true
+                if (chastitywearer == interaction.user) {
+                    // trying to take off own belt
+                    data.self = true
+                    if (getChastity(interaction.user.id)) {
+                        // in chastity
+                        data.chastity = true
+                        interaction.reply(getText(data))
                     }
                     else {
-                        // Trying to unlock someone else's belt 
-                        interaction.reply({ content: `You don't have the key for ${chastitywearer} belt!`, flags: MessageFlags.Ephemeral })
+                        // User is in some form of heavy bondage and wouldn't be able to remove it anyway
+                        data.nochastity = true
+                        interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                     }
                 }
                 else {
-                    // User fumbles with the key due to their arousal and frustration
-                    const fumbleResults = rollKeyFumbleN(interaction.user.id, chastitywearer.id, 2);
-                    if (fumbleResults[0]) {
-                        // if they fumble again they can lose the key
-                        if (optins.getKeyDiscarding(chastitywearer.id) && fumbleResults[1]) {
-                            // User IS the keyholder for the belt. 
-                            if (interaction.user == chastitywearer) {
-                                // Wearer loses key
-                                interaction.reply(`${interaction.user} tries to put the key in the lock on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt but fumbles so much with the key that they drop it somewhere and will remain in ${getPronouns(interaction.user.id, "possessiveDeterminer")} prison!`)
-                                discardChastityKey(chastitywearer.id);
+                    data.other = true
+                    if (getChastity(interaction.user.id)) {
+                        data.chastity = true
+                        interaction.reply(getText(data))
+                    }
+                    else {
+                        // User is in some form of heavy bondage and cannot put on a chastity belt
+                        data.nochastity = true
+                        interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                    }
+                }
+            }
+            // What the fuck was my logic here
+            // Anyway, rewritten unchastity logic
+            else {
+                // Not in heavy bondage
+                data.noheavy = true
+                if (chastitywearer == interaction.user) {
+                    // This is ourselves
+                    data.self = true
+                    if (getChastity(chastitywearer.id)) {
+                        // We are in chastity
+                        data.chastity = true
+                        if (getChastity(chastitywearer.id).keyholder == interaction.user.id) {
+                            // We have the key to our belt
+                            data.key = true
+                            const fumbleResults = rollKeyFumbleN(interaction.user.id, chastitywearer.id, 2);
+                            if (fumbleResults[0]) {
+                                // We fumbled
+                                data.fumble = true
+                                if (optins.getKeyDiscarding(chastitywearer.id) && fumbleResults[1]) {
+                                    // We lost the key
+                                    data.discard = true
+                                    interaction.reply(getText(data))
+                                    discardChastityKey(chastitywearer.id);
+                                }
+                                else {
+                                    data.nodiscard = true
+                                    interaction.reply(getText(data));
+                                }
                             }
                             else {
-                                // User loses key
-                                interaction.reply(`${interaction.user} tries to unlock ${chastitywearer}'s belt but fumbles so much with the key that they drop it somewhere so ${getPronouns(interaction.user.id, "subject")} will remain in their prison!`)
-                                discardChastityKey(chastitywearer.id);                            
+                                // We didnt lose the keys
+                                data.nofumble = true
+                                interaction.reply(getText(data))
+                                removeChastity(chastitywearer.id)
                             }
-                        } else {
-                            // User IS the keyholder for the belt. 
-                            if (interaction.user == chastitywearer) {
-                                // Wearer fails to unlock themselves
-                                interaction.reply(`${interaction.user} tries to put the key in the lock on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt but fumbles with the key and will remain in ${getPronouns(interaction.user.id, "possessiveDeterminer")} prison!`)
-                            }
-                            else {
-                                // User fails to unlock someone else
-                                interaction.reply(`${interaction.user} tries to unlock ${chastitywearer}'s belt but fumbles with the key so ${getPronouns(interaction.user.id, "subject")} will remain in their prison!`)
-                            }
-                        }
-                    } else {                        
-                        // User IS the keyholder for the belt. 
-                        if (interaction.user == chastitywearer) {
-                            // Wearer unlocks themselves
-                            interaction.reply(`${interaction.user} puts the key in the lock on ${getPronouns(interaction.user.id, "possessiveDeterminer")} belt and unlocks it, letting it fall as ${getPronouns(interaction.user.id, "subjectIs")} freed from ${getPronouns(interaction.user.id, "possessiveDeterminer")} prison!`)
-                            removeChastity(chastitywearer.id)
                         }
                         else {
-                            // User unlocks someone else
-                            interaction.reply(`${interaction.user} unlocks ${chastitywearer}'s belt and unwraps it from ${getPronouns(interaction.user.id, "possessiveDeterminer")} waist!`)
-                            removeChastity(chastitywearer.id)
+                            // We don't have the keys
+                            data.nokey = true
+                            interaction.reply(getText(data))
                         }
+                    }
+                    else {
+                        // We aren't in chastity
+                        data.nochastity = true
+                        interaction.reply(getText(data))
+                    }
+                }
+                else {
+                    // This is someone else
+                    data.other = true
+                    if (getChastity(chastitywearer.id)) {
+                        // They are in chastity
+                        data.chastity = true
+                        if (getChastity(chastitywearer.id).keyholder == interaction.user.id) {
+                            // We have their chastity key
+                            data.key = true
+                            const fumbleResults = rollKeyFumbleN(interaction.user.id, chastitywearer.id, 2);
+                            if (fumbleResults[0]) {
+                                // We fumbled the key
+                                data.fumble = true
+                                if (optins.getKeyDiscarding(chastitywearer.id) && fumbleResults[1]) {
+                                    // We lost the key
+                                    data.discard = true
+                                    interaction.reply(getText(data))
+                                    discardChastityKey(chastitywearer.id);
+                                }
+                                else {
+                                    data.nodiscard = true
+                                    interaction.reply(getText(data))
+                                }
+                            }
+                            else {
+                                // did not fumble!
+                                data.nofumble = true
+                                interaction.reply(getText(data))
+                                removeChastity(chastitywearer.id)
+                            }
+                        }
+                        else {
+                            // We don't have their chastity key
+                            data.nokey = true
+                            interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                        }
+                    }
+                    else {
+                        // They aren't in a chastity belt
+                        data.nochastity = true
+                        interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                     }
                 }
             }
-            else {
-                if (interaction.user == chastitywearer) {
-                    interaction.reply({ content: `You aren't locked in a chastity belt!`, flags: MessageFlags.Ephemeral })
-                }
-                else {
-                    // Target is NOT wearing a belt
-                    interaction.reply({ content: `${chastitywearer} isn't locked in a chastity belt!`, flags: MessageFlags.Ephemeral })
-                }
-            }
+            console.log(data)
         }
         catch (err) {
             console.log(err);

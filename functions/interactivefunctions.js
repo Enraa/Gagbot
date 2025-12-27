@@ -9,14 +9,15 @@ const consentMessage = (interaction, user) => {
     let outtext = `# Consent to being Bound
 <@${process.env.CLIENTID}> is a bot which facilitates restraints in this channel, which have certain effects on you as you wear them, primarily centered around some form of speech impairment. Effects will only apply within this channel. 
 Restraints and toys used include the following:
-- Gags and Vibrators: Impair and modify speech in various ways
+- Gags, Corsets and Vibrators: Impair and modify speech in various ways
 - Mittens and Chastity: Restrict modifying these settings
 - Heavy Bondage: Restrict modifying any setting
 - Collars: Allow others to perform more significant actions on you.
 You can access these commands by typing / to bring up a list of what can be done.
 *Where possible, the bot's design philosophy is **"Consent First,"** meaning that you will have to make an active choice to give up control. Examples of this include mittens, chastity and heavy bondage. Collars can override this, if you wear them. Please use these at your own risk and leverage the **keyholder** and **other controls** presented as necessary.*
 
-<@${user}>, by clicking the button below, you acknowledge the above risks and considerations and users will be able to play with you using the bot.`
+<@${user}>, by clicking the button below, you acknowledge the above risks and considerations and users will be able to play with you using the bot.
+-# Button only works for <@${user.displayName}`
     const confirm = new ButtonBuilder().setCustomId('confirm').setLabel('I Accept').setStyle(ButtonStyle.Success);
     const row = new ActionRowBuilder().addComponents(confirm);
 

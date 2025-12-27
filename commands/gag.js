@@ -1,10 +1,11 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { assignGag, getMitten } = require('./../functions/gagfunctions.js')
+const { getGag, assignGag, getMitten } = require('./../functions/gagfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getText } = require("./../functions/textfunctions.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -53,50 +54,137 @@ module.exports = {
 			}
 			let gagtype = interaction.options.getString('gag') ? interaction.options.getString('gag') : 'ball'
 			let gagintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
-			let gagname = gagtypes.find(g => g.value == gagtype).name;
-			let intensitytext = " loosely"
+			let currentgag = getGag(gaggeduser.id)
+			console.log(currentgag)
+			let gagname = gagtypes.find(g => g.value == gagtype)?.name;
+			let oldgagname = gagtypes.find(g => g.value == currentgag)?.name;
+			let intensitytext = "loosely"
 			try {
 				let gagfile = require(path.join(commandsPath, `${gagtype}.js`))
 				if (gagfile.intensity) {
 					intensitytext = gagfile.intensity(gagintensity)
 				}
+				/* ------------ This idea needs some investigation to ensure gag texts retrieve this properly.
+				if (gagfile.gagnamecustom) {
+					gagname = gagfile.gagnamecustom(gagintensity)
+				} */
 			}
 			catch (err) { console.log(err) }
-			if (intensitytext == " loosely") {
+			if (intensitytext == "loosely") {
 				if (gagintensity > 2) {
-				intensitytext = " moderately loosely"
+				intensitytext = "moderately loosely"
 				}
 				if (gagintensity > 4) {
-					intensitytext = " moderately tightly"
+					intensitytext = "moderately tightly"
 				}
 				if (gagintensity > 7) {
-					intensitytext = " tightly"
+					intensitytext = "tightly"
 				}
 				if (gagintensity > 9) {
-					intensitytext = " as tightly as possible"
+					intensitytext = "as tightly as possible"
 				}
 			}
+
+			// Build data tree:
+            let data = {
+                textarray: "texts_gag",
+                textdata: {
+                    interactionuser: interaction.user,
+                    targetuser: gaggeduser,
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+                    c2: intensitytext, // gag tightness 
+					c3: gagname, // New gag being put on the wearer
+					c4: oldgagname // Old gag the wearer has on
+                }
+            }
+
 			if (getHeavy(interaction.user.id)) {
-				interaction.reply(`${interaction.user} eyes a ${gagname}, but cannot put it on because of ${getPronouns(interaction.user.id, "possessiveDeterminer")} ${getHeavy(interaction.user.id).type}!`)
-			}
-			else if (getMitten(interaction.user)) {
-				// We are wearing mittens, we can't hold onto the straps!
-				if (interaction.user.id != gaggeduser.id) {
-					interaction.reply(`${interaction.user} attempts to gag someone, but fumbles at holding the gag in ${getPronouns(interaction.user.id, "possessiveDeterminer")} mittens!`)
+				// in heavy bondage, cant equip
+				data.heavy = true
+				if (interaction.user == gaggeduser) {
+					// gagging self
+					data.self = true
+					if (getGag(interaction.user.id)) {
+						// has a gag already
+						data.gag = true
+						interaction.reply(getText(data))
+					}
+					else {
+						// No gag already
+						data.nogag = true
+						interaction.reply(getText(data))
+					}
 				}
 				else {
-					interaction.reply(`${interaction.user} attempts to gag ${getPronouns(interaction.user.id, "reflexive")}, but can't get a good grip on the straps with ${getPronouns(interaction.user.id, "possessiveDeterminer")} mittens!`)
+					// gagging another
+					data.other = true
+					if (getGag(gaggeduser.id)) {
+						// has a gag already
+						data.gag = true
+						interaction.reply(getText(data))
+					}
+					else {
+						// No gag already
+						data.nogag = true
+						interaction.reply(getText(data))
+					}
+				}
+			}
+			else if (getMitten(interaction.user.id)) {
+				// We are wearing mittens, we can't hold onto the straps!
+				data.noheavy = true
+				data.mitten = true
+				if (interaction.user.id != gaggeduser.id) {
+					data.other = true // yes, this is backwards, sorry.
+					if (getGag(gaggeduser.id)) {
+						data.gag = true
+						interaction.reply(getText(data))
+					}
+					else {
+						data.nogag = true
+						interaction.reply(getText(data))
+					}
+				}
+				else {
+					data.self = true
+					interaction.reply(getText(data))
 				}
 			}
 			else {
 				// We have fingers! 
+				data.noheavy = true
+				data.nomitten = true
 				if (interaction.user.id == gaggeduser.id) {
-					interaction.reply(`${interaction.user} inserts a ${gagname}${intensitytext} in ${getPronouns(interaction.user.id, "possessiveDeterminer")} own mouth!`)
-					assignGag(gaggeduser, gagtype, gagintensity)
+					// Gagging ourself
+					data.self = true
+					if (getGag(gaggeduser.id)) {
+						// We are already gagged, so we want to change gags
+						data.gag = true
+						interaction.reply(getText(data))
+						assignGag(gaggeduser.id, gagtype, gagintensity)
+					}
+					else {
+						// Not already gagged, lets put one on
+						data.nogag = true
+						interaction.reply(getText(data))
+						assignGag(gaggeduser.id, gagtype, gagintensity)
+					}
 				}
 				else {
-					interaction.reply(`${interaction.user} gagged ${gaggeduser}${intensitytext} with a ${gagname}!`)
-					assignGag(gaggeduser, gagtype, gagintensity)
+					// Gagging others
+					data.other = true
+					if (getGag(gaggeduser.id)) {
+						// They are already gagged, so we want to change gags
+						data.gag = true
+						interaction.reply(getText(data))
+						assignGag(gaggeduser.id, gagtype, gagintensity)
+					}
+					else {
+						// Not already gagged, lets put one on
+						data.nogag = true
+						interaction.reply(getText(data))
+						assignGag(gaggeduser.id, gagtype, gagintensity)
+					}
 				}
 			}
 		}
