@@ -6,6 +6,7 @@ const BREATH_RECOVERY_TABLE = [2000, 11.5, 9.5, 8, 6.5, 5, 4, 3.2, 2.5, 2, 1.5, 
 
 const gaspSounds = ["*hff*", "*hnnf*", "*ahff*", "*hhh*", "*nnn*", "*hnn*", "*hng*", "*uah*", "*uhh*"];
 const silenceReplacers = [" ", ".", ",", ""];
+const silenceMessages = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"];
 const specialCharacterCosts = new Map([
   ["!", 4],
   ["-", 0],
@@ -130,10 +131,15 @@ function tryExpendBreath(user, exertion) {
   return corset.breath > 0;
 }
 
+function silenceMessage() {
+  return silenceMessages[Math.floor(Math.random() * silenceMessages.length)];
+}
+
 exports.assignCorset = assignCorset;
 exports.getCorset = getCorset;
 exports.removeCorset = removeCorset;
 exports.corsetLimitWords = corsetLimitWords;
+exports.silenceMessage = silenceMessage;
 
 exports.getBreath = getBreath;
 exports.tryExpendBreath = tryExpendBreath;

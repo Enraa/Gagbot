@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const https = require('https');
 const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/messagefunctions.js`)
-const { getCorset, corsetLimitWords } = require(`./../functions/corsetfunctions.js`)
+const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`)
 const { stutterText } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
 
@@ -224,7 +224,7 @@ const garbleMessage = async (threadId, msg) => {
                 messageparts.splice(toRemove[i], 1);
             }
             if (hadParts && messageparts.length == 0) {
-                messageSend(threadId, "-# *Panting heavily*", msg.member.displayAvatarURL(), msg.member.displayName).then(() => msg.delete())
+                messageSend(threadId, silenceMessage(), msg.member.displayAvatarURL(), msg.member.displayName).then(() => msg.delete())
                 return;
             }
         }
