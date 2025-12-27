@@ -47,7 +47,7 @@ module.exports = {
                     interactionuser: interaction.user,
                     targetuser: vibeuser,
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-                    c2: vibetype // the chosen vibe type
+                    c2: (vibetype ? vibetype : "vibrator") // the chosen vibe type
                 }
             }
 

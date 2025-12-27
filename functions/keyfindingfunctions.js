@@ -8,9 +8,9 @@ const { getUserVar, setUserVar } = require("./usercontext");
 const { getHeavy } = require("./heavyfunctions");
 
 // the minimum time before attempts at using keys can succeed after they fumble
-const MIN_FUMBLE_TIMEOUT = 60000;
+const MIN_FUMBLE_TIMEOUT = 100; // Removing cooldown, effectively by making it 0.1-0.5s
 // the maximum time before attempts at using keys can succeed after they fumble
-const MAX_FUMBLE_TIMEOUT = 180000;
+const MAX_FUMBLE_TIMEOUT = 500; // Removing cooldown, effectively by making it 0.1-0.5s
 
 // return true if the user fumbles
 function rollKeyFumble(keyholder, locked) {
@@ -135,13 +135,23 @@ async function handleKeyFinding(message) {
 }
 
 async function sendFindMessage(message, lockedUser, restraint) {
-  if (message.author.id == lockedUser) message.channel.send(`${message.author} has found the key to ${their(message.author.id)} ${restraint}!`);
-  else message.channel.send(`${message.author} has found the key to <@${lockedUser}>'s ${restraint}!`);
+  try {
+    if (message.author.id == lockedUser) message.channel.send(`${message.author} has found the key to ${their(message.author.id)} ${restraint}!`);
+    else message.channel.send(`${message.author} has found the key to <@${lockedUser}>'s ${restraint}!`);
+  }
+  catch (err) {
+    console.log(err); // Seriously plz dont crash
+  }
 }
 
 async function sendFindFumbleMessage(message, lockedUser, restraint) {
-  if (message.author.id == lockedUser) message.channel.send(`${message.author} has found the key to ${their(message.author.id)} ${restraint} but fumbles when trying to pick it up!`);
-  else message.channel.send(`${message.author} has found the key to <@${lockedUser}>'s ${restraint} but fumbles when trying to pick it up!`);
+  try {
+    if (message.author.id == lockedUser) message.channel.send(`${message.author} has found the key to ${their(message.author.id)} ${restraint} but fumbles when trying to pick it up!`);
+    else message.channel.send(`${message.author} has found the key to <@${lockedUser}>'s ${restraint} but fumbles when trying to pick it up!`);
+  }
+  catch (err) {
+    console.log(err); // Seriously plz dont crash
+  }
 }
 
 function calcFindSuccessChance(user) {

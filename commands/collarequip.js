@@ -93,8 +93,8 @@ module.exports = {
                 return;
             }
             let actiontotake = interaction.options.getSubcommand();
-            let collareduser = interaction.options.getUser('user')
-            let heavybondagetype = interaction.options.getString('type')
+            let collareduser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user
+            let heavybondagetype = interaction.options.getString('type') ? interaction.options.getString('type') : "armbinder_latex"
             let keyholderuser = interaction.options.getUser('keyholder') ? interaction.options.getUser('keyholder') : interaction.user
 
             // Build data tree:

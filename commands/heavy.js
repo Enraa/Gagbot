@@ -66,7 +66,7 @@ module.exports = {
                     interactionuser: interaction.user,
                     targetuser: interaction.user,
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-                    c2: heavychoice // New heavy bondage
+                    c2: convertheavy(heavychoice) // New heavy bondage
                 }
             }
             

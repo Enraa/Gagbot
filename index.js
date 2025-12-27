@@ -15,153 +15,37 @@ let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAG
 
 process.GagbotSavedFileDirectory = GagbotSavedFileDirectory // Because honestly, I dont know WHY global stuff in index.js can't be accessble everywhere
 
-console.log(fs.readdirSync(process.GagbotSavedFileDirectory))
+let processdatatoload = [
+    { textname: "gaggedusers.txt", processvar: "gags" },
+    { textname: "mittenedusers.txt", processvar: "mitten" },
+    { textname: "chastityusers.txt", processvar: "chastity" },
+    { textname: "vibeusers.txt", processvar: "vibe" },
+    { textname: "collarusers.txt", processvar: "collar" },
+    { textname: "heavyusers.txt", processvar: "heavy" },
+    { textname: "pronounsusers.txt", processvar: "pronouns" },
+    { textname: "usersdata.txt", processvar: "usersdata" },
+    { textname: "consentusers.txt", processvar: "consented" },
+    { textname: "optinusers.txt", processvar: "optins" },
+    { textname: "corsetusers.txt", processvar: "corset" },
+    { textname: "arousal.txt", processvar: "arousal" },
+    { textname: "keyfumbling.txt", processvar: "keyfumbling" },
+]
 
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/gaggedusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/gaggedusers.txt`, JSON.stringify({}))
-    }
-    process.gags = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/gaggedusers.txt`))
-    // convert gags that were stored by tag instead of snowflake
-    for (const key in process.gags) {
-        const match = key.match(/\<\@(\d+)\>/);
-        if (match) {
-            const gag = process.gags[key];
-            process.gags[match[1]] = gag;
-            delete process.gags[key];
+processdatatoload.forEach((s) => {
+    try {
+        if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/${s.textname}`)) {
+            fs.writeFileSync(`${process.GagbotSavedFileDirectory}/${s.textname}`, JSON.stringify({}))
         }
+        process[s.processvar] = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/${s.textname}`))
     }
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/mittenedusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/mittenedusers.txt`, JSON.stringify({}))
+    catch (err) {
+        console.log(`Error loading ${s.textname}`)
+        console.log(err)
     }
-    process.mitten = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/mittenedusers.txt`))
-    // convert mittens that were stored by tag instead of snowflake
-    for (const key in process.mitten) {
-        const match = key.match(/\<\@(\d+)\>/);
-        if (match) {
-            const gag = process.mitten[key];
-            process.mitten[match[1]] = gag;
-            delete process.mitten[key];
-        }
-    }
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify({}))
-    }
-    process.chastity = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`))
-    // handle belts locked before frustration was being tracked, can be removed once this has been ran once
-    for (const key in process.chastity) {
-        if (!process.chastity[key].timestamp) process.chastity[key].timestamp = Date.now();
-        if (!process.chastity[key].extraFrustration) process.chastity[key].extraFrustration = 0;
-    }
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/vibeusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/vibeusers.txt`, JSON.stringify({}))
-    }
-    process.vibe = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/vibeusers.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify({}))
-    }
-    process.collar = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/heavyusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/heavyusers.txt`, JSON.stringify({}))
-    }
-    process.heavy = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/heavyusers.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/pronounsusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/pronounsusers.txt`, JSON.stringify({}))
-    }
-    process.pronouns = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/pronounsusers.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/usersdata.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/usersdata.txt`, JSON.stringify({}))
-    }
-    process.usersdata = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/usersdata.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/optinusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/optinusers.txt`, JSON.stringify({}))
-    }
-    process.optins = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/optinusers.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`, JSON.stringify({}))
-    }
-    // PLEASE GOD READ THIS
-    process.consented = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/consentusers.txt`))
+})
 
-    console.log(process.consented)
-} catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/corsetusers.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/corsetusers.txt`, JSON.stringify({}))
-    }
-    process.corset = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/corsetusers.txt`))
-} catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/arousal.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify({}))
-    }
-    process.arousal = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-try {
-    if (!fs.existsSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`)) {
-        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`, JSON.stringify({}))
-    }
-    process.keyfumbling = JSON.parse(fs.readFileSync(`${process.GagbotSavedFileDirectory}/keyfumbling.txt`))
-}
-catch (err) { 
-    console.log(err);
-}
-
-loadHeavyTypes();       // Load heavy types into memory for fast autocomplete access
-
-loadHeavyTypes();       // Load heavy types into memory for fast autocomplete access
+// Later loaders for autocompletes
+loadHeavyTypes(); 
 assignMemeImages();
 
 // Grab all the command files from the commands directory

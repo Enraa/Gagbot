@@ -58,7 +58,10 @@ module.exports = {
                 let timelockedtext = "Timelocked (Open)"
                 if (chastitykeyaccess == 1) { timelockedtext = "Timelocked (Keyed)" }
                 if (chastitykeyaccess == 2) { timelockedtext = "Timelocked (Sealed)" }
-                if (getChastityTimelock(inspectuser.id)) {
+                if (getChastity(inspectuser.id).keyholder == "discarded") {
+                    outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: ${lockemoji} **Keys are Missing!**\n`
+                }
+                else if (getChastityTimelock(inspectuser.id)) {
                     outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: ${lockemoji} **${timelockedtext} until ${getChastityTimelock(inspectuser.id, true)}**\n`
                 }
                 else if (getChastity(inspectuser.id).keyholder == inspectuser.id) {
@@ -96,7 +99,16 @@ module.exports = {
             }
             // Collar status
             if (getCollar(inspectuser.id)) {
-                if (!getCollar(inspectuser.id).keyholder_only) {
+                if (getCollar(inspectuser.id).keyholder == "discarded") {
+                    // Self bound!
+                    if (getCollar(inspectuser.id).keyholder_only) {
+                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **Keys are Missing!**\n`
+                    }
+                    else {
+                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **Keys are Missing! Free Use!**\n`
+                    }
+                }
+                else if (!getCollar(inspectuser.id).keyholder_only) {
                     // Free use!
                     if (getCollar(inspectuser.id).keyholder == inspectuser.id) {
                         outtext = `${outtext}<:collar:1449984183261986939> Collar: **Self-bound and free use!**\n`
