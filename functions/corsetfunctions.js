@@ -71,7 +71,7 @@ function corsetLimitWords(user, text) {
       corset.breath -= globalMultiplier * capitals;
 
       // Shouting is not fitting for a bottom
-      if (corset.tightness >= 3 && capitals > 1) word = toLowerCase();
+      if (corset.tightness >= 3 && capitals > 1) word = word.toLowerCase();
 
       if (word.length < 3) corset.breath -= (3 - word.length) * globalMultiplier;
 
