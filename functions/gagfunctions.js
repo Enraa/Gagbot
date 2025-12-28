@@ -87,17 +87,10 @@ const getMittenName = (userID, mittenname) => {
     for (let i = 0; i < mittentypes.length; i++) {
         convertmittenarr[mittentypes[i].value] = mittentypes[i].name
     }
-    console.log(convertmittenarr)
     if (mittenname) {
-        console.log("MITTEN NAME")
-        console.log(mittenname)
-        console.log(convertmittenarr[mittenname])
         return convertmittenarr[mittenname];
     }
     else if (process.mitten[userID]?.mittenname) {
-        console.log("USER NAME")
-        console.log(process.mitten[userID])
-        console.log(convertmittenarr[process.mitten[userID].mittenname])
         return convertmittenarr[process.mitten[userID]?.mittenname]
     }
     else {

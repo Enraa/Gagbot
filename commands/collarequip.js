@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes } = require('./../functions/heavyfunctions.js')
 const { getCollar, getCollarPerm } = require('./../functions/collarfunctions.js')
-const { getChastity, assignChastity } = require('./../functions/vibefunctions.js')
+const { getChastity, assignChastity, chastitytypes, getChastityName } = require('./../functions/vibefunctions.js')
 const { getMittenName, assignMitten, getMitten, mittentypes } = require('./../functions/gagfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
@@ -51,6 +51,11 @@ module.exports = {
                     opt.setName('keyholder')
                     .setDescription("Who should be the keyholder?")
                 )
+                .addStringOption(opt =>
+                    opt.setName('type')
+                    .setDescription("What flavor of cruel chastity to wear...")
+                    .setAutocomplete(true)
+                )
         ),
     async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
@@ -84,8 +89,23 @@ module.exports = {
             }
             else {
                 try {
-                    let mittens = process.mittentypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                    let mittens = mittentypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
                     await interaction.respond(mittens)
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+        }
+        else if (subc == "chastity") {
+            if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
+                let chastitytoreturn = chastitytypes.slice(0,10)
+                await interaction.respond(chastitytoreturn)
+            }
+            else {
+                try {
+                    let chastitytoreturn = chastitytypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                    await interaction.respond(chastitytoreturn)
                 }
                 catch (err) {
                     console.log(err);
@@ -124,6 +144,9 @@ module.exports = {
                 else if (actiontotake == "mittens") {
                     bondagetype = "mittens_latex"
                 }
+                else if (actiontotake == "chastity") {
+                    bondagetype = "belt_silver"
+                }
             }
 
             // Build data tree:
@@ -145,6 +168,16 @@ module.exports = {
             }
             else if (actiontotake == "mittens") {
                 data.textdata.c3 = getMittenName(interaction.user.id, bondagetype)
+            }
+            else if (actiontotake == "chastity") {
+                data.textdata.c3 = getChastityName(interaction.user.id, bondagetype)
+            }
+
+            if (data.textdata.c3 == undefined) {
+                // Jesus christ please just DONT BE UNDEFINED
+                // and ACTUALLY CHOOSE SOMETHING
+                data.textdata.c3 = "Latex Armbinder"
+                bondagetype = "armbinder_latex"
             }
 
             console.log(bondagetype)
@@ -228,23 +261,48 @@ module.exports = {
                     else if (actiontotake == "chastity") {
                         data.chastity = true
                         if (getCollarPerm(collareduser.id, "chastity")) {
-                            if (getChastity(collareduser.id)) {
-                                // Cant equip it on them 
-                                data.alreadyworn = true
-                                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
-                            }
-                            else {
-                                // we can equip this on them
-                                data.allowed = true
-                                if (keyholderuser == interaction.user) {
-                                    data.key_self = true
-                                    interaction.reply(getText(data))
-                                    assignChastity(collareduser.id, keyholderuser.id)
+                            if (bondagetypenotchosen == false) {
+                                data.namedchastity = true
+                                if (getChastity(collareduser.id)) {
+                                    // Cant equip it on them 
+                                    data.alreadyworn = true
+                                    interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
                                 }
                                 else {
-                                    data.key_other = true
-                                    interaction.reply(getText(data))
-                                    assignChastity(collareduser.id, keyholderuser.id)
+                                    // we can equip this on them
+                                    data.allowed = true
+                                    if (keyholderuser == interaction.user) {
+                                        data.key_self = true
+                                        interaction.reply(getText(data))
+                                        assignChastity(collareduser.id, keyholderuser.id, bondagetype)
+                                    }
+                                    else {
+                                        data.key_other = true
+                                        interaction.reply(getText(data))
+                                        assignChastity(collareduser.id, keyholderuser.id, bondagetype)
+                                    }
+                                }
+                            }
+                            else {
+                                data.namedchastity = true
+                                if (getChastity(collareduser.id)) {
+                                    // Cant equip it on them 
+                                    data.alreadyworn = true
+                                    interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                                }
+                                else {
+                                    // we can equip this on them
+                                    data.allowed = true
+                                    if (keyholderuser == interaction.user) {
+                                        data.key_self = true
+                                        interaction.reply(getText(data))
+                                        assignChastity(collareduser.id, keyholderuser.id, bondagetype)
+                                    }
+                                    else {
+                                        data.key_other = true
+                                        interaction.reply(getText(data))
+                                        assignChastity(collareduser.id, keyholderuser.id, bondagetype)
+                                    }
                                 }
                             }
                         }

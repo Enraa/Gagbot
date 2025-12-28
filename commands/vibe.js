@@ -379,7 +379,7 @@ module.exports = {
                                     }
                                 }
                             }
-                            else if ((getChastity(corsetuser.id)?.access === 0 && corsetuser.id != interaction.user.id)) {
+                            else if ((getChastity(vibeuser.id)?.access === 0 && vibeuser.id != interaction.user.id)) {
                                 // public access key
                                 data.public = true
                                 if (vibetype) {

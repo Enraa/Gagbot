@@ -19,12 +19,22 @@ const texts_chastity = {
             ]
         },
         nochastity: {
-            key_other: [
-                `USER_TAG slips into a chastity belt, slipping on a tiny lock, and then hands TARGET_TAG the key!`
-            ],
-            key_self: [
-                `USER_TAG puts a chastity belt on and clicks a tiny lock on it before stashing the key for safekeeping!`
-            ]
+            namedchastity: {
+                key_other: [
+                    `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                ],
+                key_self: [
+                    `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                ]
+            },
+            nonamedchastity: {
+                key_other: [
+                    `USER_TAG slips into a chastity belt, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                ],
+                key_self: [
+                    `USER_TAG puts a chastity belt on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                ]
+            },
         }
     }
 }
@@ -100,20 +110,38 @@ const texts_collarequip = {
                     ]
                 },
                 chastity: {
-                    alreadyworn: [
-                        `TARGET_TAG is already in a chastity belt, with keys held by VAR_C4!`
-                    ],
-                    allowed: {
-                        key_self: [
-                            `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist and clicking the lock shut before TARGET_THEY can even react!`
+                    namedchastity: {
+                        alreadyworn: [
+                            `TARGET_TAG is already in a chastity belt, with keys held by VAR_C4!`
                         ],
-                        key_other: [
-                            `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist before clicking the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                        allowed: {
+                            key_self: [
+                                `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR waist and clicking the lock shut before TARGET_THEY can even react!`
+                            ],
+                            key_other: [
+                                `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR waist before clicking the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                            ]
+                        },
+                        notallowed: [
+                            `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
                         ]
                     },
-                    notallowed: [
-                        `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
-                    ]
+                    nonamedchastity: {
+                        alreadyworn: [
+                            `TARGET_TAG is already in a chastity belt, with keys held by VAR_C4!`
+                        ],
+                        allowed: {
+                            key_self: [
+                                `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist and clicking the lock shut before TARGET_THEY can even react!`
+                            ],
+                            key_other: [
+                                `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist before clicking the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                            ]
+                        },
+                        notallowed: [
+                            `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
+                        ]
+                    },
                 } 
             },
             nokey: [

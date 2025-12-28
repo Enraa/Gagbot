@@ -5,6 +5,20 @@ const { arousedtexts, arousedtextshigh } = require('../vibes/aroused/aroused_tex
 const { optins } = require('./optinfunctions');
 const { getHeavy, heavyDenialCoefficient } = require("./heavyfunctions.js");
 
+const chastitytypes = [
+    { name: "Featherlight Belt", value: "belt_featherlight" },
+    { name: "Blacksteel Chastity Belt", value: "belt_blacksteel" },
+    { name: "Silver Chastity Belt", value: "belt_silver" },
+    { name: "Ancient Chastity Belt", value: "belt_ancient" },
+    { name: "Cyber Doll Belt", value: "belt_cyberdoll" },
+    { name: "Tungsten Belt", value: "belt_tungsten" },
+    { name: "Hardlight Belt", value: "belt_hardlight" },
+    { name: "Wolf Panties", value: "belt_wolf" },
+    { name: "Maid Chastity Belt", value: "belt_maid" },
+    { name: "Chastity Belt of Eternal Binding", value: "belt_eternal" },
+    { name: "Queensbelt", value: "belt_queen" },
+]
+
 // the arousal under which it is treated as 0
 const RESET_LIMIT = 0.1;
 // the minimum arousal required for frustration to also impact speach
@@ -31,7 +45,7 @@ const ORGASM_COOLDOWN = 60 * 1000;
 // the frustration increase caused by failed orgasms
 const ORGASM_FRUSTRATION = 5;
 
-const assignChastity = (user, keyholder) => {
+const assignChastity = (user, keyholder, namedchastity) => {
     if (process.chastity == undefined) { process.chastity = {} }
     // catch up with arousal before arousal-affecting restraints change
     getArousal(user);
@@ -39,6 +53,7 @@ const assignChastity = (user, keyholder) => {
         keyholder: keyholder ? keyholder : "unlocked",
         timestamp: Date.now(),
         extraFrustration: 0,
+        chastitytype: namedchastity
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
 }
@@ -109,6 +124,23 @@ const getChastityKeys = (user) => {
         }
     })
     return keysheld
+}
+
+const getChastityName = (userID, chastityname) => {
+    if (process.chastity == undefined) { process.chastity = {} }
+    let convertchastityarr = {}
+    for (let i = 0; i < chastitytypes.length; i++) {
+        convertchastityarr[chastitytypes[i].value] = chastitytypes[i].name
+    }
+    if (chastityname) {
+        return convertchastityarr[chastityname];
+    }
+    else if (process.chastity[userID]?.chastitytype) {
+        return convertchastityarr[process.chastity[userID]?.chastitytype]
+    }
+    else {
+        return undefined;
+    }
 }
 
 // Returns UNIX timestring of the wearer's unlock time. 
@@ -451,4 +483,5 @@ exports.discardChastityKey = discardChastityKey;
 exports.findChastityKey = findChastityKey;
 exports.getFindableChastityKeys = getFindableChastityKeys;
 
-console.log(getChastityKeys("125093095405518850"))
+exports.chastitytypes = chastitytypes;
+exports.getChastityName = getChastityName;

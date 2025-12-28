@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getChastity, assignChastity } = require('./../functions/vibefunctions.js')
+const { getChastity, assignChastity, getChastityName, chastitytypes } = require('./../functions/vibefunctions.js')
 const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
@@ -13,7 +13,28 @@ module.exports = {
 		.addUserOption(opt =>
 			opt.setName('keyholder')
 			.setDescription('Keyholder (leave blank to lock yourself)')
-		),
+		)
+        .addStringOption(opt =>
+            opt.setName('type')
+            .setDescription("What flavor of cruel chastity to wear...")
+            .setAutocomplete(true)
+        ),
+    async autoComplete(interaction) {
+		const focusedValue = interaction.options.getFocused(); 
+        if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
+            let chastitytoreturn = chastitytypes.slice(0,10)
+            await interaction.respond(chastitytoreturn)
+        }
+        else {
+            try {
+                let chastitytoreturn = chastitytypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                await interaction.respond(chastitytoreturn)
+            }
+            catch (err) {
+                console.log(err);
+            }
+        }
+	},
     async execute(interaction) {
         try {
             let chastityuser = interaction.user
@@ -23,14 +44,15 @@ module.exports = {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
-
+            let bondagetype = interaction.options.getString('type')
             // Build data tree:
             let data = {
                 textarray: "texts_chastity",
                 textdata: {
                     interactionuser: interaction.user,
                     targetuser: chastitykeyholder,
-                    c1: getHeavy(interaction.user.id)?.type // heavy bondage type 
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type 
+                    c2: getChastityName(interaction.user.id, bondagetype)
                 }
             }
 
@@ -66,17 +88,37 @@ module.exports = {
                 data.noheavy = true
                 data.nochastity = true
                 if (chastitykeyholder) {
-                    if (interaction.user != chastitykeyholder) {
-                        // Locked it and giving someone else the key
-                        data.key_other = true
-                        interaction.reply(getText(data))
-                        assignChastity(interaction.user.id, chastitykeyholder.id)
+                    if (bondagetype) {
+                        // Named chastity belt
+                        data.namedchastity = true
+                        if (interaction.user != chastitykeyholder) {
+                            // Locked it and giving someone else the key
+                            data.key_other = true
+                            interaction.reply(getText(data))
+                            assignChastity(interaction.user.id, chastitykeyholder.id)
+                        }
+                        else {
+                            // Locked it but holding onto the key
+                            data.key_self = true
+                            interaction.reply(getText(data))
+                            assignChastity(interaction.user.id, chastitykeyholder.id)
+                        }
                     }
                     else {
-                        // Locked it but holding onto the key
-                        data.key_self = true
-                        interaction.reply(getText(data))
-                        assignChastity(interaction.user.id, chastitykeyholder.id)
+                        // Not a named chastity belt
+                        data.nonamedchastity = true
+                        if (interaction.user != chastitykeyholder) {
+                            // Locked it and giving someone else the key
+                            data.key_other = true
+                            interaction.reply(getText(data))
+                            assignChastity(interaction.user.id, chastitykeyholder.id)
+                        }
+                        else {
+                            // Locked it but holding onto the key
+                            data.key_self = true
+                            interaction.reply(getText(data))
+                            assignChastity(interaction.user.id, chastitykeyholder.id)
+                        }
                     }
                 }
                 else {
