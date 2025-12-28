@@ -1,5 +1,7 @@
 const discord = require('discord.js')
 const dotenv = require('dotenv')
+dotenv.config()
+
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -8,9 +10,8 @@ const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
 const { assignCorset } = require('./functions/corsetfunctions.js');
-const { assignMemeImages } = require('./functions/interactivefunctions.js')
-
-dotenv.config()
+const { assignMemeImages } = require('./functions/interactivefunctions.js');
+const { updateArousalValues } = require('./functions/vibefunctions.js');
 
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname
 
@@ -99,6 +100,7 @@ client.on("clientReady", async () => {
     // This is run once we’re logged in!
     console.log(`Logged in as ${client.user.tag}!`)
     restartChastityTimers(client);
+    setInterval(updateArousalValues, Number(process.env.AROUSALSTEPSIZE ?? 6000));
 })
 
 client.on("messageCreate", async (msg) => {

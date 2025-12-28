@@ -73,6 +73,8 @@ export function tryOrgasm(user: Snowflake): boolean;
 
 export function setArousalCooldown(user: Snowflake);
 
+export function updateArousalValues();
+
 /**
  * Returns a value representing the frustration of a user.
  * @param hoursBelted the number of hours since the belt was locked
