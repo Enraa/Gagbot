@@ -21,6 +21,8 @@ const chastitytypes = [
 
 const chastitytypesoptions = chastitytypes.map((chastity) => ({name: chastity.name, value: chastity.value}));
 
+// the arousal under which it is treated as 0
+const RESET_LIMIT = 0.1
 // the minimum arousal required for frustration to also impact speach
 const STUTTER_LIMIT = 1;
 // the arousal needed for an unbelted user to orgasm
@@ -45,9 +47,7 @@ const ORGASM_COOLDOWN = 60 * 1000;
 // the frustration increase caused by failed orgasms
 const ORGASM_FRUSTRATION = 5;
 const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE ?? "6000") ?? 6000;
-const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000;
-// the arousal under which it is treated as 0
-const RESET_LIMIT = 0.1 * AROUSAL_STEP_SIZE_SCALING;
+const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000;;
 
 const assignChastity = (user, keyholder, namedchastity) => {
     if (process.chastity == undefined) { process.chastity = {} }
