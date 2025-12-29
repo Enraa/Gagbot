@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes } = require('./../functions/heavyfunctions.js')
 const { getCollar, getCollarPerm } = require('./../functions/collarfunctions.js')
-const { getChastity, assignChastity, chastitytypes, getChastityName } = require('./../functions/vibefunctions.js')
+const { getChastity, assignChastity, chastitytypesoptions, getChastityName } = require('./../functions/vibefunctions.js')
 const { getMittenName, assignMitten, getMitten, mittentypes } = require('./../functions/gagfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
@@ -99,12 +99,12 @@ module.exports = {
         }
         else if (subc == "chastity") {
             if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
-                let chastitytoreturn = chastitytypes.slice(0,10)
+                let chastitytoreturn = chastitytypesoptions.slice(0,10)
                 await interaction.respond(chastitytoreturn)
             }
             else {
                 try {
-                    let chastitytoreturn = chastitytypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                    let chastitytoreturn = chastitytypesoptions.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
                     await interaction.respond(chastitytoreturn)
                 }
                 catch (err) {

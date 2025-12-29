@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getChastity, assignChastity, getChastityName, chastitytypes } = require('./../functions/vibefunctions.js')
+const { getChastity, assignChastity, getChastityName, chastitytypesoptions } = require('./../functions/vibefunctions.js')
 const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
@@ -22,12 +22,12 @@ module.exports = {
     async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
         if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
-            let chastitytoreturn = chastitytypes.slice(0,10)
+            let chastitytoreturn = chastitytypesoptions.slice(0,10)
             await interaction.respond(chastitytoreturn)
         }
         else {
             try {
-                let chastitytoreturn = chastitytypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                let chastitytoreturn = chastitytypesoptions.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
                 await interaction.respond(chastitytoreturn)
             }
             catch (err) {

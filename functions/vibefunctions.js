@@ -6,21 +6,23 @@ const { optins } = require('./optinfunctions');
 const { getHeavy, heavyDenialCoefficient } = require("./heavyfunctions.js");
 
 const chastitytypes = [
-    { name: "Featherlight Belt", value: "belt_featherlight" },
-    { name: "Blacksteel Chastity Belt", value: "belt_blacksteel" },
-    { name: "Silver Chastity Belt", value: "belt_silver" },
-    { name: "Ancient Chastity Belt", value: "belt_ancient" },
-    { name: "Cyber Doll Belt", value: "belt_cyberdoll" },
-    { name: "Tungsten Belt", value: "belt_tungsten" },
-    { name: "Hardlight Belt", value: "belt_hardlight" },
-    { name: "Wolf Panties", value: "belt_wolf" },
-    { name: "Maid Chastity Belt", value: "belt_maid" },
-    { name: "Chastity Belt of Eternal Binding", value: "belt_eternal" },
-    { name: "Queensbelt", value: "belt_queen" },
+    { name: "Featherlight Belt", value: "belt_featherlight", denialCoefficient: 15 },
+    { name: "Blacksteel Chastity Belt", value: "belt_blacksteel", denialCoefficient: 7.5 },
+    { name: "Silver Chastity Belt", value: "belt_silver", denialCoefficient: 5 },
+    { name: "Ancient Chastity Belt", value: "belt_ancient", denialCoefficient: 15 },
+    { name: "Cyber Doll Belt", value: "belt_cyberdoll", denialCoefficient: 10 },
+    { name: "Tungsten Belt", value: "belt_tungsten", denialCoefficient: 7.5 },
+    { name: "Hardlight Belt", value: "belt_hardlight", denialCoefficient: 10 },
+    { name: "Wolf Panties", value: "belt_wolf", denialCoefficient: 7.5 },
+    { name: "Maid Chastity Belt", value: "belt_maid", denialCoefficient: 10 },
+    { name: "Chastity Belt of Eternal Binding", value: "belt_eternal", denialCoefficient: 20 },
+    { name: "Queensbelt", value: "belt_queen", denialCoefficient: 10 },
 ]
 
+const chastitytypesoptions = chastitytypes.map((chastity) => ({name: chastity.name, value: chastity.value}));
+
 // the arousal under which it is treated as 0
-const RESET_LIMIT = 0.1;
+const RESET_LIMIT = 0.1
 // the minimum arousal required for frustration to also impact speach
 const STUTTER_LIMIT = 1;
 // the arousal needed for an unbelted user to orgasm
@@ -44,11 +46,11 @@ const FRUSTRATION_MAX_COEFFICIENT = 7;
 const ORGASM_COOLDOWN = 60 * 1000;
 // the frustration increase caused by failed orgasms
 const ORGASM_FRUSTRATION = 5;
+const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE ?? "6000") ?? 6000;
+const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000;;
 
 const assignChastity = (user, keyholder, namedchastity) => {
     if (process.chastity == undefined) { process.chastity = {} }
-    // catch up with arousal before arousal-affecting restraints change
-    getArousal(user);
     process.chastity[user] = {
         keyholder: keyholder ? keyholder : "unlocked",
         timestamp: Date.now(),
@@ -65,8 +67,6 @@ const getChastity = (user) => {
 
 const removeChastity = (user) => {
     if (process.chastity == undefined) { process.chastity = {} }
-    // catch up with arousal before arousal-affecting restraints change
-    getArousal(user);
     delete process.chastity[user];
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/chastityusers.txt`, JSON.stringify(process.chastity));
 }
@@ -74,13 +74,12 @@ const removeChastity = (user) => {
 const assignVibe = (user, intensity, vibetype = "bullet vibe") => {
     if (!optins.getEnableVibes(user)) return;
     if (process.vibe == undefined) { process.vibe = {} }
-    // catch up with arousal before arousal-affecting restraints change
-    getArousal(user);
     if (!process.vibe[user]) {        
         process.vibe[user] = [{
             vibetype: vibetype,
             intensity: intensity
         }]
+        addArousal(user, intensity / 2);
     } else {
         const existingVibe = process.vibe[user].find(v => v.vibetype === vibetype);
         if (existingVibe) {
@@ -102,8 +101,6 @@ const getVibe = (user) => {
 
 const removeVibe = (user, vibetype) => {
     if (process.vibe == undefined) { process.vibe = {} }
-    // catch up with arousal before arousal-affecting restraints change
-    getArousal(user);
     if (!vibetype) {
         delete process.vibe[user];
     } else {
@@ -261,11 +258,24 @@ function stutterText(text, intensity) {
     return outtext
 }
 
+function updateArousalValues() {
+    const now = Date.now();
+    for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
+    for (const user in process.arousal) {
+        const arousal = process.arousal[user];
+        if (arousal.timestamp > now) continue;
+        const next = calcNextArousal(arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
+        arousal.timestamp = now;
+        arousal.prev = arousal.arousal;
+        arousal.arousal = next < RESET_LIMIT ? 0 : next;
+    }
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
+}
+
 function getVibeEquivalent(user) {
   if (!optins.getDynamicArousal(user)) return calcStaticVibeIntensity(user);
 
   let intensity = getArousal(user);
-  if (intensity < RESET_LIMIT) intensity = 0;
   if (intensity >= STUTTER_LIMIT) {
     const chastity = getChastity(user);
     if (chastity) {
@@ -295,11 +305,10 @@ function getArousalDescription(user) {
 
 function getArousalChangeDescription(user) {
   if (!optins.getDynamicArousal(user)) return null;
-
-  if (process.arousal == undefined) process.arousal = {};
+  
   const arousal = process.arousal[user];
-  if (!arousal || !arousal.lastChange || !arousal.lastTimeStep) return null;
-  const lastChange = arousal.lastChange / arousal.lastTimeStep * arousal.prev;
+  if (!arousal) return null;
+  const lastChange = (arousal.arousal - arousal.prev) / AROUSAL_STEP_SIZE_SCALING;
   if (Math.abs(lastChange) < 0.01) return null;
   // these numbers are mostly arbitrary
   if (lastChange < -2) return "and cooling off rapidly";
@@ -310,70 +319,23 @@ function getArousalChangeDescription(user) {
 }
 
 function getArousal(user) {
-  if (process.arousal == undefined) process.arousal = {};
-  const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
-  const now = Date.now();
-  if (arousal.timestamp && arousal.timestamp > now) return arousal.prev;
-  let timeStep = 1;
-  if (arousal.timestamp) {
-    timeStep = (now - arousal.timestamp) / (60 * 1000);
-  }
-  while (timeStep > 1) {
-    const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), 1);
-    arousal.prev2 = arousal.prev;
-    arousal.prev = next;
-    timeStep -= 1;
-  }
-  const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), timeStep);
-  arousal.lastChange = next - arousal.prev;
-  arousal.lastTimeStep = timeStep;
-  arousal.prev2 = arousal.prev;
-  arousal.prev = next;
-  arousal.timestamp = now;
-  process.arousal[user] = arousal;
-  fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
-  return next;
+  return process.arousal[user]?.arousal ?? 0;
 }
 
 function addArousal(user, change) {
-  if (process.arousal == undefined) process.arousal = {};
-  const arousal = process.arousal[user] ?? { prev: 0, prev2: 0 };
-  const now = Date.now();
-  if (arousal.timestamp && arousal.timestamp > now) {
-    arousal.prev += change;
-    return arousal.prev;
-  }
-  let timeStep = 1;
-  if (arousal.timestamp) {
-    timeStep = (now - arousal.timestamp) / (60 * 1000);
-  }
-  // for large gaps, calculate it in steps
-  while (timeStep > 1) {
-    const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), 1);
-    arousal.prev2 = arousal.prev;
-    arousal.prev = next;
-    timeStep -= 1;
-  }
-  const next = calcNextArousal(arousal.prev, arousal.prev2, calcGrowthCoefficient(user), calcDecayCoefficient(user), timeStep) + change;
-  arousal.lastChange = next - arousal.prev;
-  arousal.lastTimeStep = timeStep;
-  arousal.prev2 = arousal.prev;
-  arousal.timestamp = now;
-  arousal.prev = next;
-  process.arousal[user] = arousal;
-  fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
-  return next;
+    if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: Date.now()};
+    process.arousal[user].arousal += change;
+    return process.arousal[user].arousal;
 }
 
 function clearArousal(user) {
-  if (process.arousal == undefined) process.arousal = {};
-  process.arousal[user] = { prev: 0, prev2: 0, timestamp: Date.now(), lastOrgasm: 0 };
+  process.arousal[user] = { arousal: 0, prev: 0, timestamp: Date.now() };
   fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
 }
 
-function calcNextArousal(prev, prev2, growthCoefficient, decayCoefficient, timeStep) {
-  const noDecay = prev + timeStep * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
-  const next = noDecay - timeStep * decayCoefficient * Math.max((prev + prev2 / 2), 0.1);
+function calcNextArousal(arousal, prev, growthCoefficient, decayCoefficient) {
+  const noDecay = arousal + AROUSAL_STEP_SIZE_SCALING * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
+  const next = noDecay - AROUSAL_STEP_SIZE_SCALING * decayCoefficient * Math.max((arousal + prev / 2), 0.1);
   return next;
 }
 
@@ -386,10 +348,8 @@ function tryOrgasm(user) {
   const arousal = getArousal(user);
   const denialCoefficient = calcDenialCoefficient(user);
   const orgasmLimit = ORGASM_LIMIT;
-  const canOrgasm = true; // now - (process.arousal[user]?.lastOrgasm ?? 0) >= ORGASM_COOLDOWN;
 
-  if (canOrgasm && arousal * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1) >= orgasmLimit * denialCoefficient) {
-    process.arousal[user].lastOrgasm = now;
+  if (arousal * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1) >= orgasmLimit * denialCoefficient) {
     setArousalCooldown(user)
     const chastity = getChastity(user);
     if (chastity) {
@@ -414,9 +374,7 @@ function tryOrgasm(user) {
 function setArousalCooldown(user) {
   const now = Date.now();
   process.arousal[user].timestamp = now + ORGASM_COOLDOWN;
-  process.arousal[user].prev = 0;
-  process.arousal[user].prev2 = 0;
-  fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
+  process.arousal[user].arousal = 0;
 }
 
 // modify when more things affect it
@@ -441,7 +399,11 @@ function calcDecayCoefficient(user) {
 // modify when more things affect it
 function calcDenialCoefficient(user) {
   const heavy = getHeavy(user);
-  if (getChastity(user)) return (heavy ? heavyDenialCoefficient(heavy.typeval) : 0) / 2 + 5;
+  const chastity = getChastity(user);
+  if (chastity) {
+    const denialCoefficient = chastitytypes.find(c => c.value == chastity.chastitytype)?.denialCoefficient ?? 5;
+    return (heavy ? heavyDenialCoefficient(heavy.typeval) : 0) / 2 + denialCoefficient;
+  }
   return heavy ? heavyDenialCoefficient(heavy.typeval) : 1;
 }
 
@@ -466,6 +428,7 @@ exports.addArousal = addArousal;
 exports.clearArousal = clearArousal;
 exports.tryOrgasm = tryOrgasm;
 exports.setArousalCooldown = setArousalCooldown;
+exports.updateArousalValues = updateArousalValues;
 
 exports.assignChastity = assignChastity
 exports.getChastity = getChastity
@@ -484,4 +447,5 @@ exports.findChastityKey = findChastityKey;
 exports.getFindableChastityKeys = getFindableChastityKeys;
 
 exports.chastitytypes = chastitytypes;
+exports.chastitytypesoptions = chastitytypesoptions;
 exports.getChastityName = getChastityName;
