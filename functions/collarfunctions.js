@@ -10,16 +10,23 @@ const collartypes = [
     { name: "Hardlight Collar", value: "collar_hardlight" },
     { name: "Runic Collar", value: "collar_runic" },
     { name: "Tall Posture Collar", value: "collar_posture" },
+    { name: "Ruffled Maid Collar", value: "collar_maid" },
+    { name: "Nevermere Tracking Collar", value: "collar_nevermere" },
+    { name: "Steel Collar", value: "collar_steel" },
+    { name: "Kitty Collar", value: "collar_kitty" },
+    { name: "Sheep Collar", value: "collar_sheep" },
+    { name: "Potion Collar", value: "collar_potion" },
 ]
 
-const assignCollar = (user, keyholder, restraints, only) => {
+const assignCollar = (user, keyholder, restraints, only, customcollar) => {
     if (process.collar == undefined) { process.collar = {} }
     process.collar[user] = {
         keyholder: keyholder,
         keyholder_only: only,
         mitten: restraints.mitten,
         chastity: restraints.chastity,
-        heavy: restraints.heavy
+        heavy: restraints.heavy,
+        collartype: customcollar
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
 }
@@ -125,3 +132,5 @@ exports.getCollarPerm = getCollarPerm
 exports.discardCollarKey = discardCollarKey;
 exports.findCollarKey = findCollarKey;
 exports.getCollarName = getCollarName;
+exports.getCollarName = getCollarName;
+exports.collartypes = collartypes;

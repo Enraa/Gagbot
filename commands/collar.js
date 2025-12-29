@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { getHeavy } = require('./../functions/heavyfunctions.js')
-const { getCollar, assignCollar } = require('./../functions/collarfunctions.js')
+const { getCollar, assignCollar, collartypes, getCollarName } = require('./../functions/collarfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent, collarPermModal } = require('./../functions/interactivefunctions.js')
 const { getText } = require("./../functions/textfunctions.js");
@@ -28,7 +28,7 @@ module.exports = {
                 textarray: "texts_collar",
                 textdata: {
                     interactionuser: interaction.user,
-                    targetuser: interaction.options.getUser('keyholder'),
+                    targetuser: interaction.options.getUser('keyholder') ? interaction.options.getUser('keyholder') : interaction.user,
                     c1: getHeavy(interaction.user.id)?.type // heavy bondage type 
                 }
             }
@@ -53,7 +53,7 @@ module.exports = {
                 return;
             }
             
-            if (collarkeyholder) {
+            if ((collarkeyholder) && (collarkeyholder.id != undefined)) {
                 //interaction.deferReply();
                 await interaction.showModal(collarPermModal(interaction, collarkeyholder))
             }
@@ -73,6 +73,7 @@ module.exports = {
             let choice_mitten = (interaction.fields.getStringSelectValues('mitten') == "mitten_yes") ? true : false
             let choice_chastity = (interaction.fields.getStringSelectValues('chastity') == "chastity_yes") ? true : false
             let choice_heavy = (interaction.fields.getStringSelectValues('heavy') == "heavy_yes") ? true : false
+            let choice_collartype = interaction.fields.getStringSelectValues('collarchoice')
 
             console.log(`${choice_mitten}, ${choice_chastity}, ${choice_heavy}`);
             //await interaction.reply("Enraa is testing if a collar was put on successfully! She chose: " + `${choice_mitten}, ${choice_chastity}, ${choice_heavy}`)
@@ -83,7 +84,8 @@ module.exports = {
                 textdata: {
                     interactionuser: interaction.user,
                     targetuser: await interaction.client.users.fetch(collarkeyholder), // To fetch the target user object
-                    c1: getHeavy(interaction.user.id)?.type // heavy bondage type 
+                    c1: getHeavy(interaction.user.id)?.type, // heavy bondage type 
+                    c2: getCollarName(interaction.user.id, choice_collartype)
                 }
             }
             
@@ -107,45 +109,95 @@ module.exports = {
             else {
                 data.noheavy = true
                 if (collarkeyholder && (collarkeyholderonly == "t")) {
-                    if (collarkeyholder != interaction.user.id) {
-                        // Locking collar and giving someone else the key
-                        try {
-                            data.key_other = true
-                            interaction.reply(getText(data))
+                    if (choice_collartype) {
+                        // Custom named collar declared
+                        data.namedcollar = true
+                        if (collarkeyholder != interaction.user.id) {
+                            // Locking collar and giving someone else the key
+                            try {
+                                data.key_other = true
+                                interaction.reply(getText(data))
+                            }
+                            catch (err) { console.log(err) }
+                            assignCollar(interaction.user.id, collarkeyholder, { 
+                                mitten: choice_mitten, 
+                                chastity: choice_chastity, 
+                                heavy: choice_heavy 
+                            }, true, choice_collartype);
                         }
-                        catch (err) { console.log(err) }
-                        assignCollar(interaction.user.id, collarkeyholder, { 
-                            mitten: choice_mitten, 
-                            chastity: choice_chastity, 
-                            heavy: choice_heavy 
-                        }, true);
+                        else {
+                            // Locking collar and keeping the key
+                            try {
+                                data.key_self = true
+                                interaction.reply(getText(data))
+                            }
+                            catch (err) { console.log(err) }
+                            assignCollar(interaction.user.id, collarkeyholder, { 
+                                mitten: choice_mitten, 
+                                chastity: choice_chastity, 
+                                heavy: choice_heavy 
+                            }, true, choice_collartype);
+                        }
                     }
                     else {
-                        // Locking collar and keeping the key
-                        try {
-                            data.key_self = true
-                            interaction.reply(getText(data))
+                        data.nonamedcollar = true
+                        if (collarkeyholder != interaction.user.id) {
+                            // Locking collar and giving someone else the key
+                            try {
+                                data.key_other = true
+                                interaction.reply(getText(data))
+                            }
+                            catch (err) { console.log(err) }
+                            assignCollar(interaction.user.id, collarkeyholder, { 
+                                mitten: choice_mitten, 
+                                chastity: choice_chastity, 
+                                heavy: choice_heavy 
+                            }, true);
                         }
-                        catch (err) { console.log(err) }
-                        assignCollar(interaction.user.id, collarkeyholder, { 
-                            mitten: choice_mitten, 
-                            chastity: choice_chastity, 
-                            heavy: choice_heavy 
-                        }, true);
+                        else {
+                            // Locking collar and keeping the key
+                            try {
+                                data.key_self = true
+                                interaction.reply(getText(data))
+                            }
+                            catch (err) { console.log(err) }
+                            assignCollar(interaction.user.id, collarkeyholder, { 
+                                mitten: choice_mitten, 
+                                chastity: choice_chastity, 
+                                heavy: choice_heavy 
+                            }, true);
+                        }
                     }
                 }
                 else {
-                    try {
-                        // Not locking collar. 
-                        data.unlocked = true
-                        interaction.reply(getText(data))
+                    if (choice_collartype) { 
+                        data.namedcollar = true
+                        try {
+                            // Not locking collar. 
+                            data.unlocked = true
+                            interaction.reply(getText(data))
+                        }
+                        catch (err) { console.log(err) }
+                        assignCollar(interaction.user.id, interaction.user.id, { 
+                                mitten: choice_mitten, 
+                                chastity: choice_chastity, 
+                                heavy: choice_heavy 
+                            }, false, choice_collartype);
                     }
-                    catch (err) { console.log(err) }
-                    assignCollar(interaction.user.id, interaction.user.id, { 
-                            mitten: choice_mitten, 
-                            chastity: choice_chastity, 
-                            heavy: choice_heavy 
-                        }, false);
+                    else {
+                        data.nonamedcollar = true
+                        try {
+                            // Not locking collar. 
+                            data.unlocked = true
+                            interaction.reply(getText(data))
+                        }
+                        catch (err) { console.log(err) }
+                        assignCollar(interaction.user.id, interaction.user.id, { 
+                                mitten: choice_mitten, 
+                                chastity: choice_chastity, 
+                                heavy: choice_heavy 
+                            }, false);
+                    }
                 }
             }
         }

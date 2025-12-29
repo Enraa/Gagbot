@@ -17,44 +17,48 @@ module.exports = {
     async execute(interaction) {
         try {
             let inspectuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user;
+            let inspectparts = [];
+            let titletext = ``
             let outtext = ``
             if (inspectuser == interaction.user) {
-                outtext = `## Your current restraints:\n-# (${getPronounsSet(interaction.user.id)})\n`
+                titletext = `## Your current restraints:\n-# (${getPronounsSet(interaction.user.id)})\n\n`
             }
             else {
-                outtext = `## ${inspectuser}'s current restraints:\n-# (${getPronounsSet(inspectuser.id)})\n`
+                titletext = `## ${inspectuser}'s current restraints:\n-# (${getPronounsSet(inspectuser.id)})\n\n`
             }
             // Gag status
             if (getGag(inspectuser.id)) {
-                outtext = `${outtext}<:Gag:1073495437635506216> Gag: **${convertGagText(getGag(inspectuser.id))}** set to Intensity **${getGagIntensity(inspectuser.id)}**\n`
+                inspectparts.push(`<:Gag:1073495437635506216> Gag: **${convertGagText(getGag(inspectuser.id))}** set to Intensity **${getGagIntensity(inspectuser.id)}**`)
             }
             else {
-                outtext = `${outtext}<:Gag:1073495437635506216> Gag: Not currently worn.\n`
+                inspectparts.push(`<:Gag:1073495437635506216> Gag: Not currently worn.`)
             }
             // Mitten status
             if (getMitten(inspectuser.id)) {
                 if (getMittenName(inspectuser.id)) {
-                    outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **${getMittenName(inspectuser.id)}**\n`
+                    inspectparts.push(`<:mittens:1452425463757803783> Mittens: **${getMittenName(inspectuser.id)}**`)
                 }
                 else {
-                    outtext = `${outtext}<:mittens:1452425463757803783> Mittens: **WORN**\n`
+                    inspectparts.push(`<:mittens:1452425463757803783> Mittens: **WORN**`)
                 }
             }
             else {
-                outtext = `${outtext}<:mittens:1452425463757803783> Mittens: Not currently worn.\n`
+                inspectparts.push(`<:mittens:1452425463757803783> Mittens: Not currently worn.`)
             }
             // Vibe status
             if (getVibe(inspectuser.id)) {
-                outtext = `${outtext}<:MagicWand:1073504682540011520> Vibrators/toys: **${getVibe(inspectuser.id).map(vibe => `${vibe.vibetype} (${vibe.intensity})`).join(', ')}**\n`
+                inspectparts.push(`<:MagicWand:1073504682540011520> Vibrators/toys: **${getVibe(inspectuser.id).map(vibe => `${vibe.vibetype} (${vibe.intensity})`).join(', ')}**`)
             }
             else {
-                outtext = `${outtext}<:MagicWand:1073504682540011520> Vibrator: Not currently worn.\n`
+                inspectparts.push(`<:MagicWand:1073504682540011520> Vibrator: Not currently worn.`)
             }
             // Arousal status
+            let arousalblock = ``
             const arousal = getArousalDescription(inspectuser.id);
-            if (arousal) outtext = `${outtext}Arousal: **${getArousalDescription(inspectuser.id)}**\n`;
+            if (arousal) arousalblock = `Arousal: **${getArousalDescription(inspectuser.id)}**`;
             const change = getArousalChangeDescription(inspectuser.id);
-            if (change) outtext = `${outtext}-# ...${change}\n`;
+            if (change) arousalblock = `${arousalblock}\n-# ...${change}`;
+            if (arousalblock.length > 0) { inspectparts.push(arousalblock) }
             // Chastity status
             if (getChastity(inspectuser.id)) {
                 let isLocked = (getChastity(inspectuser.id)?.keyholder == interaction.user.id || (getChastity(inspectuser.id)?.access === 0 && inspectuser.id != interaction.user.id))
@@ -65,48 +69,49 @@ module.exports = {
                 if (chastitykeyaccess == 1) { timelockedtext = "Timelocked (Keyed)" }
                 if (chastitykeyaccess == 2) { timelockedtext = "Timelocked (Sealed)" }
                 if (getChastity(inspectuser.id).keyholder == "discarded") {
-                    outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing!**\n`
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing!**`)
                 }
                 else if (getChastityTimelock(inspectuser.id)) {
-                    outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **${timelockedtext} until ${getChastityTimelock(inspectuser.id, true)}**\n`
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **${timelockedtext} until ${getChastityTimelock(inspectuser.id, true)}**`)
                 }
                 else if (getChastity(inspectuser.id).keyholder == inspectuser.id) {
                     // Self bound!
-                    outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**\n`
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**`)
                 }
                 else {
-                    outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getChastity(inspectuser.id).keyholder}>**\n`
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getChastity(inspectuser.id).keyholder}>**`)
                 }
             }
             else {
-                outtext = `${outtext}<:Chastity:1073495208861380629> Chastity: Not currently worn.\n`
+                inspectparts.push(`<:Chastity:1073495208861380629> Chastity: Not currently worn.`)
             }
             // Corset status
             if (getCorset(inspectuser.id)) {
                 if (getCorset(inspectuser.id).tightness > 10) {
-                    outtext = `${outtext}<:corset:1451126998192881684> Corset: **Laced beyond reason to a string length of ${getCorset(inspectuser.id).tightness}**\n`
+                    inspectparts.push(`<:corset:1451126998192881684> Corset: **Laced beyond reason to a string length of ${getCorset(inspectuser.id).tightness}**`)
                 }
                 else if (getCorset(inspectuser.id).tightness > 7) {
-                    outtext = `${outtext}<:corset:1451126998192881684> Corset: **Laced tightly to a string length of ${getCorset(inspectuser.id).tightness}**\n`
+                    inspectparts.push(`<:corset:1451126998192881684> Corset: **Laced tightly to a string length of ${getCorset(inspectuser.id).tightness}**`)
                 }
                 else if (getCorset(inspectuser.id).tightness > 4) {
-                    outtext = `${outtext}<:corset:1451126998192881684> Corset: **Laced moderately to a string length of ${getCorset(inspectuser.id).tightness}**\n`
+                    inspectparts.push(`<:corset:1451126998192881684> Corset: **Laced moderately to a string length of ${getCorset(inspectuser.id).tightness}**`)
                 }
                 else {
-                    outtext = `${outtext}<:corset:1451126998192881684> Corset: **Laced loosely to a string length of ${getCorset(inspectuser.id).tightness}**\n`
+                    inspectparts.push(`<:corset:1451126998192881684> Corset: **Laced loosely to a string length of ${getCorset(inspectuser.id).tightness}**`)
                 }
             }
             else {
-                outtext = `${outtext}<:corset:1451126998192881684> Corset: Not currently worn.\n`
+                inspectparts.push(`<:corset:1451126998192881684> Corset: Not currently worn.`)
             }
             // Heavy Bondage status
             if (getHeavy(inspectuser.id)) {
-                outtext = `${outtext}<:Armbinder:1073495590656286760> Heavy Bondage: **${getHeavy(inspectuser.id).type}**\n`
+                inspectparts.push(`<:Armbinder:1073495590656286760> Heavy Bondage: **${getHeavy(inspectuser.id).type}**`)
             }
             else {
-                outtext = `${outtext}<:Armbinder:1073495590656286760> Heavy Bondage: Not currently worn.\n`
+                inspectparts.push(`<:Armbinder:1073495590656286760> Heavy Bondage: Not currently worn.`)
             }
             // Collar status
+            let collarparts = []
             if (getCollar(inspectuser.id)) {
                 let currentcollartext = "Locked Up Nice and Tight!"
                 let isLocked = ((getCollar(inspectuser.id).keyholder == interaction.user) || (!getCollar(inspectuser.id).keyholder_only))
@@ -114,47 +119,55 @@ module.exports = {
                 if (getCollar(inspectuser.id).keyholder == "discarded") {
                     // Self bound!
                     if (getCollar(inspectuser.id).keyholder_only) {
-                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing!**\n`
+                        collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing!**`)
                     }
                     else {
-                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing! Free Use!**\n`
+                        collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing! Free Use!**`)
                     }
                 }
                 else if (!getCollar(inspectuser.id).keyholder_only) {
                     // Free use!
                     if (getCollar(inspectuser.id).keyholder == inspectuser.id) {
-                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Self-bound and free use!**\n`
+                        collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Self-bound and free use!**`)
                     }
                     else {
-                        outtext = `${outtext}<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getCollar(inspectuser.id).keyholder}>, free use!**\n`
+                        collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getCollar(inspectuser.id).keyholder}>, free use!**`)
                     }
                 }
                 else if (getCollar(inspectuser.id).keyholder == inspectuser.id) {
                     // Self bound!
-                    outtext = `${outtext}<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**\n`
+                    collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**`)
                 }
                 else {
-                    outtext = `${outtext}<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getCollar(inspectuser.id).keyholder}>**\n`
+                    collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getCollar(inspectuser.id).keyholder}>**`)
                 }
                 // Output Collar Perms
-                outtext = `${outtext}-# Mittens: ${getCollarPerm(inspectuser.id, "mitten") ? "YES":"NO"}, Chastity: ${getCollarPerm(inspectuser.id, "chastity") ? "YES":"NO"}, Heavy: ${getCollarPerm(inspectuser.id, "heavy") ? "YES":"NO"}\n`
+                collarparts.push(`-# Mittens: ${getCollarPerm(inspectuser.id, "mitten") ? "YES":"NO"}, Chastity: ${getCollarPerm(inspectuser.id, "chastity") ? "YES":"NO"}, Heavy: ${getCollarPerm(inspectuser.id, "heavy") ? "YES":"NO"}`)
             }
             else {
-                outtext = `${outtext}<:collar:1449984183261986939> Collar: Not currently worn.\n`
+                collarparts.push(`<:collar:1449984183261986939> Collar: Not currently worn.`)
             }
-            outtext = `${outtext}\n`
+            inspectparts.push(collarparts.join("\n"));
+            inspectparts.push(" ")
+            // Keys Held
+            let keysheldtext = ''
             let keysheldchastity = getChastityKeys(inspectuser.id)
             if (keysheldchastity.length > 0) {
                 keysheldchastity = keysheldchastity.map(k => `<@${k}>`)
                 let keysstring = keysheldchastity.join(", ");
-                outtext = `${outtext}Currently holding chastity keys for: ${keysstring}\n`
+                keysheldtext = `Currently holding chastity keys for: ${keysstring}\n`
             }
             let keysheldcollar = getCollarKeys(inspectuser.id)
             if (keysheldcollar.length > 0) {
                 keysheldcollar = keysheldcollar.map(k => `<@${k}>`)
                 let keysstring = keysheldcollar.join(", ");
-                outtext = `${outtext}Currently holding collar keys for: ${keysstring}`
+                keysheldtext = `${keysheldtext}Currently holding collar keys for: ${keysstring}`
             }
+            if (keysheldtext.length > 0) { inspectparts.push(keysheldtext) }
+
+            // Now construct the pages - we want pages of 1000 characters or fewer. If a part causes a page to exceed that,
+            // we want to use a new page button eventually to handle this. 
+            outtext = `${titletext}${inspectparts.join("\n")}`
             interaction.reply({ content: outtext, flags: MessageFlags.Ephemeral })
         }
         catch (err) {

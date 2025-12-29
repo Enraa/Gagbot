@@ -49,17 +49,30 @@ const texts_collar = {
         ]
     },
     noheavy: {
+        namedcollar: {
+            key_other: [
+                `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a little lock in the lockable buckle and then hands TARGET_TAG the key!`
+            ],
+            key_self: [
+                `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a little lock in the lockable buckle and then hiding the key!`
+            ],
+            unlocked: [
+                `USER_TAG puts a VAR_C2 on USER_THEIR neck, but neglects to lock it!`
+            ]
+        },
+        nonamedcollar: {
+            key_other: [
+                `USER_TAG puts a collar on USER_THEIR neck, clicking a little lock in the lockable buckle and then hands TARGET_TAG the key!`
+            ],
+            key_self: [
+                `USER_TAG puts a collar on USER_THEIR neck, clicking a little lock in the lockable buckle and then hiding the key!`
+            ],
+            unlocked: [
+                `USER_TAG puts a collar on USER_THEIR neck, but neglects to lock it!`
+            ]
+        },
         alreadycollared: [
             `You already have a collar on!`
-        ],
-        key_other: [
-            `USER_TAG puts a collar on USER_THEIR neck, clicking a little lock in the lockable buckle and then hands TARGET_TAG the key!`
-        ],
-        key_self: [
-            `USER_TAG puts a collar on USER_THEIR neck, clicking a little lock in the lockable buckle and then hiding the key!`
-        ],
-        unlocked: [
-            `USER_TAG puts a collar on USER_THEIR neck, but neglects to lock it!`
         ]
     }
 }
@@ -378,7 +391,7 @@ const texts_letgo = {
         `USER_TAG squirms, trying to adjust the belt so USER_THEY can feel ***something***, but USER_THEY just can't get over the edge!`,
         `USER_TAG holds USER_THEIR breath, feverishly stroking the smooth belt USER_THEY USER_ISARE wearing, but USER_THEY just can't let go!`,
         `USER_TAG grinds on a near by object, trying to get that last little bit of sensation to let go... but USER_THEY just can't make it!`,
-        `USER_TAG buckles USER_THEIR legs, panting in short breaths as USER_THEY attemptUSER_S to (and fail miserably) to get release!`
+        `USER_TAG buckles USER_THEIR legs, panting in short breaths as USER_THEY attemptUSER_S to (and failUSER_S miserably) to get release!`
     ],
     heavy: [
         `USER_TAG shifts USER_THEIR legs to try to reach the peak! Too bad USER_THEIR VAR_C1 makes it hard to touch there!`,
