@@ -199,107 +199,8 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
     return modal;
 }
 
-const timelockChastityModal = (interaction, wearer, tempKeyholder) => {
-    const modal = new ModalBuilder().setCustomId(`chastitytimelock_${wearer.id}${tempKeyholder ? `_${tempKeyholder.id}` : ""}`).setTitle('Chastity Timelock');
-
-    let restrictionWarningText = new TextDisplayBuilder()
-    let warningText = interaction.user.id == wearer.id ? `# Timelock (Chastity Belt)
-This will lock your belt for a set period of time. Please configure your timelock below.
--# Once confirmed, you will have a final prompt before the timelock starts` : `# Timelock (Chastity Belt)
-This will lock ${wearer}'s belt for a set period of time. Please configure your timelock below.
--# Once confirmed, you will have a final prompt before the timelock starts`
-
-    restrictionWarningText.setContent(warningText)
-
-    const timelockamt = new TextInputBuilder()
-        .setCustomId('timelockinput')
-        .setStyle(TextInputStyle.Short)
-        .setPlaceholder('e.g. 10 days 5h 24 mins')
-        .setRequired(true)
-
-
-    const accesswhilebound = new StringSelectMenuBuilder()
-        .setCustomId('accesswhilebound')
-        .setPlaceholder('Belt Access')
-        .setRequired(true)
-        .setMinValues(1)
-        .setMaxValues(1)
-        .addOptions(
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Everyone Else')
-                // Description of option
-                .setDescription('Everyone except the wearer can vibe and corset the wearer')
-                // Value returned to you in modal submission
-                .setValue('access_others'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Keyholder Only')
-                // Description of option
-                .setDescription('Only the non-wearer keyholder access the wearer\' belt')
-                // Value returned to you in modal submission
-                .setValue('access_kh'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Nobody')
-                // Description of option
-                .setDescription('Nobody, not even you, can access the wearer\' belt')
-                // Value returned to you in modal submission
-                .setValue('access_no'),
-        )
-
-    const keyholderafter = new StringSelectMenuBuilder()
-        .setCustomId('keyholderafter')
-        .setPlaceholder('Action after lock')
-        .setRequired(true)
-        .setMinValues(1)
-        .setMaxValues(1)
-        .addOptions(
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Unlock')
-                // Description of option
-                .setDescription('Unlocks the belt, letting it fall off')
-                // Value returned to you in modal submission
-                .setValue('keyholder_unlock'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('Return')
-                // Description of option
-                .setDescription('Returns the keys to the wearer')
-                // Value returned to you in modal submission
-                .setValue('keyholder_return'),
-            new StringSelectMenuOptionBuilder()
-                // Label displayed to user
-                .setLabel('To Keyholder')
-                // Description of option
-                .setDescription('Returns keys to the keyholder')
-                // Value returned to you in modal submission
-                .setValue('keyholder_keyholder'),
-        )
-
-    const labeltimelockamt = new LabelBuilder()
-        .setLabel(`How long should the timelock be?`)
-        .setDescription("This can be a range like `1 hour - 24 hours`")
-        .setTextInputComponent(timelockamt)
-
-    const labelaccesswhilebound = new LabelBuilder()
-        .setLabel(`Who can access during the timelock?`)
-        .setStringSelectMenuComponent(accesswhilebound)
-
-    const labelkeyholderafter = new LabelBuilder()
-        .setLabel(`What happens after?`)
-        .setStringSelectMenuComponent(keyholderafter)
-
-    // Add labels to modal
-    modal.addTextDisplayComponents(restrictionWarningText)
-        .addLabelComponents(labeltimelockamt, labelaccesswhilebound, labelkeyholderafter); 
-
-    return modal;
-}
-
-const timelockChastityModalnew = async (interaction, wearer, tempKeyholder) => {
-    const modal = new ModalBuilder().setCustomId(`chastitytimelock_${wearer.id}${tempKeyholder ? `_${tempKeyholder.id}` : ""}`).setTitle('Chastity Timelock');
+const timelockChastityModal = (interaction, wearer) => {
+    const modal = new ModalBuilder().setCustomId(`chastitytimelock_${wearer.id}`).setTitle('Chastity Timelock');
 
     let restrictionWarningText = new TextDisplayBuilder()
     let warningText = interaction.user.id == wearer.id ? `# Timelock (Chastity Belt)
@@ -323,10 +224,6 @@ This will lock ${wearer}'s belt for a set period of time. Please configure your 
         .setMaxValues(1)
         .setRequired(false)
     
-    if (tempKeyholder) {
-        userselect.setDefaultUsers(tempKeyholder.id);
-    }
-
     const accesswhilebound = new StringSelectMenuBuilder()
         .setCustomId('accesswhilebound')
         .setPlaceholder('Belt Access')
@@ -407,8 +304,8 @@ This will lock ${wearer}'s belt for a set period of time. Please configure your 
 
     // Add labels to modal
     modal.addTextDisplayComponents(restrictionWarningText)
-        .addLabelComponents(userselectlabel)
-        .addLabelComponents(labeltimelockamt, labelaccesswhilebound, labelkeyholderafter); 
+    if (interaction.user.id == wearer.id) modal.addLabelComponents(userselectlabel);
+    modal.addLabelComponents(labeltimelockamt, labelaccesswhilebound, labelkeyholderafter); 
 
     return modal;
 }
@@ -440,6 +337,5 @@ exports.getConsent = getConsent
 exports.handleConsent = handleConsent
 exports.collarPermModal = collarPermModal
 exports.timelockChastityModal = timelockChastityModal
-exports.timelockChastityModalnew = timelockChastityModalnew
 
 exports.assignMemeImages = assignMemeImages

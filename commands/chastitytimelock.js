@@ -12,7 +12,8 @@ module.exports = {
     let keyholder = interaction.user.id;
     const split = interaction.customId.split("_");
     const wearer = split[1];
-    if (keyholder == wearer && split[2]) keyholder = split[2];
+    const tempKeyholder = interaction.fields.getSelectedUsers("userselection")?.keys()[0];
+    if (tempKeyholder) keyholder = tempKeyholder;
     const timeString = interaction.fields.getTextInputValue("timelockinput");
     const timeStringSplit = timeString.split("-");
     if (timeStringSplit.length > 2) {
@@ -92,9 +93,11 @@ module.exports = {
           return;
         }
 
-        const frustrationMultiplier = 1 + rollKeyFumbleN(interaction.user.id, wearer, 20).reduce((a, b) => a + b) / 100;
+        const frustrationMultiplier = rollKeyFumbleN(interaction.user.id, wearer, 20).reduce((a, b) => a + b) / 100;
 
-        if (timelockChastity(interaction.client, wearer, keyholder, Number(unlockTime) * frustrationMultiplier, Number(access), Number(keyholderAfter))) {
+        const modifiedUnlockTime = Number(unlockTime) + (Number(unlockTime) - Date.now()) * frustrationMultiplier;
+
+        if (timelockChastity(interaction.client, wearer, keyholder, Math.floor(modifiedUnlockTime), Number(access), Number(keyholderAfter))) {
           interaction.channel.send(`<@${wearer}>'s chastity belt has been locked with a timelock`);
           interaction.reply({
             content: "Timelock confirmed",
@@ -115,8 +118,10 @@ function buildConfirmMessage(wearer, keyholder, minUnlockTime, maxUnlockTime, ac
   const timeString = maxUnlockTime ? `<t:${(minUnlockTime / 1000) | 0}:f> - <t:${(maxUnlockTime / 1000) | 0}:f>` : `<t:${(minUnlockTime / 1000) | 0}:f>`;
   const unlockTime = maxUnlockTime ? Math.floor(minUnlockTime + Math.random() * (maxUnlockTime - minUnlockTime)) : minUnlockTime;
 
+  const warning = Math.max(minUnlockTime, maxUnlockTime) - Date.now() > 24 * 60 * 60 * 1000 ? "\n# YOU MAY LOCK YOURSELF FOR LONGER THAN 24 HOURS" : "";
+
   return {
-    content: `# Timelock (Chastity Belt)\nConfirm locking the belt until ${timeString}\nNote: Frustration may cause the actual unlock time to be later`,
+    content: `# Timelock (Chastity Belt)\nConfirm locking the belt until ${timeString}${warning}\nNote: Frustration may cause the actual unlock time to be later`,
     flags: MessageFlags.Ephemeral,
     components: [
       {

@@ -13,12 +13,10 @@ module.exports = {
         .setName("chastity")
         .setDescription("Lock a chastity belt...")
         .addUserOption((opt) => opt.setName("wearer").setDescription("Who wears the belt?").setRequired(false))
-        .addUserOption((opt) => opt.setName("keyholder").setDescription("If selflocked, who is your temporary keyholder?").setRequired(false))
     ),
   async execute(interaction) {
     const actiontotake = interaction.options.getSubcommand();
     const wearer = interaction.options.getUser("wearer") ?? interaction.user;
-    const tempKeyholder = interaction.options.getUser("keyholder");
 
     switch (actiontotake) {
       case "chastity":
@@ -62,7 +60,7 @@ module.exports = {
           }
         }
 
-        interaction.showModal(timelockChastityModal(interaction, wearer, tempKeyholder));
+        interaction.showModal(timelockChastityModal(interaction, wearer));
         break;
       default:
         interaction.reply({
@@ -70,18 +68,5 @@ module.exports = {
           flags: MessageFlags.Ephemeral,
         });
     }
-  },
-  async modalexecute(interaction) {
-    console.log(interaction);
-
-    const keyholder = interaction.user.id;
-    const wearer = interaction.customId.split("_")[1];
-    const timeString = interaction.fields.getStringSelectValues("timelockinput");
-    const access = interaction.fields.getStringSelectValues("accesswhilebound");
-    const keyholderAfter = interaction.fields.getStringSelectValues("keyholderafter");
-
-    const unlockTime = parseTime(timeString);
-
-    interaction.showModal(buildConfirmModal(wearer, keyholder, unlockTime.getTime(), access, keyholderAfter));
-  },
+  }
 };
