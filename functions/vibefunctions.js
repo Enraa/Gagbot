@@ -298,7 +298,7 @@ function stutterText(text, intensity, arousedtexts) {
                 outtext = `${outtext}${text}`
             }
             if (Math.random() < intensity / 40) { // 0.5-5% to insert an arousal text
-                let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)]
+                let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)] ?? "mmf~"
                 outtext = `${outtext} ${arousedtext}`
             }
             return outtext;
