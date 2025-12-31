@@ -319,17 +319,24 @@ function stutterText(text, intensity, arousedtexts) {
 }
 
 function updateArousalValues() {
-    const now = Date.now();
-    for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
-    for (const user in process.arousal) {
-        const arousal = process.arousal[user];
-        if (arousal.timestamp > now) continue;
-        const next = calcNextArousal(arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
-        arousal.timestamp = now;
-        arousal.prev = arousal.arousal;
-        arousal.arousal = next < RESET_LIMIT ? 0 : next;
+    try {
+        const now = Date.now();
+        for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
+        for (const user in process.arousal) {
+            const arousal = process.arousal[user];
+            if (arousal.timestamp > now) continue;
+            const next = calcNextArousal(arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
+            arousal.timestamp = now;
+            arousal.prev = arousal.arousal;
+            arousal.arousal = next < RESET_LIMIT ? 0 : next;
+        }
+        fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
     }
-    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
+    catch (err) {
+        // SAM PLEASE TRY CATCH THESE THINGS
+        // Holy fuck the arousal file broke and I had to delete it. 
+        console.log(err)
+    }
 }
 
 function getVibeEquivalent(user) {

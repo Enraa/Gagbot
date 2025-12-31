@@ -18,6 +18,8 @@ const headweartypes = [
     { name: "Kigu Mask (😀)", value: "mask_kigu_😀", blockinspect: true, blockemote: true, replaceemote: "😀" },
     { name: "Kigu Mask (🥰)", value: "mask_kigu_🥰", blockinspect: true, blockemote: true, replaceemote: "🥰" },
     { name: "Kigu Mask (Yesh)", value: "mask_kigu_Yesh", blockinspect: true, blockemote: true, replaceemote: "<:Yesh:1448775211838341251>" },
+    { name: "Kigu Mask (Miku)", value: "mask_kigu_miku", blockinspect: true, blockemote: true, replaceemote: "<:miku:1455804527570718832>" },
+    { name: "Kigu Mask (Teto)", value: "mask_kigu_teto", blockinspect: true, blockemote: true, replaceemote: "<:tetowoah:1455805527199056125>" },
     { name: "Kigu Mask (Sadistic Maid)", value: "mask_kigu_sadisticmaid", blockinspect: true, blockemote: true, replaceemote: "<:sadisticmaid:1244055266815774730>" },
     { name: "Kigu Mask (Cute Maid)", value: "mask_kigu_cutemaid", blockinspect: true, blockemote: true, replaceemote: "<:cutemaid:1244055369169502209>" },
     { name: "Kigu Mask (Happy Maid)", value: "mask_kigu_happymaid", blockinspect: true, blockemote: true, replaceemote: "<:happymaid:1244055447900655666>" },
@@ -25,16 +27,34 @@ const headweartypes = [
     { name: "Sheep Mask", value: "mask_sheep", blockinspect: true, blockemote: true, replaceemote: "🐑" },
     { name: "Kitty Mask", value: "mask_kitty", blockinspect: true, blockemote: true, replaceemote: "🐱" },
     { name: "Bunny Mask", value: "mask_bunny", blockinspect: true, blockemote: true, replaceemote: "🐰" },
+    { name: "Dragon Mask", value: "mask_dragon", blockinspect: true, blockemote: true, replaceemote: "🐉" },
+    { name: "Dog Mask", value: "mask_dog", blockinspect: true, blockemote: true, replaceemote: "🐶" },
+    { name: "Frog Mask", value: "mask_frog", blockinspect: true, blockemote: true, replaceemote: "🐸" },
+    { name: "Turtle Mask", value: "mask_turtle", blockinspect: true, blockemote: true, replaceemote: "🐢" },
     { name: "Doll Visor", value: "doll_visor", blockinspect: true, blockemote: true },
+    { name: "Doll Visor (transparent)", value: "doll_visor_trans", },
     { name: "VR Headset", value: "vr_visor", blockinspect: true },
+    { name: "Protective Eye Goggles", value: "eye_goggles", },
+    { name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
     { name: "Witchy Glasses", value: "glasses_witchy" },
     { name: "Full Frame Glasses", value: "glasses_fullframe" },
     { name: "Nostalgia Glasses", value: "glasses_nostalgia" },
+    { name: "Half-rimmed Glasses", value: "glasses_halfrimmed" },
+    { name: "Librarian's Spectacles", value: "glasses_librarian" },
+    { name: "Moonveiled Glasses", value: "glasses_moon" },
+    { name: "Starry Night Glasses", value: "glasses_stars" },
     { name: "Ridiculously Big Witch Hat", value: "witchhat_big" },
-    { name: "Ridiculously Big Witch Hat 2", value: "witchhat_big2" },
-    { name: "Ridiculously Big Witch Hat 3", value: "witchhat_big3" },
-    { name: "Final Ridiculously Big Witch Hat", value: "witchhat_big4" },
+    //{ name: "Ridiculously Big Witch Hat 2", value: "witchhat_big2" }, // These were a funny meme, but not necessary
+    //{ name: "Ridiculously Big Witch Hat 3", value: "witchhat_big3" },
+    //{ name: "Final Ridiculously Big Witch Hat", value: "witchhat_big4" },
+    { name: "Witch Hat", value: "witchhat_normal" },
     { name: "Princess Crown", value: "princess_crown" },
+    { name: "Sunless Tiara", value: "sunless_crown" },
+    { name: "Lunar Crescent Tiara", value: "lunar_crown" },
+    { name: "Twilight Crown", value: "twilight_crown" },
+    { name: "Moon Phase Headchain", value: "moonphase_headchain" },
+    { name: "Elemental Headchain", value: "elemental_headchain" },
+    { name: "Starveiled Headdress", value: "starveiled_headchain" },
 ]
 
 /**************
@@ -71,20 +91,62 @@ const getHeadwearBinder = (userID) => {
 }
 
 const getLockedHeadgear = (userID) => {
-    
+    if (process.headwear == undefined) { process.headwear = {} }
+    return process.headwear[userID]?.locked ? process.headwear[userID]?.locked : [];
+}
+
+const addLockedHeadgear = (userID, headwear) => {
+    if (process.headwear == undefined) { process.headwear = {} }
+    if (process.headwear[userID]) {
+        if (process.headwear[userID].locked == undefined) {
+            process.headwear[userID].locked = [headwear]
+        }
+        else { 
+            process.headwear[userID].locked.push(headwear);
+        }
+    }
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/headwearusers.txt`, JSON.stringify(process.headwear));
+}
+
+const removeLockedHeadgear = (userID, headwear) => {
+    if (process.headwear == undefined) { process.headwear = {} }
+    if (process.headwear[userID]) {
+        if (process.headwear[userID].locked == undefined) {
+            return;
+        }
+        else { 
+            if (process.headwear[userID].locked.includes(headwear)) {
+                process.headwear[userID].locked.splice(process.headwear[userID].locked.indexOf(headwear), 1);
+            }
+            if (process.headwear[userID].locked.length == 0) {
+                delete process.headwear[userID].locked
+            }
+        }
+    }
+    fs.writeFileSync(`${process.GagbotSavedFileDirectory}/headwearusers.txt`, JSON.stringify(process.headwear));
 }
 
 const deleteHeadwear = (userID, headwear) => {
     if (process.headwear == undefined) { process.headwear = {} }
     if (!process.headwear[userID]) { return false }
-    if (headwear && process.headwear[userID].wornheadwear.includes(headwear)) {
+    if (headwear && process.headwear[userID].wornheadwear.includes(headwear) && !getLockedHeadgear(userID).includes(headwear)) {
         process.headwear[userID].wornheadwear.splice(process.headwear[userID].wornheadwear.indexOf(headwear), 1)
         if (process.headwear[userID].wornheadwear.length == 0) {
             delete process.headwear[userID]
         }
     }
     else if (process.headwear[userID]) {
-        delete process.headwear[userID];
+        let locks = getLockedHeadgear(userID);
+        let savedheadgear = [];
+        process.headwear[userID].wornheadwear.forEach((g) => {
+            if (locks.includes(g)) {
+                savedheadgear.push(g)
+            }
+        })
+        process.headwear[userID].wornheadwear = savedheadgear;
+        if (process.headwear[userID].wornheadwear.length == 0) {
+            delete process.headwear[userID]
+        }
     }
     fs.writeFileSync(`${process.GagbotSavedFileDirectory}/headwearusers.txt`, JSON.stringify(process.headwear));
 }
@@ -176,3 +238,7 @@ exports.getHeadwearName = getHeadwearName;
 exports.getHeadwearRestrictions = getHeadwearRestrictions;
 
 exports.processHeadwearEmoji = processHeadwearEmoji;
+
+exports.addLockedHeadgear = addLockedHeadgear;
+exports.getLockedHeadgear = getLockedHeadgear;
+exports.removeLockedHeadgear = removeLockedHeadgear;

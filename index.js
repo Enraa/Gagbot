@@ -119,6 +119,10 @@ client.on("clientReady", async () => {
     try {
         await client.application.fetch();
         console.log(`Bot is owned by user ID ${client?.application?.owner.id}`)
+        console.log(`Executable Functions: [${Array.from(commands.keys()).join(", ")}]`);
+        console.log(`Modals: [${Array.from(modalHandlers.keys()).join(", ")}]`);
+        console.log(`Components: [${Array.from(componentHandlers.keys()).join(", ")}]`);
+        console.log(`Autocompletes: [${Array.from(autocompletehandlers.keys()).join(", ")}]`);
     }
     catch (err) {
         console.log(err)

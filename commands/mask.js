@@ -22,13 +22,21 @@ module.exports = {
 		),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
+		let chosenuserid = interaction.options.get('user')?.value ?? interaction.user.id // Note we can only retrieve the user ID here!
 		if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
-			let headstoreturn = process.headtypes.slice(0,10)
-			await interaction.respond(headstoreturn)
+			let itemsworn = getHeadwear(chosenuserid)
+
+			// Remove anything we're already wearing from the list
+			let sorted = process.headtypes.filter(f => !itemsworn.includes(f.value))
+			await interaction.respond(sorted.slice(0,10))
 		}
 		else {
             try {
-                let headstoreturn = process.headtypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+				let itemsworn = getHeadwear(chosenuserid)
+
+				// Remove anything we're already wearing from the list
+				let sorted = process.headtypes.filter(f => !itemsworn.includes(f.value))
+                let headstoreturn = sorted.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
 			    await interaction.respond(headstoreturn)
             }
 			catch (err) {

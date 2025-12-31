@@ -4,7 +4,7 @@ const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDe
 const { getCollar, getCollarPerm, getCollarKeys, getCollarName } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getCorset } = require('./../functions/corsetfunctions.js')
-const { getHeadwear, getHeadwearName, getHeadwearRestrictions } = require('./../functions/headwearfunctions.js')
+const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require('./../functions/headwearfunctions.js')
 const { getPronouns, getPronounsSet } = require('./../functions/pronounfunctions.js')
 
 module.exports = {
@@ -20,10 +20,6 @@ module.exports = {
             let inspectuser = interaction.options.getUser('user') ? interaction.options.getUser('user') : interaction.user;
             let headwearrestrictions = getHeadwearRestrictions(interaction.user.id)
             console.log(headwearrestrictions);
-            if ((inspectuser != interaction.user) && !headwearrestrictions.canInspect) {
-                interaction.reply({ content: `You are blinded and cannot look at ${inspectuser}.`, flags: MessageFlags.Ephemeral })
-                return;
-            }
             let inspectparts = [];
             let titletext = ``
             let outtext = ``
@@ -32,6 +28,10 @@ module.exports = {
             }
             else {
                 titletext = `## ${inspectuser}'s current restraints:\n-# (${getPronounsSet(inspectuser.id)})\n\n`
+            }
+            if ((inspectuser != interaction.user) && !headwearrestrictions.canInspect) {
+                interaction.reply({ content: `${titletext}You are blinded and cannot look at ${inspectuser}.`, flags: MessageFlags.Ephemeral })
+                return;
             }
             // Gag status
             // You can easily feel if you're gagged, so no restrictions here
@@ -44,8 +44,14 @@ module.exports = {
             // Headwear parts!
             if (getHeadwear(inspectuser.id).length > 0) {
                 let headout = `👤 Headwear: **`;
+                let lockedheads = getLockedHeadgear(inspectuser.id);
                 getHeadwear(inspectuser.id).forEach((h) => {
-                    headout = `${headout}${getHeadwearName(inspectuser.id, h)}, `
+                    if (lockedheads.includes(h)) {
+                        headout = `${headout}*${getHeadwearName(inspectuser.id, h)}*, `
+                    }
+                    else {
+                        headout = `${headout}${getHeadwearName(inspectuser.id, h)}, `
+                    }
                 })
                 headout = headout.slice(0,-2)
                 headout = `${headout}**`

@@ -3,7 +3,7 @@ const { getMitten } = require('./../functions/gagfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
-const { getHeadwear, getHeadwearName, deleteHeadwear } = require('../functions/headwearfunctions.js');
+const { getHeadwear, getHeadwearName, deleteHeadwear, getLockedHeadgear } = require('../functions/headwearfunctions.js');
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require('../functions/configfunctions.js');
 
@@ -22,13 +22,25 @@ module.exports = {
 		),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
+        let chosenuserid = interaction.options.get('user')?.value ?? interaction.user.id // Note we can only retrieve the user ID here!
 		if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
-			let headstoreturn = process.headtypes.slice(0,10)
-			await interaction.respond(headstoreturn)
+			let itemsworn = getHeadwear(chosenuserid)
+            let itemslocked = getLockedHeadgear(chosenuserid)
+            
+			// Remove anything we're already wearing from the list
+			let sorted = process.headtypes.filter(f => itemsworn.includes(f.value))
+            sorted = sorted.filter(f => !itemslocked.includes(f.value))
+			await interaction.respond(sorted.slice(0,10))
 		}
 		else {
             try {
-                let headstoreturn = process.headtypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                let itemsworn = getHeadwear(chosenuserid)
+                let itemslocked = getLockedHeadgear(chosenuserid)
+
+			    // Remove anything we're already wearing from the list
+			    let sorted = process.headtypes.filter(f => itemsworn.includes(f.value))
+                sorted = sorted.filter(f => !itemslocked.includes(f.value))
+                let headstoreturn = sorted.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
 			    await interaction.respond(headstoreturn)
             }
 			catch (err) {
