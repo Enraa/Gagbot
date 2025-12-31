@@ -15,13 +15,25 @@ const headweartypes = [
     { name: "Latex Hood (no eyes)", value: "hood_latexfull", blockinspect: true, blockemote: true },
     { name: "Hardlight Hood", value: "hood_hardlight", },
     { name: "Hardlight Hood (no eyes)", value: "hood_hardlightfull", blockinspect: true, blockemote: true },
-    { name: "Kigu Mask", value: "mask_kigu", blockinspect: true, blockemote: true },
+    { name: "Kigu Mask (😀)", value: "mask_kigu_😀", blockinspect: true, blockemote: true, replaceemote: "😀" },
+    { name: "Kigu Mask (🥰)", value: "mask_kigu_🥰", blockinspect: true, blockemote: true, replaceemote: "🥰" },
+    { name: "Kigu Mask (Yesh)", value: "mask_kigu_Yesh", blockinspect: true, blockemote: true, replaceemote: "<:Yesh:1448775211838341251>" },
+    { name: "Kigu Mask (Sadistic Maid)", value: "mask_kigu_sadisticmaid", blockinspect: true, blockemote: true, replaceemote: "<:sadisticmaid:1244055266815774730>" },
+    { name: "Kigu Mask (Cute Maid)", value: "mask_kigu_cutemaid", blockinspect: true, blockemote: true, replaceemote: "<:cutemaid:1244055369169502209>" },
+    { name: "Kigu Mask (Happy Maid)", value: "mask_kigu_happymaid", blockinspect: true, blockemote: true, replaceemote: "<:happymaid:1244055447900655666>" },
+    { name: "Kigu Mask (Cursed Epicenter)", value: "mask_kigu_epicenter", blockinspect: true, blockemote: true, replaceemote: "<:EpicenterCursed:1167683745428549632>" },
+    { name: "Sheep Mask", value: "mask_sheep", blockinspect: true, blockemote: true, replaceemote: "🐑" },
+    { name: "Kitty Mask", value: "mask_kitty", blockinspect: true, blockemote: true, replaceemote: "🐱" },
+    { name: "Bunny Mask", value: "mask_bunny", blockinspect: true, blockemote: true, replaceemote: "🐰" },
     { name: "Doll Visor", value: "doll_visor", blockinspect: true, blockemote: true },
     { name: "VR Headset", value: "vr_visor", blockinspect: true },
     { name: "Witchy Glasses", value: "glasses_witchy" },
     { name: "Full Frame Glasses", value: "glasses_fullframe" },
     { name: "Nostalgia Glasses", value: "glasses_nostalgia" },
     { name: "Ridiculously Big Witch Hat", value: "witchhat_big" },
+    { name: "Ridiculously Big Witch Hat 2", value: "witchhat_big2" },
+    { name: "Ridiculously Big Witch Hat 3", value: "witchhat_big3" },
+    { name: "Final Ridiculously Big Witch Hat", value: "witchhat_big4" },
     { name: "Princess Crown", value: "princess_crown" },
 ]
 
@@ -56,6 +68,10 @@ const getHeadwear = (userID) => {
 const getHeadwearBinder = (userID) => {
     if (process.headwear == undefined) { process.headwear = {} }
     return process.headwear[userID]?.origbinder;
+}
+
+const getLockedHeadgear = (userID) => {
+    
 }
 
 const deleteHeadwear = (userID, headwear) => {
@@ -129,6 +145,27 @@ const getHeadwearRestrictions = (userID) => {
     return allowedperms
 }
 
+// Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
+const processHeadwearEmoji = (userID, text) => {
+    //if (!getHeadwearRestrictions(userID).canEmote) { return text } // Not blocking emotes, no need to change anything
+    
+    let regex = /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g
+    let replaceemote = "";
+    let wornheadwear = getHeadwear(userID);
+    for (let i = 0; i < wornheadwear.length; i++) {
+        if (getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
+            replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote
+        }
+    }
+
+    let outtext = text.replaceAll(regex, replaceemote);
+
+    if (replaceemote && !outtext.includes(replaceemote)) { outtext = `${outtext} ${replaceemote}`}
+    
+    if (outtext.length == 0) { outtext = `*(<@${userID}>'s face shows no emotion...)*`}
+    return outtext
+}
+
 exports.headweartypes = headweartypes
 exports.loadHeadwearTypes = loadHeadwearTypes;
 exports.assignHeadwear = assignHeadwear
@@ -137,3 +174,5 @@ exports.getHeadwearBinder = getHeadwearBinder;
 exports.deleteHeadwear = deleteHeadwear
 exports.getHeadwearName = getHeadwearName;
 exports.getHeadwearRestrictions = getHeadwearRestrictions;
+
+exports.processHeadwearEmoji = processHeadwearEmoji;

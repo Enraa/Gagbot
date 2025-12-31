@@ -5,6 +5,7 @@ const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`)
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
+const { getHeadwearRestrictions, processHeadwearEmoji } = require('./headwearfunctions.js')
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -168,12 +169,21 @@ const splitMessage = (text) => {
 
 const garbleMessage = async (threadId, msg) => {
     try {
-        // fast-track if the message is just emotes and spaces
-        if (msg.content.match(/^((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s|\n)+$/)) return;
-
         let outtext = '';
-        let messageparts = splitMessage(msg.content);
         let modifiedmessage = false;
+        let replacingtext = msg.content
+        // replace all emoji if the wearer is wearing something with emoji
+        if (!getHeadwearRestrictions(msg.author.id).canEmote) {
+            replacingtext = processHeadwearEmoji(msg.author.id, msg.content)
+            // If we actually modified the text, then change modifed message to true. 
+            if (replacingtext != msg.content) {
+                modifiedmessage = true;
+            }
+        }
+        // fast-track if the message is just emotes and spaces
+        if (!modifiedmessage && msg.content.match(/^((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s|\n)+$/)) return;
+
+        let messageparts = splitMessage(replacingtext);
 
         //Weird exception for links
         for (let i = 0; i < messageparts.length - 1; i++) {
