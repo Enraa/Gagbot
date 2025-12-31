@@ -69,6 +69,12 @@ module.exports = {
                     c2: convertheavy(heavychoice) // New heavy bondage
                 }
             }
+
+            if (data.textdata.c2 == undefined) {
+                // Something went CRITICALLY wrong. Eject, eject!
+                interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral })
+                return;
+            }
             
             if (getHeavy(interaction.user.id)) {
                 data.heavy = true

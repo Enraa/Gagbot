@@ -115,6 +115,12 @@ module.exports = {
                 }
             }
 
+			if (data.textdata.c3 == undefined) {
+                // Something went CRITICALLY wrong. Eject, eject!
+                interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral })
+                return;
+            }
+
 			if (getHeavy(interaction.user.id)) {
 				// in heavy bondage, cant equip
 				data.heavy = true

@@ -55,6 +55,8 @@ const headweartypes = [
     { name: "Moon Phase Headchain", value: "moonphase_headchain" },
     { name: "Elemental Headchain", value: "elemental_headchain" },
     { name: "Starveiled Headdress", value: "starveiled_headchain" },
+    { name: "Demon Horns", value: "demon_horns" },
+    { name: "Demon Horns (Sheep)", value: "demon_horns_sheep" },
 ]
 
 /**************
