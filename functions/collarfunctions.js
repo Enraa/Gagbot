@@ -88,7 +88,7 @@ const getCollarKeyholder = (user) => {
 // Returns an object you can check the .access prop of. 
 // Unlock actions should set the third param true to ensure
 // that users are not unlocking public access. 
-const canAccessCollar = (collaruser, keyholder, unlock) => {
+const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
     // As a reference for access in timelocks:
     // 0: "Everyone Else"
     // 1: "Keyholder Only"
@@ -100,22 +100,22 @@ const canAccessCollar = (collaruser, keyholder, unlock) => {
         hascollar: true
     }
     // no collar, no need
-    if (!getCollar(chastityuser)) { 
+    if (!getCollar(collaruser)) { 
         accessval.hascollar = false;
         return accessval;
     } 
     // Sealed Collar - nobody gets in!
-    if (getCollar(chastityuser).access == 2) {
+    if (getCollar(collaruser)?.access == 2) {
         return accessval;
     }
     // If unlock is set, only allow access to unlock if the keyholder is the correct one.
     if (unlock) {
         // Allow unlocks by a non-self keyholder at all times, assuming its not sealed. 
-        if ((getChastity(chastityuser).access != 2) && (getChastity(chastityuser).keyholder == keyholder) && (keyholder != chastityuser)) {
+        if ((getCollar(collaruser)?.access != 2) && (getCollar(collaruser)?.keyholder == keyholder) && (keyholder != collaruser)) {
             accessval.access = true;
         }
         // Allow unlocks by any keyholder if no timelock. 
-        if ((getChastity(chastityuser).access == undefined) && (getChastity(chastityuser).keyholder == keyholder)) {
+        if ((getCollar(collaruser)?.access == undefined) && (getCollar(collaruser)?.keyholder == keyholder)) {
             accessval.access = true;
         }
         // Else, return false.
@@ -123,21 +123,88 @@ const canAccessCollar = (collaruser, keyholder, unlock) => {
         return accessval;
     }
     // Others access only when access is set to 0. 
-    if ((getChastity(chastityuser).access == 0) && (keyholder != chastityuser)) {
+    if ((getCollar(collaruser)?.access == 0) && (keyholder != collaruser)) {
         accessval.access = true;
         accessval.public = true;
     }
     // Keyholder access if access is unset (no timelocks)
-    if ((getChastity(chastityuser).access == undefined) && (getChastity(chastityuser).keyholder == keyholder)) {
+    if ((getCollar(collaruser)?.access == undefined) && (getCollar(collaruser)?.keyholder == keyholder)) {
+        accessval.access = true;
+    }
+    // Secondary Keyholder access (cloned key), but only if cloning is NOT true and no timelocks
+    let clonedkeys = getCollar(collaruser)?.clonedKeyholders ?? [];
+    if ((clonedkeys.includes(keyholder)) && (cloning != true) && (getCollar(collaruser)?.access == undefined)) {
         accessval.access = true;
     }
     // Keyholder access if timelock is 1 (keyholder only) but only if not self.
-    if ((getChastity(chastityuser).access == 1) && (getChastity(chastityuser).keyholder == keyholder) && (chastityuser != keyholder)) {
+    if ((getCollar(collaruser)?.access == 1) && (getCollar(collaruser)?.keyholder == keyholder) && (collaruser != keyholder)) {
+        accessval.access = true;
+    }
+    // Secondary Keyholder access (cloned key) if access is 1, but only if not self.
+    if ((clonedkeys.includes(keyholder)) && (cloning != true) && (getCollar(collaruser)?.access == 1) && (collaruser != keyholder)) {
         accessval.access = true;
     }
     // Else, return false. 
     
     return accessval;
+}
+
+// Called to prompt the wearer if it is okay to clone a key.
+async function promptCloneCollarKey(user, target, clonekeyholder) {
+    return new Promise(async (res,rej) => {
+        let buttons = [
+            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+        ]
+        let bondageaccess = `${(getCollarPerm(target, "mitten")) ? "mitten you, " : ""}${(getCollarPerm(target, "chastity")) ? "put you in chastity, " : ""}${(getCollarPerm(target, "chastity")) ? "put heavy bondage on you, " : ""}`.slice(0,-2);
+        let dmchannel = await target.createDM();
+        await dmchannel.send({
+            content: `${user} would like to give ${clonekeyholder} a copy of your collar key. Do you want to allow this?${(bondageaccess.length > 0) ? `\n\n**Note: ${clonekeyholder} will have access to ${bondageaccess}.**` : "" }`,
+            components: [new ActionRowBuilder().addComponents(...buttons)]
+        }).then((mess) => {
+            // Create a collector for up to 30 seconds
+            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30_000, max: 1 })
+
+            collector.on('collect', async (i) => {
+                console.log(i)
+                if (i.customId == "acceptButton") {
+                    await mess.delete().then(() => {
+                        i.reply(`Confirmed - ${clonekeyholder} will receive a copied key for your collar!`)
+                    })
+                    res(true);
+                }
+                else {
+                    await mess.delete().then(() => {
+                        i.reply(`Rejected - ${clonekeyholder} will NOT receive a copied key for your collar!`)
+                    })
+                    rej(true);
+                }
+            })
+
+            collector.on('end', async (collected) => {
+                // timed out
+                if (collected.length == 0) {
+                    await mess.delete().then(() => {
+                        i.reply(`Timed Out - ${clonekeyholder} will NOT receive a copied key for your collar!`)
+                    })
+                    rej(true);
+                }
+            })
+        })
+    })
+}
+
+// Called once we confirm the user is okay with it!
+// For cloned keys, we want to allow a cloned key to do everything except
+// giving the key or cloning the key. These actions should check the
+// fourth param of the canAccessCollar function and set it to true
+// when the action needs to REJECT cloned keys. 
+const cloneCollarKey = (collarUser, newKeyholder) => {
+    let collar = getCollar(collarUser);
+    if (!collar.clonedKeyholders) {
+        collar.clonedKeyholders = [];
+    }
+    collar.clonedKeyholders.push(newKeyholder)
 }
 
 // transfer keys and returns whether the transfer was successful
@@ -146,6 +213,8 @@ const transferCollarKey = (lockedUser, newKeyholder) => {
     if (process.collar[lockedUser]) {
         if (process.collar[lockedUser].keyholder != newKeyholder) { 
             process.collar[lockedUser].keyholder = newKeyholder;
+            // Erase cloned keys in this process!
+            delete process.collar[lockedUser].clonedKeyholders;
             fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
             return true;
         }
@@ -176,6 +245,8 @@ const findCollarKey = (index, newKeyholder) => {
     if (collar.length < 1) return false;
     if (process.collar[collar[0].wearer]) {
       process.collar[collar[0].wearer].keyholder = newKeyholder;
+      // Erase cloned keys in this process!
+      delete process.collar[lockedUser].clonedKeyholders;
       fs.writeFileSync(`${process.GagbotSavedFileDirectory}/collarusers.txt`, JSON.stringify(process.collar));
       return true;
     }
@@ -194,3 +265,6 @@ exports.findCollarKey = findCollarKey;
 exports.getCollarName = getCollarName;
 exports.getCollarName = getCollarName;
 exports.collartypes = collartypes;
+exports.canAccessCollar = canAccessCollar;
+exports.promptCloneCollarKey = promptCloneCollarKey;
+exports.cloneCollarKey = cloneCollarKey;

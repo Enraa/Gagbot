@@ -440,6 +440,17 @@ const texts_heavy = {
     ]
 }
 
+const texts_key = {
+    clone: {
+        collar: [
+            `USER_TAG subtly puts TARGET_TAG's collar key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`
+        ],
+        chastitybelt: [
+            `USER_TAG subtly puts TARGET_TAG's chastity belt key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`
+        ]
+    }
+}
+
 // This follows an inconsistent flat structure - consider reworking in the future.
 const texts_letgo = {
     orgasm: [
@@ -1353,6 +1364,8 @@ const getTextGeneric = (type, data_in) => {
         "changebind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (30 second timeout).",
         "changebind_decline": "TARGET_TAG has declined allowing you to change USER_THEIR bindings.",
         "changebind_accept": "TARGET_TAG has allowed you to change USER_THEIR bindings.",
+        "clone_accept": "TARGET_TAG has allowed you to make a clone of USER_THEIR VAR_C1 key, giving it to VAR_C2!",
+        "clone_decline": "TARGET_TAG has forbidden you from making a clone of USER_THEIR VAR_C1 key for VAR_C2!"
     }
 
     let chosentext = generics[type];

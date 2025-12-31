@@ -151,8 +151,6 @@ module.exports = {
         return;
       }
 
-      console.log("HIIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
-
       // Prompt and ensure the user intended to run this command for this combination. 
       let response = await interaction.reply({ 
 				content: `Giving the keys for ${choiceemoji}${lockedUser} to 🔑${newKeyholder}. . .\n\nPlease confirm by pressing the button below:`, 
