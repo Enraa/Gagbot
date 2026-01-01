@@ -5,7 +5,15 @@ const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`)
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
-const { getHeadwearRestrictions, processHeadwearEmoji } = require('./headwearfunctions.js')
+const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear } = require('./headwearfunctions.js')
+
+const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
+
+const DOLLOVERRIDES = {
+    "185614860942442496" : "14",
+    "165073621637791744" : "2268"
+}
+
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -131,7 +139,7 @@ const getMittenName = (userID, mittenname) => {
     }
 }
 
-const splitMessage = (text) => {
+const splitMessage = (text, inputRegex=null) => {
 
     /*************************************************************************************
      * Massive Regex, let's break it down:
@@ -152,7 +160,7 @@ const splitMessage = (text) => {
 
     let output = [];
     let deepCopy = text.split()[0]
-    let found = deepCopy.match(regex)
+    let found = deepCopy.match(inputRegex ? inputRegex : regex)
 
     for(const x in found){
 
@@ -310,6 +318,33 @@ const garbleMessage = async (threadId, msg) => {
             outtext = messagetexts.join("");
         }
 
+        // Handle Dollification
+        let dollID;
+        if(getHeadwear(msg.author.id).find((headwear) => ["doll_visor", "doll_visor_trans"].includes(headwear))){
+            modifiedmessage = true;
+            dollDigits      = DOLLOVERRIDES[msg.author.id] ? DOLLOVERRIDES[msg.author.id] : `${msg.author.id}`.slice(-4)
+            // Include the tag - Otherwise, there is NO WAY to tell who it is.
+            dollIDShort     = "DOLL-" + dollDigits
+            dollID          = "DOLL-" + (dollDigits.length == 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
+            dollIDDisplay   = dollID + ` (@${msg.author.username})`
+            console.log(dollID)
+
+            let dollMessageParts = splitMessage(outtext, DOLLREGEX)
+            console.log(dollMessageParts)
+
+            // Put every "garble" messagePart in ANSI.
+            for(let i = 0; i < dollMessageParts.length; i++){
+                if(dollMessageParts[i].garble){
+                    dollMessageParts[i].text = `\`\`\`ansi\n[1;35m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
+                }
+            }
+
+            outtext = dollMessageParts.map(m => m.text).join("")
+
+            // Clean up mess
+            outtext = outtext.replaceAll(/```\s+```ansi/g,"")
+        }
+
         if (modifiedmessage) { //Fake reply with a ping
             if (msg.type == "19") {
                 const replied = await msg.fetchReference();
@@ -357,7 +392,7 @@ const garbleMessage = async (threadId, msg) => {
                     outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                 }
                 if (outtext.length == 0) { outtext = "Something went wrong. Ping <@125093095405518850> and let her know!"}
-                let sentmessage = messageSend(threadId, outtext, msg.member.displayAvatarURL(), msg.member.displayName).then(() => {
+                let sentmessage = messageSend(threadId, outtext, msg.member.displayAvatarURL(), dollID ? dollIDDisplay : msg.member.displayName).then(() => {
                     msg.delete();
                 })
             }
