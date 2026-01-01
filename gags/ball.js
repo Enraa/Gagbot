@@ -93,19 +93,19 @@ exports.choicename = "Ball Gag"
 // Unit Tests
 
 //Test Gag Intensities
-let intensityTestMsg = "I AM LOUD.  I am quiet."
-let intensityTestMsg2 = "Ha! I, in my brattiness, created  test-4, a test. . .  just to anger DOLL-0014 into domming me!!"
+// let intensityTestMsg = "I AM LOUD.  I am quiet."
+// let intensityTestMsg2 = "Ha! I, in my brattiness, created  test-4, a test. . .  just to anger DOLL-0014 into domming me!!"
 
-console.log(`Original:     ${intensityTestMsg}\n`)
-console.log(`Intensity 1-2:   ${garbleText(intensityTestMsg, 1)}`)
-console.log(`Intensity 3-4:   ${garbleText(intensityTestMsg, 3)}`)
-console.log(`Intensity 5-6:   ${garbleText(intensityTestMsg, 5)}`)
-console.log(`Intensity 7-8:   ${garbleText(intensityTestMsg, 7)}`)
-console.log(`Intensity 9-10:  ${garbleText(intensityTestMsg, 9)}`)
+// console.log(`Original:     ${intensityTestMsg}\n`)
+// console.log(`Intensity 1-2:   ${garbleText(intensityTestMsg, 1)}`)
+// console.log(`Intensity 3-4:   ${garbleText(intensityTestMsg, 3)}`)
+// console.log(`Intensity 5-6:   ${garbleText(intensityTestMsg, 5)}`)
+// console.log(`Intensity 7-8:   ${garbleText(intensityTestMsg, 7)}`)
+// console.log(`Intensity 9-10:  ${garbleText(intensityTestMsg, 9)}`)
 
-console.log(`\nOriginal:     ${intensityTestMsg2}\n`)
-console.log(`Intensity 1-2:   ${garbleText(intensityTestMsg2, 2)}`)
-console.log(`Intensity 3-4:   ${garbleText(intensityTestMsg2, 4)}`)
-console.log(`Intensity 5-6:   ${garbleText(intensityTestMsg2, 6)}`)
-console.log(`Intensity 7-8:   ${garbleText(intensityTestMsg2, 8)}`)
-console.log(`Intensity 9-10:  ${garbleText(intensityTestMsg2, 10)}`)
+// console.log(`\nOriginal:     ${intensityTestMsg2}\n`)
+// console.log(`Intensity 1-2:   ${garbleText(intensityTestMsg2, 2)}`)
+// console.log(`Intensity 3-4:   ${garbleText(intensityTestMsg2, 4)}`)
+// console.log(`Intensity 5-6:   ${garbleText(intensityTestMsg2, 6)}`)
+// console.log(`Intensity 7-8:   ${garbleText(intensityTestMsg2, 8)}`)
+// console.log(`Intensity 9-10:  ${garbleText(intensityTestMsg2, 10)}`)
