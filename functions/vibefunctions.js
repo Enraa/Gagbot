@@ -16,7 +16,7 @@ const chastitytypes = [
     { name: "Hardlight Belt", value: "belt_hardlight", denialCoefficient: 10 },
     { name: "Wolf Panties", value: "belt_wolf", denialCoefficient: 7.5 },
     { name: "Maid Chastity Belt", value: "belt_maid", denialCoefficient: 10 },
-    { name: "Chastity Belt of Eternal Edging", value: "belt_eternal", denialCoefficient: 20 },
+    { name: "Chastity Belt of Eternal Denial", value: "belt_eternal", denialCoefficient: 20 },
     { name: "Queensbelt", value: "belt_queen", denialCoefficient: 10 },
 ]
 
