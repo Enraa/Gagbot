@@ -5,14 +5,9 @@ const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`)
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
-const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear } = require('./headwearfunctions.js')
+const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLOVERRIDES, DOLLVISORS } = require('./headwearfunctions.js')
 
 const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
-
-const DOLLOVERRIDES = {
-    "185614860942442496" : "14",
-    "165073621637791744" : "2268"
-}
 
 
 // Grab all the command files from the commands directory
@@ -319,29 +314,36 @@ const garbleMessage = async (threadId, msg) => {
         }
 
         // Handle Dollification
-        let dollID;
-        if(getHeadwear(msg.author.id).find((headwear) => ["doll_visor", "doll_visor_blind"].includes(headwear))){
+        let dollIDDisplay;
+        if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
             modifiedmessage = true;
-            dollDigits      = DOLLOVERRIDES[msg.author.id] ? DOLLOVERRIDES[msg.author.id] : `${msg.author.id}`.slice(-4)
+            dollDigits      = DOLLOVERRIDES[msg.author.id] ? DOLLOVERRIDES[msg.author.id].id : `${msg.author.id}`.slice(-4)
             // Include the tag - Otherwise, there is NO WAY to tell who it is.
-            dollIDShort     = "DOLL-" + dollDigits
-            dollID          = "DOLL-" + (dollDigits.length == 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
-            dollIDDisplay   = dollID + ` (@${msg.author.username})`
-            console.log(dollID)
+            let dollIDShort     = "DOLL-" + dollDigits
+            let dollID          = "DOLL-" + (dollDigits.length == 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
+            let dollIDColor     = DOLLOVERRIDES[msg.author.id]?.color ? DOLLOVERRIDES[msg.author.id]?.color : "34"
+            // Display names max 32 chars.
+            let truncateDisplay = ""
+            try{
+                truncateDisplay = msg.member.displayName.slice(0,16) + (msg.member.displayName.length > 16 ? "..." : "")
+            }catch(err){
+                console.error(err.message);     // Following is not tested but SHOULD work.
+                truncateDisplay = msg.author.displayName.slice(0,16) + (msg.author.displayName.length > 16 ? "..." : "")
+            }
+            dollIDDisplay       = dollIDShort + ` (@${truncateDisplay})`
 
-            let dollMessageParts = splitMessage(outtext, DOLLREGEX)
-            console.log(dollMessageParts)
+            let dollMessageParts = splitMessage(outtext, DOLLREGEX)     // Reuse splitMessage, but with a different regex.
 
             // Put every "garble" messagePart in ANSI.
             for(let i = 0; i < dollMessageParts.length; i++){
                 if(dollMessageParts[i].garble){
-                    dollMessageParts[i].text = `\`\`\`ansi\n[1;35m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
+                    dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
                 }
             }
 
             outtext = dollMessageParts.map(m => m.text).join("")
 
-            // Clean up mess
+            // Merge any code blocks with nothing but whitespace in between.
             outtext = outtext.replaceAll(/```\s+```ansi/g,"")
         }
 
@@ -379,7 +381,7 @@ const garbleMessage = async (threadId, msg) => {
                         msg.channel.send(msg.content)
                         outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                     }
-                    messageSendImg(threadId, outtext, msg.member.displayAvatarURL(), msg.member.displayName, msg.id, spoiler).then(() => {
+                    messageSendImg(threadId, outtext, msg.member.displayAvatarURL(), (dollIDDisplay ? dollIDDisplay : msg.member.displayName), msg.id, spoiler).then(() => {
                         msg.delete().then(() => {
                             fs.rmSync(`./${spoilertext}downloadedimage_${msg.id}.png`)
                         });
@@ -392,7 +394,7 @@ const garbleMessage = async (threadId, msg) => {
                     outtext = "Mistress <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes."
                 }
                 if (outtext.length == 0) { outtext = "Something went wrong. Ping <@125093095405518850> and let her know!"}
-                let sentmessage = messageSend(threadId, outtext, msg.member.displayAvatarURL(), dollID ? dollIDDisplay : msg.member.displayName).then(() => {
+                let sentmessage = messageSend(threadId, outtext, msg.member.displayAvatarURL(), (dollIDDisplay ? dollIDDisplay : msg.member.displayName)).then(() => {
                     msg.delete();
                 })
             }
