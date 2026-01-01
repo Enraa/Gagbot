@@ -6,6 +6,7 @@ const { SlashCommandBuilder, UserSelectMenuBuilder, MessageFlags, TextInputBuild
     StringSelectMenuOptionBuilder, TextDisplayBuilder } = require('discord.js');
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { collartypes } = require('./collarfunctions.js');
+const { getOption } = require('./../functions/configfunctions.js')
 
 // Generates a consent button which the user will have to agree to. 
 const consentMessage = (interaction, user) => {
