@@ -32,7 +32,8 @@ let processdatatoload = [
     { textname: "arousal.txt", processvar: "arousal", default: {} },
     { textname: "headwearusers.txt", processvar: "headwear", default: {} },
     { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
-    { textname: "configs.txt", processvar: "configs", default: {}}
+    { textname: "configs.txt", processvar: "configs", default: {}},
+    { textname: "dollusers.txt", processvar: "dolloverrides", default: {}}
 ]
 
 processdatatoload.forEach((s) => {

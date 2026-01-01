@@ -68,10 +68,6 @@ const headweartypes = [
 ]
 
 const DOLLVISORS = ["doll_visor", "doll_visor_blind"]
-const DOLLOVERRIDES = {
-    "185614860942442496" : {id: "14", color: "35"},     // DOLLMINATRIX
-    //"165073621637791744" : {id: "2268"},                    // Get confirmation first.
-}
 
 /**************
  * Discord API Requires an array of objects in form:
@@ -244,7 +240,7 @@ const processHeadwearEmoji = (userID, text) => {
 
         // Handle Doll Visors
         if(getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))){
-            let dollDigits = DOLLOVERRIDES[userID] ? DOLLOVERRIDES[userID].id : `${userID}`.slice(-4)
+            let dollDigits = process.dolloverrides[userID] ? process.dolloverrides[userID].id : `${userID}`.slice(-4)
             // Below is a stylistic choice it's uncertain about.
             let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
             outtext = `*(DOLL-${dollID}'s face shows no emotion...)*`
@@ -269,5 +265,4 @@ exports.processHeadwearEmoji = processHeadwearEmoji;
 exports.addLockedHeadgear = addLockedHeadgear;
 exports.getLockedHeadgear = getLockedHeadgear;
 exports.removeLockedHeadgear = removeLockedHeadgear;
-exports.DOLLOVERRIDES = DOLLOVERRIDES;
 exports.DOLLVISORS = DOLLVISORS;

@@ -5,7 +5,7 @@ const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`)
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
-const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLOVERRIDES, DOLLVISORS } = require('./headwearfunctions.js')
+const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require('./headwearfunctions.js')
 
 //const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 // Abomination of a regex for corset compatibility.
@@ -319,11 +319,11 @@ const garbleMessage = async (threadId, msg) => {
         let dollIDDisplay;
         if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
             modifiedmessage = true;
-            dollDigits      = DOLLOVERRIDES[msg.author.id] ? DOLLOVERRIDES[msg.author.id].id : `${msg.author.id}`.slice(-4)
+            dollDigits      = process.dolloverrides[msg.author.id] ? process.dolloverrides[msg.author.id].id : `${msg.author.id}`.slice(-4)
             // Include the tag - Otherwise, there is NO WAY to tell who it is.
             let dollIDShort     = "DOLL-" + dollDigits
             let dollID          = "DOLL-" + (dollDigits.length == 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
-            let dollIDColor     = DOLLOVERRIDES[msg.author.id]?.color ? DOLLOVERRIDES[msg.author.id]?.color : "34"
+            let dollIDColor     = process.dolloverrides[msg.author.id]?.color ? process.dolloverrides[msg.author.id]?.color : "34"
             // Display names max 32 chars.
             let truncateDisplay = ""
             try{
