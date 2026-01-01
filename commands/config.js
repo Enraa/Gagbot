@@ -36,6 +36,8 @@ module.exports = {
 				if (newindex >= optionschoice.length) { newindex = 0 }
 				setOption(interaction.user.id, optionparts[3], optionschoice[newindex])
 
+				// After doing so, run the NEW option's select_function. 
+				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id)
 				// Finally, reprompt the user, now with the new choice set. 
 				interaction.update(generateConfigModal(interaction, optionparts[2]));
 			}

@@ -15,7 +15,7 @@ const configoptions = {
                     name: "Off",
                     helptext: "*Arousal disabled*",
                     select_function: (userID) => { 
-                        removeVibe(userID) // Delete vibes when disabling arousal
+                        delete process.vibe[userID]
                     },
                     value: 0,
                     style: ButtonStyle.Danger,
@@ -147,7 +147,7 @@ const configoptions = {
                     name: "Automatic",
                     helptext: "⚠️ **You will accept keygiving requests automatically**",
                     select_function: (userID) => { return false },
-                    value: "prompt",
+                    value: "auto",
                     style: ButtonStyle.Secondary,
                     uname: "KeyGivingAuto"
                 },
