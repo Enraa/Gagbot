@@ -138,12 +138,6 @@ module.exports = {
                     return;
                 }
 
-                // We can't clone ourselves lol
-                if (wearertoclone == clonedkeyholder) {
-                    interaction.reply({ content: `You can't give yourself a copy of a key!`, flags: MessageFlags.Ephemeral })
-                    return;
-                }
-
                 // Check if the interaction user has access to clone the target restraint.
                 let canclone = false;
                 let chosenrestraintreadable;
@@ -159,6 +153,12 @@ module.exports = {
                 }
                 if (!canclone) {
                     interaction.reply({ content: `You do not have the keys for ${wearertoclone}'s ${chosenrestrainttoclone}.`, flags: MessageFlags.Ephemeral })
+                    return;
+                }
+
+                // We can't hold a clone of a restraint we have primary keys for.
+                if (interaction.user == clonedkeyholder) {
+                    interaction.reply({ content: `You can't give yourself a copy of the primary key!`, flags: MessageFlags.Ephemeral })
                     return;
                 }
 
@@ -203,7 +203,7 @@ module.exports = {
 
                     if (confirmation.customId === 'agreetoclonebutton') {
                         // Skip the DM if it's the wearer giving a clone of their key.
-                        if (wearertoclone == interaction.user) {
+                        if ((wearertoclone == interaction.user) || (wearertoclone == clonedkeyholder)) {
                             let data = {
                                 textarray: "texts_key",
                                 textdata: {
