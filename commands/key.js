@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const { generateConfigModal, configoptions, getOption, setOption } = require('./../functions/configfunctions.js');
 const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require('./../functions/headwearfunctions.js');
-const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar } = require('./../functions/collarfunctions.js');
-const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity } = require('./../functions/vibefunctions.js');
+const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar } = require('./../functions/collarfunctions.js');
+const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity } = require('./../functions/vibefunctions.js');
 const { getText, getTextGeneric } = require('./../functions/textfunctions.js');
 
 module.exports = {
@@ -147,12 +147,12 @@ module.exports = {
                 // Check if the interaction user has access to clone the target restraint.
                 let canclone = false;
                 let chosenrestraintreadable;
-                if (chosenrestrainttoclone == "collar" && canAccessCollar(wearertoclone.id, interaction.user.id, undefined, true)) { 
+                if (chosenrestrainttoclone == "collar" && getCollar(wearertoclone.id) && canAccessCollar(wearertoclone.id, interaction.user.id, undefined, true).access) { 
                     canclone = true 
                     chosenrestraintreadable = "collar";
                     choiceemoji = "<:collar:1449984183261986939>";
                 }
-                if (chosenrestrainttoclone == "chastitybelt" && canAccessChastity(wearertoclone.id, interaction.user.id, undefined, true)) { 
+                if (chosenrestrainttoclone == "chastitybelt" && getChastity(wearertoclone.id) && canAccessChastity(wearertoclone.id, interaction.user.id, undefined, true).access) { 
                     canclone = true 
                     chosenrestraintreadable = "chastity belt"
                     choiceemoji = "<:Chastity:1073495208861380629>"
@@ -305,23 +305,23 @@ module.exports = {
                 let isclone = false;
                 let typeofrestraintreadable;
                 // Has primary keys to the collar!
-                if (typeofrestraint == "collar" && canAccessCollar(wearer, interaction.user.id, undefined, true)) { 
+                if (typeofrestraint == "collar" && getCollar(wearertoclone.id) && canAccessCollar(wearer, interaction.user.id, undefined, true).access) { 
                     canrevoke = true 
                     typeofrestraintreadable = "collar";
                     choiceemoji = "<:collar:1449984183261986939>";
                 }
-                if (typeofrestraint == "chastitybelt" && canAccessChastity(wearer, interaction.user.id, undefined, true)) { 
+                if (typeofrestraint == "chastitybelt" && getChastity(wearertoclone.id) && canAccessChastity(wearer, interaction.user.id, undefined, true).access) { 
                     canrevoke = true 
                     typeofrestraintreadable = "chastity belt"
                     choiceemoji = "<:Chastity:1073495208861380629>"
                 }
                 // Allow cloned key to be revoked if the cloned keyholder is the interaction user. 
-                if (typeofrestraint == "collar" && canAccessCollar(wearer, interaction.user.id) && (clonedkeyholder == interaction.user)) { 
+                if (typeofrestraint == "collar" && getCollar(wearertoclone.id) && canAccessCollar(wearer, interaction.user.id).access && (clonedkeyholder == interaction.user)) { 
                     canrevoke = true 
                     typeofrestraintreadable = "collar";
                     choiceemoji = "<:collar:1449984183261986939>";
                 }
-                if (typeofrestraint == "chastitybelt" && canAccessChastity(wearer, interaction.user.id) && (clonedkeyholder == interaction.user)) { 
+                if (typeofrestraint == "chastitybelt" && getCollar(wearertoclone.id) && canAccessChastity(wearer, interaction.user.id).access && (clonedkeyholder == interaction.user)) { 
                     canrevoke = true 
                     typeofrestraintreadable = "chastity belt"
                     choiceemoji = "<:Chastity:1073495208861380629>"
