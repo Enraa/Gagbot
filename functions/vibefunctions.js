@@ -49,6 +49,11 @@ const ORGASM_COOLDOWN = 60 * 1000;
 const ORGASM_FRUSTRATION = 5;
 const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE ?? "6000") ?? 6000;
 const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000;;
+// how large an impact the arousal variance has
+const AROUSAL_PERIOD_AMPLITUDE = 0.3;
+// the inverses of the period lengths used for arousal variance. The lengths should be coprime
+const AROUSAL_PERIOD_A = 1 / 19;
+const AROUSAL_PERIOD_B = 1 / 33;
 
 const assignChastity = (user, keyholder, namedchastity) => {
     if (process.chastity == undefined) { process.chastity = {} }
@@ -448,11 +453,12 @@ function stutterText(text, intensity, arousedtexts) {
 function updateArousalValues() {
     try {
         const now = Date.now();
+        const time = now * AROUSAL_STEP_SIZE_SCALING;
         for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = {arousal: 0, prev: 0, timestamp: now};
         for (const user in process.arousal) {
             const arousal = process.arousal[user];
             if (arousal.timestamp > now) continue;
-            const next = calcNextArousal(arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
+            const next = calcNextArousal(time, arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
             arousal.timestamp = now;
             arousal.prev = arousal.arousal;
             arousal.arousal = next < RESET_LIMIT ? 0 : next;
@@ -527,8 +533,8 @@ function clearArousal(user) {
   fs.writeFileSync(`${process.GagbotSavedFileDirectory}/arousal.txt`, JSON.stringify(process.arousal));
 }
 
-function calcNextArousal(arousal, prev, growthCoefficient, decayCoefficient) {
-  const noDecay = arousal + AROUSAL_STEP_SIZE_SCALING * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
+function calcNextArousal(time, arousal, prev, growthCoefficient, decayCoefficient) {
+  const noDecay = arousal + AROUSAL_STEP_SIZE_SCALING * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(time * AROUSAL_PERIOD_A) * Math.cos(time * AROUSAL_PERIOD_B)) * growthCoefficient * (RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1);
   const next = noDecay - AROUSAL_STEP_SIZE_SCALING * decayCoefficient * Math.max((arousal + prev / 2), 0.1);
   return next;
 }
