@@ -1,19 +1,21 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags } = require("discord.js");
-const { mittentypes } = require("./../functions/gagfunctions.js");
+const { gagtypes, mittentypes } = require("./../functions/gagfunctions.js");
 const { heavytypes } = require("./../functions/heavyfunctions.js");
 const { chastitytypes } = require("./../functions/vibefunctions.js");
 const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { collartypes } = require("./../functions/collarfunctions.js");
+const { wearabletypes } = require("./../functions/wearablefunctions.js");
 
 const PAGE_SIZE = 10;
 
 const restraints = [
   ["Heavy", heavytypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
   ["Mittens", mittentypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
-  //["Gags", process.gagtypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
+  ["Gags", gagtypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
   ["Chastity", chastitytypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
   ["Masks", headweartypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: (heavy.blockinspect || heavy.blockemote) ? (`Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`).slice(0,-2) : `-# *No description*`, inline: false }))],
   ["Collars", collartypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
+  ["Wearables", wearabletypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: (heavy.colorable ? `-# (multiple colors)` : `-# *No Colors Available*`), inline: false }))],
 ];
 
 const restraintOptions = restraints.map(([name, _], idx) => ({ label: name, value: idx }));

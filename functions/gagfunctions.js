@@ -42,6 +42,25 @@ const gagtypesset = () => {
     process.gagtypes = gagtypes;
 }
 
+// This should probably be better maintained with automation
+// Only used for the /list command. 
+const gagtypesout = [
+    { name: "Ball Gag" },
+    { name: "Bast Gag" },
+    { name: "Bweh Gag" },
+    { name: "Cat Gag" },
+    { name: "Code Gag" },
+    { name: "Enchanted Dog Gag" },
+    { name: "Donald Gag" },
+    { name: "Good Sub Gag" },
+    { name: "Ring Gag" },
+    { name: "Silent Panel Gag" },
+    { name: "Stuff Gag" },
+    { name: "Tape Gag" },
+    { name: "UwU Gag" },
+    { name: "Enchanted Wolf Gag" },
+]
+
 const mittentypes = [
     { name: "Kitty Paws", value: "mittens_kitty" },
     { name: "Cyber Doll Mittens", value: "mittens_cyberdoll" },
@@ -437,3 +456,4 @@ exports.garbleMessage = garbleMessage;
 exports.convertGagText = convertGagText;
 exports.getMittenName = getMittenName;
 exports.mittentypes = mittentypes;
+exports.gagtypes = gagtypesout;
