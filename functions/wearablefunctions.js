@@ -161,8 +161,6 @@ const loadWearables = () => {
         })
     })
 
-    fs.writeFileSync(`./seriouslywtf.txt`, JSON.stringify(wearablestoadd));
-
     let outarr = wearablestoadd.map((item) => {return { name: item.name, value: item.value }})
     // Since I have zero clue how to prevent the duplicates, 
     // the code feels solid and doesnt seem to have any obvious bugs.
