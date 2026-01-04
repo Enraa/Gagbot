@@ -459,6 +459,24 @@ const texts_key = {
             ]
         }
     },
+    give: {
+        self: {
+            collar: [
+                `USER_TAG gives USER_THEIR collar key to VAR_C2.`
+            ],
+            chastitybelt: [
+                `USER_TAG gives USER_THEIR chastity belt key to VAR_C2.`
+            ]
+        },
+        other: {
+            collar: [
+                `USER_TAG subtly gives TARGET_TAG's collar key to VAR_C2 without TARGET_THEM noticing!`
+            ],
+            chastitybelt: [
+                `USER_TAG subtly gives TARGET_TAG's chastity belt key to VAR_C2 without TARGET_THEM noticing!`
+            ]
+        }
+    },
     revoke: {
         isclone: {
             collar: [
@@ -1754,6 +1772,9 @@ const getTextGeneric = (type, data_in) => {
         "clone_accept": "TARGET_TAG has allowed you to make a clone of USER_THEIR VAR_C1 key, giving it to VAR_C2!",
         "clone_accept_self": "Cloning your key...",
         "clone_decline": "TARGET_TAG has forbidden you from making a clone of USER_THEIR VAR_C1 key for VAR_C2!",
+        "give_accept": "TARGET_TAG has allowed you to give USER_THEIR VAR_C1 key to VAR_C2!",
+        "give_accept_self": "Giving your key...",
+        "give_decline": "TARGET_TAG has forbidden you from giving USER_THEIR VAR_C1 key to VAR_C2!",
         "revoke_accept": "You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1.",
     }
 

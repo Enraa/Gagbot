@@ -288,6 +288,50 @@ async function promptCloneChastityKey(user, target, clonekeyholder, bra) {
     })
 }
 
+// Called to prompt the wearer if it is okay to give a key.
+async function promptTransferChastityKey(user, target, newKeyholder, bra) {
+    return new Promise(async (res,rej) => {
+        let buttons = [
+            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+        ]
+        let dmchannel = await target.createDM();
+        await dmchannel.send({
+            content: `${user} would like to give ${newKeyholder} your chastity ${bra ? "bra" : "belt"} key. Do you want to allow this?`,
+            components: [new ActionRowBuilder().addComponents(...buttons)]
+        }).then((mess) => {
+            // Create a collector for up to 30 seconds
+            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30_000, max: 1 })
+
+            collector.on('collect', async (i) => {
+                console.log(i)
+                if (i.customId == "acceptButton") {
+                    await mess.delete().then(() => {
+                        i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity ${bra ? "bra" : "belt"}!`)
+                    })
+                    res(true);
+                }
+                else {
+                    await mess.delete().then(() => {
+                        i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity ${bra ? "bra" : "belt"}!`)
+                    })
+                    rej(true);
+                }
+            })
+
+            collector.on('end', async (collected) => {
+                // timed out
+                if (collected.length == 0) {
+                    await mess.delete().then(() => {
+                        i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity ${bra ? "bra" : "belt"}!`)
+                    })
+                    rej(true);
+                }
+            })
+        })
+    })
+}
+
 // Called once we confirm the user is okay with it!
 // For cloned keys, we want to allow a cloned key to do everything except
 // giving the key or cloning the key. These actions should check the
@@ -675,6 +719,7 @@ exports.getChastityName = getChastityName;
 exports.canAccessChastity = canAccessChastity;
 
 exports.promptCloneChastityKey = promptCloneChastityKey;
+exports.promptTransferChastityKey = promptTransferChastityKey;
 exports.cloneChastityKey = cloneChastityKey;
 exports.revokeChastityKey = revokeChastityKey;
 exports.getClonedChastityKey = getClonedChastityKey;
