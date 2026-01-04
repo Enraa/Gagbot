@@ -49,27 +49,41 @@ const texts_collar = {
         ]
     },
     noheavy: {
-        namedcollar: {
-            key_other: [
-                `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a little lock in the lockable buckle and then hands TARGET_TAG the key!`
-            ],
-            key_self: [
-                `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a little lock in the lockable buckle and then hiding the key!`
-            ],
-            unlocked: [
-                `USER_TAG puts a VAR_C2 on USER_THEIR neck, but neglects to lock it!`
-            ]
+        self: {
+            nofreeuse: {
+                namedcollar: [
+                    `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a lock on the lockable buckle and hiding the key.`
+                ],
+                nonamedcollar: [
+                    `USER_TAG puts a collar on USER_THEIR neck, clicking a lock on the lockable buckle and hiding the key.`
+                ],
+            },
+            freeuse: {
+                namedcollar: [
+                    `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a lock on the lockable buckle and hiding the key. A little tag hangs off the collar with "Free Use!" written on it!`
+                ],
+                nonamedcollar: [
+                    `USER_TAG puts a collar on USER_THEIR neck, clicking a lock on the lockable buckle and hiding the key. A little tag hangs off the collar with "Free Use!" written on it!`
+                ],
+            }
         },
-        nonamedcollar: {
-            key_other: [
-                `USER_TAG puts a collar on USER_THEIR neck, clicking a little lock in the lockable buckle and then hands TARGET_TAG the key!`
-            ],
-            key_self: [
-                `USER_TAG puts a collar on USER_THEIR neck, clicking a little lock in the lockable buckle and then hiding the key!`
-            ],
-            unlocked: [
-                `USER_TAG puts a collar on USER_THEIR neck, but neglects to lock it!`
-            ]
+        other: {
+            nofreeuse: {
+                namedcollar: [
+                    `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a lock on the lockable buckle and then handing the key to TARGET_TAG.`
+                ],
+                nonamedcollar: [
+                    `USER_TAG puts a collar on USER_THEIR neck, clicking a lock on the lockable buckle and then handing the key to TARGET_TAG.`
+                ],
+            },
+            freeuse: {
+                namedcollar: [
+                    `USER_TAG puts a VAR_C2 on USER_THEIR neck, clicking a lock on the lockable buckle and then handing the key to TARGET_TAG. A little tag hangs off the collar with "Free Use!" written on it!`
+                ],
+                nonamedcollar: [
+                    `USER_TAG puts a collar on USER_THEIR neck, clicking a lock on the lockable buckle and then handing the key to TARGET_TAG. A little tag hangs off the collar with "Free Use!" written on it!`
+                ],
+            }
         },
         alreadycollared: [
             `You already have a collar on!`

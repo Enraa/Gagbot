@@ -21,6 +21,7 @@ Restraints and toys used include the following:
 - Gags, Corsets and Vibrators: Impair and modify speech in various ways
 - Mittens and Chastity: Restrict modifying these settings
 - Heavy Bondage: Restrict modifying any setting
+- Headwear and Apparel: Generally cosmetic, but certain pieces can do inhibiting effects
 - Collars: Allow others to perform more significant actions on you.
 You can access these commands by typing / to bring up a list of what can be done.
 *Where possible, the bot's design philosophy is **"Consent First,"** meaning that you will have to make an active choice to give up control. Examples of this include mittens, chastity and heavy bondage. Collars can override this, if you wear them. Please use these at your own risk and leverage the **keyholder** and **other controls** presented as necessary.*
@@ -76,18 +77,29 @@ const collarPermModal = (interaction, keyholder, freeuse) => {
     let othertext = "others"
     let warningText = `# WARNING 
 This restraint is intended to allow **others** to use /chastity, /mittens and /heavy on you!`
-    if (freeuse) { 
-        warningText = `${warningText}\nYou have designated yourself as free use and will allow *everyone* to play with you.` 
-    }
-    else if (keyholder == interaction.user) {
-        warningText = `${warningText}\nYou have designated yourself as your own keyholder. These settings will only apply when giving keys using **/givekeys** to someone.` 
+    let keyholderpermissionstext = ``
+    let freeusetext = ``;
+    if (keyholder == interaction.user && !freeuse) {
+        // Self keyholder, NOT free use
+        keyholderpermissionstext = `You have designated yourself as your own keyholder. These settings will only apply when giving keys using **/keys give** to someone.`
         othertext = "keyholder"
     }
-    else {
-        warningText = `${warningText}\nYou have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(keyholder.id, "object")} to play with you.` 
+    else if (keyholder == interaction.user) {
+        // Self keyholder, free use
+        keyholderpermissionstext = `**(Public Access)** You have designated yourself as your own keyholder, but with public access (Free Use). These settings will apply to others using your collar.`
+        othertext = "keyholder"
+    }
+    else if (keyholder != interaction.user && !freeuse) {
+        // Other keyholder, NOT free use
+        keyholderpermissionstext = `You have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(keyholder.id, "object")} to play with you.`
         othertext = getPronouns(keyholder.id, "object")
     }
-    warningText = `${warningText}\nCollars may result in unintended situations such as someone holding your chastity key other than you, or you becoming unable to remove restraints because of heavy bondage. Use with caution!`
+    else {
+        // Other keyholder, free use
+        keyholderpermissionstext = `**(Public Access)** You have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(keyholder.id, "object")} to play with you, in addition to everyone else as public access.`
+        othertext = getPronouns(keyholder.id, "object")
+    }
+    warningText = `${warningText}\n\n${keyholderpermissionstext}\n\nCollars may result in unintended situations such as someone holding your chastity key other than you, or you becoming unable to remove restraints because of heavy bondage. __**Use with caution!**__`
 
     restrictionWarningText.setContent(warningText)
 
@@ -154,6 +166,27 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
                 .setValue('heavy_no'),
         )
 
+    /*const isfreeuse = new StringSelectMenuBuilder()
+        .setCustomId('freeuse')
+        .setPlaceholder('Public Access')
+        .setRequired(true)
+        .addOptions(
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('Yes')
+                // Description of option
+                .setDescription('Allows anyone to access your collar')
+                // Value returned to you in modal submission
+                .setValue('freeuse_yes'),
+            new StringSelectMenuOptionBuilder()
+                // Label displayed to user
+                .setLabel('No')
+                // Description of option
+                .setDescription('Allows only keyholder to access your collar')
+                // Value returned to you in modal submission
+                .setValue('freeuse_no'),
+        )*/
+
     let collaroptionssorted = collartypes // We need to make this alphabetical later but meh
 
     let collarchoiceoptions = [
@@ -191,13 +224,19 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
         .setLabel(`Allow ${othertext} to put you in heavy bondage?`)
         .setStringSelectMenuComponent(restrictionsInputheavy)
 
+    // Gee Golly Discord I would FUCKING LOVE if I could add just... ONE, 
+    // just one more label element. But no. That would be too easy. Fuck. You. 
+    /*const isfreeuselabel = new LabelBuilder()
+        .setLabel(`(Optional) Public access to your collar?`)
+        .setStringSelectMenuComponent(isfreeuse)*/
+
     const collarchoiceLabel = new LabelBuilder()
         .setLabel(`(Optional) What specific collar to wear?`)
         .setStringSelectMenuComponent(collarchoice)
 
     // Add labels to modal
     modal.addTextDisplayComponents(restrictionWarningText)
-        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy,collarchoiceLabel)
+        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy, /*isfreeuselabel,*/ collarchoiceLabel)
 
     return modal;
 }

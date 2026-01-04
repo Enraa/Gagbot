@@ -77,7 +77,7 @@ module.exports = {
             // Wearable status
             // You probably can't really tell what you're wearing but...
             if (getWearable(inspectuser.id).length > 0) {
-                let headout = `👗 General Clothing: **`;
+                let headout = `👗 Apparel: **`;
                 let lockedwears = getLockedWearable(inspectuser.id);
                 getWearable(inspectuser.id).forEach((h) => {
                     if (lockedwears.includes(h)) {
@@ -92,7 +92,7 @@ module.exports = {
                 inspectparts.push(headout)
             }
             else {
-                inspectparts.push(`👗 General Clothing: Not currently worn.`)
+                inspectparts.push(`👗 Apparel: Not currently worn.`)
             }
             // Vibe status
             if (getVibe(inspectuser.id)) {

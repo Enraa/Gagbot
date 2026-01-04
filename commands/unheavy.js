@@ -47,10 +47,12 @@ module.exports = {
                 if (interaction.user == heavyuser) {
                     data.self = true;
                     interaction.reply(getText(data))
+                    return;
                 }
                 else {
                     data.other = true;
                     interaction.reply(getText(data))
+                    return;
                 }
             }
             else {

@@ -3,7 +3,7 @@ const { mittentypes } = require('./../functions/gagfunctions.js')
 const { heavytypes } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent, timelockChastityModalnew } = require('./../functions/interactivefunctions.js')
-const { generateConfigModal, configoptions, getOption, setOption } = require('./../functions/configfunctions.js');
+const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption } = require('./../functions/configfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -39,6 +39,29 @@ module.exports = {
 				// After doing so, run the NEW option's select_function. 
 				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id)
 				// Finally, reprompt the user, now with the new choice set. 
+				interaction.update(generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "spageopt") {
+				// Frankly I hate arrays for this but lets break it down. For servers this time.
+				// We retrieve all of the choices for the given configuration option, mapping their values.
+				// We then find the current value and then increment it, resetting to 0 when out of range.
+				// Then we assign it to setOption. This means that choices are chosen from top to bottom in a circle.
+				let optionschoice = configoptions[optionparts[2]][optionparts[3]].choices.map((c) => c.value);
+				let newindex = optionschoice.indexOf(getServerOption(interaction.guildId,optionparts[3])) + 1;
+				if (newindex >= optionschoice.length) { newindex = 0 }
+				setServerOption(interaction.guildId, optionparts[3], optionschoice[newindex])
+
+				// After doing so, run the NEW option's select_function. 
+				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id)
+				// Finally, reprompt the user, now with the new choice set. 
+				interaction.update(generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "serveroptchannel") {
+				let channelsselected = interaction.channels ? interaction.channels?.keys() : [];
+				channelsselected = Array.from(channelsselected);
+				console.log(channelsselected);
+				setServerOption(interaction.guildId, "server-channelspermitted", channelsselected)
+				console.log(getServerOption(interaction.guildId, "server-channelspermitted"))
 				interaction.update(generateConfigModal(interaction, optionparts[2]));
 			}
 		}

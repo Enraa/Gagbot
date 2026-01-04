@@ -366,7 +366,7 @@ const configoptions = {
         },
         "server-channelspermitted": {
             name: "Allowed Channels",
-            desc: "If selected, which channels to allow Gagbot to interact with.",
+            desc: `Which channels to allow Gagbot to interact with. Gagbot __MUST__ have **Manage Messages** and **Manage Webhooks** permissions in the channel.`,
             menutype: "choice_server_channels",
             default: [],
             disabled: () => { return false }
@@ -431,7 +431,7 @@ function generateConfigModal(interaction, menuset = "General", page) {
                         (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getServerOption(interaction.guildId,k))?.helptext}`)
                     )
                     .setButtonAccessory((button) =>
-                        button.setCustomId(`config_pageopt_${menuset}_${k}`)
+                        button.setCustomId(`config_spageopt_${menuset}_${k}`)
                             .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getServerOption(interaction.guildId,k))?.name)
                             .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getServerOption(interaction.guildId,k))?.style)
                             .setDisabled(configoptions[menuset][k].disabled(interaction.guildId))
@@ -441,25 +441,23 @@ function generateConfigModal(interaction, menuset = "General", page) {
             else if (configoptions[menuset][k].menutype == "choice_server_channels") {
                 let currentrole = "Select allowed channels..."
                 let channelsmentioned = [];
-                if (getServerOption(interaction.guildId,k) && getServerOption(interaction.guildId,k).length > 0) {
-                    getServerOption(interaction.guildId,k).forEach(async (c) => {
-                        let channeltoadd = await interaction.guild.channels.fetch(getServerOption(interaction.guildId,k))
-                        channelsmentioned.push(channeltoadd)
-                    })
+                if (getServerOption(interaction.guildId,"server-channelspermitted") && getServerOption(interaction.guildId,"server-channelspermitted").length > 0) {
+                    channelsmentioned = getServerOption(interaction.guildId,"server-channelspermitted")
                 }
                 
                 let roledescription = new TextDisplayBuilder()
                     .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
-                let rolesection = new ActionRowBuilder()
-                    .addComponents(new ChannelSelectMenuBuilder()
-                            .setCustomId(`config_serveroptrole_${k}`)
+                let component = new ChannelSelectMenuBuilder()
+                            .setCustomId(`config_serveroptchannel_${menuset}_${k}`)
                             .setPlaceholder(currentrole)
                             .setMinValues(0)
                             .setMaxValues(25)
-                    )
+
                 if (channelsmentioned && (channelsmentioned.length > 0)) {
-                    rolesection.setDefaultChannels(...channelsmentioned);
+                    component.setDefaultChannels(...channelsmentioned);
                 }
+                let rolesection = new ActionRowBuilder()
+                    .addComponents(component)
                 pagecomponents.push(roledescription)
                 pagecomponents.push(rolesection)
             }
@@ -474,7 +472,7 @@ function generateConfigModal(interaction, menuset = "General", page) {
                     .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
                 let rolesection = new ActionRowBuilder()
                     .addComponents(new RoleSelectMenuBuilder()
-                            .setCustomId(`config_serveroptrole_${k}`)
+                            .setCustomId(`config_serveroptrole_${menuset}_${k}`)
                             .setPlaceholder(currentrole)
                             .setMinValues(0)
                             .setMaxValues(1)
@@ -621,6 +619,7 @@ function getServerOption(serverID, option) {
     if (process.configs == undefined) { process.configs = {} } 
     if (process.configs.servers == undefined) { process.configs.servers = {} } 
     if (process.configs.servers[serverID] == undefined) { 
+        console.log("reinitting " + option)
         process.configs.servers[serverID] = {} 
         initializeServerOptions(serverID)
     } 
