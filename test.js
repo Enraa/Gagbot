@@ -33,9 +33,10 @@ client.on("clientReady", async () => {
     for (const guild of allguilds) {
         let guildfetched = await client.guilds.fetch(guild[0])
         let guildapps = await guildfetched.commands.fetch()
+        console.log(guildapps.length)
         guildapps = guildapps.map((m) => { return { name: m.name, desc: m.description, guildId: m.guildId, id: m.id }})
         console.log(guild[1].name)
-        console.log(guildapps)
+        console.log(guildapps.length)
     }
 })
 

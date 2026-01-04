@@ -114,7 +114,7 @@ module.exports = {
 					let chosenitemparts = chosenitem.split("+")
 					let replytextname;
 					if (chosenitemparts[1] == "head") {
-						removeLockedHeadgear(interaction.user.id, chosenitem)
+						removeLockedHeadgear(interaction.user.id, chosenitemparts[0])
 						replytextname = getHeadwearName(undefined, chosenitemparts[0])
 					}
 					else {

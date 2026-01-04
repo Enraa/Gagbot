@@ -485,24 +485,41 @@ function generateConfigModal(interaction, menuset = "General", page) {
             }
         })
 
-        // If manage messages on the server, user is considered a moderator.
-        // Give them server specific components, namely to designate a safeword role
-        if (interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages) && menuset == "Server Settings") {
-            let currrole // Get current safeword role that's set here
-            pagecomponents.push(new ActionRowBuilder()
-                .addComponents(new RoleSelectMenuBuilder()
-                    .setCustomId(`roleselectopt_${interaction.guildId}`)
-                    .setPlaceholder(`Select Safeword role for /reset`)
-                    .setMinValues(0)
-                    .setMaxValues(1)
-                    //.setDefaultRoles() -- Set the current safeword role here if theres one already
-                )
-            )
-        }
-
         let pagemenutext = menuset;
-        // If bot owner, construct a selector for servers here and allow them to make the client leave them
-
+        // If bot owner, construct a selector for servers here and allow them to create defaults and then to leave after.
+        if (menuset == "Bot" && (interaction.user.id == interaction.client.application.owner.id)) {
+            let asyncfunc = async () => {
+                
+            }
+            let guildchoices = [];
+            let allguilds = interaction.client.guilds.fetch();
+            let allguildsarr = [];
+            for (const guild in allguilds) {
+                allguildsarr.push(guild[0]);
+            }
+            allguildsarr.forEach(async (g) => {
+                let guildresolved = await interaction.client.guilds.fetch(g);
+                let guildapps = await guildresolved.commands.fetch().map((m) => m.id)
+                let guildappsset = ((guildapps.length) > 0) ? true : false;
+                
+                //guildapps = guildapps.map((m) => { return { name: m.name, desc: m.description, guildId: m.guildId, id: m.id }})
+                let guildsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`### ${guildappsset ? "Delete Config in " : "Create Default in "}${guildresolved}\n-# ‎   ⤷ ${guildappsset ? `Loaded with ${guildapps.length} commands` : `*Not Active on this Server*`}`)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_botguilds_${menuset}_${g}_${guildappsset ? "delete" : "setup"}`)
+                            .setLabel(guildappsset ? "Delete Config" : "Setup Default Config")
+                            .setStyle(guildappsset ? ButtonStyle.Danger : ButtonStyle.Primary)
+                    )
+                guildchoices.push(guildsection)
+            })
+            guildchoices = guildchoices.slice(0, 8)
+            guildchoices.forEach((g) => {
+                pagecomponents.push(g)
+            })
+        }
+        
         // Construct the menu selector
         let menupageoptions = new StringSelectMenuBuilder()
             .setCustomId('config_menuselector')

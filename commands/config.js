@@ -64,6 +64,11 @@ module.exports = {
 				console.log(getServerOption(interaction.guildId, "server-channelspermitted"))
 				interaction.update(generateConfigModal(interaction, optionparts[2]));
 			}
+			else if (optionparts[1] == "botguilds") {
+				console.log(optionparts[4])
+				console.log(optionparts[3])
+				interaction.update(generateConfigModal(interaction, optionparts[2]));
+			}
 		}
 		catch (err) {
 			console.log(err);
