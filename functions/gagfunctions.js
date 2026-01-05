@@ -214,7 +214,7 @@ const splitMessage = (text, inputRegex=null) => {
 
 const modifymessage = async (msg, threadId) => {
     try {
-        console.log(msg.content);
+        console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
         // Mark modified message or not
         let modifiedmessage = false;
         let outtext = ``;
@@ -462,7 +462,6 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID) {
         }
 
         // Determine if an attachment was posted in the original message. 
-        console.log(msg.attachments)
         if (msg.attachments.size > 0) {
             console.log(`IT HAS IMAGES LOL`)
             let attachments = [];

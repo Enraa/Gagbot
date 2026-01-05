@@ -511,7 +511,6 @@ module.exports = {
                     }
                 }
             }
-            console.log(data); // since I have no idea why vibe coding is failing. 
         }
         catch (err) {
             console.log(err)
