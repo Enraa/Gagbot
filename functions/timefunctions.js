@@ -115,6 +115,10 @@ const saveFiles = () => {
                     filepath = `${process.GagbotSavedFileDirectory}/chastityusers.txt`
                     processvar = "chastity"
                     break;
+                case "chastitybra":
+                    filepath = `${process.GagbotSavedFileDirectory}/chastitybrausers.txt`
+                    processvar = "chastitybra"
+                    break;
                 case "arousal":
                     filepath = `${process.GagbotSavedFileDirectory}/arousal.txt`
                     processvar = "arousal"

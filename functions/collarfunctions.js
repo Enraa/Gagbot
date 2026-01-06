@@ -130,6 +130,23 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
 
         return accessval;
     }
+    if (cloning) {
+        // Others access only when access is set to 0. 
+        if ((getCollar(collaruser)?.access == 0) && (keyholder != collaruser)) {
+            accessval.access = true;
+            accessval.public = true;
+        }
+        // Keyholder access if access is unset (no timelocks)
+        if ((getCollar(collaruser)?.access == undefined) && (getCollar(collaruser)?.keyholder == keyholder)) {
+            accessval.access = true;
+        }
+        // Keyholder access if timelock is 1 (keyholder only) but only if not self.
+        if ((getCollar(collaruser)?.access == 1) && (getCollar(collaruser)?.keyholder == keyholder) && (collaruser != keyholder)) {
+            accessval.access = true;
+        }
+
+        return accessval;
+    }
     // Others access only when access is set to 0. 
     if ((getCollar(collaruser)?.access == 0) && (keyholder != collaruser)) {
         accessval.access = true;
@@ -141,7 +158,7 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
     }
     // Secondary Keyholder access (cloned key), but only if cloning is NOT true and no timelocks
     let clonedkeys = getCollar(collaruser)?.clonedKeyholders ?? [];
-    if ((clonedkeys.includes(keyholder)) && (cloning != true) && (getCollar(collaruser)?.access == undefined)) {
+    if ((clonedkeys.includes(keyholder)) && (getCollar(collaruser)?.access == undefined)) {
         accessval.access = true;
     }
     // Keyholder access if timelock is 1 (keyholder only) but only if not self.
@@ -149,7 +166,7 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
         accessval.access = true;
     }
     // Secondary Keyholder access (cloned key) if access is 1, but only if not self.
-    if ((clonedkeys.includes(keyholder)) && (cloning != true) && (getCollar(collaruser)?.access == 1) && (collaruser != keyholder)) {
+    if ((clonedkeys.includes(keyholder)) && (getCollar(collaruser)?.access == 1) && (collaruser != keyholder)) {
         accessval.access = true;
     }
     // Free use collar if not locked.

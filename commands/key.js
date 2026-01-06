@@ -4,6 +4,16 @@ const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, remo
 const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar, transferCollarKey, promptTransferCollarKey } = require('./../functions/collarfunctions.js');
 const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity, transferChastityKey, promptTransferChastityKey } = require('./../functions/vibefunctions.js');
 const { getText, getTextGeneric } = require('./../functions/textfunctions.js');
+const { getPronouns } = require('../functions/pronounfunctions.js');
+const { getChastityBra } = require('../functions/vibefunctions.js');
+const { canAccessChastityBra } = require('../functions/vibefunctions.js');
+const { getClonedChastityBraKeysOwned } = require('../functions/vibefunctions.js');
+const { getOtherKeysChastityBra } = require('../functions/vibefunctions.js');
+const { cloneChastityBraKey } = require('../functions/vibefunctions.js');
+const { promptCloneChastityBraKey } = require('../functions/vibefunctions.js');
+const { revokeChastityBraKey } = require('../functions/vibefunctions.js');
+const { transferChastityBraKey } = require('../functions/vibefunctions.js');
+const { promptTransferChastityBraKey } = require('../functions/vibefunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -65,25 +75,31 @@ module.exports = {
                 let chosenuserid = interaction.options.get('wearer')?.value ?? interaction.user.id // Note we can only retrieve the user ID here!
 				let collarkeyholder = (getCollar(chosenuserid) && canAccessCollar(chosenuserid, interaction.user.id, undefined, true).access);
                 let chastitykeyholder = (getChastity(chosenuserid) && canAccessChastity(chosenuserid, interaction.user.id, undefined, true).access);
+                let chastitybrakeyholder = (getChastityBra(chosenuserid) && canAccessChastityBra(chosenuserid, interaction.user.id, undefined, true).access);
 
 				let choices = [];
-                if (!collarkeyholder && !chastitykeyholder) {
+                if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
                     choices = [{ name: "No Keys Available", value: "nokeys" }]
                 }
                 if (collarkeyholder) {
                     choices.push({ name: "Collar", value: "collar" })
                 }
                 if (chastitykeyholder) {
-                    choices.push({ name: "Chastity", value: "chastitybelt" })
+                    choices.push({ name: "Chastity Belt", value: "chastitybelt" })
+                }
+                if (chastitybrakeyholder) {
+                    choices.push({ name: "Chastity Bra", value: "chastitybra" })
                 }
 
 				await interaction.respond(choices)
 			}
 			else if (subcommand == "revoke") {
 				let ownedclonedchastitykeys = getClonedChastityKeysOwned(interaction.user.id)
+                let ownedclonedchastitybrakeys = getClonedChastityBraKeysOwned(interaction.user.id)
                 let ownedclonedcollarkeys = getClonedCollarKeysOwned(interaction.user.id)
 
                 let clonedchastitykeys = getOtherKeysChastity(interaction.user.id)
+                let clonedchastitybrakeys = getOtherKeysChastityBra(interaction.user.id)
                 let clonedcollarkeys = getOtherKeysCollar(interaction.user.id)
 
                 // Iterate over every member, ensuring that they are cached using the await command.
@@ -111,11 +127,17 @@ module.exports = {
                 ownedclonedchastitykeys = ownedclonedchastitykeys.map((k) => {
                     return { name: `Your key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s chastity belt`, value: `${k.split("_")[0]}_${interaction.user.id}_${k.split("_")[1]}`}
                 })
+                ownedclonedchastitybrakeys = ownedclonedchastitybrakeys.map((k) => {
+                    return { name: `Your key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s chastity bra`, value: `${k.split("_")[0]}_${interaction.user.id}_${k.split("_")[1]}`}
+                })
                 ownedclonedcollarkeys = ownedclonedcollarkeys.map((k) => {
                     return { name: `Your key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s collar`, value: `${k.split("_")[0]}_${interaction.user.id}_${k.split("_")[1]}`}
                 })
                 clonedchastitykeys = clonedchastitykeys.map((k) => {
                     return { name: `${interaction.guild.members.cache.get(k.split("_")[1])?.displayName}'s key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s chastity belt`.slice(0,100), value: `${k}_chastitybelt` }
+                })
+                clonedchastitybrakeys = clonedchastitybrakeys.map((k) => {
+                    return { name: `${interaction.guild.members.cache.get(k.split("_")[1])?.displayName}'s key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s chastity bra`.slice(0,100), value: `${k}_chastitybra` }
                 })
                 clonedcollarkeys = clonedcollarkeys.map((k) => {
                     return { name: `${interaction.guild.members.cache.get(k.split("_")[1])?.displayName}'s key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s collar`.slice(0,100), value: `${k}_collar` }
@@ -168,6 +190,11 @@ module.exports = {
                     canclone = true 
                     chosenrestraintreadable = "chastity belt"
                     choiceemoji = "<:Chastity:1073495208861380629>"
+                }
+                if (chosenrestrainttoclone == "chastitybra" && getChastityBra(wearertoclone.id) && canAccessChastityBra(wearertoclone.id, interaction.user.id, undefined, true).access) { 
+                    canclone = true 
+                    chosenrestraintreadable = "chastity bra"
+                    choiceemoji = "<:chastitybra:1457992137164718152>"
                 }
                 if (!canclone) {
                     interaction.reply({ content: `You do not have the keys for ${wearertoclone}'s ${chosenrestrainttoclone}.`, flags: MessageFlags.Ephemeral })
@@ -244,6 +271,11 @@ module.exports = {
                                 await confirmation.followUp(getText(data))
                                 cloneChastityKey(wearertoclone.id, clonedkeyholder.id);
                             }
+                            else if (chosenrestrainttoclone == "chastitybra") {
+                                await confirmation.update({ content: getTextGeneric("clone_accept_self", data.textdata), components: [] })
+                                await confirmation.followUp(getText(data))
+                                cloneChastityBraKey(wearertoclone.id, clonedkeyholder.id);
+                            }
                         }
                         else {
                             await confirmation.update({ content: `Prompting the user for permission.`, components: [] });
@@ -293,6 +325,29 @@ module.exports = {
                                     await interaction.editReply(getTextGeneric("clone_decline", datatogeneric))
                                 })
                             }
+                            else if (chosenrestrainttoclone == "chastitybra") {
+                                let canRemove = await promptCloneChastityBraKey(interaction.user, wearertoclone, clonedkeyholder).then(async (res) => {
+                                    // User said yes
+                                    let data = {
+                                        textarray: "texts_key",
+                                        textdata: {
+                                            interactionuser: interaction.user,
+                                            targetuser: wearertoclone,
+                                            c1: chosenrestraintreadable,
+                                            c2: clonedkeyholder
+                                        }
+                                    }
+                                    data.clone = true;
+                                    data.other = true;
+                                    data[chosenrestrainttoclone] = true;
+                                    await confirmation.editReply(getTextGeneric("clone_accept", data.textdata))
+                                    await confirmation.followUp(getText(data))
+                                    cloneChastityBraKey(wearertoclone.id, clonedkeyholder.id);
+                                }, async (rej) => {
+                                    // User said no.
+                                    await interaction.editReply(getTextGeneric("clone_decline", datatogeneric))
+                                })
+                            }
                         }
                     } else if (confirmation.customId === 'cancel') {
                         await confirmation.update({ content: 'Action cancelled', components: [] });
@@ -318,31 +373,47 @@ module.exports = {
                 let wearer = await interaction.guild.members.fetch(cloneresponse.split("_")[0])
                 let typeofrestraint = cloneresponse.split("_")[2]
 
+                /*console.log(typeofrestraint)
+                if (typeofrestraint == "chastitybelt") {
+                    console.log(getChastity(wearer.id));
+                    console.log(canAccessChastity(wearer.id, interaction.user.id, undefined, true).access)
+                }*/
+
                 // Check if the interaction user has access to clone the target restraint.
                 let canrevoke = false;
                 let isclone = false;
                 let typeofrestraintreadable;
                 // Has primary keys to the collar!
-                if (typeofrestraint == "collar" && getCollar(wearer) && canAccessCollar(wearer, interaction.user.id, undefined, true).access) { 
+                if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true).access) { 
                     canrevoke = true 
                     typeofrestraintreadable = "collar";
                     choiceemoji = "<:collar:1449984183261986939>";
                 }
-                if (typeofrestraint == "chastitybelt" && getChastity(wearer) && canAccessChastity(wearer, interaction.user.id, undefined, true).access) { 
+                if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true).access) { 
                     canrevoke = true 
                     typeofrestraintreadable = "chastity belt"
                     choiceemoji = "<:Chastity:1073495208861380629>"
+                }
+                if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true).access) { 
+                    canrevoke = true 
+                    typeofrestraintreadable = "chastity bra"
+                    choiceemoji = "<:chastitybra:1457992137164718152>"
                 }
                 // Allow cloned key to be revoked if the cloned keyholder is the interaction user. 
-                if (typeofrestraint == "collar" && getCollar(wearer) && canAccessCollar(wearer, interaction.user.id).access && (clonedkeyholder == interaction.user)) { 
+                if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id).access && (clonedkeyholder == interaction.user)) { 
                     canrevoke = true 
                     typeofrestraintreadable = "collar";
                     choiceemoji = "<:collar:1449984183261986939>";
                 }
-                if (typeofrestraint == "chastitybelt" && getCollar(wearer) && canAccessChastity(wearer, interaction.user.id).access && (clonedkeyholder == interaction.user)) { 
+                if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id).access && (clonedkeyholder == interaction.user)) { 
                     canrevoke = true 
                     typeofrestraintreadable = "chastity belt"
                     choiceemoji = "<:Chastity:1073495208861380629>"
+                }
+                if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id).access && (clonedkeyholder == interaction.user)) { 
+                    canrevoke = true 
+                    typeofrestraintreadable = "chastity bra"
+                    choiceemoji = "<:chastitybra:1457992137164718152>"
                 }
                 if ((clonedkeyholder == interaction.user)) {
                     isclone = true;
@@ -381,6 +452,10 @@ module.exports = {
                 ]
 
                 let verifyresponse = `Revoking the cloned keys for ${choiceemoji}${wearer} from 🔑${clonedkeyholder}. ${clonedkeyholder} will no longer have access to ${wearer}'s ${typeofrestraintreadable}.\n\nPlease confirm by pressing the button below:`
+                if (wearer.id == clonedkeyholder.id) {
+                    // they hold their own cloned key. 
+                    verifyresponse = `Revoking the cloned keys for ${choiceemoji}${wearer} from 🔑${clonedkeyholder}. ${getPronouns(clonedkeyholder.id, "subject", true)} will no longer have access to ${getPronouns(clonedkeyholder.id, "possessiveDeterminer")} ${typeofrestraintreadable}.\n\nPlease confirm by pressing the button below:`
+                }
                 if (isclone) {
                     verifyresponse = `Revoking your cloned keys for ${choiceemoji}${wearer}. You will no longer have access to ${wearer}'s ${typeofrestraintreadable}.\n\nPlease confirm by pressing the button below:`
                 }
@@ -425,6 +500,11 @@ module.exports = {
                             await confirmation.followUp(getText(data))
                             revokeChastityKey(wearer.id, clonedkeyholder.id);
                         }
+                        else if (typeofrestraint == "chastitybra") {
+                            await confirmation.update({ content: getTextGeneric("revoke_accept", data.textdata), components: [] })
+                            await confirmation.followUp(getText(data))
+                            revokeChastityBraKey(wearer.id, clonedkeyholder.id);
+                        }
                     } else if (confirmation.customId === 'cancel') {
                         await confirmation.update({ content: 'Action cancelled', components: [] });
                         return; // Stop with the key revokation immediately. 
@@ -464,6 +544,11 @@ module.exports = {
                     cangive = true 
                     chosenrestraintreadable = "chastity belt"
                     choiceemoji = "<:Chastity:1073495208861380629>"
+                }
+                if (restraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true)) { 
+                    cangive = true 
+                    chosenrestraintreadable = "chastity bra"
+                    choiceemoji = "<:chastitybra:1457992137164718152>"
                 }
                 if (!cangive) {
                     interaction.reply({ content: `You do not have the keys for ${wearer}'s ${restraint}.`, flags: MessageFlags.Ephemeral })
@@ -539,6 +624,11 @@ module.exports = {
                                 await confirmation.followUp(getText(data))
                                 transferChastityKey(wearer.id, newKeyholder.id);
                             }
+                            else if (restraint == "chastitybra") {
+                                await confirmation.update({ content: getTextGeneric("give_accept_self", data.textdata), components: [] })
+                                await confirmation.followUp(getText(data))
+                                transferChastityBraKey(wearer.id, newKeyholder.id);
+                            }
                         }
                         else {
                             await confirmation.update({ content: `Prompting the user for permission.`, components: [] });
@@ -592,6 +682,38 @@ module.exports = {
                                     await confirmation.editReply(getTextGeneric("give_accept", data.textdata))
                                     await confirmation.followUp(getText(data))
                                     transferChastityKey(wearer.id, newKeyholder.id);
+                                }, async (rej) => {
+                                    // User said no.
+                                    let data = {
+                                        textarray: "texts_key",
+                                        textdata: {
+                                            interactionuser: interaction.user,
+                                            targetuser: wearer,
+                                            c1: chosenrestraintreadable,
+                                            c2: newKeyholder
+                                        }
+                                    }
+                                    await interaction.editReply(getTextGeneric("give_decline", data.textdata))
+                                })
+                            }
+                            else if (restraint == "chastitybra") {
+                                let canRemove = await promptTransferChastityBraKey(interaction.user, wearer, newKeyholder).then(async (res) => {
+                                    // User said yes
+                                    let data = {
+                                        textarray: "texts_key",
+                                        textdata: {
+                                            interactionuser: interaction.user,
+                                            targetuser: wearer,
+                                            c1: chosenrestraintreadable,
+                                            c2: newKeyholder
+                                        }
+                                    }
+                                    data.give = true;
+                                    data.other = true;
+                                    data[restraint] = true;
+                                    await confirmation.editReply(getTextGeneric("give_accept", data.textdata))
+                                    await confirmation.followUp(getText(data))
+                                    transferChastityBraKey(wearer.id, newKeyholder.id);
                                 }, async (rej) => {
                                     // User said no.
                                     let data = {

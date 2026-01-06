@@ -125,7 +125,7 @@ module.exports = {
                             else {
                                 // We do not own the key for the belt!
                                 data.nokey = true
-                                interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+                                interaction.reply(getText(data));
                             }
                         }
                         else {

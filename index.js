@@ -42,6 +42,7 @@ let processdatatoload = [
     { textname: "gaggedusers.txt", processvar: "gags", default: {} },
     { textname: "mittenedusers.txt", processvar: "mitten", default: {} },
     { textname: "chastityusers.txt", processvar: "chastity", default: {} },
+    { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {} },
     { textname: "vibeusers.txt", processvar: "vibe", default: {} },
     { textname: "collarusers.txt", processvar: "collar", default: {} },
     { textname: "heavyusers.txt", processvar: "heavy", default: {} },

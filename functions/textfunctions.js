@@ -1,40 +1,80 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
 
 const texts_chastity = {
-    heavy: {
-        chastity: [
-            `USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR chastity belt, but it's futile!`
-        ],
-        nochastity: [
-            `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a chastity belt, but can't!`
-        ]
-    },
-    noheavy: {
-        chastity: {
-            key_other: [
-                `You are already locked in a chastity belt and TARGET_TAG has the key!`
+    chastitybelt: {
+        heavy: {
+            chastity: [
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`
             ],
-            key_self: [
-                `You are already locked in a chastity belt and you're holding the key!`
+            nochastity: [
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`
             ]
         },
-        nochastity: {
-            namedchastity: {
+        noheavy: {
+            chastity: {
                 key_other: [
-                    `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                    `You are already locked in a chastity belt and TARGET_TAG has the key!`
                 ],
                 key_self: [
-                    `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                    `You are already locked in a chastity belt and you're holding the key!`
                 ]
             },
-            nonamedchastity: {
+            nochastity: {
+                namedchastity: {
+                    key_other: [
+                        `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                    ],
+                    key_self: [
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                    ]
+                },
+                nonamedchastity: {
+                    key_other: [
+                        `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                    ],
+                    key_self: [
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                    ]
+                },
+            }
+        }
+    },
+    chastitybra: {
+        heavy: {
+            chastity: [
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`
+            ],
+            nochastity: [
+                `USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`
+            ]
+        },
+        noheavy: {
+            chastity: {
                 key_other: [
-                    `USER_TAG slips into a chastity belt, slipping on a tiny lock, and then hands TARGET_TAG the key!`
+                    `You are already locked in a chastity bra and TARGET_TAG has the key!`
                 ],
                 key_self: [
-                    `USER_TAG puts a chastity belt on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                    `You are already locked in a chastity bra and you're holding the key!`
                 ]
             },
+            nochastity: {
+                namedchastity: {
+                    key_other: [
+                        `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`
+                    ],
+                    key_self: [
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                    ]
+                },
+                nonamedchastity: {
+                    key_other: [
+                        `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`
+                    ],
+                    key_self: [
+                        `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`
+                    ]
+                },
+            }
         }
     }
 }
@@ -137,38 +177,74 @@ const texts_collarequip = {
                     ]
                 },
                 chastity: {
-                    namedchastity: {
-                        alreadyworn: [
-                            `TARGET_TAG is already in a chastity belt, with keys held by VAR_C4!`
-                        ],
-                        allowed: {
-                            key_self: [
-                                `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR waist and clicking the lock shut before TARGET_THEY can even react!`
+                    chastitybelt: {
+                        namedchastity: {
+                            alreadyworn: [
+                                `TARGET_TAG is already in a chastity belt, with keys held by VAR_C4!`
                             ],
-                            key_other: [
-                                `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR waist before clicking the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
-                            ]
-                        }
-                    },
-                    nonamedchastity: {
-                        alreadyworn: [
-                            `TARGET_TAG is already in a chastity belt, with keys held by VAR_C4!`
-                        ],
-                        allowed: {
-                            key_self: [
-                                `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist and clicking the lock shut before TARGET_THEY can even react!`
+                            allowed: {
+                                key_self: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR waist and clicking the lock shut before TARGET_THEY can even react!`
+                                ],
+                                key_other: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR waist before clicking the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                                ]
+                            }
+                        },
+                        nonamedchastity: {
+                            alreadyworn: [
+                                `TARGET_TAG is already in a chastity belt, with keys held by VAR_C4!`
                             ],
-                            key_other: [
-                                `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist before clicking the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                            allowed: {
+                                key_self: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist and clicking the lock shut before TARGET_THEY can even react!`
+                                ],
+                                key_other: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a chastity belt around TARGET_THEIR waist before clicking the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                                ]
+                            },
+                            notallowed: [
+                                `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
                             ]
                         },
                         notallowed: [
                             `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
                         ]
                     },
-                    notallowed: [
-                        `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
-                    ]
+                    chastitybra: {
+                        namedchastity: {
+                            alreadyworn: [
+                                `TARGET_TAG is already in a chastity bra, with keys held by VAR_C4!`
+                            ],
+                            allowed: {
+                                key_self: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR chest and clicks the lock shut before TARGET_THEY can even react!`
+                                ],
+                                key_other: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a VAR_C3 around TARGET_THEIR chest and clicks the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                                ]
+                            }
+                        },
+                        nonamedchastity: {
+                            alreadyworn: [
+                                `TARGET_TAG is already in a chastity bra, with keys held by VAR_C4!`
+                            ],
+                            allowed: {
+                                key_self: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a chastity bra around TARGET_THEIR chest and clicks the lock shut before TARGET_THEY can even react!`
+                                ],
+                                key_other: [
+                                    `USER_TAG grabs TARGET_TAG and wraps a chastity bra around TARGET_THEIR chest and clicks the lock shut and tossing the key over to VAR_C5! TARGET_THEY_CAP will no doubt have to earn TARGET_THEIR chastity back!`
+                                ]
+                            },
+                            notallowed: [
+                                `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
+                            ]
+                        },
+                        notallowed: [
+                            `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
+                        ]
+                    }
                 } 
             },
             nokey: [
@@ -579,7 +655,7 @@ const texts_mitten = {
 const texts_struggle = {
     heavy: [
         `USER_TAG squirms in USER_THEIR VAR_C1, trying to squeeze out of it but USER_THEY really didn't think about how challenging that'd be.`,
-        `Despite USER_THEIR best efforts, the VAR_C1 binding USER_TAG's arms (and maybe legs) refuses to budge!`,
+        `Despite USER_THEIR best efforts, the VAR_C1 binding USER_TAG's arms (and maybe legs) refuse to budge!`,
         `The VAR_C1 creaks loudly as USER_TAG *thrashes* in USER_THEIR bondage, trying to escape!`,
         `USER_TAG tries USER_THEIR *best* to get some leverage and escape USER_THEIR bondage, but stops just short of potentially pulling a muscle.`,
         `USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
@@ -587,7 +663,7 @@ const texts_struggle = {
     ],
     gag: {
         heavy: [
-            `Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_SHE is wearing!`,
+            `Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_THEY USER_ISARE wearing!`,
             `USER_TAG noms on USER_THEIR VAR_C2, trying to loosen it and maybe get it out of USER_THEIR mouth!`,
             `USER_TAG tries to push USER_THEIR VAR_C2 out with USER_THEIR tongue! It had no effect!`
         ],
@@ -657,7 +733,7 @@ const texts_struggle = {
                 `USER_TAG sighs as USER_THEY USER_TRY to fumble with USER_THEIR VAR_C4. When was the last time USER_THEY had freedom or relief?`,
                 `USER_TAG mews in despair as USER_THEY can't get *any* feeling when touching down there! Poor USER_THEM!`,
                 `USER_TAG tried so hard to touch USER_THEMSELF, and didn't get so far. But in the end, it doesn't even matter.`,
-                `USER_TAG fusses with USER_THEIR belt, but USER_THEY forgot: Good USER_PRAISEOBJECT ***never*** cum.`,
+                `USER_TAG fusses with USER_THEIR belt, but USER_THEY forgot: Good USER_PRAISEOBJECTs ***never*** cum.`,
             ],
             // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
             mitten: [
@@ -793,84 +869,161 @@ const texts_struggle = {
         `USER_TAG starts mumbling, counting sheep to USER_THEMSELF. USER_THEY might be a little sleepy...`,
         `USER_TAG starts scrolling on YourSpace, and comes across a post titled, 'rawr XD' with a girl with too much eyeshadow and a terrible webcam in the dark.`,
         `USER_TAG wants to take a selfie. In bondage, of course. Who wouldn't want to take beautiful pictures wearing a ball gag?`,
-        `USER_TAG's breathing accelerates a little as USER_THEY fantasize about being in chains, kneeling at the feet of someone here... Who will give USER_THEM that fantasy?`,
+        `USER_TAG's breathing accelerates a little as USER_THEY fantasizeUSER_S about being in chains, kneeling at the feet of someone here... Who will give USER_THEM that fantasy?`,
         `USER_TAG might have had some water recently, but it's good to remember to get more. Can never have too much, afterall.`,
         `All this talk about servitude and the moans from the dungeon's denizens makes it impossible for USER_TAG to focus...`,
         `USER_TAG wants to lay in someone's lap. Or maybe have someone lay in USER_THEIR lap. Maybe both.`,
         `USER_TAG wants to pet a cute kitty. Or a cute doggo. Maybe lots of cute kitties and doggos!`,
+        `USER_TAG prepares for battle with a sword and flourishes it. USER_THEY_CAP USER_ISARE going to hunt the legendary sHE!`,
+        `USER_TAG sits and looks around patiently because USER_THEY USER_ISARE a **good USER_PRAISEOBJECT!**`,
     ]
 }
 
 const texts_unchastity = {
-    heavy: {
-        self: {
-            chastity: [
-                `USER_TAG shifts in USER_THEIR VAR_C1, trying to squirm out of USER_THEIR chastity belt, but USER_THEIR metal prison holds firmly to USER_THEIR body!`
-            ],
-            // ephemeral
-            nochastity: [
-                `You're not in a chastity belt, but you wouldn't be able to remove it anyway!`
-            ]
-        },
-        other: {
-            chastity: [
-                `USER_TAG shifts in USER_THEIR VAR_C1, trying to help TARGET_TAG out of TARGET_THEIR chastity belt, but can't get a good grip on the locking mechanism because of USER_THEIR bondage!`
-            ],
-            // ephemeral
-            nochastity: [
-                `TARGET_TAG is not in a chastity belt, but you wouldn't be able to remove it anyway!`
-            ]
-        }
-    },
-    noheavy: {
-        self: {
-            chastity: {
-                key: {
-                    fumble: {
-                        discard: [
-                            `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEIR hands are so shaky that the key slips and falls somewhere with a klang!`
-                        ],
-                        nodiscard: [
-                            `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEY struggleUSER_S to guide it in the mechanism!`
-                        ]
-                    },
-                    nofumble: [
-                        `USER_TAG puts the key in the lock on USER_THEIR belt and unlocks it, freeing USER_THEMSELF from that wretched prison!`
-                    ]
-                },
-                nokey: [
-                    `USER_TAG runs USER_THEIR fingers uselessly on the metal of USER_THEIR chastity belt, but USER_THEY can't unlock it without the key!`
+    chastitybelt: {
+        heavy: {
+            self: {
+                chastity: [
+                    `USER_TAG shifts in USER_THEIR VAR_C1, trying to squirm out of USER_THEIR chastity belt, but USER_THEIR metal prison holds firmly to USER_THEIR body!`
+                ],
+                // ephemeral
+                nochastity: [
+                    `You're not in a chastity belt, but you wouldn't be able to remove it anyway!`
                 ]
             },
-            // ephemeral
-            nochastity: [
-                `You aren't wearing a chastity belt!`
-            ]
+            other: {
+                chastity: [
+                    `USER_TAG shifts in USER_THEIR VAR_C1, trying to help TARGET_TAG out of TARGET_THEIR chastity belt, but can't get a good grip on the locking mechanism because of USER_THEIR bondage!`
+                ],
+                // ephemeral
+                nochastity: [
+                    `TARGET_TAG is not in a chastity belt, but you wouldn't be able to remove it anyway!`
+                ]
+            }
         },
-        other: {
-            chastity: {
-                key: {
-                    fumble: {
-                        discard: [
-                            `USER_TAG tries to use the key for TARGET_TAG's belt, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
-                        ],
-                        nodiscard: [
-                            `USER_TAG tries to unlock TARGET_TAG's belt, but USER_THEY can't focus enough to guide the key into the keyhole!`
+        noheavy: {
+            self: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: [
+                                `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEIR hands are so shaky that the key slips and falls somewhere with a klang!`
+                            ],
+                            nodiscard: [
+                                `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEY struggleUSER_S to guide it in the mechanism!`
+                            ]
+                        },
+                        nofumble: [
+                            `USER_TAG puts the key in the lock on USER_THEIR belt and unlocks it, freeing USER_THEMSELF from that wretched prison!`
                         ]
                     },
-                    nofumble: [
-                        `USER_TAG puts the key into TARGET_TAG's belt and turns the lock, letting it fall open and onto the floor. TARGET_THEY_CAP TARGET_ISARE free!`
+                    nokey: [
+                        `USER_TAG runs USER_THEIR fingers uselessly on the metal of USER_THEIR chastity belt, but USER_THEY can't unlock it without the key!`
                     ]
                 },
                 // ephemeral
-                nokey: [
-                    `You don't have the key for TARGET_TAG's belt!`
+                nochastity: [
+                    `You aren't wearing a chastity belt!`
                 ]
             },
-            // ephemeral
-            nochastity: [
-                `TARGET_TAG is not wearing chastity!`
-            ]
+            other: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: [
+                                `USER_TAG tries to use the key for TARGET_TAG's belt, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
+                            ],
+                            nodiscard: [
+                                `USER_TAG tries to unlock TARGET_TAG's belt, but USER_THEY can't focus enough to guide the key into the keyhole!`
+                            ]
+                        },
+                        nofumble: [
+                            `USER_TAG puts the key into TARGET_TAG's belt and turns the lock, letting it fall open and onto the floor. TARGET_THEY_CAP TARGET_ISARE free!`
+                        ]
+                    },
+                    // ephemeral
+                    nokey: [
+                        `You don't have the key for TARGET_TAG's belt!`
+                    ]
+                },
+                // ephemeral
+                nochastity: [
+                    `TARGET_TAG is not wearing a chastity belt!`
+                ]
+            }
+        }
+    },
+    chastitybra: {
+        heavy: {
+            self: {
+                chastity: [
+                    `USER_TAG shifts in USER_THEIR VAR_C1, trying to shift out of USER_THEIR chastity bra, but USER_THEIR metal prison holds firmly to USER_THEIR body!`
+                ],
+                // ephemeral
+                nochastity: [
+                    `You're not in a chastity bra, but you wouldn't be able to remove it anyway!`
+                ]
+            },
+            other: {
+                chastity: [
+                    `USER_TAG shifts in USER_THEIR VAR_C1, trying to help TARGET_TAG out of TARGET_THEIR chastity bra, but can't get a good grip on the locking mechanism because of USER_THEIR bondage!`
+                ],
+                // ephemeral
+                nochastity: [
+                    `TARGET_TAG is not in a chastity bra, but you wouldn't be able to remove it anyway!`
+                ]
+            }
+        },
+        noheavy: {
+            self: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: [
+                                `USER_TAG tries to put the key in the lock on USER_THEIR bra, but USER_THEIR hands are so shaky that the key slips and falls somewhere with a klang!`
+                            ],
+                            nodiscard: [
+                                `USER_TAG tries to put the key in the lock on USER_THEIR bra, but USER_THEY struggleUSER_S to guide it in the mechanism!`
+                            ]
+                        },
+                        nofumble: [
+                            `USER_TAG puts the key in the lock on USER_THEIR bra and unlocks it, freeing USER_THEIR breasts from that wretched prison!`
+                        ]
+                    },
+                    nokey: [
+                        `USER_TAG caresses USER_THEIR fingers uselessly on the smooth metal of USER_THEIR chastity bra's breast cups, but USER_THEY can't unlock it without the key!`
+                    ]
+                },
+                // ephemeral
+                nochastity: [
+                    `You aren't wearing a chastity bra!`
+                ]
+            },
+            other: {
+                chastity: {
+                    key: {
+                        fumble: {
+                            discard: [
+                                `USER_TAG tries to use the key for TARGET_TAG's bra, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
+                            ],
+                            nodiscard: [
+                                `USER_TAG tries to unlock TARGET_TAG's bra, but USER_THEY can't focus enough to guide the key into the keyhole!`
+                            ]
+                        },
+                        nofumble: [
+                            `USER_TAG puts the key into TARGET_TAG's bra and turns the lock, letting it fall off of TARGET_THEIR breasts and onto the floor.`
+                        ]
+                    },
+                    // ephemeral
+                    nokey: [
+                        `You don't have the key for TARGET_TAG's bra!`
+                    ]
+                },
+                // ephemeral
+                nochastity: [
+                    `TARGET_TAG is not wearing a chastity bra!`
+                ]
+            }
         }
     }
 }

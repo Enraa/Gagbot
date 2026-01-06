@@ -7,6 +7,9 @@ const { getCorset } = require('./../functions/corsetfunctions.js')
 const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require('./../functions/headwearfunctions.js')
 const { getPronouns, getPronounsSet } = require('./../functions/pronounfunctions.js');
 const { getWearable, getWearableName, getLockedWearable } = require('../functions/wearablefunctions.js');
+const { canAccessChastityBra } = require('../functions/vibefunctions.js');
+const { getChastityBra } = require('../functions/vibefunctions.js');
+const { getChastityBraName, getChastityBraTimelock } = require('../functions/vibefunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -121,24 +124,56 @@ module.exports = {
                 if (chastitykeyaccess == 2) { timelockedtext = "Timelocked (Sealed)" }
                 if (!headwearrestrictions.canInspect) {
                     // Wearer is blind - they can only tell its on and locked. Nothing more. 
-                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Locked (blind)**`)
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity Belt: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Locked (blind)**`)
                 }
                 else if (getChastity(inspectuser.id).keyholder == "discarded") {
-                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing!**`)
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity Belt: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing!**`)
                 }
                 else if (getChastityTimelock(inspectuser.id)) {
-                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **${timelockedtext} until ${getChastityTimelock(inspectuser.id, true)}**`)
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity Belt: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **${timelockedtext} until ${getChastityTimelock(inspectuser.id, true)}**`)
                 }
                 else if (getChastity(inspectuser.id).keyholder == inspectuser.id) {
                     // Self bound!
-                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**`)
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity Belt: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**`)
                 }
                 else {
-                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getChastity(inspectuser.id).keyholder}>**`)
+                    inspectparts.push(`<:Chastity:1073495208861380629> Chastity Belt: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getChastity(inspectuser.id).keyholder}>**`)
                 }
             }
             else {
-                inspectparts.push(`<:Chastity:1073495208861380629> Chastity: Not currently worn.`)
+                inspectparts.push(`<:Chastity:1073495208861380629> Chastity Belt: Not currently worn.`)
+            }
+            // Chastity Bra status.
+            // You'll be able to tell that it's locked, but nothing more. 
+            if (getChastityBra(inspectuser.id)) {
+                let isLocked = (canAccessChastityBra(inspectuser.id, interaction.user.id).access)
+                let lockemoji = isLocked ? "🔑" : "🔒"
+                if (!headwearrestrictions.canInspect) { lockemoji = "❓" }
+                let chastitykeyaccess = getChastityBra(inspectuser.id)?.access
+                let currentchastitybelt = (getChastityBraName(inspectuser.id) ? getChastityBraName(inspectuser.id) : "Locked Up Nice and Tight!")
+                let timelockedtext = "Timelocked (Open)"
+                if (chastitykeyaccess == 1) { timelockedtext = "Timelocked (Keyed)" }
+                if (chastitykeyaccess == 2) { timelockedtext = "Timelocked (Sealed)" }
+                if (!headwearrestrictions.canInspect) {
+                    // Wearer is blind - they can only tell its on and locked. Nothing more. 
+                    inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Locked (blind)**`)
+                }
+                else if (getChastityBra(inspectuser.id).keyholder == "discarded") {
+                    inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Keys are Missing!**`)
+                }
+                else if (getChastityBraTimelock(inspectuser.id)) {
+                    inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **${timelockedtext} until ${getChastityTimelock(inspectuser.id, true)}**`)
+                }
+                else if (getChastityBra(inspectuser.id).keyholder == inspectuser.id) {
+                    // Self bound!
+                    inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**`)
+                }
+                else {
+                    inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getChastity(inspectuser.id).keyholder}>**`)
+                }
+            }
+            else {
+                inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: Not currently worn.`)
             }
             // Corset status
             // Can probably easily tell how tight it is by how shallow your breathing is. No restrictions.

@@ -4,6 +4,8 @@ const { removeChastity, removeVibe } = require('./../functions/vibefunctions.js'
 const { removeCollar } = require('./../functions/collarfunctions.js')
 const { removeHeavy } = require('./../functions/heavyfunctions.js');
 const { removeCorset } = require('../functions/corsetfunctions.js');
+const { deleteWearable } = require('../functions/wearablefunctions.js');
+const { removeChastityBra } = require('../functions/vibefunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -21,10 +23,13 @@ module.exports = {
             deleteGag(resetuser.id)
             deleteMitten(resetuser.id)
             removeChastity(resetuser.id)
+            removeChastityBra(resetuser.id)
             removeVibe(resetuser.id)
             removeCollar(resetuser.id)
             removeHeavy(resetuser.id)
             removeCorset(resetuser.id)
+            deleteWearable(resetuser.id)
+            setArousalCooldown(resetuser.id)
         } else {
             if (interaction.member.roles.cache.has("1073505965619564604")) { 
                 // User has the safeword role, we should remove all their restraints because they safeworded
@@ -32,10 +37,13 @@ module.exports = {
                 deleteGag(interaction.user.id)
                 deleteMitten(interaction.user.id)
                 removeChastity(interaction.user.id)
+                removeChastityBra(interaction.user.id)
                 removeVibe(interaction.user.id)
-                //removeCollar(interaction.user.id)
+                removeCollar(interaction.user.id)
                 removeHeavy(interaction.user.id)
-                removeCorset(resetuser.id)
+                removeCorset(interaction.user.id)
+                deleteWearable(interaction.user.id)
+                setArousalCooldown(interaction.user.id)
             }
             else {
                 // User does not have the permission, send an error message, but only if they don't have the safeworded role. If they do, then 

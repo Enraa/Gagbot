@@ -20,7 +20,21 @@ const chastitytypes = [
     { name: "Queensbelt", value: "belt_queen", denialCoefficient: 10 },
 ]
 
+const chastitybratypes = [
+    { name: "Featherlight Bra", value: "bra_featherlight", denialCoefficient: 6, minVibe: 2, minArousal: 1 },
+    { name: "Blacksteel Chastity Bra", value: "bra_blacksteel", denialCoefficient: 3},
+    { name: "Silver Chastity Bra", value: "bra_silver", denialCoefficient: 3},
+    { name: "Ancient Chastity Bra", value: "bra_ancient", denialCoefficient: 6},
+    { name: "Cyber Doll Bra", value: "bra_cyberdoll", denialCoefficient: 4},
+    { name: "Tungsten Bra", value: "bra_tungsten", denialCoefficient: 3},
+    { name: "Hardlight Bra", value: "bra_hardlight", denialCoefficient: 4},
+    { name: "Wolf Bra", value: "bra_wolf", denialCoefficient: 3},
+    { name: "Maid Chastity Bra", value: "bra_maid", denialCoefficient: 3},
+    { name: "Queensbra", value: "bra_queen", denialCoefficient: 4},
+]
+
 const chastitytypesoptions = chastitytypes.map((chastity) => ({name: chastity.name, value: chastity.value}));
+const chastitybratypesoptions = chastitybratypes.map((chastity) => ({name: chastity.name, value: chastity.value}));
 
 // the arousal under which it is treated as 0
 const RESET_LIMIT = 0.1
@@ -72,13 +86,35 @@ const getChastity = (user) => {
     return process.chastity[user];
 }
 
-// Chastity does not need an origbinder function
-
 const removeChastity = (user) => {
     if (process.chastity == undefined) { process.chastity = {} }
     delete process.chastity[user];
     if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.chastity = true;
+}
+
+const assignChastityBra = (user, keyholder, namedchastity) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    process.chastitybra[user] = {
+        keyholder: keyholder ? keyholder : "unlocked",
+        timestamp: Date.now(),
+        extraFrustration: 0,
+        chastitytype: namedchastity
+    }
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastitybra = true;
+}
+
+const getChastityBra = (user) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    return process.chastitybra[user];
+}
+
+const removeChastityBra = (user) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    delete process.chastitybra[user];
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastitybra = true;
 }
 
 const assignVibe = (user, intensity, vibetype = "bullet vibe", origbinder) => {
@@ -153,6 +189,34 @@ const getChastityName = (userID, chastityname) => {
     }
 }
 
+const getChastityBraKeys = (user) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    let keysheld = [];
+    Object.keys(process.chastitybra).forEach((k) => {
+        if (process.chastitybra[k].keyholder == user) {
+            keysheld.push(k)
+        }
+    })
+    return keysheld
+}
+
+const getChastityBraName = (userID, chastityname) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    let convertchastityarr = {}
+    for (let i = 0; i < chastitybratypes.length; i++) {
+        convertchastityarr[chastitybratypes[i].value] = chastitybratypes[i].name
+    }
+    if (chastityname) {
+        return convertchastityarr[chastityname];
+    }
+    else if (process.chastitybra[userID]?.chastitytype) {
+        return convertchastityarr[process.chastitybra[userID]?.chastitytype]
+    }
+    else {
+        return undefined;
+    }
+}
+
 // Returns UNIX timestring of the wearer's unlock time. 
 // second flag to true to return a Discord UNIX timestring instead. 
 const getChastityTimelock = (user, UNIXTimestring) => {
@@ -170,9 +234,31 @@ const getChastityTimelock = (user, UNIXTimestring) => {
     }
 }
 
+// Returns UNIX timestring of the wearer's unlock time. 
+// second flag to true to return a Discord UNIX timestring instead. 
+const getChastityBraTimelock = (user, UNIXTimestring) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    if (!UNIXTimestring) {
+        return process.chastitybra[user]?.unlockTime
+    }
+    else {
+        if (process.chastitybra[user]?.unlockTime) {
+            return `<t:${Math.floor(process.chastitybra[user]?.unlockTime / 1000)}:f>`
+        }
+        else {
+            return null
+        }
+    }
+}
+
 const getChastityKeyholder = (user) => {
     if (process.chastity == undefined) { process.chastity = {} }
     return process.chastity[user]?.keyholder;
+}
+
+const getChastityBraKeyholder = (user) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    return process.chastitybra[user]?.keyholder;
 }
 
 // Returns an object you can check the .access prop of. 
@@ -217,6 +303,24 @@ const canAccessChastity = (chastityuser, keyholder, unlock, cloning) => {
 
         return accessval;
     }
+    // If Cloning is set, parse specific instructions for that. 
+    if (cloning) {
+        // Primary Keyholder access only if set to 0. 
+        if ((getChastity(chastityuser)?.access == 0) && (keyholder != chastityuser)) {
+            accessval.access = true;
+            accessval.public = true;
+        }
+        // Keyholder access if access is unset (no timelocks)
+        if ((getChastity(chastityuser)?.access == undefined) && (getChastity(chastityuser)?.keyholder == keyholder)) {
+            accessval.access = true;
+        }
+        // Keyholder access if timelock is 1 (keyholder only) but only if not self.
+        if ((getChastity(chastityuser)?.access == 1) && (getChastity(chastityuser)?.keyholder == keyholder) && (chastityuser != keyholder)) {
+            accessval.access = true;
+        }
+
+        return accessval;
+    }
     // Others access only when access is set to 0. 
     if ((getChastity(chastityuser)?.access == 0) && (keyholder != chastityuser)) {
         accessval.access = true;
@@ -228,7 +332,7 @@ const canAccessChastity = (chastityuser, keyholder, unlock, cloning) => {
     }
     // Secondary Keyholder access (cloned key), but only if cloning is NOT true and no timelocks
     let clonedkeys = getChastity(chastityuser)?.clonedKeyholders ?? [];
-    if ((clonedkeys.includes(keyholder)) && (cloning != true) && (getChastity(chastityuser)?.access == undefined)) {
+    if ((clonedkeys.includes(keyholder)) && (getChastity(chastityuser)?.access == undefined)) {
         accessval.access = true;
     }
     // Keyholder access if timelock is 1 (keyholder only) but only if not self.
@@ -236,7 +340,94 @@ const canAccessChastity = (chastityuser, keyholder, unlock, cloning) => {
         accessval.access = true;
     }
     // Secondary Keyholder access (cloned key) if access is 1, but only if not self.
-    if ((clonedkeys.includes(keyholder)) && (cloning != true) && (getChastity(chastityuser)?.access == 1) && (chastityuser != keyholder)) {
+    if ((clonedkeys.includes(keyholder)) && (getChastity(chastityuser)?.access == 1) && (chastityuser != keyholder)) {
+        accessval.access = true;
+    }
+    // Else, return false. 
+    
+    return accessval;
+}
+
+// Returns an object you can check the .access prop of. 
+// Unlock actions should set the third param true to ensure
+// that users are not unlocking public access. 
+const canAccessChastityBra = (chastityuser, keyholder, unlock, cloning) => {
+    // As a reference for access in timelocks:
+    // 0: "Everyone Else"
+    // 1: "Keyholder Only"
+    // 2: "Nobody"
+
+    let accessval = {
+        access: false,
+        public: false,
+        hasbelt: true
+    }
+    // no belt, no need
+    if (!getChastityBra(chastityuser)) { 
+        accessval.hasbelt = false;
+        return accessval;
+    } 
+    // Sealed Belt - nobody gets in!
+    if (getChastityBra(chastityuser)?.access == 2) {
+        return accessval;
+    }
+    // If unlock is set, only allow access to unlock if the keyholder is the correct one.
+    if (unlock) {
+        // Allow unlocks by a non-self keyholder at all times, assuming its not sealed. 
+        if ((getChastityBra(chastityuser)?.access != 2) && (getChastityBra(chastityuser)?.keyholder == keyholder) && (keyholder != chastityuser)) {
+            accessval.access = true;
+        }
+        // Allow unlocks by any keyholder if no timelock. 
+        if ((getChastityBra(chastityuser)?.access == undefined) && (getChastityBra(chastityuser)?.keyholder == keyholder)) {
+            accessval.access = true;
+        }
+        // Allow unlocks by secondary keyholder if no timelock
+        let clonedkeys = getChastityBra(chastityuser)?.clonedKeyholders ?? [];
+        if ((getChastityBra(chastityuser)?.access == undefined) && (clonedkeys.includes(keyholder))) {
+            accessval.access = true;
+        }
+        // Else, return false.
+
+        return accessval;
+    }
+    // If Cloning is set, parse specific instructions for that. 
+    if (cloning) {
+        // Primary Keyholder access only if set to 0. 
+        if ((getChastityBra(chastityuser)?.access == 0) && (keyholder != chastityuser)) {
+            accessval.access = true;
+            accessval.public = true;
+        }
+        // Keyholder access if access is unset (no timelocks)
+        if ((getChastityBra(chastityuser)?.access == undefined) && (getChastityBra(chastityuser)?.keyholder == keyholder)) {
+            accessval.access = true;
+        }
+        // Keyholder access if timelock is 1 (keyholder only) but only if not self.
+        if ((getChastityBra(chastityuser)?.access == 1) && (getChastityBra(chastityuser)?.keyholder == keyholder) && (chastityuser != keyholder)) {
+            accessval.access = true;
+        }
+
+        return accessval;
+    }
+    // Others access only when access is set to 0. 
+    if ((getChastityBra(chastityuser)?.access == 0) && (keyholder != chastityuser)) {
+        accessval.access = true;
+        accessval.public = true;
+    }
+    // Keyholder access if access is unset (no timelocks)
+    if ((getChastityBra(chastityuser)?.access == undefined) && (getChastityBra(chastityuser)?.keyholder == keyholder)) {
+        accessval.access = true;
+    }
+    // Secondary Keyholder access (cloned key), but only if cloning is NOT true and no timelocks
+    let clonedkeys = getChastityBra(chastityuser)?.clonedKeyholders ?? [];
+    if ((clonedkeys.includes(keyholder)) && (getChastityBra(chastityuser)?.access == undefined)) {
+        accessval.access = true;
+    }
+    // Keyholder access if timelock is 1 (keyholder only) but only if not self.
+    if ((getChastityBra(chastityuser)?.access == 1) && (getChastityBra(chastityuser)?.keyholder == keyholder) && (chastityuser != keyholder)) {
+        accessval.access = true;
+    }
+    // Secondary Keyholder access (cloned key) if access is 1, but only if not self.
+    if ((clonedkeys.includes(keyholder)) && (getChastityBra(chastityuser)?.access == 1) && (chastityuser != keyholder)) {
         accessval.access = true;
     }
     // Else, return false. 
@@ -253,7 +444,7 @@ async function promptCloneChastityKey(user, target, clonekeyholder, bra) {
         ]
         let dmchannel = await target.createDM();
         await dmchannel.send({
-            content: `${user} would like to give ${clonekeyholder} a copy of your chastity ${bra ? "bra" : "belt"} key. Do you want to allow this?`,
+            content: `${user} would like to give ${clonekeyholder} a copy of your chastity belt key. Do you want to allow this?`,
             components: [new ActionRowBuilder().addComponents(...buttons)]
         }).then((mess) => {
             // Create a collector for up to 30 seconds
@@ -263,13 +454,13 @@ async function promptCloneChastityKey(user, target, clonekeyholder, bra) {
                 console.log(i)
                 if (i.customId == "acceptButton") {
                     await mess.delete().then(() => {
-                        i.reply(`Confirmed - ${clonekeyholder} will receive a copied key for your chastity ${bra ? "bra" : "belt"}!`)
+                        i.reply(`Confirmed - ${clonekeyholder} will receive a copied key for your chastity belt!`)
                     })
                     res(true);
                 }
                 else {
                     await mess.delete().then(() => {
-                        i.reply(`Rejected - ${clonekeyholder} will NOT receive a copied key for your chastity ${bra ? "bra" : "belt"}!`)
+                        i.reply(`Rejected - ${clonekeyholder} will NOT receive a copied key for your chastity belt!`)
                     })
                     rej(true);
                 }
@@ -279,7 +470,7 @@ async function promptCloneChastityKey(user, target, clonekeyholder, bra) {
                 // timed out
                 if (collected.length == 0) {
                     await mess.delete().then(() => {
-                        i.reply(`Timed Out - ${clonekeyholder} will NOT receive a copied key for your chastity ${bra ? "bra" : "belt"}!`)
+                        i.reply(`Timed Out - ${clonekeyholder} will NOT receive a copied key for your chastity belt!`)
                     })
                     rej(true);
                 }
@@ -289,7 +480,7 @@ async function promptCloneChastityKey(user, target, clonekeyholder, bra) {
 }
 
 // Called to prompt the wearer if it is okay to give a key.
-async function promptTransferChastityKey(user, target, newKeyholder, bra) {
+async function promptTransferChastityKey(user, target, newKeyholder) {
     return new Promise(async (res,rej) => {
         let buttons = [
             new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
@@ -297,7 +488,7 @@ async function promptTransferChastityKey(user, target, newKeyholder, bra) {
         ]
         let dmchannel = await target.createDM();
         await dmchannel.send({
-            content: `${user} would like to give ${newKeyholder} your chastity ${bra ? "bra" : "belt"} key. Do you want to allow this?`,
+            content: `${user} would like to give ${newKeyholder} your chastity belt key. Do you want to allow this?`,
             components: [new ActionRowBuilder().addComponents(...buttons)]
         }).then((mess) => {
             // Create a collector for up to 30 seconds
@@ -307,13 +498,13 @@ async function promptTransferChastityKey(user, target, newKeyholder, bra) {
                 console.log(i)
                 if (i.customId == "acceptButton") {
                     await mess.delete().then(() => {
-                        i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity ${bra ? "bra" : "belt"}!`)
+                        i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity belt!`)
                     })
                     res(true);
                 }
                 else {
                     await mess.delete().then(() => {
-                        i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity ${bra ? "bra" : "belt"}!`)
+                        i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity belt!`)
                     })
                     rej(true);
                 }
@@ -323,7 +514,95 @@ async function promptTransferChastityKey(user, target, newKeyholder, bra) {
                 // timed out
                 if (collected.length == 0) {
                     await mess.delete().then(() => {
-                        i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity ${bra ? "bra" : "belt"}!`)
+                        i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity belt!`)
+                    })
+                    rej(true);
+                }
+            })
+        })
+    })
+}
+
+// Called to prompt the wearer if it is okay to clone a key.
+async function promptCloneChastityBraKey(user, target, clonekeyholder) {
+    return new Promise(async (res,rej) => {
+        let buttons = [
+            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+        ]
+        let dmchannel = await target.createDM();
+        await dmchannel.send({
+            content: `${user} would like to give ${clonekeyholder} a copy of your chastity bra key. Do you want to allow this?`,
+            components: [new ActionRowBuilder().addComponents(...buttons)]
+        }).then((mess) => {
+            // Create a collector for up to 30 seconds
+            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30_000, max: 1 })
+
+            collector.on('collect', async (i) => {
+                console.log(i)
+                if (i.customId == "acceptButton") {
+                    await mess.delete().then(() => {
+                        i.reply(`Confirmed - ${clonekeyholder} will receive a copied key for your chastity bra!`)
+                    })
+                    res(true);
+                }
+                else {
+                    await mess.delete().then(() => {
+                        i.reply(`Rejected - ${clonekeyholder} will NOT receive a copied key for your chastity bra!`)
+                    })
+                    rej(true);
+                }
+            })
+
+            collector.on('end', async (collected) => {
+                // timed out
+                if (collected.length == 0) {
+                    await mess.delete().then(() => {
+                        i.reply(`Timed Out - ${clonekeyholder} will NOT receive a copied key for your chastity bra!`)
+                    })
+                    rej(true);
+                }
+            })
+        })
+    })
+}
+
+// Called to prompt the wearer if it is okay to give a key.
+async function promptTransferChastityBraKey(user, target, newKeyholder) {
+    return new Promise(async (res,rej) => {
+        let buttons = [
+            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+        ]
+        let dmchannel = await target.createDM();
+        await dmchannel.send({
+            content: `${user} would like to give ${newKeyholder} your chastity bra key. Do you want to allow this?`,
+            components: [new ActionRowBuilder().addComponents(...buttons)]
+        }).then((mess) => {
+            // Create a collector for up to 30 seconds
+            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30_000, max: 1 })
+
+            collector.on('collect', async (i) => {
+                console.log(i)
+                if (i.customId == "acceptButton") {
+                    await mess.delete().then(() => {
+                        i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity bra!`)
+                    })
+                    res(true);
+                }
+                else {
+                    await mess.delete().then(() => {
+                        i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity bra!`)
+                    })
+                    rej(true);
+                }
+            })
+
+            collector.on('end', async (collected) => {
+                // timed out
+                if (collected.length == 0) {
+                    await mess.delete().then(() => {
+                        i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity bra!`)
                     })
                     rej(true);
                 }
@@ -337,7 +616,7 @@ async function promptTransferChastityKey(user, target, newKeyholder, bra) {
 // giving the key or cloning the key. These actions should check the
 // fourth param of the canAccessCollar function and set it to true
 // when the action needs to REJECT cloned keys. 
-const cloneChastityKey = (chastityuser, newKeyholder, bra) => {
+const cloneChastityKey = (chastityuser, newKeyholder) => {
     let chastity = getChastity(chastityuser);
     if (!chastity.clonedKeyholders) {
         chastity.clonedKeyholders = [];
@@ -345,6 +624,21 @@ const cloneChastityKey = (chastityuser, newKeyholder, bra) => {
     chastity.clonedKeyholders.push(newKeyholder)
     if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.chastity = true;
+}
+
+// Called once we confirm the user is okay with it!
+// For cloned keys, we want to allow a cloned key to do everything except
+// giving the key or cloning the key. These actions should check the
+// fourth param of the canAccessCollar function and set it to true
+// when the action needs to REJECT cloned keys. 
+const cloneChastityBraKey = (chastityuser, newKeyholder) => {
+    let chastity = getChastityBra(chastityuser);
+    if (!chastity.clonedKeyholders) {
+        chastity.clonedKeyholders = [];
+    }
+    chastity.clonedKeyholders.push(newKeyholder)
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastitybra = true;
 }
 
 // Called to remove a single cloned keyholder from the list. 
@@ -360,10 +654,30 @@ const revokeChastityKey = (chastityuser, newKeyholder) => {
     process.readytosave.chastity = true;
 }
 
+// Called to remove a single cloned keyholder from the list. 
+const revokeChastityBraKey = (chastityuser, newKeyholder) => {
+    let chastity = getChastityBra(chastityuser);
+    if (!chastity.clonedKeyholders) {
+        chastity.clonedKeyholders = [];
+    }
+    if (chastity.clonedKeyholders.includes(newKeyholder)) {
+        chastity.clonedKeyholders.splice(chastity.clonedKeyholders.indexOf(newKeyholder), 1)
+    }
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
+}
+
 // Called to get cloned keys on a restraint
 const getClonedChastityKey = (userID) => {
     if (process.chastity == undefined) { process.chastity = {} }
     let returnval = process.chastity[userID]?.clonedKeyholders ?? []
+    return returnval;
+}
+
+// Called to get cloned keys on a restraint
+const getClonedChastityBraKey = (userID) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    let returnval = process.chastitybra[userID]?.clonedKeyholders ?? []
     return returnval;
 }
 
@@ -382,6 +696,21 @@ const getClonedChastityKeysOwned = (userID) => {
     return ownedkeys;
 }
 
+// Called to get cloned keys held by userID
+// Returns a list in format: [USERID_type]
+const getClonedChastityBraKeysOwned = (userID) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    let ownedkeys = []
+    Object.keys(process.chastitybra).forEach((k) => {
+        if (process.chastitybra[k].clonedKeyholders) {
+            if (process.chastitybra[k].clonedKeyholders.includes(userID)) {
+                ownedkeys.push(`${k}_chastitybra`)
+            }
+        }
+    })
+    return ownedkeys;
+}
+
 // Called to get cloned keys from restraints the keyholder is primary for
 // Returns a list in format: [wearerID_clonedKeyholderID]
 const getOtherKeysChastity = (userID) => {
@@ -391,6 +720,23 @@ const getOtherKeysChastity = (userID) => {
         if (process.chastity[k].keyholder == userID) {
             if (process.chastity[k].clonedKeyholders) {
                 process.chastity[k].clonedKeyholders.forEach((c) => {
+                    ownedkeys.push(`${k}_${c}`)
+                })
+            }
+        }
+    })
+    return ownedkeys;
+}
+
+// Called to get cloned keys from restraints the keyholder is primary for
+// Returns a list in format: [wearerID_clonedKeyholderID]
+const getOtherKeysChastityBra = (userID) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    let ownedkeys = []
+    Object.keys(process.chastitybra).forEach((k) => {
+        if (process.chastitybra[k].keyholder == userID) {
+            if (process.chastitybra[k].clonedKeyholders) {
+                process.chastitybra[k].clonedKeyholders.forEach((c) => {
                     ownedkeys.push(`${k}_${c}`)
                 })
             }
@@ -443,6 +789,55 @@ const findChastityKey = (index, newKeyholder) => {
       process.chastity[chastity[0].wearer].clonedKeyholders = []
       if (process.readytosave == undefined) { process.readytosave = {} }
         process.readytosave.chastity = true;
+      return true;
+    }
+    return false;
+}
+
+// transfer keys and returns whether the transfer was successful
+const transferChastityBraKey = (lockedUser, newKeyholder) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    if (process.chastitybra[lockedUser]) {
+        if (process.chastitybra[lockedUser].keyholder != newKeyholder) {
+            process.chastitybra[lockedUser].keyholder = newKeyholder;
+            process.chastitybra[lockedUser].clonedKeyholders = []
+            if (process.readytosave == undefined) { process.readytosave = {} }
+            process.readytosave.chastitybra = true;
+            return true;
+        }
+    }
+
+    return false;
+}
+
+const discardChastityBraKey = (user) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    if (process.discardedKeys == undefined) { process.discardedKeys = [] }
+    if (process.chastitybra[user]) {
+        process.chastitybra[user].keyholder = "discarded";
+        process.chastitybra[user].clonedKeyholders = []
+        process.discardedKeys.push({
+          restraint: "chastity bra",
+          wearer: user
+        })
+    }
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
+    process.readytosave.discardedKeys = true;
+}
+
+const findChastityBraKey = (index, newKeyholder) => {
+    if (process.chastitybra == undefined) { process.chastitybra = {} }
+    if (process.discardedKeys == undefined) { process.discardedKeys = [] }
+    const chastity = process.discardedKeys.splice(index, 1);
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.discardedKeys = true;
+    if (chastity.length < 1) return false;
+    if (process.chastitybra[chastity[0].wearer]) {
+      process.chastitybra[chastity[0].wearer].keyholder = newKeyholder;
+      process.chastitybra[chastity[0].wearer].clonedKeyholders = []
+      if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.chastitybra = true;
       return true;
     }
     return false;
@@ -725,3 +1120,27 @@ exports.revokeChastityKey = revokeChastityKey;
 exports.getClonedChastityKey = getClonedChastityKey;
 exports.getClonedChastityKeysOwned = getClonedChastityKeysOwned;
 exports.getOtherKeysChastity = getOtherKeysChastity;
+
+exports.assignChastityBra = assignChastityBra
+exports.getChastityBra = getChastityBra
+exports.removeChastityBra = removeChastityBra
+
+exports.getChastityBraKeys = getChastityBraKeys;
+exports.getChastityBraKeyholder = getChastityBraKeyholder;
+exports.transferChastityBraKey = transferChastityBraKey
+exports.discardChastityBraKey = discardChastityBraKey;
+exports.findChastityBraKey = findChastityBraKey;
+
+exports.chastitybratypes = chastitybratypes;
+exports.chastitybratypesoptions = chastitybratypesoptions;
+exports.getChastityBraName = getChastityBraName;
+exports.canAccessChastityBra = canAccessChastityBra;
+
+exports.promptCloneChastityBraKey = promptCloneChastityBraKey;
+exports.promptTransferChastityBraKey = promptTransferChastityBraKey;
+exports.cloneChastityBraKey = cloneChastityBraKey;
+exports.revokeChastityBraKey = revokeChastityBraKey;
+exports.getClonedChastityBraKey = getClonedChastityBraKey;
+exports.getClonedChastityBraKeysOwned = getClonedChastityBraKeysOwned;
+exports.getOtherKeysChastityBra = getOtherKeysChastityBra;
+exports.getChastityBraTimelock = getChastityBraTimelock;

@@ -240,9 +240,12 @@ const modifymessage = async (msg, threadId) => {
         modifiedmessage = vibereturned.modifiedmessage;
 
         // Text limiting and modifying due to Corset
-        let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage);
+        let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage, threadId);
+        if (corsetreturned.corseted) {
+            return;
+        }
         messageparts = corsetreturned.messageparts;
-        modifiedmessage = corsetreturned.modifiedmessage;
+        modifiedmessage = corsetreturned.modifiedmessage
 
         // Text garbling due to Gag
         let gagreturned = textGarbleGag(messageparts, msg, modifiedmessage, outtext);
@@ -318,10 +321,11 @@ function textGarbleVibrator(messagein, msg, modifiedmessage) {
     return { messageparts: messageparts, modifiedmessage: modified }
 }
 
-function textGarbleCorset(messagein, msg, modifiedmessage) {
+function textGarbleCorset(messagein, msg, modifiedmessage, threadId) {
     // Now corset any words, using an amount to start with.
     let messageparts = messagein;
     let modified = modifiedmessage
+    let corseted = false;
     if (getCorset(msg.author.id)) {
         const hadParts = messageparts.length > 0;
         modified = true
@@ -340,11 +344,12 @@ function textGarbleCorset(messagein, msg, modifiedmessage) {
             messageparts.splice(toRemove[i], 1);
         }
         if (hadParts && messageparts.length == 0) {
-            messageSend(threadId, silenceMessage(), msg.member.displayAvatarURL(), msg.member.displayName).then(() => msg.delete())
-            return;
+            messageSend(msg, silenceMessage(), msg.member.displayAvatarURL(), msg.member.displayName, threadId).then(() => msg.delete())
+            corseted = true;
+            return { corseted: corseted };
         }
     }
-    return { messageparts: messageparts, modifiedmessage: modified }
+    return { messageparts: messageparts, modifiedmessage: modified, corseted: corseted }
 }
 
 function textGarbleGag(messagein, msg, modifiedmessage, outtextin) {

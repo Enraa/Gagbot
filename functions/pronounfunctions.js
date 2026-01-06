@@ -143,9 +143,9 @@ const convertPronounsText = (text, data) => {
 
     // Other Replacements
     outtext = outtext.replaceAll("USER_PRAISEOBJECT", () => {
-        if ((getPronouns(interactionuser.id, "subject") == "she")) { return "girls" }
-        if ((getPronouns(interactionuser.id, "subject") == "he")) { return "boys" }
-        return "toys"
+        if ((getPronouns(interactionuser.id, "subject") == "she")) { return "girl" }
+        if ((getPronouns(interactionuser.id, "subject") == "he")) { return "boy" }
+        return "toy"
     });
 
     // Reflexive - Himself, Herself, Themselves, etc.
@@ -198,9 +198,9 @@ const convertPronounsText = (text, data) => {
 
     // Other Replacements
     outtext = outtext.replaceAll("TARGET_PRAISEOBJECT", () => {
-        if ((getPronouns(targetuser.id, "subject") == "she")) { return "girls" }
-        if ((getPronouns(targetuser.id, "subject") == "he")) { return "boys" }
-        return "toys"
+        if ((getPronouns(targetuser.id, "subject") == "she")) { return "girl" }
+        if ((getPronouns(targetuser.id, "subject") == "he")) { return "boy" }
+        return "toy"
     });
 
     // Reflexive - Himself, Herself, Themselves, etc.

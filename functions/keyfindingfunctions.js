@@ -6,6 +6,7 @@ const fs = require("fs");
 const { getUserVar, setUserVar } = require("./usercontext");
 const { getHeavy } = require("./heavyfunctions");
 const { config } = require("./configfunctions");
+const { findChastityBraKey } = require("./vibefunctions");
 
 // return true if the user fumbles
 function rollKeyFumble(keyholder, locked) {
@@ -96,6 +97,8 @@ function getFindFunction(restraint) {
       return findChastityKey;
     case "collar":
       return findCollarKey;
+    case "chastity bra":
+      return findChastityBraKey;
     default:
       console.log(`No find function for restraint ${restraint}`);
       return (_0, _1) => false;
