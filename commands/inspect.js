@@ -10,6 +10,8 @@ const { getWearable, getWearableName, getLockedWearable } = require('../function
 const { canAccessChastityBra } = require('../functions/vibefunctions.js');
 const { getChastityBra } = require('../functions/vibefunctions.js');
 const { getChastityBraName, getChastityBraTimelock } = require('../functions/vibefunctions.js');
+const { getChastityBraKeys } = require('../functions/vibefunctions.js');
+const { getClonedChastityBraKeysOwned } = require('../functions/vibefunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -169,7 +171,7 @@ module.exports = {
                     inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Self-bound!**`)
                 }
                 else {
-                    inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getChastity(inspectuser.id).keyholder}>**`)
+                    inspectparts.push(`<:chastitybra:1457992137164718152> Chastity Bra: **${currentchastitybelt}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getChastityBra(inspectuser.id).keyholder}>**`)
                 }
             }
             else {
@@ -254,7 +256,13 @@ module.exports = {
             if (keysheldchastity.length > 0) {
                 keysheldchastity = keysheldchastity.map(k => `<@${k}>`)
                 let keysstring = keysheldchastity.join(", ");
-                keysheldtext = `- Chastity keys: ${keysstring}\n`
+                keysheldtext = `- Chastity belt keys: ${keysstring}\n`
+            }
+            let keysheldchastitybra = getChastityBraKeys(inspectuser.id)
+            if (keysheldchastitybra.length > 0) {
+                keysheldchastitybra = keysheldchastitybra.map(k => `<@${k}>`)
+                let keysstring = keysheldchastitybra.join(", ");
+                keysheldtext = `- Chastity bra keys: ${keysstring}\n`
             }
             let keysheldcollar = getCollarKeys(inspectuser.id)
             if (keysheldcollar.length > 0) {
@@ -267,7 +275,13 @@ module.exports = {
             if (keysheldclonedchastity.length > 0) {
                 keysheldclonedchastity = keysheldclonedchastity.map(k => `<@${k.split("_")[0]}>`)
                 let keysstring = keysheldclonedchastity.join(", ");
-                keysheldtext = `${keysheldtext}- Cloned chastity keys: ${keysstring}\n`
+                keysheldtext = `${keysheldtext}- Cloned chastity belt keys: ${keysstring}\n`
+            }
+            let keysheldclonedchastitybra = getClonedChastityBraKeysOwned(inspectuser.id)
+            if (keysheldclonedchastitybra.length > 0) {
+                keysheldclonedchastitybra = keysheldclonedchastitybra.map(k => `<@${k.split("_")[0]}>`)
+                let keysstring = keysheldclonedchastitybra.join(", ");
+                keysheldtext = `${keysheldtext}- Cloned chastity bra keys: ${keysstring}\n`
             }
             let keysheldclonedcollar = getClonedCollarKeysOwned(inspectuser.id)
             if (keysheldclonedcollar.length > 0) {

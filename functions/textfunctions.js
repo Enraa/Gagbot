@@ -244,7 +244,10 @@ const texts_collarequip = {
                         notallowed: [
                             `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
                         ]
-                    }
+                    },
+                    notallowed: [
+                        `TARGET_TAG's collar does not allow you to put TARGET_THEM in chastity!`
+                    ]
                 } 
             },
             nokey: [
@@ -538,6 +541,9 @@ const texts_key = {
             ],
             chastitybelt: [
                 `USER_TAG waves USER_THEIR fingers a bit and a nearly-perfect replica of USER_THEIR chastity belt key appears! USER_THEY_CAP giveUSER_S it to VAR_C2.`
+            ],
+            chastitybra: [
+                `USER_TAG waves USER_THEIR fingers a bit and a nearly-perfect replica of USER_THEIR chastity bra key appears! USER_THEY_CAP giveUSER_S it to VAR_C2.`
             ]
         },
         other: {
@@ -546,6 +552,9 @@ const texts_key = {
             ],
             chastitybelt: [
                 `USER_TAG subtly puts TARGET_TAG's chastity belt key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`
+            ],
+            chastitybra: [
+                `USER_TAG subtly puts TARGET_TAG's chastity bra key in a key copying machine and then hands the cloned key to VAR_C2 without TARGET_THEM noticing!`
             ]
         }
     },
@@ -556,6 +565,9 @@ const texts_key = {
             ],
             chastitybelt: [
                 `USER_TAG gives USER_THEIR chastity belt key to VAR_C2.`
+            ],
+            chastitybra: [
+                `USER_TAG gives USER_THEIR chastity bra key to VAR_C2.`
             ]
         },
         other: {
@@ -564,6 +576,9 @@ const texts_key = {
             ],
             chastitybelt: [
                 `USER_TAG subtly gives TARGET_TAG's chastity belt key to VAR_C2 without TARGET_THEM noticing!`
+            ],
+            chastitybra: [
+                `USER_TAG subtly gives TARGET_TAG's chastity bra key to VAR_C2 without TARGET_THEM noticing!`
             ]
         }
     },
@@ -575,6 +590,9 @@ const texts_key = {
             chastitybelt: [
                 "USER_TAG magically destroys the cloned key for TARGET_TAG's chastity belt that USER_THEY USER_WERE holding!"
             ],
+            chastitybra: [
+                "USER_TAG magically destroys the cloned key for TARGET_TAG's chastity bra that USER_THEY USER_WERE holding!"
+            ],
         },
         isprimary: {
             collar: [
@@ -583,6 +601,9 @@ const texts_key = {
             chastitybelt: [
                 "USER_TAG has magically broken the cloned key for TARGET_TAG's chastity belt that VAR_C2 was holding!"
             ],
+            chastitybra: [
+                "USER_TAG has magically broken the cloned key for TARGET_TAG's chastity bra that VAR_C2 was holding!"
+            ]
         }
     }
 }

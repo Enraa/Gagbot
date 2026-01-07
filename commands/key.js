@@ -107,10 +107,17 @@ module.exports = {
                 ownedclonedchastitykeys.forEach(async (m) => {
                     await interaction.guild.members.fetch(m.split("_")[0]); 
                 })
+                ownedclonedchastitybrakeys.forEach(async (m) => {
+                    await interaction.guild.members.fetch(m.split("_")[0]); 
+                })
                 ownedclonedcollarkeys.forEach(async (m) => {
                     await interaction.guild.members.fetch(m.split("_")[0]); 
                 })
                 clonedchastitykeys.forEach(async (m) => {
+                    await interaction.guild.members.fetch(m.split("_")[0]); 
+                    await interaction.guild.members.fetch(m.split("_")[1]); 
+                })
+                clonedchastitybrakeys.forEach(async (m) => {
                     await interaction.guild.members.fetch(m.split("_")[0]); 
                     await interaction.guild.members.fetch(m.split("_")[1]); 
                 })
@@ -148,7 +155,7 @@ module.exports = {
                 console.log(clonedchastitykeys)
                 console.log(clonedcollarkeys)
 
-				let sorted = [...clonedchastitykeys, ...clonedcollarkeys, ...ownedclonedchastitykeys, ...ownedclonedcollarkeys]
+				let sorted = [...clonedchastitykeys, ...clonedchastitybrakeys, ...clonedcollarkeys, ...ownedclonedchastitykeys, ...ownedclonedchastitybrakeys, ...ownedclonedcollarkeys]
 				if (sorted.length == 0) {
 					sorted = [{ name: "No Eligible Keys To Revoke...", value: "nothing" }]
 				}

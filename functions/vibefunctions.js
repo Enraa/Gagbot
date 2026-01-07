@@ -637,6 +637,8 @@ const cloneChastityBraKey = (chastityuser, newKeyholder) => {
         chastity.clonedKeyholders = [];
     }
     chastity.clonedKeyholders.push(newKeyholder)
+    console.log("CLONED")
+    console.log(chastity)
     if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.chastitybra = true;
 }
