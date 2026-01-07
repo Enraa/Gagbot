@@ -6,7 +6,7 @@ const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getCorset } = require('./../functions/corsetfunctions.js')
 const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require('./../functions/headwearfunctions.js')
 const { getPronouns, getPronounsSet } = require('./../functions/pronounfunctions.js');
-const { getWearable, getWearableName, getLockedWearable } = require('../functions/wearablefunctions.js');
+const { getWearable, getWearableName, getLockedWearable, deleteWearable } = require('../functions/wearablefunctions.js');
 const { canAccessChastityBra } = require('../functions/vibefunctions.js');
 const { getChastityBra } = require('../functions/vibefunctions.js');
 const { getChastityBraName, getChastityBraTimelock } = require('../functions/vibefunctions.js');
@@ -84,7 +84,10 @@ module.exports = {
                 let headout = `👗 Apparel: **`;
                 let lockedwears = getLockedWearable(inspectuser.id);
                 getWearable(inspectuser.id).forEach((h) => {
-                    if (lockedwears.includes(h)) {
+                    if (getWearableName(inspectuser.id, h) == undefined) {
+                        deleteWearable(inspectuser.id, h);
+                    }
+                    else if (lockedwears.includes(h)) {
                         headout = `${headout}*${getWearableName(inspectuser.id, h)}*, `
                     }
                     else {
