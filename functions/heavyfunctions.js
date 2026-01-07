@@ -70,7 +70,7 @@ const heavytypes = [
     // Rope Restraints
     { name: "Hogtie", value: "rope_hogtie", denialCoefficient: 3 },
     { name: "Shrimp Tie", value: "rope_shrimp", denialCoefficient: 3 },
-    { name: "Frogtie", value: "rope_frogtie", denialCoefficient: 2.5 },   
+    { name: "Frogtie", value: "rope_frogtie", denialCoefficient: 2.5 },
     { name: "Rope Boxtie", value: "rope_boxtie", denialCoefficient: 2 },
     { name: "Ribbons", value: "ribbons", denialCoefficient: 1.5 },
 
@@ -85,7 +85,7 @@ const heavytypes = [
     { name: "Shadow Latex Ballsuit", value: "shadow_latex_ball", denialCoefficient: 4 },
     { name: "Crystalline Pillar", value: "encasement_crystal", denialCoefficient: 4 },
     { name: "Magic Mirror", value: "encasement_mirror", denialCoefficient: 5 },
-    
+
     // Misc Heavy Restraints
     { name: "Lockdown Virus", value: "lockdown_virus", denialCoefficient: 4 },
     // { name: "Silk Cocoon", value: "silk_cocoon", denialCoefficient: 2 },   Removed due to Arachnophobia
@@ -103,7 +103,7 @@ const heavytypes = [
  * { name: "Latex Armbinder", value: "armbinder_latex" }
  ********************/
 const loadHeavyTypes = () => {
-    process.heavytypes = heavytypes.map((item) => {return {name: item.name, value: item.value}})
+    process.heavytypes = heavytypes.map((item) => { return { name: item.name, value: item.value } })
 }
 
 const convertheavy = (type) => {
