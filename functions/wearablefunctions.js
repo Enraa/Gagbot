@@ -82,6 +82,7 @@ let wearabletypes = [
     { name: "Empress' Robes", value: "empressnewdress" },
     { name: "Latex Mermaid Tail", value: "mermaid_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Harem Silks", value: "haremsilks", colorable: true },
+    { name: "Dancer Outfit", value: "dancer_outfit", colorable: true },
     { name: "Magical Girl Uniform", value: "outfit_magicalgirl", colorable: true },
     { name: "Latex Magical Girl Uniform", value: "outfit_magicalgirl_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
 
