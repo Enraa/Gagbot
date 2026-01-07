@@ -43,6 +43,7 @@ const heavytypes = [
     // Static Restraints
     { name: "Display Stand", value: "displaystand", denialCoefficient: 4 },
     { name: "One Bar Prison", value: "one_bar_prison", denialCoefficient: 2 },
+    { name: "Latex Encasement Stand", value: "encasementstand_latex", denialCoefficient: 4 },
     { name: "Sarcophagus", value: "sarco_mummy", denialCoefficient: 3 },
     { name: "Wooden Horse", value: "wooden_horse", denialCoefficient: 3 },
     { name: "X-Frame", value: "x_frame", denialCoefficient: 2 },
