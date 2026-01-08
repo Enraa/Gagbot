@@ -101,6 +101,31 @@ const configoptions = {
             default: "disabled",
             disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") } // if true, button is greyed out
         },
+        "blessed-luck": {
+            name: "Blessed Luck",
+            desc: "Should failed rolls from fumbling contribute to future rolls?",
+            choices: [
+                {
+                    name: "No",
+                    helptext: "*Blessed Luck is disabled*",
+                    select_function: (userID) => { return false },
+                    value: "disabled",
+                    style: ButtonStyle.Danger,
+                    uname: "BlessedLuckDisabled"
+                },
+                {
+                    name: "Yes",
+                    helptext: "Failed rolls add to future success chance",
+                    select_function: (userID) => { return false },
+                    value: "enabled",
+                    style: ButtonStyle.Secondary,
+                    uname: "BlessedLuck"
+                },
+            ],
+            menutype: "choice",
+            default: "enabled",
+            disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
+        },
         "arousaleffectpotency": {
             name: "Arousal Effect Potency",
             desc: "How much should arousal modify your speech?",
@@ -157,32 +182,7 @@ const configoptions = {
             menutype: "choice",
             default: 1.00,
             disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
-        },
-        "blessed-luck": {
-            name: "Blessed Luck",
-            desc: "Should failed rolls from fumbling contribute to future rolls?",
-            choices: [
-                {
-                    name: "No",
-                    helptext: "*Blessed Luck is disabled*",
-                    select_function: (userID) => { return false },
-                    value: "disabled",
-                    style: ButtonStyle.Danger,
-                    uname: "BlessedLuckDisabled"
-                },
-                {
-                    name: "Yes",
-                    helptext: "Failed rolls add to future success chance",
-                    select_function: (userID) => { return false },
-                    value: "enabled",
-                    style: ButtonStyle.Secondary,
-                    uname: "BlessedLuck"
-                },
-            ],
-            menutype: "choice",
-            default: "enabled",
-            disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
-        },
+        }
     },
     "General": {
         "keygiving": {
@@ -257,6 +257,23 @@ const configoptions = {
             ],
             menutype: "choice",
             default: "accept",
+            disabled: () => { return false }
+        },
+        "revokeconsent": {
+            name: "Revoke Consent",
+            desc: "Revoke your consent from the bot? You will need to consent again to bondage in the future.",
+            choices: [
+                {
+                    name: "Revoke",
+                    helptext: "*Revoking helptext that'll never be used lol*",
+                    select_function: (userID) => { return false },
+                    value: "disabled",
+                    style: ButtonStyle.Danger,
+                    uname: "KeyGivingDisabled"
+                },
+            ],
+            menutype: "choice_revokeconsent",
+            default: "disabled",
             disabled: () => { return false }
         }
     },
@@ -618,6 +635,19 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                             .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getBotOption(k))?.name)
                             .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getBotOption(k))?.style)
                             .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
+                    )
+                pagecomponents.push(buttonsection)
+            }
+            else if (configoptions[menuset][k].menutype == "choice_revokeconsent") {
+                let buttonsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_pageoptrevoke_${menuset}`)
+                            .setLabel(`Revoke Consent`)
+                            .setStyle(ButtonStyle.Danger)
+                            .setDisabled((process.consented[interaction.user.id] == undefined))
                     )
                 pagecomponents.push(buttonsection)
             }

@@ -44,7 +44,6 @@ function replacer(text, ogText, startWord, repeatWord, endWord) {
         else { repletter = repeatWord }
         if (!ogText.charAt(t).search(/[A-z]|\d]/)) {
             if (!ogText.charAt(t).search(/[A-Z]/)) { repletter = repletter.toUpperCase() }
-            console.log(repletter);
             text = `${text}${repletter}`
         }
         else {

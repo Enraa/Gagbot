@@ -1233,7 +1233,7 @@ const texts_ungag = {
             self: {
                 gag: [
                     `USER_TAG paws at USER_THEIR gag, trying to get a good grasp on the straps, but to no avail!`,
-                    `USER_TAG tries to use both hands to get a grip on the buckle, but gets nowhere because of USER_THEIR mittens.`,
+                    `USER_TAG tries to use both hands to get a grip on the buckle of USER_THEIR gag, but gets nowhere because of USER_THEIR mittens.`,
                     `Brushing USER_THEIR cheek, USER_TAG paws at USER_THEIR gag cutely!`,
                     `USER_TAG mews into USER_THEIR gag pitifully as USER_THEY can't grip the straps to take it out!`
                 ],

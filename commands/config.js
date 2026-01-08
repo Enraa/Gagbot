@@ -145,6 +145,14 @@ module.exports = {
 				}
 				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}
+			else if (optionparts[1] == "pageoptrevoke") {
+				// Revoke that CONSENT
+				if (process.consented[interaction.user.id]) {
+					delete process.consented[interaction.user.id]
+				}
+				// Finally, reprompt the user, now with the new choice set. 
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
 			else {
 				console.log(interaction)
 			}
