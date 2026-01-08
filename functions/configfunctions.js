@@ -969,7 +969,7 @@ async function setGlobalCommands(client) {
     await client.application.fetch()
     let clientcommands = await client.application.commands.fetch()
     clientcommands = clientcommands.map((m) => { return { name: m.name, desc: m.description, id: m.id }})
-    if (clientcommands.length > 1 || (clientcommands[0].name != "config")) {
+    if ((clientcommands.length > 1) || (clientcommands[0]?.name != "config")) {
         const command = require(`./../commands/config.js`);
         if ((command.execute) && (command.data)) {
             commandlist = [command.data.toJSON()];
