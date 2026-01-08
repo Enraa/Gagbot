@@ -6,7 +6,7 @@ const { getConsent, handleConsent, timelockChastityModalnew } = require('./../fu
 const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require('./../functions/configfunctions.js');
 const { removeAllCommands } = require('../functions/configfunctions.js');
 const { initializeServerOptions } = require('../functions/configfunctions.js');
-const { setCommands, getBotOption, leaveServerOptions, createWebhook } = require('../functions/configfunctions.js');
+const { setCommands, getBotOption, leaveServerOptions, createWebhook, deleteWebhook } = require('../functions/configfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -66,31 +66,60 @@ module.exports = {
 				interaction.update(await generateConfigModal(interaction, "Server"));
 			}
 			else if (optionparts[1] == "serveroptchannel") {
+				let savedchannels = [];
+				let failedtext = ``;
 				let channelsselected = interaction.channels ? interaction.channels?.keys() : [];
 				channelsselected = Array.from(channelsselected);
-				console.log(channelsselected);
-				let savedchannels = [];
-				let failedtext;
-				channelsselected.forEach(async (c) => {
+				let oldchannelsselected = getServerOption(interaction.guildId, "server-channelspermitted");
+				// Missing channels in channelsselected versus oldchannelsselected should be removed.
+				let filteredlistfordeletes = oldchannelsselected.filter((f) => !channelsselected.includes(f));
+				// delete them!
+				filteredlistfordeletes.forEach(async (c) => {
+					let channel = await interaction.client.channels.fetch(c);
+					console.log("DELETING WEBHOOK")
+					let webhookdeleted = await deleteWebhook(interaction, channel)
+					if (webhookdeleted == "bot") {
+						// We have a successful webhook AND Manage Messages.
+						failedtext = `${failedtext}\n-# ✅ ***Deleted auto-generated webhook in #${channel.name}***`
+					}
+					else if (webhookdeleted == "notbot") {
+						// We have a successful webhook AND Manage Messages.
+						failedtext = `${failedtext}\n-# ✅ ***Unregistered webhook in #${channel.name}.***`
+					}
+					else {
+						webhookdeleted = `${failedtext}\n-# ❌ ***Failed to delete webhook or missing perms for #${channel.name}***`
+					}
+				})
+				// Now filter the opposite direction, to detect additions. 
+				let filteredlistforcreation = channelsselected.filter((f) => !oldchannelsselected.includes(f));
+				filteredlistforcreation.forEach(async (c) => {
 					let channel = await interaction.client.channels.fetch(c);
 					console.log("CREATING WEBHOOK")
 					let webhook = await createWebhook(interaction, channel)
-					if (webhook && channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageMessages)) {
+					if (webhook && webhook.humanwebhook && channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageMessages)) {
 						// We have a successful webhook AND Manage Messages.
-						failedtext = `\n-# ✅ ***Created webhook and can manage messages in #${channel.name}***`
+						failedtext = `${failedtext}\n-# ✅ ***Registered webhook and can manage messages in #${channel.name}, with external emoji***`
+						savedchannels.push(c)
+					}
+					else if (webhook && !webhook.humanwebhook && channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageMessages)) {
+						// We have a successful webhook AND Manage Messages.
+						failedtext = `${failedtext}\n-# ⚠️ ***Auto-created webhook and can manage messages in #${channel.name}. Note, this will not allow external emoji. You need to create a new webhook yourself for this channel named "Gagbot" and re-set this channel.***`
 						savedchannels.push(c)
 					}
 					else {
-						failedtext = `\n-# ❌ ***Failed to create webhook or missing perms for #${channel.name}***`
+						failedtext = `${failedtext}\n-# ❌ ***Failed to create webhook or missing perms for #${channel.name}***`
 					}
 				})
 				function sleep(ms) {
 					return new Promise(resolve => setTimeout(resolve, ms));
 				}
-				await sleep(200); // Pauses for 200 milliseconds
-				setServerOption(interaction.guildId, "server-channelspermitted", savedchannels)
+				await sleep(500); // Pauses for 200 milliseconds
+				// Concat, and then use the Set syntax to filter dupes. 
+				let uniquesavedchannels = [...new Set(savedchannels.concat(...channelsselected))]
+				console.log(failedtext)
+				setServerOption(interaction.guildId, "server-channelspermitted", uniquesavedchannels)
 				console.log(getServerOption(interaction.guildId, "server-channelspermitted"))
-				interaction.update(await generateConfigModal(interaction, optionparts[2], undefined, failedtext));
+				interaction.update(await generateConfigModal(interaction, optionparts[2], undefined, (failedtext.length > 0) ? failedtext : undefined));
 			}
 			else if (optionparts[1] == "botguilds") {
 				console.log(optionparts[4])
@@ -114,6 +143,14 @@ module.exports = {
 					initializeServerOptions(interaction.guildId)
 					await setCommands(interaction, interaction.guildId);
 				}
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "pageoptrevoke") {
+				// Revoke that CONSENT
+				if (process.consented[interaction.user.id]) {
+					delete process.consented[interaction.user.id]
+				}
+				// Finally, reprompt the user, now with the new choice set. 
 				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}
 			else {

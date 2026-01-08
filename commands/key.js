@@ -1,8 +1,8 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const { generateConfigModal, configoptions, getOption, setOption, config } = require('./../functions/configfunctions.js');
 const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require('./../functions/headwearfunctions.js');
-const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar, transferCollarKey, promptTransferCollarKey } = require('./../functions/collarfunctions.js');
-const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity, transferChastityKey, promptTransferChastityKey } = require('./../functions/vibefunctions.js');
+const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar, transferCollarKey, promptTransferCollarKey, collartypes, getCollarName } = require('./../functions/collarfunctions.js');
+const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity, transferChastityKey, promptTransferChastityKey, chastitytypesoptions, chastitybratypesoptions } = require('./../functions/vibefunctions.js');
 const { getText, getTextGeneric } = require('./../functions/textfunctions.js');
 const { getPronouns } = require('../functions/pronounfunctions.js');
 const { getChastityBra } = require('../functions/vibefunctions.js');
@@ -14,6 +14,8 @@ const { promptCloneChastityBraKey } = require('../functions/vibefunctions.js');
 const { revokeChastityBraKey } = require('../functions/vibefunctions.js');
 const { transferChastityBraKey } = require('../functions/vibefunctions.js');
 const { promptTransferChastityBraKey } = require('../functions/vibefunctions.js');
+const { getChastityName } = require('../functions/vibefunctions.js');
+const { getChastityBraName } = require('../functions/vibefunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -64,7 +66,26 @@ module.exports = {
                     opt.setName("newkeyholder")
 						.setDescription("Who to give the key to?")
 					)  
-    ),
+        )
+        .addSubcommand((subcommand) => 
+            subcommand
+                .setName("swapitem")
+                .setDescription("Swap a worn restraint for another you have the key for...")
+                .addUserOption((opt) => 
+                    opt.setName("wearer")
+						.setDescription("Whose restraint to give key for?")
+					)
+				.addStringOption((opt) => 
+					opt.setName("restraint")
+						.setDescription("Which restraint of theirs to give key for?")
+						.setAutocomplete(true)
+					)
+                .addStringOption((opt) => 
+                    opt.setName("restrainttype")
+                        .setDescription("What new restraint to put on them?")
+                        .setAutocomplete(true)
+                )
+        ),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused(); 
 		let subcommand = interaction.options.getSubcommand();
@@ -164,6 +185,69 @@ module.exports = {
                 }
 				await interaction.respond(sorted)
 			}
+            else if (subcommand == "swapitem") {
+                // Note, we only need to know if we can ***unlock*** a restraint to swap it.
+                if (interaction.options.get('restraint')?.focused) {
+                    let chosenuserid = interaction.options.get('wearer')?.value ?? interaction.user.id // Note we can only retrieve the user ID here!
+                    let collarkeyholder = (getCollar(chosenuserid) && canAccessCollar(chosenuserid, interaction.user.id, true).access);
+                    let chastitykeyholder = (getChastity(chosenuserid) && canAccessChastity(chosenuserid, interaction.user.id, true).access);
+                    let chastitybrakeyholder = (getChastityBra(chosenuserid) && canAccessChastityBra(chosenuserid, interaction.user.id, true).access);
+
+
+                    
+                    let choices = [];
+                    if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
+                        choices = [{ name: "No Keys Available", value: "nokeys" }]
+                    }
+                    if (collarkeyholder) {
+                        choices.push({ name: "Collar", value: "collar" })
+                    }
+                    if (chastitykeyholder) {
+                        choices.push({ name: "Chastity Belt", value: "chastitybelt" })
+                    }
+                    if (chastitybrakeyholder) {
+                        choices.push({ name: "Chastity Bra", value: "chastitybra" })
+                    }
+
+                    console.log(interaction.options.get('restraint'))
+
+                    await interaction.respond(choices)
+                }
+                else {
+                    let chosenrestrainttype = interaction.options.get('restraint')?.value;
+                    let choices = [];
+                    if (chosenrestrainttype) {
+                        if (chosenrestrainttype == "collar") {
+                            choices = collartypes;
+                        }
+                        else if (chosenrestrainttype == "chastitybelt") {
+                            choices = chastitytypesoptions;
+                        }
+                        else if (chosenrestrainttype == "chastitybra") {
+                            choices = chastitybratypesoptions
+                        }
+                        else {
+                            choices = [
+                                { name: "Nothing", value: "nothing" }
+                            ]
+                        }
+                    }
+
+                    if (focusedValue === "") {
+                        let choicestoreturn = choices.slice(0,10)
+                        await interaction.respond(choicestoreturn)
+                    }
+                    else {
+                        try {
+                            let choicestoreturn = choices.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                            await interaction.respond(choicestoreturn)
+                        }
+                        catch (err) {
+                            console.log(err);
+                        }
+                    }
+                }
+            }
 		}
 		catch (err) {
 			console.log(err);
@@ -522,7 +606,8 @@ module.exports = {
                     await interaction.editReply({ content: 'Confirmation not received within 1 minute, cancelling transfer.', components: [] });
                     return;
                 }
-            } else if (subcommand == "give") {
+            } 
+            else if (subcommand == "give") {
                 const wearer = interaction.options.getUser("wearer") ?? interaction.user;
                 const restraint = interaction.options.getString("restraint")
                 const newKeyholder = interaction.options.getUser("newkeyholder")
@@ -745,6 +830,103 @@ module.exports = {
                     console.log(err);
                     await interaction.editReply({ content: 'Confirmation not received within 30 seconds, cancelling transfer.', components: [] });
                     return;
+                }
+            }
+            else if (subcommand == "swapitem") {
+                let wearer = interaction.options.getUser("wearer") ?? interaction.user;
+                let restrainttype = interaction.options.getString("restraint")
+                let newrestraint = interaction.options.getString("restrainttype")
+
+                if (!wearer || !restrainttype || !newrestraint) {
+                    interaction.reply({ content: `Something went wrong. The command was parsed as:\nSwap ${wearer}'s ${restrainttype} to a ${newrestraint}!`, flags: MessageFlags.Ephemeral })
+                    return;
+                }
+
+                let newrestraintname;
+                let permitted = false;
+                if (restrainttype == "collar") {
+                    newrestraintname = getCollarName(undefined, newrestraint);
+                    if ((getCollar(wearer.id)) && (canAccessCollar(wearer.id, interaction.user.id, true).access)) {
+                        permitted = true;
+                    }
+                }
+                else if (restrainttype == "chastitybelt") {
+                    newrestraintname = getChastityName(undefined, newrestraint);
+                    if ((getChastity(wearer.id)) && (canAccessChastity(wearer.id, interaction.user.id, true).access)) {
+                        permitted = true;
+                    }
+                }
+                else if (restrainttype == "chastitybra") {
+                    newrestraintname = getChastityBraName(undefined, newrestraint);
+                    if ((getChastityBra(wearer.id)) && (canAccessChastityBra(wearer.id, interaction.user.id, true).access)) {
+                        permitted = true;
+                    }
+                }
+
+                // Catch if they ARE NOT ALLOWED
+                if (!permitted) {
+                    interaction.reply({ content: `You don't have access to unlock ${wearer}'s ${restrainttype}!`, flags: MessageFlags.Ephemeral })
+                    return;
+                }
+                else if (!newrestraintname) {
+                    interaction.reply({ content: `Something went wrong with your new restraint selection!`, flags: MessageFlags.Ephemeral })
+                    return;
+                }
+
+                // Okay they're probably allowed lol
+                let data = {
+                    textarray: "texts_key",
+                    textdata: {
+                        interactionuser: interaction.user,
+                        targetuser: wearer,
+                    }
+                }
+                data.swapitem = true;
+                if (interaction.user.id == wearer.id) {
+                    // swapping own keyed item
+                    data.self = true;
+                    data[restrainttype] = true;
+                    if (restrainttype == "collar") {
+                        data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
+                        data.textdata.c2 = newrestraintname;
+                        getCollar(wearer.id).collartype = newrestraint;
+                        interaction.reply(getText(data));
+                    }
+                    else if (restrainttype == "chastitybelt") {
+                        data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
+                        data.textdata.c2 = newrestraintname;
+                        getChastity(wearer.id).chastitytype = newrestraint;
+                        interaction.reply(getText(data));
+                    }
+                    else if (restrainttype == "chastitybra") {
+                        data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
+                        data.textdata.c2 = newrestraintname;
+                        getChastityBra(wearer.id).chastitytype = newrestraint;
+                        interaction.reply(getText(data));
+                    }
+                }
+                else {
+                    // swapping other's keyed item
+                    data.other = true;
+                    data[restrainttype] = true;
+                    if (restrainttype == "collar") {
+                        data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype); // Old collar
+                        data.textdata.c2 = newrestraintname;
+                        getCollar(wearer.id).collartype = newrestraint;
+                        interaction.reply(getText(data));
+                    }
+                    else if (restrainttype == "chastitybelt") {
+                        data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype); // Old collar
+                        data.textdata.c2 = newrestraintname;
+                        getChastity(wearer.id).collartype = newrestraint;
+                        interaction.reply(getText(data));
+                    }
+                    else if (restrainttype == "chastitybra") {
+                        data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype); // Old collar
+                        data.textdata.c2 = newrestraintname;
+                        getChastityBra(wearer.id).collartype = newrestraint;
+                        interaction.reply(getText(data));
+                    }
                 }
             }
 		}

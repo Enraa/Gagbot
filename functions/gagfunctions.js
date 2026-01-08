@@ -303,15 +303,15 @@ function textGarbleVibrator(messagein, msg, modifiedmessage) {
     let messageparts = messagein;
     let modified = modifiedmessage
     if (intensity) {
-        modified = true;
-
         const arousedtexts = getArousedTexts(msg.author.id);
 
         //totalwords = 0 // recalculate eligible word count because they're stimmed out of their mind. 
         for (let i = 0; i < messageparts.length; i++) {
             try {
                 if (messageparts[i].garble) {
-                    messageparts[i].text = stutterText(messageparts[i].text, intensity, arousedtexts)
+                    let garbledtext = stutterText(msg, messageparts[i].text, intensity, arousedtexts)
+                    if (garbledtext.stuttered) { modified = true }
+                    messageparts[i].text = garbledtext.text
                     //totalwords = totalwords + messageparts[i].text.split(" ").length
                 }
             }

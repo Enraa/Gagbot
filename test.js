@@ -4,9 +4,25 @@ const path = require('path');
 const admZip = require('adm-zip');
 const { getTimestringForZip } = require("./functions/timefunctions");
 const env = require('dotenv')
+const nlp = require('compromise');
+const nlpSpeech = require('compromise-speech');
+nlp.extend(nlpSpeech);
 
 env.config();
 
+let textinputs = [`compromise`, `Enraa`, `super`, `XD`, `lol`, `mostly`, `indication`]
+textinputs.forEach((t) => {
+    let tmodified = nlp(t)
+    tmodified.compute('syllables')
+    tmodified.terms().json().forEach((termdata) => {
+        console.log(`Syllables output for ${termdata.text}:`)
+        console.log(termdata.terms[0].syllables)
+    })
+})
+
+
+
+/*
 const client = new discord.Client({
     intents: [
         discord.GatewayIntentBits.Guilds,
@@ -42,4 +58,4 @@ client.on("clientReady", async () => {
 
 client.login(process.env.DISCORDBOTTOKEN)
 
-console.log(JSON.stringify(['1443329378560901303']))
+console.log(JSON.stringify(['1443329378560901303']))*/

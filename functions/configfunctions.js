@@ -125,6 +125,63 @@ const configoptions = {
             menutype: "choice",
             default: "enabled",
             disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
+        },
+        "arousaleffectpotency": {
+            name: "Arousal Effect Potency",
+            desc: "How much should arousal modify your speech?",
+            choices: [
+                {
+                    name: "Very Little",
+                    helptext: "*33% of base*",
+                    select_function: (userID) => { return false },
+                    value: 0.33,
+                    style: ButtonStyle.Secondary,
+                    uname: "ArousalEffect033"
+                },
+                {
+                    name: "Less",
+                    helptext: "*66% of base*",
+                    select_function: (userID) => { return false },
+                    value: 0.66,
+                    style: ButtonStyle.Secondary,
+                    uname: "ArousalEffect066"
+                },
+                {
+                    name: "Normal",
+                    helptext: "100% of base",
+                    select_function: (userID) => { return false },
+                    value: 1.00,
+                    style: ButtonStyle.Primary,
+                    uname: "ArousalEffect100"
+                },
+                {
+                    name: "More",
+                    helptext: "133% of base",
+                    select_function: (userID) => { return false },
+                    value: 1.33,
+                    style: ButtonStyle.Primary,
+                    uname: "ArousalEffect133"
+                },
+                {
+                    name: "Much More",
+                    helptext: "166% of base",
+                    select_function: (userID) => { return false },
+                    value: 1.66,
+                    style: ButtonStyle.Primary,
+                    uname: "ArousalEffect166"
+                },
+                {
+                    name: "Too Much...",
+                    helptext: "200% of base",
+                    select_function: (userID) => { return false },
+                    value: 2.00,
+                    style: ButtonStyle.Danger,
+                    uname: "ArousalEffect200"
+                },
+            ],
+            menutype: "choice",
+            default: 1.00,
+            disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
         }
     },
     "General": {
@@ -200,6 +257,23 @@ const configoptions = {
             ],
             menutype: "choice",
             default: "accept",
+            disabled: () => { return false }
+        },
+        "revokeconsent": {
+            name: "Revoke Consent",
+            desc: "Revoke your consent from the bot? You will need to consent again to bondage in the future.",
+            choices: [
+                {
+                    name: "Revoke",
+                    helptext: "*Revoking helptext that'll never be used lol*",
+                    select_function: (userID) => { return false },
+                    value: "disabled",
+                    style: ButtonStyle.Danger,
+                    uname: "KeyGivingDisabled"
+                },
+            ],
+            menutype: "choice_revokeconsent",
+            default: "disabled",
             disabled: () => { return false }
         }
     },
@@ -454,8 +528,8 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     )
                     .setButtonAccessory((button) =>
                         button.setCustomId(`config_pageopt_${menuset}_${k}`)
-                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name)
-                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style)
+                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name ?? "Undefined")
+                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style ?? ButtonStyle.Danger)
                             .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
                     )
                 pagecomponents.push(buttonsection)
@@ -502,7 +576,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                                 .setMaxValues(25)
 
                     if (channelsmentioned && (channelsmentioned.length > 0)) {
-                        component.setDefaultChannels(...channelsmentioned);
+                        component.setDefaultChannels(...[...new Set(channelsmentioned)]);
                     }
                     let rolesection = new ActionRowBuilder()
                         .addComponents(component)
@@ -561,6 +635,19 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                             .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getBotOption(k))?.name)
                             .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getBotOption(k))?.style)
                             .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
+                    )
+                pagecomponents.push(buttonsection)
+            }
+            else if (configoptions[menuset][k].menutype == "choice_revokeconsent") {
+                let buttonsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_pageoptrevoke_${menuset}`)
+                            .setLabel(`Revoke Consent`)
+                            .setStyle(ButtonStyle.Danger)
+                            .setDisabled((process.consented[interaction.user.id] == undefined))
                     )
                 pagecomponents.push(buttonsection)
             }
@@ -912,7 +999,7 @@ async function setGlobalCommands(client) {
     await client.application.fetch()
     let clientcommands = await client.application.commands.fetch()
     clientcommands = clientcommands.map((m) => { return { name: m.name, desc: m.description, id: m.id }})
-    if (clientcommands.length > 1 || (clientcommands[0].name != "config")) {
+    if ((clientcommands.length > 1) || !(clientcommands[0]?.name == "config")) {
         const command = require(`./../commands/config.js`);
         if ((command.execute) && (command.data)) {
             commandlist = [command.data.toJSON()];
@@ -948,14 +1035,30 @@ async function createWebhook(interaction, channel) {
         // We're now reasonably sure we can make webhooks. 
         // Check if a Gagbot webhook already exists. If it does, use it.
         let existingwebhooks = await channel.fetchWebhooks();
-        let webhook
+        let webhook;
+        let humanwebhook;
+        // Use a user-made webhook first if available
         existingwebhooks.forEach((w) => {
-            if (w.applicationId == interaction.client.user.id ) { webhook = w }
+            console.log(existingwebhooks)
+            console.log(`ISBOT: ${(w.applicationId != interaction.client.user.id)}, ISNAME: ${(w.name == "Gagbot")}`)
+            if ((w.applicationId != interaction.client.user.id) && (w.name == "Gagbot")) { 
+                webhook = w 
+                humanwebhook = true;
+            }
         })
+        // Use an existing bot created webhook if available.
+        if (!webhook) {
+            existingwebhooks.forEach((w) => {
+                if (w.applicationId == interaction.client.user.id) { 
+                    webhook = w 
+                    humanwebhook = false;
+                }
+            })
+        }
         // A gagbot webhook does not exist. Create one. 
         if (!webhook) {
             webhook = await channel.createWebhook({
-                name: "Gagbot",
+                name: "Gagbot Webhook",
                 reason: "Auto-generated Webhook for Gagbot"
             })
         }
@@ -966,12 +1069,38 @@ async function createWebhook(interaction, channel) {
         if (process.readytosave == undefined) { process.readytosave = {} }
         process.readytosave.webhooks = true;
         console.log(process.webhookstoload);
-        return webhook;
+        return { humanwebhook: humanwebhook };
     }
     catch (err) {
         console.log(err)
         return false;
     }
+}
+
+async function deleteWebhook(interaction, channel) {
+    // First, check if we can manage webhooks. If we can't, vamos. 
+    if (!channel.permissionsFor(channel.guild.members.me).has(PermissionsBitField.Flags.ManageWebhooks)) {
+        return false;
+    }
+    let webhook;
+    let existingwebhooks = await channel.fetchWebhooks();
+    existingwebhooks.forEach((w) => {
+        if (w.id == process.webhook[channel.id]) {
+            webhook = w;
+        }
+    })
+    delete process.webhook[channel.id];
+    delete process.webhookstoload[channel.id];
+    if (webhook) {
+        if (webhook.w.applicationId == interaction.client.user.id) {
+            await interaction.client.deleteWebhook(webhook.id);
+            return "bot";
+        }
+        else {
+            return "notbot";
+        }
+    }
+    return false;
 }
 
 // Load all known webhooks into the list 
@@ -1009,6 +1138,7 @@ exports.knownServer = knownServer;
 exports.leaveServerOptions = leaveServerOptions;
 
 exports.createWebhook = createWebhook;
+exports.deleteWebhook = deleteWebhook;
 exports.loadWebhooks = loadWebhooks;
 
 const functions = {};

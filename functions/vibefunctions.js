@@ -1,10 +1,16 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
+// Used to identify syllables during vibe garbling
+const nlp = require('compromise');
+const nlpSpeech = require('compromise-speech');
+nlp.extend(nlpSpeech);
+
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require('discord.js');
 const { getHeavy, heavyDenialCoefficient } = require("./heavyfunctions.js");
 const { arousedtexts } = require('../vibes/aroused/aroused_texts.js');
 const { config } = require('./configfunctions.js');
+const { getOption } = require(`./configfunctions.js`);
 
 const chastitytypes = [
     { name: "Featherlight Belt", value: "belt_featherlight", denialCoefficient: 15, minVibe: 2, minArousal: 1 },
@@ -867,38 +873,122 @@ function getArousedTexts(user) {
 }
 
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
-function stutterText(text, intensity, arousedtexts) {
-    function aux(text) {
-        outtext = '';
-        if (!((text.charAt(0) == "<" && text.charAt(1) == "@") || (text.charAt(0) == "\n") || (!text.charAt(0).match(/[a-zA-Z0-9]/)))) { //Ignore pings, linebreaks and signs (preventively I dunno)
-            let stuttered = false;
-            //console.log("a");console.log(text);console.log(intensity);
-            if (Math.random() < intensity / 10) { // 2-20% to cause a stutter
-                let stuttertimes = Math.min(Math.max(Math.floor(Math.random() * 0.3 * intensity), 1), 8) // Stutter between 1, 1-2 and 1-3 times, depending on intensity
-                for (let i = 0; i < stuttertimes; i++) {
-                    outtext = `${outtext}${text.charAt(0)}-`
-                }
-                outtext = `${outtext}${text}`
-            }
-            else {
-                outtext = `${outtext}${text}`
-            }
-            if (Math.random() < intensity / 40) { // 0.5-5% to insert an arousal text
-                let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)] ?? "mmf\\~"
-                outtext = `${outtext} ${arousedtext}`
-            }
-            return outtext;
-        } else {
-            return text;
-        }
-    }
-    
+function stutterText(msg,text, intensity, arousedtexts) {
     let newtextparts = text.split(" ");
     let outtext = ''
+    let stuttered = false;
+    let usermod = getOption(msg.author.id, "arousaleffectpotency") ?? 1.0
+    let overcorrected = 3;
+    console.log(intensity)
+    // js is a disaster sometimes. And Im a terrible coder. 
+    if (isNaN(usermod) || (usermod > 2.0) || usermod < 0.33) { usermod == 1.0 }
     for (let i = 0; i < newtextparts.length; i++) {
-        outtext = `${outtext} ${aux(newtextparts[i])}`
+        let parttomodify = newtextparts[i];
+        // If this is a discord username, use the clean version of the username.
+        // This will require an async. 
+        if ((/<@!?(\d+)>/).test(parttomodify)) {
+
+        }
+        let stuttertextsyllables = nlp(newtextparts[i]).compute("syllables");
+        stuttertextsyllables = stuttertextsyllables.terms().json()[0] // We only have one word in the part!
+        if (stuttertextsyllables && stuttertextsyllables.terms[0]) {
+            stuttertextsyllables = stuttertextsyllables.terms[0].syllables
+        }
+        else {
+            stuttertextsyllables = []; // We dont have a syllable somehow I guess
+        }
+        let nosyllable = false;
+        // If the syllable is undefined, because stuff broke, don't bother with it. 
+        if (stuttertextsyllables[0] == undefined) {
+            nosyllable = true;
+        }
+        let modifiedpart = '';
+        let modified = false;
+
+        // Let pre-arousalchoices be 0.00 up to 1.00 divided equally, where full arousal is achieved at 40 arousal 
+        // and scales based on arousaleffectpotency. Remainder over the top will be no arousal text.
+        let prearousalchoicethresh = Math.min(((intensity / (40 * overcorrected)) / 4) * usermod, 0.25);
+        let prearousalmathroll = Math.random();
+        let prearousalcumulative = 0 + prearousalchoicethresh;
+        // Modifier 1 - 0.0-0.25 - First syllable stutter. In-indication
+        if ((prearousalmathroll < prearousalcumulative) && !nosyllable) {
+            stuttered = true;
+            modified = true;
+            let gasptexts = ["*gasp*", "*pant*", "*shudder*", "*shiver*"]
+            let chosengasptext = gasptexts[Math.floor(Math.random() * gasptexts.length)]
+            modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}...${chosengasptext}-`
+        }
+        prearousalcumulative = prearousalcumulative + prearousalchoicethresh;
+        // Modifier 2 - 0.25-0.50 - First syllable stammer, with pause and letter. In...I-Indication
+        if (!modified && (prearousalmathroll < prearousalcumulative) && !nosyllable) {
+            stuttered = true;
+            modified = true;
+            modifiedpart = `${modifiedpart}${stuttertextsyllables[0]}-`
+        }
+        prearousalcumulative = prearousalcumulative + prearousalchoicethresh;
+        // Modifier 3 - 0.50-0.75 - Stutter up to a base of 6 times, depending on user options.  I-I-I-I-Indication
+        if (!modified && (prearousalmathroll < prearousalcumulative) && !nosyllable) {
+            stuttered = true;
+            modified = true;
+            stuttertimes = (Math.min(intensity / 10, 6) * usermod)
+            for (let y = 0; y < Math.min(Math.floor((Math.random() + 0.5) * stuttertimes), stuttertimes); y++) {
+                modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}-`
+            }
+            modifiedpart = `${modifiedpart}`
+        }
+        prearousalcumulative = prearousalcumulative + prearousalchoicethresh;
+        // Modifier 4 - 0.75-1.00 - First syllable stammer, with pause and letter. In...I-Indication
+        if (!modified && (prearousalmathroll < prearousalcumulative) && !nosyllable) {
+            stuttered = true;
+            modified = true;
+            let gasptexts = ["*gasp*", "*pant*", "*shudder*", "*shiver*"]
+            let chosengasptext = gasptexts[Math.floor(Math.random() * gasptexts.length)]
+            modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}...${chosengasptext}-`
+        }
+
+        // Add the full word part now
+        modifiedpart = `${modifiedpart}${parttomodify}`
+        let postarousalchoicethresh = Math.min(((intensity / (40 * overcorrected)) / 3) * usermod * (modified ? 0.5 : 1.0), 0.25);
+        let postarousalmathroll = Math.random();
+        let postarousalcumulative = 0 + postarousalchoicethresh;
+        let postmodified = false;
+
+        // Modifier 1 - 0.00-0.33 - Post text stutter using the syllables library. Indication-tion
+        if (!postmodified && (postarousalmathroll < postarousalcumulative) && !nosyllable) {
+            stuttered = true;
+            postmodified = true;
+            modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length-1]}`
+            if (Math.random() < postarousalcumulative) {
+                modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length-1]}`
+            }
+        }
+        postarousalcumulative = postarousalcumulative + postarousalchoicethresh;
+        // Modifier 2 - 0.33-0.66 - Post text stutter with delayed syllable. Indication...tion
+        if (!postmodified && (postarousalmathroll < postarousalcumulative) && !nosyllable) {
+            stuttered = true;
+            postmodified = true;
+            modifiedpart = `${modifiedpart}...${stuttertextsyllables[stuttertextsyllables.length-1]}`
+        }
+
+        // Modifier 3 - 0.66-1.00 - Insert an arousal text, with chance scaled based on user option. Indication mmf~
+        if (!postmodified && (postarousalmathroll < postarousalcumulative)) {
+            stuttered = true;
+            postmodified = true;
+            let arousedtext = arousedtexts[Math.floor(Math.random() * arousedtexts.length)] ?? "mmf\\~"
+            modifiedpart = `${modifiedpart} ${arousedtext}`
+        }
+
+        // Finally, if its eating formatting for whatever stupid reason, don't.
+        let formattingeaten = [`-#`, `#`]
+        if (formattingeaten.includes(newtextparts[i])) {
+            outtext = `${outtext} ${newtextparts[i]}`
+        }
+        else {
+            outtext = `${outtext} ${modifiedpart}`
+        }
     }
-    return outtext
+
+    return { text: outtext.slice(1), stuttered: stuttered } // Remove starting space;
 }
 
 function updateArousalValues() {
@@ -924,21 +1014,19 @@ function updateArousalValues() {
         process.readytosave.arousal = true;
     }
     catch (err) {
-        // SAM PLEASE TRY CATCH THESE THINGS
-        // Holy fuck the arousal file broke and I had to delete it. 
         console.log(err)
     }
 }
 
 function getVibeEquivalent(user) {
-  if (!config.getDynamicArousal(user)) return calcStaticVibeIntensity(user);
+  if (!config.getDynamicArousal(user)) return (calcStaticVibeIntensity(user) * 2);
 
   let intensity = getArousal(user);
   if (intensity >= STUTTER_LIMIT) {
     const chastity = getChastity(user);
     if (chastity) {
       const hoursBelted = (Date.now() - chastity.timestamp) / (60 * 60 * 1000);
-      intensity += (calcFrustration(hoursBelted) + (chastity.extraFrustration ?? 0)) / 10;
+      intensity += (calcFrustration(hoursBelted) + (chastity.extraFrustration ?? 0)) / 20;
     }
   }
   return intensity;
@@ -1052,7 +1140,7 @@ function calcGrowthCoefficient(user) {
 function calcStaticVibeIntensity(user) {
   const vibes = getVibe(user);
   if (!vibes) return 0;
-  return vibes.reduce((a, b) => a + b.intensity, 0);
+  return (vibes.reduce((a, b) => a + b.intensity, 0) * 0.70);
 }
 
 // modify when more things affect it
