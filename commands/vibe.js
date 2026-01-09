@@ -172,14 +172,16 @@ module.exports = {
                                         if (vibetype) {
                                             // specific single vibe
                                             data.single = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                         else {
                                             // removing all vibes
                                             data.both = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                     }
                                     else {
@@ -256,14 +258,16 @@ module.exports = {
                                         if (vibetype) {
                                             // specific single vibe
                                             data.single = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                         else {
                                             // removing all vibes
                                             data.both = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                     }
                                     else {
@@ -344,14 +348,16 @@ module.exports = {
                                         if (vibetype) {
                                             // specific single vibe
                                             data.single = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                         else {
                                             // removing all vibes
                                             data.both = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                     }
                                     else {
@@ -444,14 +450,16 @@ module.exports = {
                                         if (vibetype) {
                                             // specific single vibe
                                             data.single = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                         else {
                                             // removing all vibes
                                             data.both = true
-                                            interaction.reply(getText(data))
-                                            discardChastityKey(vibeuser.id)
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                     }
                                     else {

@@ -213,7 +213,7 @@ const processHeadwearEmoji = (userID, text) => {
     let replaceemote = "";
     let wornheadwear = getHeadwear(userID);
     for (let i = 0; i < wornheadwear.length; i++) {
-        if (getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
+        if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
             replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote
         }
     }

@@ -106,8 +106,9 @@ module.exports = {
                                     if (config.getKeyLoss(corsetuser.id) && fumbleResults[1]) {
                                         // We lost the key while fumbling
                                         data.discard = true;
+                                        let discardresult = discardChastityKey(corsetuser.id, interaction.user.id)
+                                        data[discardresult] = true
                                         interaction.reply(getText(data));
-                                        discardChastityKey(corsetuser.id);
                                     }
                                     else {
                                         data.nodiscard = true;
@@ -160,8 +161,9 @@ module.exports = {
                                     if (config.getKeyLoss(corsetuser.id) && fumbleResults[1]) {
                                         // We lost the key while fumbling
                                         data.discard = true;
+                                        let discardresult = discardChastityKey(corsetuser.id, interaction.user.id)
+                                        data[discardresult] = true
                                         interaction.reply(getText(data));
-                                        discardChastityKey(corsetuser.id);
                                     }
                                     else {
                                         data.nodiscard = true;

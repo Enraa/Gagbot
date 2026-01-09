@@ -267,8 +267,8 @@ let wearabletypes = [
     { name: "Long Detached Latex Sleeves", value: "sleeves_longdetached_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },
     { name: "Fingernail Polish", value: "polish_fingernails", colorable: true, uniqueColors: ["Iridescent", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
     { name: "Wristcuff", value: "wristcuff", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    { name: "Bracelet", value: "bracelet", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    { name: "Armbands", value: "armbands", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Bracelet", value: "bracelet", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Armbands", value: "armbands", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Gauntlets", value: "gauntlet", colorable: true, uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 
     //Misc Accessories
@@ -277,7 +277,7 @@ let wearabletypes = [
     { name: "Big Cute Ribbon", value: "bigcute_ribbon", colorable: true },
     { name: "Feather Boa", value: "feather_boa", colorable: true },
     { name: "Bridal Wristlets", value: "wristlets_bridal", colorable: true, uniqueColors: ["Gothic"] },
-    { name: "Choker", value: "choker", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Vampire", "Angel Wings"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Choker", value: "choker", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Vampire", "Angel Wings", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Leather Choker", value: "choker_leather", colorable: true },
     { name: "Cloak", value: "cloak", colorable: true, uniqueColors: ["Witch", "Rogue", "Vampire", "Hooded", "Elven"] },
     { name: "Latex Cloak", value: "cloak_latex", colorable: true, uniqueColors: ["Witch", "Rogue", "Vampire", "Hooded"] },
