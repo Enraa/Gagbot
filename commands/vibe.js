@@ -22,20 +22,29 @@ for (const file of commandFiles) {
 
 module.exports = {
 	data: new SlashCommandBuilder()
-		.setName('vibe')
+		.setName('toy')
 		.setDescription('Add a vibrator/toy, causing stuttered speech and other effects')
         .addUserOption(opt =>
             opt.setName('user')
-            .setDescription('Who to add a fun vibrator to')
+            .setDescription('Who to add a fun toy to...')
         )
         .addStringOption(opt =>
             opt.setName('type')
-            .setDescription('What kind of vibe to add')
-            .addChoices(...vibetypes)
+            .setDescription('What kind of toy to add...')
+            .addChoices(
+                { name: "Vibrators", value: "vibes" },
+                { name: "Nipple Toys", value: "nipple" },
+                { name: "Insertables", value: "insertable" }
+            )
+        )
+        .addStringOption(opt => 
+            opt.setName('toychoice')
+            .setDescription(`Which toy specifically...`)
+            .setAutocomplete(true)
         )
 		.addNumberOption(opt => 
             opt.setName('intensity')
-            .setDescription("How intensely to stimulate")
+            .setDescription("How intensely to set the toy to (1-10)...")
             .setMinValue(1)
             .setMaxValue(20)
         ),
