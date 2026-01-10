@@ -910,21 +910,21 @@ module.exports = {
                     data.other = true;
                     data[restrainttype] = true;
                     if (restrainttype == "collar") {
-                        data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype); // Old collar
+                        data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
                         data.textdata.c2 = newrestraintname;
                         getCollar(wearer.id).collartype = newrestraint;
                         interaction.reply(getText(data));
                     }
                     else if (restrainttype == "chastitybelt") {
-                        data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype); // Old collar
+                        data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
                         data.textdata.c2 = newrestraintname;
-                        getChastity(wearer.id).collartype = newrestraint;
+                        getChastity(wearer.id).chastitytype = newrestraint;
                         interaction.reply(getText(data));
                     }
                     else if (restrainttype == "chastitybra") {
-                        data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype); // Old collar
+                        data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
                         data.textdata.c2 = newrestraintname;
-                        getChastityBra(wearer.id).collartype = newrestraint;
+                        getChastityBra(wearer.id).chastitytype = newrestraint;
                         interaction.reply(getText(data));
                     }
                 }

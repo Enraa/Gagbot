@@ -115,12 +115,12 @@ module.exports = {
           lockedUser.id
         )} ${restraint}! Who knows when they'll be found.`
       );
-      discardFunction(lockedUser.id);
+      discardFunction(lockedUser.id, interaction.user.id);
     } else {
       interaction.reply(
-        `${interaction.user} discards the keys to ${lockedUser}'s ${restraint}! Who knows when they'll be found.`
+        `${interaction.user} discards their keys to ${lockedUser}'s ${restraint}! Who knows when they'll be found.`
       );
-      discardFunction(lockedUser.id);
+      discardFunction(lockedUser.id, interaction.user.id);
     }
   },
 };

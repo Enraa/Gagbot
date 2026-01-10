@@ -9,22 +9,22 @@ module.exports = {
         .setDescription(`Prevent a worn item from being removed...`)
 		.addSubcommand((subcommand) =>
       		subcommand
-				.setName("lock")
-				.setDescription("Lock an item...")
+				.setName("protect")
+				.setDescription("Protect an item...")
 				.addStringOption((opt) => 
 					opt.setName("wornitem")
-						.setDescription("Which worn item to lock?")
+						.setDescription("Which worn item to protect?")
 						.setAutocomplete(true)
 						.setRequired(true)
 					)
 		)
 		.addSubcommand((subcommand) =>
       		subcommand
-				.setName("unlock")
-				.setDescription("Unlock an item...")
+				.setName("unprotect")
+				.setDescription("Unprotect an item...")
 				.addStringOption((opt) => 
 					opt.setName("wornitem")
-						.setDescription("Which locked item to unlock?")
+						.setDescription("Which locked item to unprotect?")
 						.setAutocomplete(true)
 						.setRequired(true)
 					)
@@ -33,7 +33,7 @@ module.exports = {
 		const focusedValue = interaction.options.getFocused(); 
 		let subcommand = interaction.options.getSubcommand();
 		try {
-			if (subcommand == "lock") {
+			if (subcommand == "protect") {
 				// Headwear
 				let itemswornhead = getHeadwear(interaction.user.id)
 				let itemslockedhead = getLockedHeadgear(interaction.user.id)
@@ -88,7 +88,7 @@ module.exports = {
 			let subcommand = interaction.options.getSubcommand();
 			let chosenitem = interaction.options.getString("wornitem")
 
-			if (subcommand == "lock") {
+			if (subcommand == "protect") {
 				if (chosenitem && chosenitem != "nothing") {
 					let chosenitemparts = chosenitem.split("+")
 					let replytextname;
@@ -100,10 +100,10 @@ module.exports = {
 						addLockedWearable(interaction.user.id, chosenitemparts[0])
 						replytextname = getWearableName(undefined, chosenitemparts[0])
 					}
-					interaction.reply({ content: `Item ${replytextname} successfully locked!`, flags: MessageFlags.Ephemeral });
+					interaction.reply({ content: `Item ${replytextname} successfully protected!`, flags: MessageFlags.Ephemeral });
 				}
 				else if (chosenitem == "nothing") {
-					interaction.reply({ content: `You chose nothing to lock.`, flags: MessageFlags.Ephemeral });
+					interaction.reply({ content: `You chose nothing to protect.`, flags: MessageFlags.Ephemeral });
 				}
 				else {
 					interaction.reply({ content: `Something went wrong choosing an item.`, flags: MessageFlags.Ephemeral });
@@ -121,10 +121,10 @@ module.exports = {
 						removeLockedWearable(interaction.user.id, chosenitemparts[0])
 						replytextname = getWearableName(undefined, chosenitemparts[0])
 					}
-					interaction.reply({ content: `Item ${replytextname} successfully unlocked!`, flags: MessageFlags.Ephemeral });
+					interaction.reply({ content: `Item ${replytextname} removed from protection!`, flags: MessageFlags.Ephemeral });
 				}
 				else if (chosenitem == "nothing") {
-					interaction.reply({ content: `You chose nothing to lock.`, flags: MessageFlags.Ephemeral });
+					interaction.reply({ content: `You chose nothing to unprotect.`, flags: MessageFlags.Ephemeral });
 				}
 				else {
 					interaction.reply({ content: `Something went wrong choosing an item.`, flags: MessageFlags.Ephemeral });

@@ -285,20 +285,40 @@ const texts_corset = {
                 fumble: {
                     discard: {
                         self: {
-                            corset: [
-                                `USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so USER_THEY will remain just as out of breath as before!`
-                            ],
-                            nocorset: [
-                                `USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! Hopefully USER_THEY can find it soon!`
-                            ]
+                            corset: {
+                                keyholder: [
+                                    `USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so USER_THEY will remain just as out of breath as before!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! The key poofs in smoke as it falls on the floor!`
+                                ]
+                            },
+                            nocorset: {
+                                keyholder: [
+                                    `USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! Hopefully USER_THEY can find it soon!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! A tiny crack is heard as the cloned key is damaged beyond repair!`
+                                ]
+                            }
                         },
                         other: {
-                            corset: [
-                                `USER_TAG tries to unlock TARGET_TAG's belt to adjust TARGET_THEIR corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so TARGET_TAG will remain just as out of breath as before!`
-                            ],
-                            nocorset: [
-                                `USER_TAG tries to unlock TARGET_TAG's belt to put a corset on TARGET_THEM, but fumbles with the key so much that it falls on the floor somewhere! Sorry TARGET_TAG!`
-                            ]
+                            corset: {
+                                keyholder: [
+                                    `USER_TAG tries to unlock TARGET_TAG's belt to adjust TARGET_THEIR corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so TARGET_TAG will remain just as out of breath as before!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to unlock TARGET_TAG's belt to adjust TARGET_THEIR corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! The key vanishes to smoke, dooming TARGET_TAG to remain out of breath.`
+                                ]
+                            },
+                            nocorset: {
+                                keyholder: [
+                                    `USER_TAG tries to unlock TARGET_TAG's belt to put a corset on TARGET_THEM, but fumbles with the key so much that it falls on the floor somewhere! Sorry TARGET_TAG!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to unlock TARGET_TAG's belt to put a corset on TARGET_THEM, but fumbles with the key so much that it falls on the floor, shattering into a hundred pieces! Sorry TARGET_TAG!`
+                                ]
+                            }
                         }
                     },
                     nodiscard: {
@@ -615,7 +635,7 @@ const texts_key = {
                 `USER_TAG puts the key in USER_THEIR VAR_C1. The locking mechanism opens, granting USER_THEM a brief moment of freedom before USER_THEY putUSER_S a VAR_C2 in the same place!`
             ],
             chastitybra: [
-                `USER_TAG unlocks the little lock on the front of USER_THEIR VAR_C2. USER_THEIR_CAP chest is free for a brief moment before it is bound again with a VAR_C2!`
+                `USER_TAG unlocks the little lock on the front of USER_THEIR VAR_C1. USER_THEIR_CAP chest is free for a brief moment before it is bound again with a VAR_C2!`
             ]
         },
         other: {
@@ -626,7 +646,7 @@ const texts_key = {
                 `USER_TAG puts the key in TARGET_TAG's VAR_C1. The locking mechanism opens, granting TARGET_THEM a brief moment of freedom before USER_THEY putUSER_S a VAR_C2 on TARGET_THEM in the same place!`
             ],
             chastitybra: [
-                `USER_TAG unlocks the little lock on the front of TARGET_TAG VAR_C2. TARGET_THEIR_CAP chest is free for a brief moment before it is bound once more with a VAR_C2!`
+                `USER_TAG unlocks the little lock on the front of TARGET_TAG's VAR_C1. TARGET_THEIR_CAP chest is free for a brief moment before it is bound once more with a VAR_C2!`
             ]
         }
     }
@@ -911,7 +931,7 @@ const texts_struggle = {
         `USER_TAG is getting cold feet. Someone should tie USER_THEM up and tickle USER_THEIR feet so they warm up!`,
         `USER_TAG wants hot cocoa and to sit cozily by a fire on a stormy day, just pleasantly reading and enjoying the warm. Under a blankey. So nice...`,
         `USER_TAG fans USER_THEMSELF as USER_THEY lookUSER_S at the strewn restraints. Gagbot has been busy. Hopefully USER_THEY USER_ISARE the next target!`,
-        `USER_TAG starts mumbling, counting sheep to USER_THEMSELF. USER_THEY might be a little sleepy...`,
+        `USER_TAG starts mumbling, counting sheep to USER_THEMSELF. USER_THEY_CAP might be a little sleepy...`,
         `USER_TAG starts scrolling on YourSpace, and comes across a post titled, 'rawr XD' with a girl with too much eyeshadow and a terrible webcam in the dark.`,
         `USER_TAG wants to take a selfie. In bondage, of course. Who wouldn't want to take beautiful pictures wearing a ball gag?`,
         `USER_TAG's breathing accelerates a little as USER_THEY fantasizeUSER_S about being in chains, kneeling at the feet of someone here... Who will give USER_THEM that fantasy?`,
@@ -951,9 +971,14 @@ const texts_unchastity = {
                 chastity: {
                     key: {
                         fumble: {
-                            discard: [
-                                `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEIR hands are so shaky that the key slips and falls somewhere with a klang!`
-                            ],
+                            discard: {
+                                keyholder: [
+                                    `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEIR hands are so shaky that the key slips and falls somewhere with a klang!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEIR hands are so shaky that the key slips and falls somewhere and turns to magical smoke!`
+                                ]
+                            },
                             nodiscard: [
                                 `USER_TAG tries to put the key in the lock on USER_THEIR belt, but USER_THEY struggleUSER_S to guide it in the mechanism!`
                             ]
@@ -975,9 +1000,14 @@ const texts_unchastity = {
                 chastity: {
                     key: {
                         fumble: {
-                            discard: [
-                                `USER_TAG tries to use the key for TARGET_TAG's belt, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
-                            ],
+                            discard: {
+                                keyholder: [
+                                    `USER_TAG tries to use the key for TARGET_TAG's belt, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to use the key for TARGET_TAG's belt, but USER_THEIR thoughts cause a momentary slip-up and the key bends out of shape! It's now useless!`
+                                ]
+                            },
                             nodiscard: [
                                 `USER_TAG tries to unlock TARGET_TAG's belt, but USER_THEY can't focus enough to guide the key into the keyhole!`
                             ]
@@ -1024,9 +1054,14 @@ const texts_unchastity = {
                 chastity: {
                     key: {
                         fumble: {
-                            discard: [
-                                `USER_TAG tries to put the key in the lock on USER_THEIR bra, but USER_THEIR hands are so shaky that the key slips and falls somewhere with a klang!`
-                            ],
+                            discard: {
+                                keyholder: [
+                                    `USER_TAG tries to put the key in the lock on USER_THEIR bra, but USER_THEIR hands are so shaky that the key slips and falls somewhere with a klang!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to put the key in the lock on USER_THEIR bra, but USER_THEIR hands are so shaky that the key slips and disappears as it hits the floor!`
+                                ]
+                            },
                             nodiscard: [
                                 `USER_TAG tries to put the key in the lock on USER_THEIR bra, but USER_THEY struggleUSER_S to guide it in the mechanism!`
                             ]
@@ -1048,9 +1083,14 @@ const texts_unchastity = {
                 chastity: {
                     key: {
                         fumble: {
-                            discard: [
-                                `USER_TAG tries to use the key for TARGET_TAG's bra, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
-                            ],
+                            discard: {
+                                keyholder: [
+                                    `USER_TAG tries to use the key for TARGET_TAG's bra, but USER_THEIR thoughts cause a momentary slip-up and the key falls somewhere!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to use the key for TARGET_TAG's bra, but USER_THEIR thoughts cause a momentary slip-up and the key melts in USER_THEIR hands!`
+                                ]
+                            },
                             nodiscard: [
                                 `USER_TAG tries to unlock TARGET_TAG's bra, but USER_THEY can't focus enough to guide the key into the keyhole!`
                             ]
@@ -1170,9 +1210,14 @@ const texts_uncorset = {
                 chastity: {
                     key: {
                         fumble: {
-                            discard: [
-                                `USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR corset, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! USER_THEY_CAP will have to remain corseted!`
-                            ],
+                            discard: {
+                                keyholder: [
+                                    `USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR corset, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! USER_THEY_CAP will have to remain corseted!`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR corset, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! A brilliant light coming from the clear floor indicates USER_THEY will have to remain corseted!`
+                                ]
+                            },
                             nodiscard: [
                                 `USER_TAG shakily tries to unlock USER_THEIR belt, but the key keeps slipping and not going into the mechanism. USER_THEY will have to leave USER_THEIR corset alone until USER_THEY calm down!`
                             ]
@@ -1199,9 +1244,14 @@ const texts_uncorset = {
                 chastity: {
                     key: {
                         fumble: {
-                            discard: [
-                                `USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR corset but the key slips in USER_THEIR careless horniness. Despite USER_THEIR best efforts, the key seems to have disappeared.`
-                            ],
+                            discard: {
+                                keyholder: [
+                                    `USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR corset but the key slips in USER_THEIR careless horniness. Despite USER_THEIR best efforts, the key seems to have disappeared.`
+                                ],
+                                clone: [
+                                    `USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR corset but the key slips in USER_THEIR careless horniness, falling on the floor and chipping. The clone is useless now.`
+                                ]
+                            },
                             nodiscard: [
                                 `USER_TAG shakily tries to unlock TARGET_TAG's chastity belt to get at TARGET_THEIR corset, but the key keeps slipping. Fortunately, it wasn't lost, but USER_THEY need to calm down first!`
                             ]
@@ -1533,12 +1583,22 @@ const texts_unvibe = {
                     key: {
                         fumble: {
                             discard: {
-                                single: [
-                                    `USER_TAG tries to put the key in USER_THEIR belt to take out the teasing VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ],
-                                both: [
-                                    `USER_TAG tries to put the key in USER_THEIR belt to take out all of the taunting vibrators, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ]
+                                single: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to take out the teasing VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to take out the teasing VAR_C2, but the key slips and falls somewhere. The key goes up in flames on the floor.`
+                                    ]
+                                },
+                                both: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to take out all of the taunting vibrators, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to take out all of the taunting vibrators, but the key slips and falls somewhere. A small ghostly key flies up after it lands on the floor and vanishes.`
+                                    ],
+                                }
                             },
                             nodiscard: {
                                 single: [
@@ -1587,12 +1647,22 @@ const texts_unvibe = {
                     key: {
                         fumble: {
                             discard: {
-                                single: [
-                                    `USER_TAG tries to put the key in TARGET_TAG's belt to take out the teasing VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ],
-                                both: [
-                                    `USER_TAG tries to put the key in TARGET_TAG's belt to take out all of the taunting vibrators, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ]
+                                single: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to take out the teasing VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to take out the teasing VAR_C2, but the key slips and falls somewhere and crumbles into dust.`
+                                    ],
+                                },
+                                both: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to take out all of the taunting vibrators, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to take out all of the taunting vibrators, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ]
+                                }
                             },
                             nodiscard: {
                                 single: [
@@ -1766,9 +1836,14 @@ const texts_vibe = {
                     key: {
                         fumble: {
                             discard: {
-                                single: [
-                                    `USER_TAG tries to put the key in USER_THEIR belt to change the settings on the VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ],
+                                single: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to change the settings on the VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to change the settings on the VAR_C2, but the key slips and falls on the floor. The pieces are scattered about.`
+                                    ]
+                                },
                             },
                             nodiscard: {
                                 single: [
@@ -1798,9 +1873,14 @@ const texts_vibe = {
                     key: {
                         fumble: {
                             discard: {
-                                single: [
-                                    `USER_TAG tries to put the key in USER_THEIR belt to add a VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ],
+                                single: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to add a VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in USER_THEIR belt to add a VAR_C2, but the key slips and vanishes. There was a loud crack as it landed on the floor.`
+                                    ]
+                                },
                             },
                             nodiscard: {
                                 single: [
@@ -1832,9 +1912,14 @@ const texts_vibe = {
                     key: {
                         fumble: {
                             discard: {
-                                single: [
-                                    `USER_TAG tries to put the key in TARGET_TAG's belt to change the VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ],
+                                single: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to change the VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to change the VAR_C2, but the key slips and explodes as it lands on the floor. A small amount of dust remains.`
+                                    ]
+                                },
                             },
                             nodiscard: {
                                 single: [
@@ -1868,9 +1953,14 @@ const texts_vibe = {
                     key: {
                         fumble: {
                             discard: {
-                                single: [
-                                    `USER_TAG tries to put the key in TARGET_TAG's belt to insert a VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
-                                ],
+                                single: {
+                                    keyholder: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to insert a VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`
+                                    ],
+                                    clone: [
+                                        `USER_TAG tries to put the key in TARGET_TAG's belt to insert a VAR_C2, but the key slips and falls somewhere, but it wasn't lost! Unfortunately, the key is bent horribly out of shape and is no longer usable.`
+                                    ]
+                                },
                             },
                             nodiscard: {
                                 single: [

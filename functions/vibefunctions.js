@@ -24,6 +24,7 @@ const chastitytypes = [
     { name: "Maid Chastity Belt", value: "belt_maid", denialCoefficient: 10 },
     { name: "Chastity Belt of Eternal Denial", value: "belt_eternal", denialCoefficient: 20 },
     { name: "Queensbelt", value: "belt_queen", denialCoefficient: 10 },
+    { name: "Starmetal Belt", value: "belt_starmetal", denialCoefficient: 7.5 }
 ]
 
 const chastitybratypes = [
@@ -37,6 +38,7 @@ const chastitybratypes = [
     { name: "Wolf Bra", value: "bra_wolf", denialCoefficient: 3},
     { name: "Maid Chastity Bra", value: "bra_maid", denialCoefficient: 3},
     { name: "Queensbra", value: "bra_queen", denialCoefficient: 4},
+    { name: "Starmetal Bra", value: "bra_starmetal", denialCoefficient: 3 }
 ]
 
 const chastitytypesoptions = chastitytypes.map((chastity) => ({name: chastity.name, value: chastity.value}));
@@ -769,20 +771,31 @@ const transferChastityKey = (lockedUser, newKeyholder) => {
     return false;
 }
 
-const discardChastityKey = (user) => {
+const discardChastityKey = (user, locker) => {
     if (process.chastity == undefined) { process.chastity = {} }
     if (process.discardedKeys == undefined) { process.discardedKeys = [] }
+    let typelocked = "none";
     if (process.chastity[user]) {
-        process.chastity[user].keyholder = "discarded";
-        process.chastity[user].clonedKeyholders = []
-        process.discardedKeys.push({
-          restraint: "chastity belt",
-          wearer: user
-        })
+        if (process.chastity[user].keyholder == locker) {
+            // Lost their own *primary* chastity keys
+            process.chastity[user].keyholder = "discarded";
+            process.chastity[user].clonedKeyholders = []
+            process.discardedKeys.push({
+            restraint: "chastity belt",
+                wearer: user
+            })
+            typelocked = "keyholder"
+        }
+        else if (process.chastity[user].clonedKeyholders.includes(locker)) {
+            // Lost a clone. Clones will simply disappear. 
+            process.chastity[user].clonedKeyholders.splice(process.chastity[user].clonedKeyholders.indexOf(locker),1)
+            typelocked = "clone"
+        }
     }
     if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.chastity = true;
     process.readytosave.discardedKeys = true;
+    return typelocked;
 }
 
 const findChastityKey = (index, newKeyholder) => {
@@ -818,20 +831,31 @@ const transferChastityBraKey = (lockedUser, newKeyholder) => {
     return false;
 }
 
-const discardChastityBraKey = (user) => {
+const discardChastityBraKey = (user, locker) => {
     if (process.chastitybra == undefined) { process.chastitybra = {} }
     if (process.discardedKeys == undefined) { process.discardedKeys = [] }
+    let typelocked = "none";
     if (process.chastitybra[user]) {
-        process.chastitybra[user].keyholder = "discarded";
-        process.chastitybra[user].clonedKeyholders = []
-        process.discardedKeys.push({
-          restraint: "chastity bra",
-          wearer: user
-        })
+        if (process.chastitybra[user].keyholder == locker) {
+            // Lost their own *primary* chastity keys
+            process.chastitybra[user].keyholder = "discarded";
+            process.chastitybra[user].clonedKeyholders = []
+            process.discardedKeys.push({
+            restraint: "chastity bra",
+                wearer: user
+            })
+            typelocked = "keyholder"
+        }
+        else if (process.chastitybra[user].clonedKeyholders.includes(locker)) {
+            // Lost a clone. Clones will simply disappear. 
+            process.chastitybra[user].clonedKeyholders.splice(process.chastitybra[user].clonedKeyholders.indexOf(locker),1)
+            typelocked = "clone"
+        }
     }
     if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.chastity = true;
     process.readytosave.discardedKeys = true;
+    return typelocked;
 }
 
 const findChastityBraKey = (index, newKeyholder) => {
@@ -1004,11 +1028,16 @@ function updateArousalValues() {
             arousal.timestamp = now;
             arousal.prev = arousal.arousal;
             arousal.arousal = next < RESET_LIMIT ? 0 : next;
+            let minArousal = 0;
             const chastity = getChastity(user);
-            if (chastity) {
-                const minArousal = chastitytypes.find(c => c.value == chastity.chastitytype)?.minArousal ?? 0;
-                if (arousal.arousal < minArousal) arousal.arousal = minArousal;
+            const chastitybra = getChastityBra(user);
+            if (getChastity(user)) {
+                minArousal = chastitytypes.find(c => c.value == chastity.chastitytype)?.minArousal ?? 0;
             }
+            if (getChastityBra(user)) {
+                minArousal = minArousal + (chastitybratypes.find(c => c.value == chastitybra.chastitytype)?.minArousal ?? 0);
+            }
+            if (arousal.arousal < minArousal) arousal.arousal = minArousal;
         }
         if (process.readytosave == undefined) { process.readytosave = {} }
         process.readytosave.arousal = true;
@@ -1131,7 +1160,9 @@ function calcGrowthCoefficient(user) {
   let vibes = getVibe(user);
   let minVibe = 0;
   const chastity = getChastity(user);
+  const chastitybra = getChastityBra(user);
   if (chastity) minVibe = chastitytypes.find(c => c.value == chastity.chastitytype)?.minVibe ?? 0;
+  if (chastitybra) minVibe = minVibe + (chastitybratypes.find(c => c.value == chastitybra.chastitytype)?.minVibe ?? 0);
   if (!vibes && !minVibe) return 0;
   return Math.max(vibes?.reduce((a, b) => a + b.intensity, 0) ?? 0, minVibe) * VIBE_SCALING;
 }

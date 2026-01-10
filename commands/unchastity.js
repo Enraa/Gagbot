@@ -101,8 +101,9 @@ module.exports = {
                                     if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
                                         // We lost the key
                                         data.discard = true
-                                        interaction.reply(getText(data))
-                                        discardChastityKey(chastitywearer.id);
+                                        let discardresult = discardChastityKey(chastitywearer.id, interaction.user.id)
+                                        data[discardresult] = true
+                                        interaction.reply(getText(data));
                                     }
                                     else {
                                         data.nodiscard = true
@@ -144,8 +145,9 @@ module.exports = {
                                     if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
                                         // We lost the key
                                         data.discard = true
-                                        interaction.reply(getText(data))
-                                        discardChastityKey(chastitywearer.id);
+                                        let discardresult = discardChastityKey(chastitywearer.id, interaction.user.id)
+                                        data[discardresult] = true
+                                        interaction.reply(getText(data));
                                     }
                                     else {
                                         data.nodiscard = true
@@ -226,8 +228,9 @@ module.exports = {
                                     if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
                                         // We lost the key
                                         data.discard = true
-                                        interaction.reply(getText(data))
-                                        discardChastityBraKey(chastitywearer.id);
+                                        let discardresult = discardChastityBraKey(chastitywearer.id, interaction.user.id)
+                                        data[discardresult] = true
+                                        interaction.reply(getText(data));
                                     }
                                     else {
                                         data.nodiscard = true
@@ -269,8 +272,9 @@ module.exports = {
                                     if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
                                         // We lost the key
                                         data.discard = true
-                                        interaction.reply(getText(data))
-                                        discardChastityBraKey(chastitywearer.id);
+                                        let discardresult = discardChastityBraKey(chastitywearer.id, interaction.user.id)
+                                        data[discardresult] = true
+                                        interaction.reply(getText(data));
                                     }
                                     else {
                                         data.nodiscard = true

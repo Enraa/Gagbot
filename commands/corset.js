@@ -95,27 +95,31 @@ module.exports = {
                                 if (getCorset(corsetuser.id)) {
                                     // User already has a corset on
                                     data.corset = true
+                                    let discardresult = discardChastityKey(corsetuser.id, interaction.user.id)
+                                    data[discardresult] = true
                                     interaction.reply(getText(data));
-                                    discardChastityKey(corsetuser.id);
                                 }
                                 else {
                                     // Putting ON a corset!
                                     data.nocorset = true;
+                                    let discardresult = discardChastityKey(corsetuser.id, interaction.user.id)
+                                    data[discardresult] = true
                                     interaction.reply(getText(data));
-                                    discardChastityKey(corsetuser.id);
                                 }
                             } else {
                                 if (getCorset(corsetuser.id)) {
                                     // User already has a corset on
                                     data.corset = true
+                                    let discardresult = discardChastityKey(corsetuser.id, interaction.user.id)
+                                    data[discardresult] = true
                                     interaction.reply(getText(data));
-                                    discardChastityKey(corsetuser.id);
                                 }
                                 else {
                                     // Putting ON a corset!
                                     data.nocorset = true
+                                    let discardresult = discardChastityKey(corsetuser.id, interaction.user.id)
+                                    data[discardresult] = true
                                     interaction.reply(getText(data));
-                                    discardChastityKey(corsetuser.id);
                                 }
                             }
                         } else {
