@@ -375,7 +375,9 @@ module.exports = {
                                         if (vibetype) {
                                             // specific single vibe
                                             data.single = true
-                                            interaction.reply(getText(data))
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                         else {
                                             // removing all vibes
@@ -477,12 +479,16 @@ module.exports = {
                                         if (vibetype) {
                                             // specific single vibe
                                             data.single = true
-                                            interaction.reply(getText(data))
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                         else {
                                             // removing all vibes
                                             data.both = true
-                                            interaction.reply(getText(data))
+                                            let discardresult = discardChastityKey(vibeuser.id, interaction.user.id)
+                                            data[discardresult] = true
+                                            interaction.reply(getText(data));
                                         }
                                     }
                                 }
@@ -528,6 +534,7 @@ module.exports = {
                     }
                 }
             }
+            console.log(data);
         }
         catch (err) {
             console.log(err)
