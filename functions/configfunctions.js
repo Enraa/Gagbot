@@ -1,7 +1,8 @@
 const { ButtonStyle, ActionRowBuilder, SectionBuilder, StringSelectMenuBuilder, 
     StringSelectMenuOptionBuilder, PermissionsBitField, MessageFlags,
     RoleSelectMenuBuilder,TextDisplayBuilder, ChannelSelectMenuBuilder, 
-    REST, Routes, ButtonBuilder} = require("discord.js")
+    REST, Routes, ButtonBuilder, ModalBuilder, LabelBuilder, TextInputBuilder,
+    TextInputStyle} = require("discord.js")
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -277,7 +278,7 @@ const configoptions = {
             disabled: () => { return false }
         }
     },
-    /*"Misc": {
+    "Misc": {
         "dollvisorname": {
             name: "Doll Visor Name",
             desc: "Set a custom name for Doll Visor name tags.",
@@ -286,17 +287,66 @@ const configoptions = {
                 {
                     name: "Set Name",
                     helptext: "Doll Visor name is set to ",
+                    helptextnone: "*Doll Visor name has not been set*",
                     select_function: (userID) => { return false },
-                    value: "SETDEFAULT",
-                    style: ButtonStyle.Secondary,
-                    uname: "RemoveBondagePrompt"
+                    value: "None",
+                    style: ButtonStyle.Primary
                 },
             ],
             menutype: "choice_textentry",
-            default: "SETDEFAULT",
+            default: (userID) => { return `DOLL-${userID.slice(-4)}` },
+            disabled: () => { return false }
+        },
+        "dollvisorcolor": {
+            name: "Doll Visor Color",
+            desc: "Set the color your Doll Visor designation will display as.",
+            choices: [
+                {
+                    name: "Gray",
+                    value: 30,
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "Red",
+                    value: 31,
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "Green",
+                    value: 32,
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "Yellow",
+                    value: 33,
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "Blue",
+                    value: 34,
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "Pink",
+                    value: 35,
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "Cyan",
+                    value: 36,
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "White",
+                    value: 37,
+                    style: ButtonStyle.Primary
+                }
+            ],
+            menutype: "choice_dollcolor",
+            default: 34,
             disabled: () => { return false }
         }
-    },*/
+    },
     "Server": {
         "server-allowgags": {
             name: "Allow Gags",
@@ -554,6 +604,36 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     )
                 pagecomponents.push(buttonsection)
             }
+            else if (configoptions[menuset][k].menutype == "choice_textentry") {
+                let helpertext = `${configoptions[menuset][k].choices[0].helptext}${getOption(interaction.user.id,k)}`
+                if (getOption(interaction.user.id,k) == undefined) {
+                    helpertext = `${configoptions[menuset][k].choices[0].helptextnone}`
+                }
+                let buttonsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices[0].helptext}${getOption(interaction.user.id,k)}`)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_tentrypageopt_${menuset}_${k}`)
+                            .setLabel(configoptions[menuset][k].choices[0].name ?? "Undefined")
+                            .setStyle(configoptions[menuset][k].choices[0].style ?? ButtonStyle.Danger)
+                            .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
+                    )
+                pagecomponents.push(buttonsection)
+            }
+            if (configoptions[menuset][k].menutype == "choice_dollcolor") {
+                let buttonsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\`\`\`ansi\n[1;${getOption(interaction.user.id,k)}m${getOption(interaction.user.id,"dollvisorname")}: [0mIt is speaking.\`\`\``)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_pageopt_${menuset}_${k}`)
+                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name ?? "Undefined")
+                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style ?? ButtonStyle.Danger)
+                            .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
+                    )
+                pagecomponents.push(buttonsection)
+            }
             else if (configoptions[menuset][k].menutype == "choice_server_refreshcmd") {
                 if (process.configs.servers[interaction.guildId] != undefined) {
                     let button = new ButtonBuilder()
@@ -799,13 +879,19 @@ function getOption(userID, option) {
         initializeOptions(userID)
     } 
     if (process.configs.users[userID][option] == undefined) {
-        let arousaloptionpages = Object.keys(configoptions["Arousal"])
-        let generaloptionpages = Object.keys(configoptions["General"])
-        arousaloptionpages.forEach((k) => {
-            if (k == option) { process.configs.users[userID][k] = configoptions["Arousal"][k].default }
-        })
-        generaloptionpages.forEach((k) => {
-            if (k == option) { process.configs.users[userID][k] = configoptions["General"][k].default }
+        let pages = ["Arousal", "General", "Misc"];
+        pages.forEach((p) => {
+            let optionspages = Object.keys(configoptions[p]);
+            optionspages.forEach((k) => {
+                if (k == option) { 
+                    if (typeof configoptions[p][k].default == "function") {
+                        process.configs.users[userID][k] = configoptions[p][k].default(userID);
+                    }
+                    else {
+                        process.configs.users[userID][k] = configoptions[p][k].default 
+                    }
+                }
+            })
         })
         if (process.readytosave == undefined) { process.readytosave = {} }
         process.readytosave.configs = true;
@@ -814,13 +900,17 @@ function getOption(userID, option) {
 }
 
 function initializeOptions(userID) {
-    let arousaloptionpages = Object.keys(configoptions["Arousal"])
-    let generaloptionpages = Object.keys(configoptions["General"])
-    arousaloptionpages.forEach((k) => {
-        process.configs.users[userID][k] = configoptions["Arousal"][k].default
-    })
-    generaloptionpages.forEach((k) => {
-        process.configs.users[userID][k] = configoptions["General"][k].default
+    let pages = ["Arousal", "General", "Misc"];
+    pages.forEach((p) => {
+        let optionspages = Object.keys(configoptions[p]);
+        optionspages.forEach((k) => {
+            if (typeof configoptions[p][k].default == "function") {
+                process.configs.users[userID][k] = configoptions[p][k].default(userID);
+            }
+            else {
+                process.configs.users[userID][k] = configoptions[p][k].default 
+            }
+        })
     })
     if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.configs = true;
@@ -1139,16 +1229,43 @@ function loadWebhooks(client) {
 
 // Recieves an interaction, with desctext and the optionval referencing 
 // the option name to pass into setOption. We will want to store this
-// interaction along with 
-function generateTextEntryModal(interaction, desctext, optionval) {
+// interaction along with data. Data must supply at least title, page, and desctext props. 
+function generateTextEntryModal(interaction, data, optionval) {
     if (process.recentinteraction == undefined) { process.recentinteraction = {}}
     process.recentinteraction[interaction.user.id] = {
         interaction: interaction,
         timestamp: performance.now() // If the interaction was at least 15 minutes ago (900000 ms), invalidate it. 
     }
+
+    const modal = new ModalBuilder().setCustomId(`config_setoptionmodal_${data.page}_${optionval}`).setTitle(`Enter Option...`);
+    
+    // Text part to tell the user what it is 
+    /*let maintextpart = new TextDisplayBuilder()
+    let maintext = `${data.desctext}`
+    maintext.setContent(maintextpart)*/
+
+    // Text Entry for the choice
+    const choicetextentry = new TextInputBuilder()
+            .setCustomId('choiceinput')
+            .setStyle(TextInputStyle.Short)
+            .setPlaceholder(data.placeholder ?? 'Enter option value...')
+            .setRequired(true)
+
+    const labeltextentry = new LabelBuilder()
+        .setLabel(`${data.title}`)
+        .setDescription(`${data.desctext}`)
+        .setTextInputComponent(choicetextentry)
+
+    // Put it all together
+    //modal.addTextDisplayComponents(maintext)
+
+    modal.addLabelComponents(labeltextentry)
+
+    return modal;
 }
 
 exports.generateConfigModal = generateConfigModal;
+exports.generateTextEntryModal = generateTextEntryModal;
 exports.configoptions = configoptions;
 exports.getOption = getOption;
 exports.setOption = setOption;

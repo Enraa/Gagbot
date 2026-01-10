@@ -206,7 +206,7 @@ const getHeadwearRestrictions = (userID) => {
 }
 
 // Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
-const processHeadwearEmoji = (userID, text) => {
+const processHeadwearEmoji = (userID, text, dollvisoroverride) => {
     //if (!getHeadwearRestrictions(userID).canEmote) { return text } // Not blocking emotes, no need to change anything
     
     let regex = /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g
@@ -223,13 +223,14 @@ const processHeadwearEmoji = (userID, text) => {
     if (replaceemote && !outtext.includes(replaceemote)) { outtext = `${outtext} ${replaceemote}`}
 
     if (outtext.length == 0) {
+        let dollIDOverride = dollvisoroverride ?? "Unknown"
 
         // Handle Doll Visors
         if(getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))){
-            let dollDigits = process.dolloverrides[userID] ? process.dolloverrides[userID].id : `${userID}`.slice(-4)
+            //let dollDigits = process.dolloverrides[userID] ? process.dolloverrides[userID].id : `${userID}`.slice(-4)
             // Below is a stylistic choice it's uncertain about.
-            let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
-            outtext = `*(DOLL-${dollID}'s face shows no emotion...)*`
+            //let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
+            outtext = `*(${dollIDOverride}'s face shows no emotion...)*`
         }else{
             outtext = `*(<@${userID}>'s face shows no emotion...)*`
         }

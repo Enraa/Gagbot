@@ -6,6 +6,7 @@ const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
 const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require('./headwearfunctions.js')
+const { getOption } = require(`./../functions/configfunctions.js`);
 
 //const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 // Abomination of a regex for corset compatibility.
@@ -254,7 +255,7 @@ const modifymessage = async (msg, threadId) => {
         outtext = gagreturned.outtext;
 
         // Text garbling due to Doll visors
-        let dolltreturned = textGarbleDOLL(msg, modifiedmessage, outtext);
+        let dolltreturned = await textGarbleDOLL(msg, modifiedmessage, outtext);
         modifiedmessage = dolltreturned.modifiedmessage;
         outtext = dolltreturned.outtext;
         let dollIDDisplay = dolltreturned.dollIDDisplay;
@@ -274,7 +275,7 @@ function replaceEmoji(msg, replacein, modifiedmessage) {
     let modified = modifiedmessage;
     // replace all emoji if the wearer is wearing something with emoji
     if (!getHeadwearRestrictions(msg.author.id).canEmote) {
-        replacingtext = processHeadwearEmoji(msg.author.id, msg.content)
+        replacingtext = processHeadwearEmoji(msg.author.id, msg.content, getOption(msg.author.id, "dollvisorname"))
         // If we actually modified the text, then change modifed message to true. 
         if (replacingtext != msg.content) {
             modified = true;
@@ -401,31 +402,54 @@ function textGarbleGag(messagein, msg, modifiedmessage, outtextin) {
     return { messageparts: messageparts, modifiedmessage: modified, outtext: outtext }
 }
 
-function textGarbleDOLL(msg, modifiedmessage, outtextin) {
+async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     // Handle Dollification
+    console.log(outtextin)
     let modified = modifiedmessage
     let outtext = outtextin
     let dollIDDisplay;
+    let dollID = ``;
+    let dollIDOverride = getOption(msg.author.id, "dollvisorname")
+    let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34
     if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
         modified = true;
-        dollDigits      = process.dolloverrides[msg.author.id] ? process.dolloverrides[msg.author.id].id : `${msg.author.id}`.slice(-4)
-        // Include the tag - Otherwise, there is NO WAY to tell who it is.
-        let dollIDShort     = "DOLL-" + dollDigits
-        let dollID          = "DOLL-" + (dollDigits.length >= 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
-        let dollIDColor     = process.dolloverrides[msg.author.id]?.color ? process.dolloverrides[msg.author.id]?.color : "34"
-        // Display names max 32 chars.
-        let truncateDisplay = ""
-        try{
-            truncateDisplay = msg.member.displayName.slice(0,16) + (msg.member.displayName.length > 16 ? "..." : "")
-        }catch(err){
-            console.error(err.message);     // Following is not tested but SHOULD work.
-            truncateDisplay = msg.author.displayName.slice(0,16) + (msg.author.displayName.length > 16 ? "..." : "")
+        // If dollIDOverride is not specified or the override is exactly a string of numbers...
+        if (!dollIDOverride || (Number.isFinite(dollIDOverride) && dollIDOverride.length < 6)) {
+            dollDigits      = dollIDOverride ? dollIDOverride : `${msg.author.id}`.slice(-4)
+            // Include the tag - Otherwise, there is NO WAY to tell who it is.
+            let dollIDShort     = "DOLL-" + dollDigits
+            dollID          = "DOLL-" + (dollDigits.length >= 4 ? dollDigits : "0".repeat(4 - dollDigits.length) + dollDigits)
+            dollIDColor         = 34
+            // Display names max 32 chars.
+            let truncateDisplay = ""
+            try{
+                truncateDisplay = msg.member.displayName.slice(0,16) + (msg.member.displayName.length > 16 ? "..." : "")
+            }catch(err){
+                console.error(err.message);     // Following is not tested but SHOULD work.
+                truncateDisplay = msg.author.displayName.slice(0,16) + (msg.author.displayName.length > 16 ? "..." : "")
+            }
+            dollIDDisplay       = dollIDShort + ` (${truncateDisplay})`
         }
-        dollIDDisplay       = dollIDShort + ` (${truncateDisplay})`
-
+        else {
+            let additionalpart = ``;
+            if (dollIDOverride.length < 25) {
+                let additionallength = 32 - dollIDOverride.length; // max length of name
+                if ((additionallength - 3) > msg.author.displayName.length) {
+                    additionalpart = ` (${msg.author.displayName})`
+                }
+                else {
+                    // Get the length of their name, minus 6 for additional characters to fit into ...
+                    let reducedname = msg.author.displayName.slice(0, Math.min((additionallength - 6), msg.author.displayName.length))
+                    additionalpart = ` (${reducedname}...)`
+                }
+            }
+            dollID = `${dollIDOverride}`
+            dollIDDisplay = `${dollIDOverride}${additionalpart}`;
+        }
+        
         let dollMessageParts = splitMessage(outtext, DOLLREGEX)     // Reuse splitMessage, but with a different regex.
-
-
+        let partstolinkto = Array.from(outtext.matchAll(/(<(@|#)[0-9]+>)|(<?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)/g)).map((a) => a[0]) // Match User tags, channel tags and links
+        
         // Strip all codeblocks from messages
         for(let i = 0; i < dollMessageParts.length; i++){
             if(dollMessageParts[i].garble){
@@ -444,6 +468,10 @@ function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         }
 
         outtext = dollMessageParts.map(m => m.text).join("")
+        // And now, append with tags and links
+        if (partstolinkto) {
+            outtext = `${outtext}${partstolinkto.join("\n")}`
+        }
 
         // Merge any code blocks with nothing but whitespace in between.
         outtext = outtext.replaceAll(/```\s+```ansi/g,"")

@@ -6,7 +6,7 @@ const { getConsent, handleConsent, timelockChastityModalnew } = require('./../fu
 const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require('./../functions/configfunctions.js');
 const { removeAllCommands } = require('../functions/configfunctions.js');
 const { initializeServerOptions } = require('../functions/configfunctions.js');
-const { setCommands, getBotOption, leaveServerOptions, createWebhook, deleteWebhook } = require('../functions/configfunctions.js');
+const { setCommands, getBotOption, leaveServerOptions, createWebhook, deleteWebhook, generateTextEntryModal } = require('../functions/configfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -40,7 +40,10 @@ module.exports = {
 				setOption(interaction.user.id, optionparts[3], optionschoice[newindex])
 
 				// After doing so, run the NEW option's select_function. 
-				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id)
+				if (typeof configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function == "function") {
+					configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id)
+				}
+				
 				// Finally, reprompt the user, now with the new choice set. 
 				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}
@@ -55,9 +58,24 @@ module.exports = {
 				setServerOption(interaction.guildId, optionparts[3], optionschoice[newindex])
 
 				// After doing so, run the NEW option's select_function. 
-				configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction, interaction.guildId)
+				if (typeof configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function == "function") {
+					configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction, interaction.guildId)
+				}
+				
 				// Finally, reprompt the user, now with the new choice set. 
 				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "tentrypageopt") {
+				// Frankly I hate arrays for this but lets break it down. All we need is to throw a modal at them
+				let buttonpressed = configoptions[optionparts[2]][optionparts[3]]
+				let data = {
+					title: buttonpressed.name,
+					desctext: buttonpressed.descmodal,
+					page: optionparts[2]
+				}
+
+				// Generate a new modal to give to the user and pass it along. 
+				await interaction.showModal(generateTextEntryModal(interaction, data, optionparts[3]))
 			}
 			else if (optionparts[1] == "refreshcmdButton") {
 				await setCommands(interaction, interaction.guildId);
@@ -159,6 +177,21 @@ module.exports = {
 		}
 		catch (err) {
 			console.log(err);
+		}
+	},
+	async modalexecute(interaction) {
+		console.log(interaction);
+		let choiceinput = interaction.fields.getTextInputValue("choiceinput");
+		let optionparts = interaction.customId.split("_");
+		if (optionparts[3] == "dollvisorname") {
+			setOption(interaction.user.id, optionparts[3], choiceinput.slice(0, 30))
+			await interaction.reply({ content: `Updated your Doll Visor designation to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral })
+			if (process.recentinteraction) {
+				if ((process.recentinteraction[interaction.user.id]?.timestamp + 895000) > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2]))
+				}
+				delete process.recentinteraction[interaction.user.id]
+			}
 		}
 	}
 }
