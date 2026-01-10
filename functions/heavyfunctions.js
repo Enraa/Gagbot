@@ -98,6 +98,7 @@ const heavytypes = [
     { name: "Wrapping Paper", value: "wrapping_paper", denialCoefficient: 2 },
     { name: "Shadow Hands", value: "shadowhands", denialCoefficient: 1.5 },
     { name: "Entangling Vines", value: "entangling_vines", denialCoefficient: 1.5 },
+    { name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
     { name: "Bondage Exosuit", value: "exosuit_bondage", denialCoefficient: 5 },
 ];
 
