@@ -81,7 +81,7 @@ const heavytypes = [
     { name: "Autotape Wrapping", value: "autotape_wrap", denialCoefficient: 2 },
     //{ name: "Slime Coating", value: "encasement_slime", denialCoefficient: 2 },               Names Needed?
     //{ name: "Solidified Rubber Coating", value: "encasement_slime", denialCoefficient: 3 },
-    //{ name: "Crystalline Pillar", value: "encasement_crystal", denialCoefficient: 4 },
+    { name: "Crystalline Pillar", value: "encasement_crystal", denialCoefficient: 4 },
     { name: "Latex Sphere", value: "sphere_latex", denialCoefficient: 3.5 },
     { name: "Latex Sleepsack", value: "sleepsack_latex", denialCoefficient: 4 },
     { name: "Duffel Bag", value: "duffel_bag", denialCoefficient: 2 },
