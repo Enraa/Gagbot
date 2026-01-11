@@ -721,16 +721,20 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     
                     let roledescription = new TextDisplayBuilder()
                         .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
-                    let rolesection = new ActionRowBuilder()
-                        .addComponents(new RoleSelectMenuBuilder()
+
+                    let rolebit = new RoleSelectMenuBuilder()
                                 .setCustomId(`config_serveroptrole_${menuset}_${k}`)
                                 .setPlaceholder(currentrole)
                                 .setMinValues(0)
                                 .setMaxValues(1)
-                        )
+
                     if (rolefetched) {
-                        rolesection.setDefaultRoles(rolefetched);
+                        rolebit.setDefaultRoles(getServerOption(interaction.guildId,k));
                     }
+
+                    let rolesection = new ActionRowBuilder()
+                        .addComponents(rolebit)
+                    
                     pagecomponents.push(roledescription)
                     pagecomponents.push(rolesection)
                 }

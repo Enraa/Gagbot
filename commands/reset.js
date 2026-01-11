@@ -5,7 +5,8 @@ const { removeCollar } = require('./../functions/collarfunctions.js')
 const { removeHeavy } = require('./../functions/heavyfunctions.js');
 const { removeCorset } = require('../functions/corsetfunctions.js');
 const { deleteWearable } = require('../functions/wearablefunctions.js');
-const { removeChastityBra } = require('../functions/vibefunctions.js');
+const { removeChastityBra, setArousalCooldown } = require('../functions/vibefunctions.js');
+const { getServerOption } = require('../functions/configfunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -31,7 +32,11 @@ module.exports = {
             deleteWearable(resetuser.id)
             setArousalCooldown(resetuser.id)
         } else {
-            if (interaction.member.roles.cache.has("1073505965619564604")) { 
+            if (getServerOption(interaction.guildId, "server-safewordroleid") === "") {
+                // no safeword role was setup. Make the user talk to a mod. 
+                await interaction.reply({ content: 'Please DM a mod about this command if someone needs to be reset.',  flags: MessageFlags.Ephemeral });
+            }
+            else if (getServerOption(interaction.guildId, "server-safewordroleid") && interaction.member.roles.cache.has(getServerOption(interaction.guildId, "server-safewordroleid"))) { 
                 // User has the safeword role, we should remove all their restraints because they safeworded
                 await interaction.reply({ content: 'Resetting all of your restraints because you are safeworded.',  flags: MessageFlags.Ephemeral });
                 deleteGag(interaction.user.id)

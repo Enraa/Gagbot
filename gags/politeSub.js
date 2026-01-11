@@ -1,0 +1,46 @@
+const garbleText = (text) => {
+    let honorifictitles = [
+        // Oh god its hard to type these without caps
+        "miss",
+        "master",
+        "sir",
+        "ma'am",
+        "maam",
+        "lady",
+        "lord",
+        "queen",
+        "king",
+        "mistress",
+        "goddess",
+        "maitresse",
+        "administrator",
+        "mommy",
+        "daddy"
+    ]
+
+    let silenttitles = [
+        `\n*looks down silently*\n`,
+        `\n*tries to speak, but no words come out*\n`,
+        `\n*nods without a word*\n`,
+        `\n*looks down and to the side*\n`,
+        `\n*twiddles thumbs meekly*\n`,
+        `\n*pouts as the gag stops impolite speech*\n`,
+        `\n*goes mute without an honorific*\n`,
+        `\n*meeps but produces no audible words*\n`,
+        `\n*casts eyes downward, like a good sub*\n`,
+    ]
+
+    let textout = silenttitles[Math.floor(Math.random() * silenttitles.length)]
+
+    honorifictitles.forEach((h) => {
+        if ((text.toLowerCase().search(h)) > -1) {
+            textout = text;
+        }
+    })
+
+
+    return textout;
+}
+
+exports.garbleText = garbleText;
+exports.choicename = "Polite Sub Gag"

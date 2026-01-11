@@ -178,6 +178,18 @@ module.exports = {
 				// Finally, reprompt the user, now with the new choice set. 
 				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}
+			else if (optionparts[1] == "serveroptrole") {
+				if (interaction.values.length > 0) {
+					newrole = interaction.values[0]
+					setServerOption(interaction.guildId, "server-safewordroleid", newrole)
+				}
+				else {
+					setServerOption(interaction.guildId, "server-safewordroleid", "")
+				}
+
+				// Finally, reprompt the user, now with the new choice set. 
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
 			else {
 				console.log(interaction)
 			}

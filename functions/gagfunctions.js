@@ -468,6 +468,13 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
             if(dollMessageParts[i].garble){
                 // Uncorset
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/ *-# */g,"")
+                console.log(dollMessageParts[i].text)
+                let replacebolds = Array.from(dollMessageParts[i].text.matchAll(/((\*\*)|(\_\_))[^(\*|\_)]+((\*\*)|(\_\_))/g)).map((a) => a[0])
+                console.log(replacebolds)
+                replacebolds.forEach((b) => {
+                    let replaceb = `[1m${b.slice(2,-2)}[0m` // Capture the part within the bolding
+                    dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replaceb)
+                })
                 dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
             }
         }
