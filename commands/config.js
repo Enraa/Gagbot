@@ -71,7 +71,14 @@ module.exports = {
 				let data = {
 					title: buttonpressed.name,
 					desctext: buttonpressed.descmodal,
+					placeholder: buttonpressed.placeholder,
 					page: optionparts[2]
+				}
+				if (typeof buttonpressed.customtext == "function") {
+					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.user.id))
+				}
+				if (typeof buttonpressed.placeholder == "function") {
+					data.placeholder = buttonpressed.placeholder(interaction.user.id)
 				}
 
 				// Generate a new modal to give to the user and pass it along. 
@@ -168,6 +175,18 @@ module.exports = {
 				if (process.consented[interaction.user.id]) {
 					delete process.consented[interaction.user.id]
 				}
+				// Finally, reprompt the user, now with the new choice set. 
+				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+			}
+			else if (optionparts[1] == "serveroptrole") {
+				if (interaction.values.length > 0) {
+					newrole = interaction.values[0]
+					setServerOption(interaction.guildId, "server-safewordroleid", newrole)
+				}
+				else {
+					setServerOption(interaction.guildId, "server-safewordroleid", "")
+				}
+
 				// Finally, reprompt the user, now with the new choice set. 
 				interaction.update(await generateConfigModal(interaction, optionparts[2]));
 			}

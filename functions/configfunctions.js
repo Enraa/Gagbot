@@ -282,7 +282,7 @@ const configoptions = {
         "dollvisorname": {
             name: "Doll Visor Name",
             desc: "Set a custom name for Doll Visor name tags.",
-            descmodal: "What should the Doll Visor change your tag to? Standard format is DOLL-####.",
+            descmodal: "What should your tag display as in Doll Visor? Your default Doll tag is CUSTOMTEXT.",
             choices: [
                 {
                     name: "Set Name",
@@ -293,6 +293,8 @@ const configoptions = {
                     style: ButtonStyle.Primary
                 },
             ],
+            customtext: (userID) => { return `DOLL-${userID.slice(-4)}` },
+            placeholder: (userID) => { return `DOLL-${userID.slice(-4)}` },
             menutype: "choice_textentry",
             default: (userID) => { return `DOLL-${userID.slice(-4)}` },
             disabled: () => { return false }
@@ -345,6 +347,31 @@ const configoptions = {
             menutype: "choice_dollcolor",
             default: 34,
             disabled: () => { return false }
+        },
+        "dollforcedit": {
+            name: "Doll Visor Forced Pronouns",
+            desc: "Should the Doll Visor force you to use it/its pronouns when worn?",
+            choices: [
+                {
+                    name: "No",
+                    helptext: "*Doll Visor will not affect pronouns*",
+                    select_function: (userID) => { return false },
+                    value: "disabled",
+                    style: ButtonStyle.Danger,
+                    uname: "DollVisorForcedNo"
+                },
+                {
+                    name: "Yes",
+                    helptext: "You will use it/its pronouns while wearing a visor",
+                    select_function: (userID) => { return false },
+                    value: "enabled",
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisorForced"
+                },
+            ],
+            menutype: "choice",
+            default: "enabled",
+            disabled: (userID) => { return false }
         }
     },
     "Server": {
@@ -694,16 +721,20 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     
                     let roledescription = new TextDisplayBuilder()
                         .setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`)
-                    let rolesection = new ActionRowBuilder()
-                        .addComponents(new RoleSelectMenuBuilder()
+
+                    let rolebit = new RoleSelectMenuBuilder()
                                 .setCustomId(`config_serveroptrole_${menuset}_${k}`)
                                 .setPlaceholder(currentrole)
                                 .setMinValues(0)
                                 .setMaxValues(1)
-                        )
+
                     if (rolefetched) {
-                        rolesection.setDefaultRoles(rolefetched);
+                        rolebit.setDefaultRoles(getServerOption(interaction.guildId,k));
                     }
+
+                    let rolesection = new ActionRowBuilder()
+                        .addComponents(rolebit)
+                    
                     pagecomponents.push(roledescription)
                     pagecomponents.push(rolesection)
                 }

@@ -23,8 +23,12 @@ Restraints and toys used include the following:
 - Heavy Bondage: Restrict modifying any setting
 - Headwear and Apparel: Generally cosmetic, but certain pieces can do inhibiting effects
 - Collars: Allow others to perform more significant actions on you.
-You can access these commands by typing / to bring up a list of what can be done.
+You can access these commands by typing / to bring up a list of what can be done. 
 *Where possible, the bot's design philosophy is **"Consent First,"** meaning that you will have to make an active choice to give up control. Examples of this include mittens, chastity and heavy bondage. Collars can override this, if you wear them. Please use these at your own risk and leverage the **keyholder** and **other controls** presented as necessary.*
+
+**You will *always* be able to speak in ooc (out of context) chat using italics (\\*this would be ungarbled\\*) or underscores.**
+
+Finally, you should review settings found in **/config** concerning effects from vibrators, key giving and effects such as Doll Visors under Misc.
 
 <@${user}>, by clicking the button below, you acknowledge the above risks and considerations and users will be able to play with you using the bot.
 -# Button only works for <@${user}>`

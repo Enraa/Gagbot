@@ -468,6 +468,13 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
             if(dollMessageParts[i].garble){
                 // Uncorset
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/ *-# */g,"")
+                console.log(dollMessageParts[i].text)
+                let replacebolds = Array.from(dollMessageParts[i].text.matchAll(/((\*\*)|(\_\_))[^(\*|\_)]+((\*\*)|(\_\_))/g)).map((a) => a[0])
+                console.log(replacebolds)
+                replacebolds.forEach((b) => {
+                    let replaceb = `[1m${b.slice(2,-2)}[0m` // Capture the part within the bolding
+                    dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replaceb)
+                })
                 dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
             }
         }
@@ -487,11 +494,16 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 async function sendTheMessage(msg, outtext, dollIDDisplay, threadID) {
     try {
         // If this is a reply, we want to create a reply in-line because webhooks can't reply. 
-        if (msg.type == "19") {
+        if (msg.type == "19") { 
             const replied = await msg.fetchReference();
             const replyauthorobject = await replied.guild.members.search({ query: replied.author.displayName, limit: 1 });
             const first = replyauthorobject.first()
-            outtext = `<@${first.id}> ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`
+            if (first) {
+                outtext = `<@${first.id}> ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`
+            }
+            else {
+                outtext = `${replied.author.displayName} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`
+            }
         }
 
         // Truncate the text if it's too long
