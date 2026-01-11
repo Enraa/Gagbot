@@ -76,7 +76,7 @@ let wearabletypes = [
     { name: "Doll Barcode", value: "cyberdoll_barcode" },
 
     //Faux Bondage and Non Restrictive Gear
-    { name: "Leather Harness", value: "harness_leather" },
+    { name: "Harness", value: "harness_leather", colorable: true, uniqueColors: ["Vine", "Leather", "Latex", "Leather", "Rubber"]  },
     { name: "Bondage Wrist Cuffs", value: "cuffswrist_bondage", colorable: true, uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
     { name: "Latex Wrist Cuffs", value: "cuffswrist_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Bondage Ankle Cuffs", value: "cuffsankle_bondage", colorable: true, uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
@@ -158,7 +158,7 @@ let wearabletypes = [
     { name: "Skimpy Dress", value: "skimpy_dress", colorable: true },
     { name: "Salsa Dress", value: "salsa_dress", colorable: true },
     { name: "Little Black Dress", value: "littleblack_dress", colorable: false },
-    { name: "Flowy Dress", value: "flowy_dress", colorable: true, uniqueColors: ["Gothic"] },
+    { name: "Flowy Dress", value: "flowy_dress", colorable: true, uniqueColors: ["Gothic", "Floral"] },
     { name: "Latex Flowy Dress", value: "flowy_dress_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },
     { name: "Evening Dress", value: "evening_dress", colorable: true, uniqueColors: ["Gothic", "Golden", "Silver",] },
     { name: "Latex Evening Dress", value: "evening_dress_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },
