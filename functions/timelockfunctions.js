@@ -1,4 +1,5 @@
-const { removeChastity, removeChastityBra, removeCollar } = require("./vibefunctions");
+const { removeChastity, removeChastityBra } = require("./vibefunctions");
+const { removeCollar } = require("./collarfunctions.js");
 const { getPronouns } = require("./pronounfunctions.js");
 const fs = require("fs");
 

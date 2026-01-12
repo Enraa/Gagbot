@@ -188,14 +188,16 @@ module.exports = {
     }
   },
   async modalexecute(interaction) {
-    console.log(Array.from(interaction.fields.getSelectedUsers("userselection").keys())[0])
+    //console.log(Array.from(interaction.fields.getSelectedUsers("userselection").keys())[0])
     let keyholder = interaction.user.id;
     const split = interaction.customId.split("_");
     const wearer = split[1];
     let wearerobject = await interaction.client.users.fetch(wearer)
     let tempKeyholder;
     if (wearer == interaction.user.id) { // Should only ever be true if they're the same!
-      keyholder = Array.from(interaction.fields.getSelectedUsers("userselection").keys())[0];
+      if (interaction.fields.getSelectedUsers("userselection")) {
+        keyholder = Array.from(interaction.fields.getSelectedUsers("userselection").keys())[0];
+      }
     } 
     const timeString = interaction.fields.getTextInputValue("timelockinput");
     const timeStringSplit = timeString.split("-");
