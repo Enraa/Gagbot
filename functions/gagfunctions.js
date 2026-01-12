@@ -15,13 +15,13 @@ const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*u
 
 const DOLLPROTOCOL = [
     // Banned words
-    {"regex": /(?<=(^|[^A-Zaz]))i(?=($|[^A-Zaz]))/gi,           "redact": false},   // "I"
-    {"regex": /(?<=(^|[^A-Zaz]))i'm(?=($|[^A-Zaz]))/gi,         "redact": false},   // "I'm"
-    {"regex": /(?<=(^|[^A-Zaz]))my(?=($|[^A-Zaz]))/gi,          "redact": false},   // "my"
-    {"regex": /(?<=(^|[^A-Zaz]))me(?=($|[^A-Zaz]))/gi,          "redact": false},   // "Myself"
-    {"regex": /(?<=(^|[^A-Zaz]))myself(?=($|[^A-Zaz]))/gi,      "redact": false},   // "Me"
+    {"regex": /(?<=(^|[^A-Zaz]))i(?=($|[^A-Zaz]))/gi,           "value": 1, "redact": false, "string": "I",},   // "I"
+    {"regex": /(?<=(^|[^A-Zaz]))i'm(?=($|[^A-Zaz]))/gi,         "value": 1, "redact": false, "string": "I'm",},   // "I'm"
+    {"regex": /(?<=(^|[^A-Zaz]))my(?=($|[^A-Zaz]))/gi,          "value": 1, "redact": false, "string": "My",},   // "my"
+    {"regex": /(?<=(^|[^A-Zaz]))me(?=($|[^A-Zaz]))/gi,          "value": 1, "redact": false, "string": "Me",},   // "Myself"
+    {"regex": /(?<=(^|[^A-Zaz]))myself(?=($|[^A-Zaz]))/gi,      "value": 1, "redact": false, "string": "Myself",},   // "Me"
     // Redacted
-    {"regex": /(c.{0,10}a.{0,10}t.{0,10}h.{0,10}e.{0,10}r.{0,10}i.{0,10}n.{0,10}e.{0,10})? ?w.{0,10}i.{0,10}l.{0,10}l.{0,10}o.{0,10}w.{0,10}s/gi, "redact": true },  // SHUT
+    {"regex": /(c.{0,10}a.{0,10}t.{0,10}h.{0,10}e.{0,10}r.{0,10}i.{0,10}n.{0,10}e.{0,10})? ?w.{0,10}i.{0,10}l.{0,10}l.{0,10}o.{0,10}w.{0,10}s/gi, "value": 999, "redact": true },  // SHUT
 ]
 
 // Grab all the command files from the commands directory
@@ -423,6 +423,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let dollIDOverride = getOption(msg.author.id, "dollvisorname")
     let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34
     let dollProtocol = (getOption(msg.author.id, "dollforcedprotocol") == "enabled")
+    let dollProtocolViolations = []
     if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
         modified = true;
         // If dollIDOverride is not specified or the override is exactly a string of numbers...
@@ -492,6 +493,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 if(dollProtocol){
                     DOLLPROTOCOL.forEach((r) => {
                         let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
+                        if(replaceProtocol.length > 0){dollProtocolViolations.push(
+                            r.redact ? "REDACTED" : r.string
+                        )}
                         replaceProtocol.forEach((b) => {
                             let replacep = r.redact ? `[1;40;30m[REDACTED][0m` : `[0;31m[${b}][0m`
                             dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replacep)
@@ -500,7 +504,14 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 }
 
 
-                dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
+                dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}`
+
+                // Log protocol violations
+                if(dollProtocolViolations.length > 0){
+                    dollMessageParts[i].text += `\n[1;31mERROR [0;31m- Protocol Violation!`
+                    //dollProtocolViolations.forEach((v) => {dollMessageParts[i].text += `"${v}", `})
+                }
+                dollMessageParts[i].text += `\`\`\``
             }
         }
 
