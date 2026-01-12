@@ -13,6 +13,17 @@ const { getOption } = require(`./../functions/configfunctions.js`);
 const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 
 
+const DOLLPROTOCOL = [
+    // Banned words
+    {"regex": /(?<=(^|[^A-Zaz]))i(?=($|[^A-Zaz]))/gi,           "redact": false},   // "I"
+    {"regex": /(?<=(^|[^A-Zaz]))i'm(?=($|[^A-Zaz]))/gi,         "redact": false},   // "I'm"
+    {"regex": /(?<=(^|[^A-Zaz]))my(?=($|[^A-Zaz]))/gi,          "redact": false},   // "my"
+    {"regex": /(?<=(^|[^A-Zaz]))me(?=($|[^A-Zaz]))/gi,          "redact": false},   // "Myself"
+    {"regex": /(?<=(^|[^A-Zaz]))myself(?=($|[^A-Zaz]))/gi,      "redact": false},   // "Me"
+    // Redacted
+    {"regex": /(c.{0,10}a.{0,10}t.{0,10}h.{0,10}e.{0,10}r.{0,10}i.{0,10}n.{0,10}e.{0,10})? ?w.{0,10}i.{0,10}l.{0,10}l.{0,10}o.{0,10}w.{0,10}s/gi, "redact": true },  // SHUT
+]
+
 // Grab all the command files from the commands directory
 const gagtypes = [];
 const commandsPath = path.join(__dirname, '..', 'gags');
@@ -411,6 +422,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let dollID = ``;
     let dollIDOverride = getOption(msg.author.id, "dollvisorname")
     let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34
+    let dollProtocol = (getOption(msg.author.id, "dollforcedprotocol") == "enabled")
     if(getHeadwear(msg.author.id).find((headwear) => DOLLVISORS.includes(headwear))){
         modified = true;
         // If dollIDOverride is not specified or the override is exactly a string of numbers...
@@ -451,7 +463,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 dollIDDisplay = `${dollIDOverride}${additionalpart}`;
             }
         }
-        
+
         let dollMessageParts = splitMessage(outtext, DOLLREGEX)     // Reuse splitMessage, but with a different regex.
         let partstolinkto = Array.from(outtext.matchAll(/(<(@|#)[0-9]+>)|(<?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)/g)).map((a) => a[0]) // Match User tags, channel tags and links
         
@@ -475,6 +487,19 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     let replaceb = `[1m${b.slice(2,-2)}[0m` // Capture the part within the bolding
                     dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replaceb)
                 })
+
+                // Loop on protocols
+                if(dollProtocol){
+                    DOLLPROTOCOL.forEach((r) => {
+                        let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
+                        replaceProtocol.forEach((b) => {
+                            let replacep = r.redact ? `[1;40;30m[REDACTED][0m` : `[0;31m[${b}][0m`
+                            dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replacep)
+                        })
+                    })
+                }
+
+
                 dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}\`\`\``
             }
         }
@@ -570,7 +595,10 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID) {
             // Finally send it!
             messageSend(msg, outtext, msg.member.displayAvatarURL(), (dollIDDisplay ? dollIDDisplay : msg.member.displayName), threadID).then(() => {
                 // Cleanup after sending. 
-                msg.delete();
+                msg.delete().then(() => {
+                    // If the user violates Doll Protocol, do STUFF
+                    msg.channel.send("Meow");
+                })
             })
         }
     }

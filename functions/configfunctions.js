@@ -372,6 +372,31 @@ const configoptions = {
             menutype: "choice",
             default: "enabled",
             disabled: (userID) => { return false }
+        },
+        "dollforcedprotocol": {
+            name: "Doll Visor Forced Protocol",
+            desc: "Should the Doll Visor punish the wearer for speaking in first person?",
+            choices: [
+                {
+                    name: "No",
+                    helptext: "*Doll Visor will not punish the wearer*",
+                    select_function: (userID) => { return false },
+                    value: "disabled",
+                    style: ButtonStyle.Danger,
+                    uname: "DollVisorPunishNo"
+                },
+                {
+                    name: "Yes",
+                    helptext: "You will use it/its pronouns while wearing a visor",
+                    select_function: (userID) => { return false },
+                    value: "enabled",
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisorPunish"
+                },
+            ],
+            menutype: "choice",
+            default: "disabled",
+            disabled: (userID) => { return false }
         }
     },
     "Server": {

@@ -158,4 +158,8 @@ configs.txt
 discardedkeys.txt
 headwearusers.txt
 dollusers.txt
+chastitybrausers.txt
+wearables.txt
+webhooks.txt
 /downloaded
+/backups
