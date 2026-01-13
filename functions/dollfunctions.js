@@ -10,7 +10,7 @@ const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*u
 const DOLLPROTOCOL = [
     // Regex uses an ENQ character to not rematch matches.
     // Banned words
-    {"regex": /(?<![\u0005A-Za-z])i(?!['A-Za-z])/i,           "value": 1, "redact": false, "string": "I",},   // "I"
+    {"regex": /(?<![\u0005A-Za-z])i(?![-'A-Za-z])/i,           "value": 1, "redact": false, "string": "I",},   // "I"
     {"regex": /(?<![\u0005A-Za-z])i'm(?![A-Za-z])/i,         "value": 1, "redact": false, "string": "I'm",},   // "I'm"
     {"regex": /(?<![\u0005A-Za-z])my(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "My",},   // "my"
     {"regex": /(?<![\u0005A-Za-z])me(?![A-Za-z])/i,          "value": 1, "redact": false, "string": "Me",},   // "Myself"
