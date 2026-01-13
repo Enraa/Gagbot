@@ -108,13 +108,13 @@ async function sendTimelockChastityBraUnlockMessage(client, wearer, keyholder) {
   if (process.chastitybra[wearer]?.webhookchannel) { 
     const channel = await client.channels.fetch(process.chastitybra[wearer].webhookchannel);
     if (!keyholder) {
-      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, process.chastity[wearer].webhookchannel)
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, process.chastitybra[wearer].webhookchannel)
     }
     else if (wearer == keyholder) {
-      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.chastity[wearer].webhookchannel)
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.chastitybra[wearer].webhookchannel)
     }
     else {
-      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.chastity[wearer].webhookchannel)
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.chastitybra[wearer].webhookchannel)
     };
   }
 }
@@ -166,13 +166,13 @@ async function sendTimelockCollarUnlockMessage(client, wearer, keyholder) {
   if (process.collar[wearer]?.webhookchannel) { 
     const channel = await client.channels.fetch(process.collar[wearer].webhookchannel);
     if (!keyholder) {
-      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, process.chastity[wearer].webhookchannel)
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, process.collar[wearer].webhookchannel)
     }
     else if (wearer == keyholder) {
-      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.chastity[wearer].webhookchannel)
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.collar[wearer].webhookchannel)
     }
     else {
-      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.chastity[wearer].webhookchannel)
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.collar[wearer].webhookchannel)
     };
   }
 }

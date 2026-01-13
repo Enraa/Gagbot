@@ -1,4 +1,6 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
+const { getWearable } = require("./wearablefunctions.js");
+const { getChastity } = require("./vibefunctions.js");
 
 const texts_chastity = {
     chastitybelt: {
@@ -672,7 +674,8 @@ const texts_letgo = {
         `USER_TAG squirms, trying to adjust the belt so USER_THEY can feel ***something***, but USER_THEY just can't get over the edge!`,
         `USER_TAG holds USER_THEIR breath, feverishly stroking the smooth belt USER_THEY USER_ISARE wearing, but USER_THEY just can't let go!`,
         `USER_TAG grinds on a near by object, trying to get that last little bit of sensation to let go... but USER_THEY just can't make it!`,
-        `USER_TAG buckles USER_THEIR legs, panting in short breaths as USER_THEY attemptUSER_S to (and failUSER_S miserably) to get release!`
+        `USER_TAG buckles USER_THEIR legs, panting in short breaths as USER_THEY attemptUSER_S to (and failUSER_S miserably) to get release!`,
+        `USER_TAG attempts to get relief, but **good USER_PRAISEOBJECTs** don't get to touch there.`
     ],
     heavy: [
         `USER_TAG shifts USER_THEIR legs to try to reach the peak! Too bad USER_THEIR VAR_C1 makes it hard to touch there!`,
@@ -799,7 +802,7 @@ const texts_struggle = {
                 `USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
                 `USER_TAG gropes USER_THEMSELF with USER_THEIR hands, helplessly unable to touch...`,
                 `USER_TAG squirms in USER_THEIR VAR_C4, but no matter how much USER_THEY USER_TRY, USER_THEY just can't feel anything...`,
-                `USER_TAG sighs as USER_THEY USER_TRY to fumble with USER_THEIR VAR_C4. When was the last time USER_THEY had freedom or relief?`,
+                { required: (t) => { return ((getChastity(t.interactionuser.id).timestamp + 7200000) < Date.now())}, text: `USER_TAG sighs as USER_THEY USER_TRY to fumble with USER_THEIR VAR_C4. When was the last time USER_THEY had freedom or relief?`},
                 `USER_TAG mews in despair as USER_THEY can't get *any* feeling when touching down there! Poor USER_THEM!`,
                 `USER_TAG tried so hard to touch USER_THEMSELF, and didn't get so far. But in the end, it doesn't even matter.`,
                 `USER_TAG fusses with USER_THEIR belt, but USER_THEY forgot: Good USER_PRAISEOBJECTs ***never*** cum.`,
@@ -945,6 +948,10 @@ const texts_struggle = {
         `USER_TAG wants to pet a cute kitty. Or a cute doggo. Maybe lots of cute kitties and doggos!`,
         `USER_TAG prepares for battle with a sword and flourishes it. USER_THEY_CAP USER_ISARE going to hunt the legendary sHE!`,
         `USER_TAG sits and looks around patiently because USER_THEY USER_ISARE a **good USER_PRAISEOBJECT!**`,
+        // 2 hours in chastity
+        { required: (t) => { return (!isNaN(getChastity(t.interactionuser.id)?.timestamp) && ((getChastity(t.interactionuser.id)?.timestamp + 7200000) < Date.now()))}, text: `USER_TAG absentmindedly fidgets, thinking about the last time USER_THEY could let go...`},
+        // 24 hours in chastity
+        { required: (t) => { return (!isNaN(getChastity(t.interactionuser.id)?.timestamp) && ((getChastity(t.interactionuser.id)?.timestamp + 86400000) < Date.now()))}, text: `USER_TAG barely remembers what it's like to not be in chastity...`}
     ]
 }
 
@@ -1406,7 +1413,7 @@ const texts_unheadwear = {
             self: {
                 single: {
                     worn: [
-                        `USER_TAG paws at USER_THEIR VAR_C2, trying to scoot it off of USER_THEIR head! No fingers makes it impossible to slip off!`
+                        `USER_TAG paws at USER_THEIR VAR_C2, trying to scoot it off of USER_THEIR head! No fingers makes it impossible to slip off!`,
                     ],
                     // Ephemeral
                     noworn: [
@@ -1737,7 +1744,7 @@ const texts_unwear = {
                 ],
                 // Ephemeral
                 noworn: [
-                    `You aren't wearing any head restraints, but you couldn't remove them anyway!`
+                    `You aren't wearing any clothes, but you couldn't remove them anyway!`
                 ]
             }
         },
@@ -1757,7 +1764,7 @@ const texts_unwear = {
                 ],
                 // Ephemeral
                 noworn: [
-                    `TARGET_TAG isn't wearing any head restraints, but you couldn't remove them anyway!`
+                    `TARGET_TAG isn't wearing any clothes, but you couldn't remove them anyway!`
                 ]
             }
         }
@@ -1766,7 +1773,14 @@ const texts_unwear = {
         self: {
             single: {
                 worn: [
-                    `USER_TAG slowly slips out of USER_THEIR VAR_C2, folding it and putting it away for future wear!`
+                    `USER_TAG slowly slips out of USER_THEIR VAR_C2, folding it and putting it away for future wear!`,
+                    { only: (t) => { return t.c2.includes("Lipstick") }, text: `USER_TAG uses makeup remover to wipe USER_THEIR VAR_C2 off USER_THEIR lips!`},
+                    { only: (t) => { return t.c2.includes("Kissmark") }, text: `USER_TAG uses makeup remover to wipe away USER_THEIR VAR_C2!`},
+                    { only: (t) => { return t.c2.includes("Eyeshadow") }, text: `USER_TAG uses makeup remover to wipe away USER_THEIR VAR_C2 from USER_THEIR eyes!`},
+                    { only: (t) => { return (t.c2.includes("lasses") || t.c2.includes("Librarian's Spectacles")) }, text: `USER_TAG takes off USER_THEIR VAR_C2 and folds the arms on them before setting them gently to the side!`},
+                    { only: (t) => { return t.c2.includes("attoo") }, text: `USER_TAG uses a bit of magic to erase USER_THEIR VAR_C2!`},
+                    { only: (t) => { return t.c2.includes("Polish") }, text: `USER_TAG uses some nail polish remover to remove USER_THEIR VAR_C2!`},
+                    { only: (t) => { return (t.c2.includes("Heels") || t.c2.includes("Shoes") || t.c2.includes("Boots") || t.c2.includes("Pumps") || t.c2.includes("Anklets") || t.c2.includes("Greaves")) }, text: `USER_TAG slips USER_THEIR VAR_C2 off USER_THEIR feet, putting them away!`},
                 ],
                 // Ephemeral
                 noworn: [
@@ -1786,7 +1800,14 @@ const texts_unwear = {
         other: {
             single: {
                 worn: [
-                    `Slowly, USER_TAG runs USER_THEIR fingers over TARGET_TAG, sensually pulling off TARGET_THEIR VAR_C2 and setting it aside.`
+                    `Slowly, USER_TAG runs USER_THEIR fingers over TARGET_TAG, sensually pulling off TARGET_THEIR VAR_C2 and setting it aside.`,
+                    { only: (t) => { return t.c2.includes("Lipstick") }, text: `USER_TAG uses makeup remover to wipe TARGET_TAG's VAR_C2 off TARGET_THEIR lips!`},
+                    { only: (t) => { return t.c2.includes("Kissmark") }, text: `USER_TAG uses makeup remover to wipe away TARGET_TAG's VAR_C2!`},
+                    { only: (t) => { return t.c2.includes("Eyeshadow") }, text: `USER_TAG uses makeup remover to wipe away TARGET_TAG's VAR_C2 from TARGET_THEIR eyes!`},
+                    { only: (t) => { return (t.c2.includes("lasses") || t.c2.includes("Librarian's Spectacles")) }, text: `USER_TAG takes off TARGET_TAG's VAR_C2 and folds the arms on them before setting them gently to the side!`},
+                    { only: (t) => { return t.c2.includes("attoo") }, text: `USER_TAG uses a bit of magic to erase TARGET_TAG's VAR_C2!`},
+                    { only: (t) => { return t.c2.includes("Polish") }, text: `USER_TAG uses some nail polish remover to remove TARGET_TAG's VAR_C2!`},
+                    { only: (t) => { return (t.c2.includes("Heels") || t.c2.includes("Shoes") || t.c2.includes("Boots") || t.c2.includes("Pumps") || t.c2.includes("Anklets") || t.c2.includes("Greaves")) }, text: `USER_TAG slips TARGET_TAG's VAR_C2 off TARGET_THEIR feet, putting them away!`},
                 ],
                 // Ephemeral
                 noworn: [
@@ -2025,7 +2046,15 @@ const texts_wear = {
                 `You are already wearing a VAR_C2!`
             ],
             noworn: [
-                `USER_TAG picks up a beautiful VAR_C2 and puts it on! It sits snugly on USER_THEM!`
+                `USER_TAG picks up a beautiful VAR_C2 and puts it on! It sits snugly on USER_THEM!`,
+                { only: (t) => { return t.c2.includes("Lipstick") }, text: `USER_TAG pulls out a makeup bag and applies VAR_C2 to USER_THEMSELF!`},
+                { only: (t) => { return t.c2.includes("Kissmark") }, text: `USER_TAG pulls out a makeup bag and carefully scribbles a VAR_C2 on USER_THEMSELF!`},
+                { only: (t) => { return t.c2.includes("Eyeshadow") }, text: `USER_TAG pulls out a makeup bag and applies VAR_C2 to USER_THEIR eyes!`},
+                { only: (t) => { return (t.c2.includes("lasses") || t.c2.includes("Librarian's Spectacles")) }, text: `USER_TAG unfolds a pair of VAR_C2 and puts them on USER_THEIR nose! USER_THEIR_CAP eyes peer through the glass!`},
+                { only: (t) => { return t.c2.includes("attoo") }, text: `USER_TAG uses a tattoo gun to apply a VAR_C2 to USER_THEMSELF!`},
+                { only: (t) => { return t.c2.includes("Polish") }, text: `USER_TAG applies VAR_C2 to USER_THEIR nails! So pretty!`},
+                { only: (t) => { return (t.c2.includes("Heels") || t.c2.includes("Shoes") || t.c2.includes("Boots") || t.c2.includes("Pumps") || t.c2.includes("Anklets") || t.c2.includes("Greaves")) }, text: `USER_TAG slips a pair of VAR_C2 on USER_THEIR feet!`},
+                { required: (t) => { return t.c2.includes("Latex") }, text: `USER_TAG eases into a VAR_C2, carefully smoothing out the wrinkles on USER_THEMSELF! Squeak squeak!`},
             ]
         },
         other: {
@@ -2034,7 +2063,16 @@ const texts_wear = {
                 `You are already wearing a VAR_C2!`
             ],
             noworn: [
-                `USER_TAG helps TARGET_TAG into a VAR_C2, ensuring it all fits snugly!`
+                `USER_TAG helps TARGET_TAG into a VAR_C2, ensuring it all fits snugly!`,
+                { only: (t) => { return t.c2.includes("Lipstick") }, text: `USER_TAG pulls out a makeup bag and applies VAR_C2 to TARGET_TAG!`},
+                { only: (t) => { return (t.c2.includes("Kissmark") && (getWearable(t.interactionuser.id).filter((f) => f.includes("lipstick")).length > 0)) }, text: `USER_TAG kisses TARGET_TAG, leaving a VAR_C2 on USER_THEIR cheek!`},
+                { only: (t) => { return (t.c2.includes("Kissmark") && (getWearable(t.interactionuser.id).filter((f) => f.includes("lipstick")).length == 0)) }, text: `USER_TAG applies some lipstick to USER_THEIR lips, and then kisses TARGET_TAG, leaving a VAR_C2 on TARGET_THEIR cheek! USER_THEY_CAP then removes the lipstick.`},
+                { only: (t) => { return t.c2.includes("Eyeshadow") }, text: `USER_TAG pulls out a makeup bag and applies VAR_C2 to TARGET_TAG's eyes!`},
+                { only: (t) => { return (t.c2.includes("lasses") || t.c2.includes("Librarian's Spectacles")) }, text: `USER_TAG unfolds a pair of VAR_C2 and puts them on TARGET_TAG's nose! TARGET_THEIR_CAP eyes peer through the glass!`},
+                { only: (t) => { return t.c2.includes("attoo") }, text: `USER_TAG uses a tattoo gun to apply a VAR_C2 to TARGET_TAG!`},
+                { only: (t) => { return t.c2.includes("Polish") }, text: `USER_TAG applies VAR_C2 to TARGET_TAG's nails! So pretty!`},
+                { only: (t) => { return (t.c2.includes("Heels") || t.c2.includes("Shoes") || t.c2.includes("Boots") || t.c2.includes("Pumps") || t.c2.includes("Anklets") || t.c2.includes("Greaves")) }, text: `USER_TAG slips a pair of VAR_C2 on TARGET_TAG's feet!`},
+                { required: (t) => { return t.c2.includes("Latex") }, text: `USER_TAG helps TARGET_TAG into a VAR_C2, carefully smoothing out the wrinkles! Squeak squeak!`},
             ]
         }
     }
@@ -2180,11 +2218,11 @@ const textarrays = {
 // Get generic text and spit out a pronoun respecting version YAY
 const getTextGeneric = (type, data_in) => {
     let generics = {
-        "unbind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (30 second timeout).",
+        "unbind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
         "unbind_decline": "TARGET_TAG has declined your help with USER_THEIR VAR_C1.",
         "unbind_accept": "TARGET_TAG has accepted your offer to help with USER_THEIR VAR_C1!",
         "unbind_timeout": "The request to help TARGET_TAG timed out!",
-        "changebind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (30 second timeout).",
+        "changebind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
         "changebind_decline": "TARGET_TAG has declined allowing you to change USER_THEIR bindings.",
         "changebind_accept": "TARGET_TAG has allowed you to change USER_THEIR bindings.",
         "clone_accept": "TARGET_TAG has allowed you to make a clone of USER_THEIR VAR_C1 key, giving it to VAR_C2!",
@@ -2244,7 +2282,39 @@ const getText = (data) => {
         This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
         EXACTLY THE WAY THE TREE IS SET UP */
         if (Array.isArray(sentencearr)) {
-            let outstring = sentencearr[Math.floor(Math.random() * sentencearr.length)];
+            // Within the array, we want to handle the following cases:
+            // - Standard strings
+            // - Required strings via "required: (userID) => {}" -- When true, the phrase is included along with standard strings
+            // - Only strings via "only: (userID) => {}" -- When any are true, only use these phrases
+            //
+            // For example, { only: () => { return data_in.c1.includes("Lipstick") }, `USER_TAG wipes off USER_THEIR VAR_C1` }
+            // would allow only this phrase to be used when the chosen item is something Lipstick in the c1 slot. 
+            //
+            // If there are *any* onlyphrases, then chosenphrases will not be used. 
+            let chosenphrases = [];
+            let onlyphrases = [];
+            let only = false;
+            sentencearr.forEach((a) => {
+                if (typeof a == "string") {
+                    chosenphrases.push(a)
+                }
+                else {
+                    if ((a.only != undefined) && a.only(data_in)) {
+                        onlyphrases.push(a.text);
+                        only = true;
+                    }
+                    else if ((a.required != undefined) && a.required(data_in)) {
+                        chosenphrases.push(a.text);
+                    }
+                }
+            })
+            let outstring;
+            if (only) {
+                outstring = onlyphrases[Math.floor(Math.random() * onlyphrases.length)];
+            }
+            else {
+                outstring = chosenphrases[Math.floor(Math.random() * chosenphrases.length)];
+            }
             outstring = convertPronounsText(outstring, data_in);
 
             return outstring;
