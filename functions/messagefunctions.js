@@ -1,4 +1,4 @@
-const { WebhookClient, AttachmentBuilder } = require('discord.js');
+const { WebhookClient, AttachmentBuilder, PermissionsBitField } = require('discord.js');
 const fs = require('fs')
 const path = require('path');
 
@@ -82,20 +82,50 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs) 
     }*/
 }
 
-const messageSendDev = async (str, avatarURL, username) => {
-    // When called, we want to do something with str and then send it.
-    const webhookClient = new WebhookClient({ 
-        id: process.env.WEBHOOKIDDEV, 
-        token: process.env.WEBHOOKTOKENDEV 
-    })
-
-    webhookClient.send({
-        content: str,
-        username: username,
-        avatarURL: avatarURL
-    }).then(() => {
-        return true
-    })
+// Sends a message to a channel, handling threads by retrieving the ID as it comes in
+// Please god don't send to an invalid place I can't take it anymore
+const messageSendChannel = async (str, channel, components = []) => {
+    try {
+        let channeltosendto = await process.client.channels.fetch(channel)
+        if (channeltosendto) {
+            if (channeltosendto.isSendable() && !channeltosendto.archived && !channeltosendto.locked) {
+                if (channeltosendto.permissionsFor(channeltosendto.guild.members.me).has(PermissionsBitField.Flags.SendMessagesInThreads)) {
+                    let messageoutput = {
+                        content: str,
+                        components: components
+                    }
+                    await channeltosendto.send(messageoutput)
+                    console.log(`Message ${str.slice(0,30)}${(str.length > 30) ? "..." : ""} sent to ${channeltosendto.name}`)
+                }
+                else {
+                    // Warn! 
+                    console.log(`Sending message to the parent channel since we don't have access to send to these threads!`)
+                    let messageoutput = {
+                        content: `**WARNING: Bot cannot send to threads directly. Please review permissions and grant it __Send Messages in Threads__!**\n\n${str}`,
+                        components: components
+                    }
+                    await channeltosendto.parent.send(messageoutput)
+                    console.log(`Message ${str.slice(0,30)}${(str.length > 30) ? "..." : ""} sent to ${channeltosendto.name}'s parent channel, ${channeltosendto.parent.name} due to no permissions.`)
+                }
+            }
+            else {
+                // Warn! 
+                console.log(`Sending message to the parent channel since the thread isnt sendable!`)
+                let messageoutput = {
+                    content: `**WARNING: Bot cannot send to locked or closed threads!**\n\n${str}`,
+                    components: components
+                }
+                await channeltosendto.parent.send(messageoutput)
+                console.log(`Message ${str.slice(0,30)}${(str.length > 30) ? "..." : ""} sent to ${channeltosendto.name}'s parent channel, ${channeltosendto.parent.name} due to no permissions.`)
+            }
+        }
+        else {
+            console.log("Failed to obtain a channel by ID " + channel);
+        }
+    }
+    catch (err) {
+        console.log(err);
+    }
 }
 
 const splitMessage = (text, inputRegex=null) => {
@@ -157,8 +187,9 @@ exports.splitMessage = splitMessage
 
 exports.messageSend = messageSend;
 exports.messageSendImg = messageSendImg;
-exports.messageSendDev = messageSendDev;
 
 exports.loadEmoji = loadEmoji;
 
 exports.splitMessage = splitMessage;
+
+exports.messageSendChannel = messageSendChannel;

@@ -1,7 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { messageSend, messageSendImg, messageSendDev } = require(`./../functions/messagefunctions.js`)
+const { messageSend, messageSendImg, messageSendChannel } = require(`./../functions/messagefunctions.js`)
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`)
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require('./vibefunctions.js');
@@ -422,7 +422,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
             // If the message somehow creates a fully empty message, we want to avoid sending it and send the debug text
             if (!(/[^\u0000-\u0020]/).test(outtext)) {
                 if (msg.content.length > 0) {
-                    msg.channel.send(msg.content)
+                    messageSendChannel(msg.content, msg.channel.id)
                 }
                 outtext = "Miss <@125093095405518850>, I broke the bot! The bot said what I was trying to say, for debugging purposes. Unless it was 0 length somehow."
             }
@@ -449,7 +449,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
                             }
                         }
                         data.levelONE = true;
-                        msg.channel.send(getText(data))
+                        messageSendChannel(getText(data), msg.channel.id)
                     }
                 })
             })

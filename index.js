@@ -140,6 +140,7 @@ const client = new discord.Client({
 
 client.on("clientReady", async () => {
     // This is run once we’re logged in!
+    process.client = client;
     console.log(`Logged in as ${client.user.tag}!`)
     // Please stop crashing
     if (process.webhook == undefined) { process.webhook = {} }

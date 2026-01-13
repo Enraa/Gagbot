@@ -3,7 +3,7 @@ const path = require('path');
 
 let wearabletypes = [
     // Aesthetic Body Parts
-    { name: "Ears", value: "ears", colorable: true, uniqueColors: ["Cat", "Futuristic Cat", "Dog", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Ears", value: "ears", colorable: true, uniqueColors: ["Cat", "Futuristic Cat", "Dog", "Floppy Dog", "Wolf", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Tail", value: "tail", colorable: true, uniqueColors: ["Cat", "Dog", "Wolf", "Bunny", "Sheep", "Demon", "Succubus", "Fox", "Pony", "Lizard", "Dragon", "Lamia"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Wings", value: "wings", colorable: true, uniqueColors: ["Demon", "Angelic", "Imp", "Succubus", "Bat", "Butterfly", "Dragonfly", "Draconic", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Horns", value: "horns", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
@@ -76,7 +76,7 @@ let wearabletypes = [
     { name: "Doll Barcode", value: "cyberdoll_barcode" },
 
     //Faux Bondage and Non Restrictive Gear
-    { name: "Leather Harness", value: "harness_leather" },
+    { name: "Harness", value: "harness_leather", colorable: true, uniqueColors: ["Vine", "Leather", "Latex", "Leather", "Rubber", "Shibari"]  },
     { name: "Bondage Wrist Cuffs", value: "cuffswrist_bondage", colorable: true, uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
     { name: "Latex Wrist Cuffs", value: "cuffswrist_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Bondage Ankle Cuffs", value: "cuffsankle_bondage", colorable: true, uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
@@ -96,8 +96,8 @@ let wearabletypes = [
 
     // Cosplay, Swimwear and Outfits
     { name: "Labcoat", value: "labcoat" },
-    { name: "Outfit" , value: "outfit", colorable: true, uniqueColors: ["Nurse", "Latex Nurse", "Race Queen", "Cheerleader", "Playbunny", "Reverse Playbunny", "Dancer"], forbiddenColors: ["Black", "White", "Red", "Purple", "Green", "Orange", "Red", "Pink", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    { name: "Spy Suit", value: "outfit_spy", },
+    { name: "Outfit" , value: "outfit", colorable: true, uniqueColors: ["Nurse", "Latex Nurse", "Race Queen", "Cheerleader", "Dancer"], forbiddenColors: ["Black", "White", "Red", "Purple", "Green", "Orange", "Red", "Pink", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Suit", value: "suit_outfit",  colorable: true, uniqueColors: ["Infiltration", "Spy", "Playbunny", "Reverse Playbunny", "Ghillie", "Nevermere", "Nevermere Executive"], forbiddenColors: ["Black", "White", "Red", "Purple", "Green", "Orange", "Red", "Pink", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Songbird Ensemble", value: "outfit_songbird", colorable: true },
     { name: "Fashionable Suit", value: "suit_fashionable", colorable: true },
     { name: "Wool Suit", value: "suit_wool", colorable: true },
@@ -158,7 +158,7 @@ let wearabletypes = [
     { name: "Skimpy Dress", value: "skimpy_dress", colorable: true },
     { name: "Salsa Dress", value: "salsa_dress", colorable: true },
     { name: "Little Black Dress", value: "littleblack_dress", colorable: false },
-    { name: "Flowy Dress", value: "flowy_dress", colorable: true, uniqueColors: ["Gothic"] },
+    { name: "Flowy Dress", value: "flowy_dress", colorable: true, uniqueColors: ["Gothic", "Floral"] },
     { name: "Latex Flowy Dress", value: "flowy_dress_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },
     { name: "Evening Dress", value: "evening_dress", colorable: true, uniqueColors: ["Gothic", "Golden", "Silver",] },
     { name: "Latex Evening Dress", value: "evening_dress_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },

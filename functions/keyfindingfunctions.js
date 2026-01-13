@@ -7,6 +7,7 @@ const { getUserVar, setUserVar } = require("./usercontext");
 const { getHeavy } = require("./heavyfunctions");
 const { config } = require("./configfunctions");
 const { findChastityBraKey } = require("./vibefunctions");
+const { messageSendChannel } = require("./messagefunctions.js");
 
 // return true if the user fumbles
 function rollKeyFumble(keyholder, locked) {
