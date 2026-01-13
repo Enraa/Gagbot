@@ -105,12 +105,14 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 })
 
                 // Loop on protocols
+                let messagePartViolation = false;
                 if(dollProtocol){
                     DOLLPROTOCOL.forEach((r) => {
                         //let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
                         let replaceProtocol = dollMessageParts[i].text.match(r.regex)
                         if(replaceProtocol){
                             dollProtocolViolations.push(r.redact ? "REDACTED" : r.string)
+                            messagePartViolation = true;
 
                             // Stuff an ENQ character before each match.
                             while(dollMessageParts[i].text.match(r.regex)){
@@ -124,11 +126,10 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 dollMessageParts[i].text = `\`\`\`ansi\n[1;${dollIDColor}m${dollID}: [0m${dollMessageParts[i].text}`
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(//g, "")
 
-                // Log protocol violations
+                // Log protocol violations overall, then append an error message after the offending line.
                 if(dollProtocolViolations.length > 0){
                     dollProtocolViolated = true;
-                    dollMessageParts[i].text += `\n[1;31mERROR [0;31m- Protocol Violation!`
-                    //dollProtocolViolations.forEach((v) => {dollMessageParts[i].text += `"${v}", `})
+                    if(messagePartViolation){dollMessageParts[i].text += `\n[1;31mERROR [0;31m- Protocol Violation!`}
                 }
                 dollMessageParts[i].text += `\`\`\``
             }
