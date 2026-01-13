@@ -43,13 +43,13 @@ const heavytypes = [
 
     // Static Restraints
     { name: "Display Stand", value: "displaystand", denialCoefficient: 4 },
-    { name: "One Bar Prison", value: "one_bar_prison", denialCoefficient: 2 },
+    { name: "One Bar Prison", value: "one_bar_prison", denialCoefficient: 1.5 },
     { name: "Latex Encasement Stand", value: "encasementstand_latex", denialCoefficient: 4 },
     { name: "Sarcophagus", value: "sarco_mummy", denialCoefficient: 3 },
     { name: "Wooden Horse", value: "wooden_horse", denialCoefficient: 3 },
-    { name: "X-Frame", value: "x_frame", denialCoefficient: 2 },
-    { name: "Dancer's Pole", value: "pole_dancer", denialCoefficient: 2.5 },
-    { name: "Leashing Post", value: "leashing_post", denialCoefficient: 2 },
+    { name: "X-Frame", value: "x_frame", denialCoefficient: 5 },
+    { name: "Dancer's Pole", value: "pole_dancer", denialCoefficient: 1.5 },
+    { name: "Leashing Post", value: "leashing_post", denialCoefficient: 2.5 },
     { name: "Latex Vacbed", value: "vacbed_latex", denialCoefficient: 3.5 },
     { name: "Latex Vaccube", value: "vaccube_latex", denialCoefficient: 4.5 },
     { name: "Doll Processing Facility", value: "doll_processing", denialCoefficient: 5 },
@@ -99,6 +99,7 @@ const heavytypes = [
     { name: "Wrapping Paper", value: "wrapping_paper", denialCoefficient: 2 },
     { name: "Shadow Hands", value: "shadowhands", denialCoefficient: 1.5 },
     { name: "Entangling Vines", value: "entangling_vines", denialCoefficient: 1.5 },
+    //{ name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
     { name: "Bondage Exosuit", value: "exosuit_bondage", denialCoefficient: 5 },
     { name: "Sticky Glue", value: "stickyglue_bondage", denialCoefficient: 5 },
 ];
