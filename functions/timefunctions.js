@@ -164,9 +164,9 @@ const saveFiles = () => {
                     filepath = `${process.GagbotSavedFileDirectory}/configs.txt`
                     processvar = "configs"
                     break;
-                case "dolloverrides":
+                case "dolls":
                     filepath = `${process.GagbotSavedFileDirectory}/dollusers.txt`
-                    processvar = "dolloverrides"
+                    processvar = "dolls"
                     break;
                 case "webhooks":
                     filepath = `${process.GagbotSavedFileDirectory}/webhooks.txt`

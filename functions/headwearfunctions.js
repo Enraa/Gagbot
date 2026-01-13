@@ -227,7 +227,6 @@ const processHeadwearEmoji = (userID, text, dollvisoroverride) => {
 
         // Handle Doll Visors
         if(getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))){
-            //let dollDigits = process.dolloverrides[userID] ? process.dolloverrides[userID].id : `${userID}`.slice(-4)
             // Below is a stylistic choice it's uncertain about.
             //let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
             outtext = `*(${dollIDOverride}'s face shows no emotion...)*`
