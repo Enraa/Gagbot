@@ -375,7 +375,8 @@ const configoptions = {
         },
         "dollforcedprotocol": {
             name: "Doll Visor Forced Protocol",
-            desc: "Should the Doll Visor punish the wearer for speaking in first person?",
+            desc: "Should the Doll Visor punish you for speaking in first person?",
+            //desc: "Should the Doll Visor punish you for speaking in first person?  Punishments escalate with each violation, and can apply mittens and heavy restraints!",
             choices: [
                 {
                     name: "No",
@@ -387,7 +388,8 @@ const configoptions = {
                 },
                 {
                     name: "Yes",
-                    helptext: "You will use it/its pronouns while wearing a visor",
+                    helptext: "Doll Visor will punish the wearer. This will apply a gag!",
+                    //helptext: "Doll Visor will punish the wearer. This can apply mittens and heavy!",
                     select_function: (userID) => { return false },
                     value: "enabled",
                     style: ButtonStyle.Secondary,
