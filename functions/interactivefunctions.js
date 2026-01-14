@@ -747,7 +747,7 @@ async function handleBondageRemoval(user, target, type, change = false) {
             content: `${user} would like to ${change ? "change" : "remove"} your ${type}. Do you want to allow this action?`,
             components: [new ActionRowBuilder().addComponents(...buttons)]
         }).then((mess) => {
-            // Create a collector for up to 30 seconds
+            // Create a collector for up to 5 minutes
             const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
 
             collector.on('collect', async (i) => {

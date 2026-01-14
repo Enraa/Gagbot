@@ -210,7 +210,7 @@ async function promptCloneCollarKey(user, target, clonekeyholder) {
             content: `${user} would like to give ${clonekeyholder} a copy of your collar key. Do you want to allow this?${(bondageaccess.length > 0) ? `\n\n**Note: ${clonekeyholder} will have access to ${bondageaccess}.**` : "" }`,
             components: [new ActionRowBuilder().addComponents(...buttons)]
         }).then((mess) => {
-            // Create a collector for up to 30 seconds
+            // Create a collector for up to 5 minutes
             const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
 
             collector.on('collect', async (i) => {
@@ -255,7 +255,7 @@ async function promptTransferCollarKey(user, target, newKeyholder) {
             content: `${user} would like to give ${newKeyholder} your collar key. Do you want to allow this?${(bondageaccess.length > 0) ? `\n\n**Note: ${newKeyholder} will have access to ${bondageaccess}.**` : "" }`,
             components: [new ActionRowBuilder().addComponents(...buttons)]
         }).then((mess) => {
-            // Create a collector for up to 30 seconds
+            // Create a collector for up to 5 minutes
             const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
 
             collector.on('collect', async (i) => {
