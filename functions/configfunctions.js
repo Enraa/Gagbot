@@ -386,6 +386,14 @@ const configoptions = {
                     uname: "DollVisorPunishNo"
                 },
                 {
+                    name: "Warn",
+                    helptext: "Doll Visor will warn on violations, but not punish",
+                    select_function: (userID) => { return false },
+                    value: "warning",
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisorPunishNo"
+                },
+                {
                     name: "Yes",
                     helptext: "Doll Visor will punish the wearer. This can apply mittens and heavy!",
                     select_function: (userID) => { return false },

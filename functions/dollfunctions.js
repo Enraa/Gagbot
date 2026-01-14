@@ -1,7 +1,7 @@
 const { getOption } = require(`./../functions/configfunctions.js`);
 const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require('./headwearfunctions.js');
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
-const { assignGag, assignMitten } = require('./../functions/gagfunctions.js')
+//const { assignGag, assignMitten } = require('./../functions/gagfunctions.js') // These do not appear to be in use and are creating a circular dependency. 
 const { assignHeavy }  = require(`./../functions/heavyfunctions.js`);
 
 //const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
@@ -131,7 +131,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let dollID = ``;
     let dollIDOverride = getOption(msg.author.id, "dollvisorname")
     let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34
-    let dollProtocol = (getOption(msg.author.id, "dollforcedprotocol") == "enabled")
+    let dollProtocol = !(getOption(msg.author.id, "dollforcedprotocol") == "disabled") // Enabled for any level that isn't disabled
     let dollProtocolViolations = 0;
     let dollProtocolVioType = undefined;
     if(dollified){
@@ -206,6 +206,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     let replaceb = `[1m${b.slice(2,-2)}[0m` // Capture the part within the bolding
                     dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replaceb)
                 })
+                let warnmodified;
 
                 // Loop on protocols
                 if(dollProtocol){
@@ -217,7 +218,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 
                             // Stuff an ENQ character before each match.
                             while(dollMessageParts[i].text.match(r.regex)){
-                                dollProtocolViolations++;
+                                if (getOption(msg.author.id,"dollforcedprotocol") != "warning") { dollProtocolViolations++ } else { warnmodified = true }
                                 dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex,r.type == "redact" ? `[1;40;30m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`)
                             }
                         }
@@ -229,17 +230,20 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(//g, "")
 
                 // Append an error message to the final garbled text block.
-                if(dollProtocolViolations > 0 && i == lastDollifiedMessage){
+                if(((dollProtocolViolations > 0) || (warnmodified)) && i == lastDollifiedMessage){
 
-                    let totalViolations = dollProtocolViolations + process.dolls[msg.author.id].violations
-
+                    let totalViolations = dollProtocolViolations
+                    if (getOption(msg.author.id,"dollforcedprotocol") != "warning") {
+                        totalViolations = dollProtocolViolations + process.dolls[msg.author.id].violations
+                    }
+                    
                     // WARN if below punishment threshold. ERROR if exceeded.
                     // CRITICAL if new violations >= punishmentThresh
                     let violationTier = (totalViolations >= getOption(msg.author.id,"dollpunishthresh")) ? ((dollProtocolViolations >= getOption(msg.author.id,"dollpunishthresh")) ? "CRITICAL" : "ERROR") : "WARN" 
                     let violationColor = (violationTier == "CRITICAL") ? "31m" : ((violationTier == "ERROR") ? "31m" : "33m")
-
+                    let violationcount = (getOption(msg.author.id,"dollforcedprotocol") == "warning") ? `` : ` (${totalViolations}/${getOption(msg.author.id,"dollpunishthresh")})` // Note, we do not need to check for "No" because the text won't show at all in that case.
                     vioMessage = PROTOCOLVIOLATIONS[dollProtocolVioType][Math.floor(Math.random() * PROTOCOLVIOLATIONS[dollProtocolVioType].length)]
-                    dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation (${totalViolations}/${getOption(msg.author.id,"dollpunishthresh")}) - ${vioMessage}`
+                    dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation${violationcount} - ${vioMessage}`
                 }else if (dollProtocolViolations == 0 && i == lastDollifiedMessage){
                     let goodDollReturn = rewardDoll(msg.author.id);
                     console.log(goodDollReturn)
