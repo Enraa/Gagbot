@@ -3,6 +3,11 @@ let fs = require('fs')
 let path = require('path')
 let admZip = require('adm-zip');
 const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar } = require(`./timelockfunctions.js`);
+const { updateArousalValues } = require('./vibefunctions.js');
+const { getGags, getMitten } = require('./gagfunctions.js');
+const { getHeadwear } = require('./headwearfunctions.js');
+const { getHeavy } = require('./heavyfunctions.js');
+const { getWearable } = require('./wearablefunctions.js');
 
 // Takes input string, outputs a date object. 
 const parseTime = (text) => {
@@ -164,9 +169,9 @@ const saveFiles = () => {
                     filepath = `${process.GagbotSavedFileDirectory}/configs.txt`
                     processvar = "configs"
                     break;
-                case "dolloverrides":
+                case "dolls":
                     filepath = `${process.GagbotSavedFileDirectory}/dollusers.txt`
-                    processvar = "dolloverrides"
+                    processvar = "dolls"
                     break;
                 case "webhooks":
                     filepath = `${process.GagbotSavedFileDirectory}/webhooks.txt`
@@ -185,6 +190,28 @@ const saveFiles = () => {
     catch (err) {
         console.log(err);
     }
+}
+
+// Assigns each function to a process variable for reference later. 
+function importFileNames() {
+    process.eventfunctions = {};
+    let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
+    eventfunctionsfolders.forEach((f) => {
+        process.eventfunctions[f] = {};
+        let eventfunctionsfiles = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions", f));
+        eventfunctionsfiles.forEach((file) => {
+            let functionfile = require(path.resolve(__dirname, "..", "eventfunctions", f, file))
+            if (typeof functionfile.functiontick === "function") {
+                process.eventfunctions[f][file.replace(".js","")] = functionfile.functiontick
+            }
+        })
+    })
+}
+
+function processTimedEvents() {
+    updateArousalValues();
+    processUnlockTimes(process.client);
+    runProcessedEvents();
 }
 
 function processUnlockTimes(client) {
@@ -212,10 +239,65 @@ function processUnlockTimes(client) {
     }
 }
 
+function runProcessedEvents() {
+    // Gags
+    if (process.gags) {
+        Object.keys(process.gags).forEach((userid) => {
+            getGags(userid).forEach((g) => {
+                if (process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype]) {
+                    process.eventfunctions.gags[g.gagtype](userid);
+                }
+            })
+        })
+    }
+    // Headwear
+    if (process.headwear) {
+        Object.keys(process.headwear).forEach((userid) => {
+            getHeadwear(userid).forEach((h) => {
+                if (process.eventfunctions.headwear && process.eventfunctions.headwear[h]) {
+                    process.eventfunctions.headwear[h](userid);
+                }
+            })
+        })
+    }
+    // Mittens
+    if (process.mitten) {
+        Object.keys(process.mitten).forEach((userid) => {
+            if (getMitten(userid)) {
+                if (process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(userid).mittenname]) {
+                    process.eventfunctions.mitten[getMitten(userid).mittenname](userid);
+                }
+            }
+        })
+    }
+    // Heavy Bondage
+    if (process.heavy) {
+        Object.keys(process.heavy).forEach((userid) => {
+            if (getHeavy(userid)) {
+                if (process.eventfunctions.heavy && process.eventfunctions.heavy[getHeavy(userid).typeval]) {
+                    process.eventfunctions.heavy[getHeavy(userid).typeval](userid);
+                }
+            }
+        })
+    }
+    // Wearables
+    if (process.wearable) {
+        Object.keys(process.wearable).forEach((userid) => {
+            getWearable(userid).forEach((h) => {
+                if (process.eventfunctions.wearable && process.eventfunctions.wearable[h]) {
+                    process.eventfunctions.wearable[h](userid);
+                }
+            })
+        })
+    }
+}
+
 exports.parseTime = parseTime;
 exports.calculateTimeout = calculateTimeout;
 exports.getTimestringForZip = getTimestringForZip;
 exports.backupsAreAnnoying = backupsAreAnnoying;
 exports.saveFiles = saveFiles;
+exports.importFileNames = importFileNames;
 
 exports.processUnlockTimes = processUnlockTimes;
+exports.processTimedEvents = processTimedEvents;

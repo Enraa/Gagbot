@@ -12,8 +12,7 @@ const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
 const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
 const { assignCorset } = require('./functions/corsetfunctions.js');
 const { assignMemeImages } = require('./functions/interactivefunctions.js');
-const { updateArousalValues } = require('./functions/vibefunctions.js');
-const { backupsAreAnnoying, saveFiles, processUnlockTimes } = require('./functions/timefunctions.js');
+const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
 const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('./functions/configfunctions.js');
@@ -54,7 +53,7 @@ let processdatatoload = [
     { textname: "headwearusers.txt", processvar: "headwear", default: {} },
     { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
     { textname: "configs.txt", processvar: "configs", default: {}},
-    { textname: "dollusers.txt", processvar: "dolloverrides", default: {}},
+    { textname: "dollusers.txt", processvar: "dolls", default: {}},
     { textname: "wearables.txt", processvar: "wearable", default: {}},
     { textname: "webhooks.txt", processvar: "webhookstoload", default: {}}
 ]
@@ -144,6 +143,7 @@ client.on("clientReady", async () => {
     console.log(`Logged in as ${client.user.tag}!`)
     // Please stop crashing
     if (process.webhook == undefined) { process.webhook = {} }
+    if (process.recentmessages == undefined) { process.recentmessages = {} }
     try {
         await client.application.fetch();
         console.log(`Bot is owned by user ID ${client?.application?.owner.id}`)
@@ -165,8 +165,7 @@ client.on("clientReady", async () => {
         console.log(err)
     }
     process.timetick = setInterval(() => {
-        updateArousalValues();
-        processUnlockTimes(client);
+        processTimedEvents()
     }, getBotOption("bot-timetickrate") ?? 6000)
     //restartChastityTimers(client);
     // setInterval(updateArousalValues, Number(process.env.AROUSALSTEPSIZE ?? 6000));
@@ -189,6 +188,7 @@ client.on("messageCreate", async (msg) => {
         }
         if (process.webhook[channelid]) {
             handleKeyFinding(msg);
+            process.recentmessages[msg.author.id] = msg.channel.id;
             modifymessage(msg, thread ? msg.channelId : null);
         }
         if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
@@ -274,4 +274,5 @@ let savefileset = setInterval(() => {
 if (process.webhook) {
     process.webhook = {};
 }
+importFileNames();
 client.login(process.env.DISCORDBOTTOKEN)

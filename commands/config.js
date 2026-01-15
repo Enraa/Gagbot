@@ -7,8 +7,7 @@ const { generateConfigModal, configoptions, getOption, setOption, getServerOptio
 const { removeAllCommands } = require('../functions/configfunctions.js');
 const { initializeServerOptions } = require('../functions/configfunctions.js');
 const { setCommands, setBotOption, getBotOption, leaveServerOptions, createWebhook, deleteWebhook, generateTextEntryModal } = require('../functions/configfunctions.js');
-const { updateArousalValues } = require('../functions/vibefunctions.js');
-const { processUnlockTimes } = require('../functions/timefunctions.js');
+const { processTimedEvents } = require('../functions/timefunctions.js');
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -85,8 +84,7 @@ module.exports = {
 				if (optionparts[3] == "bot-timetickrate") {
 					clearInterval(process.timetick);
 					process.timetick = setInterval(() => {
-						updateArousalValues();
-						processUnlockTimes(interaction.client);
+						processTimedEvents()
 					}, getBotOption("bot-timetickrate") ?? 6000)
 				}
 				

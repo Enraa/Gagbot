@@ -5,6 +5,7 @@ const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
 const { getHeadwear, assignHeadwear, getHeadwearName } = require('../functions/headwearfunctions.js');
 const { getText } = require("./../functions/textfunctions.js");
+const { getCollar, getCollarPerm, canAccessCollar } = require('../functions/collarfunctions.js');
 
 
 module.exports = {
@@ -162,16 +163,30 @@ module.exports = {
 					else {
 						// Them
 						data.other = true;
-						if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
-							// Wearing the headgear already, Ephemeral
-							data.worn = true
-							interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+						if (getCollar(headwearuser.id)) {
+							data.collar = true
+							if (getCollarPerm(headwearuser.id, "mask") && canAccessCollar(headwearuser.id, interaction.user.id)) {
+								data.maskperm = true
+								if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
+									// Wearing the headgear already, Ephemeral
+									data.worn = true
+									interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+								}
+								else {
+									// Not wearing it!
+									data.noworn = true
+									interaction.reply(getText(data))
+									assignHeadwear(headwearuser.id, headwearchoice)
+								}
+							}
+							else {
+								data.nomaskperm = true
+								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
+							}
 						}
 						else {
-							// Not wearing it!
-							data.noworn = true
-							interaction.reply(getText(data))
-							assignHeadwear(headwearuser.id, headwearchoice)
+							data.nocollar = true
+							interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral })
 						}
 					}
 				}

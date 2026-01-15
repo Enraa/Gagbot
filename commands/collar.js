@@ -17,7 +17,29 @@ module.exports = {
         .addBooleanOption(opt =>
 			opt.setName('freeuse')
 			.setDescription('Allow public access (Free Use?')
-		),
+		)
+        .addStringOption(opt =>
+            opt.setName('type')
+            .setDescription("What kind of collar to wear...")
+            .setAutocomplete(true)
+        ),
+    async autoComplete(interaction) {
+            const focusedValue = interaction.options.getFocused(); 
+            let optionstouse = collartypes;
+            if (focusedValue == "") { // User hasn't entered anything, lets give them a suggested set of 10
+                let collarstoreturn = optionstouse.slice(0,10)
+                await interaction.respond(collarstoreturn)
+            }
+            else {
+                try {
+                    let collarstoreturn = optionstouse.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+                    await interaction.respond(collarstoreturn)
+                }
+                catch (err) {
+                    console.log(err);
+                }
+            }
+        },
     async execute(interaction) {
         try {
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
@@ -26,7 +48,9 @@ module.exports = {
                 return;
             }
             let collarkeyholder = interaction.options.getUser('keyholder') ?? interaction.user;
+            let collarselected = interaction.options.getString('type');
             let freeuse = interaction.options.getBoolean('freeuse')
+            console.log(collarselected)
 
             // Build data tree:
             let data = {
@@ -60,11 +84,11 @@ module.exports = {
             
             if ((collarkeyholder) && (collarkeyholder.id != undefined)) {
                 //interaction.deferReply();
-                await interaction.showModal(collarPermModal(interaction, collarkeyholder, freeuse))
+                await interaction.showModal(collarPermModal(interaction, collarkeyholder, freeuse, collarselected))
             }
             else {
                 //interaction.deferReply();
-                await interaction.showModal(collarPermModal(interaction, interaction.user, freeuse))
+                await interaction.showModal(collarPermModal(interaction, interaction.user, freeuse, collarselected))
             }
         }
         catch (err) {
@@ -78,7 +102,9 @@ module.exports = {
             let choice_mitten = (interaction.fields.getStringSelectValues('mitten') == "mitten_yes") ? true : false
             let choice_chastity = (interaction.fields.getStringSelectValues('chastity') == "chastity_yes") ? true : false
             let choice_heavy = (interaction.fields.getStringSelectValues('heavy') == "heavy_yes") ? true : false
-            let choice_collartype = interaction.fields.getStringSelectValues('collarchoice')
+            let choice_mask = (interaction.fields.getStringSelectValues('mask') == "mask_yes") ? true : false
+            // lol consistency with naming scheme is hard
+            let choice_collartype = (interaction.customId.split("_")[3].length > 0) ? `${interaction.customId.split("_")[3]}_${interaction.customId.split("_")[4]}` : undefined;
             
             // Build data tree:
             let data = {
@@ -121,7 +147,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, true, choice_collartype)
                         }
                         else {
@@ -130,7 +157,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, true)
                         }
                     }
@@ -143,7 +171,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, false, choice_collartype)
                         }
                         else {
@@ -152,7 +181,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, false)
                         }
                     }
@@ -168,7 +198,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, true, choice_collartype)
                         }
                         else {
@@ -177,7 +208,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, true)
                         }
                     }
@@ -190,7 +222,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, false, choice_collartype)
                         }
                         else {
@@ -199,7 +232,8 @@ module.exports = {
                             assignCollar(interaction.user.id, collarkeyholder, { 
                                     mitten: choice_mitten, 
                                     chastity: choice_chastity, 
-                                    heavy: choice_heavy 
+                                    heavy: choice_heavy,
+                                    mask: choice_mask
                                 }, false)
                         }
                     }

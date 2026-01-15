@@ -74,8 +74,8 @@ const handleConsent = async (interaction, user) => {
     }
 }
 
-const collarPermModal = (interaction, keyholder, freeuse) => {
-    const modal = new ModalBuilder().setCustomId(`collar_${keyholder.id}_${freeuse ? "f" : "t"}`).setTitle('Collar Permissions');
+const collarPermModal = (interaction, keyholder, freeuse, collartype) => {
+    const modal = new ModalBuilder().setCustomId(`collar_${keyholder.id}_${freeuse ? "f" : "t"}_${collartype}`).setTitle('Collar Permissions');
 
     let restrictionWarningText = new TextDisplayBuilder()
     let othertext = "others"
@@ -170,51 +170,26 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
                 .setValue('heavy_no'),
         )
 
-    /*const isfreeuse = new StringSelectMenuBuilder()
-        .setCustomId('freeuse')
-        .setPlaceholder('Public Access')
+    const restrictionsInputmask = new StringSelectMenuBuilder()
+        .setCustomId('mask')
+        .setPlaceholder('Select Permission')
         .setRequired(true)
         .addOptions(
             new StringSelectMenuOptionBuilder()
                 // Label displayed to user
                 .setLabel('Yes')
                 // Description of option
-                .setDescription('Allows anyone to access your collar')
+                .setDescription('Allows the use of /mask on you')
                 // Value returned to you in modal submission
-                .setValue('freeuse_yes'),
+                .setValue('mask_yes'),
             new StringSelectMenuOptionBuilder()
                 // Label displayed to user
                 .setLabel('No')
                 // Description of option
-                .setDescription('Allows only keyholder to access your collar')
+                .setDescription('Disallows the use of /mask on you')
                 // Value returned to you in modal submission
-                .setValue('freeuse_no'),
-        )*/
-
-    let collaroptionssorted = collartypes // We need to make this alphabetical later but meh
-
-    let collarchoiceoptions = [
-        new StringSelectMenuOptionBuilder()
-            // Label displayed to user
-            .setLabel('None')
-            // Value returned to you in modal submission
-            .setValue('collar_none'),
-    ]
-
-    for (let i = 0; i < collaroptionssorted.length; i++) {
-        collarchoiceoptions.push(
-            new StringSelectMenuOptionBuilder()
-            // Label displayed to user
-            .setLabel(collaroptionssorted[i].name)
-            // Value returned to you in modal submission
-            .setValue(collaroptionssorted[i].value),
+                .setValue('mask_no'),
         )
-    }
-
-    const collarchoice = new StringSelectMenuBuilder()
-        .setCustomId('collarchoice')
-        .setPlaceholder('Flavor Text for Collar')
-        .addOptions(...collarchoiceoptions)
 
     const restrictionsLabelmitten = new LabelBuilder()
         .setLabel(`Allow ${othertext} to mitten you?`)
@@ -227,6 +202,10 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
     const restrictionsLabelheavy = new LabelBuilder()
         .setLabel(`Allow ${othertext} to put you in heavy bondage?`)
         .setStringSelectMenuComponent(restrictionsInputheavy)
+    
+    const restrictionsLabelmask = new LabelBuilder()
+        .setLabel(`Allow ${othertext} to put headgear on you?`)
+        .setStringSelectMenuComponent(restrictionsInputmask)
 
     // Gee Golly Discord I would FUCKING LOVE if I could add just... ONE, 
     // just one more label element. But no. That would be too easy. Fuck. You. 
@@ -234,13 +213,13 @@ This restraint is intended to allow **others** to use /chastity, /mittens and /h
         .setLabel(`(Optional) Public access to your collar?`)
         .setStringSelectMenuComponent(isfreeuse)*/
 
-    const collarchoiceLabel = new LabelBuilder()
+    /*const collarchoiceLabel = new LabelBuilder()
         .setLabel(`(Optional) What specific collar to wear?`)
-        .setStringSelectMenuComponent(collarchoice)
+        .setStringSelectMenuComponent(collarchoice)*/
 
     // Add labels to modal
     modal.addTextDisplayComponents(restrictionWarningText)
-        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy, /*isfreeuselabel,*/ collarchoiceLabel)
+        .addLabelComponents(restrictionsLabelmitten, restrictionsLabelchastity, restrictionsLabelheavy, restrictionsLabelmask)
 
     return modal;
 }
@@ -747,7 +726,7 @@ async function handleBondageRemoval(user, target, type, change = false) {
             content: `${user} would like to ${change ? "change" : "remove"} your ${type}. Do you want to allow this action?`,
             components: [new ActionRowBuilder().addComponents(...buttons)]
         }).then((mess) => {
-            // Create a collector for up to 30 seconds
+            // Create a collector for up to 5 minutes
             const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
 
             collector.on('collect', async (i) => {

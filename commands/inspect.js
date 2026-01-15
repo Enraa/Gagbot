@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getMittenName, getMitten, getGag, convertGagText, getGagIntensity } = require('./../functions/gagfunctions.js')
+const { getMittenName, getMitten, getGag, convertGagText, getGagIntensity, getGags } = require('./../functions/gagfunctions.js')
 const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDescription, getArousalChangeDescription, getChastityName, getClonedChastityKeysOwned, canAccessChastity } = require('./../functions/vibefunctions.js')
 const { getCollar, getCollarPerm, getCollarKeys, getCollarName, getClonedCollarKeysOwned, canAccessCollar, getCollarTimelock } = require('./../functions/collarfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
@@ -41,7 +41,12 @@ module.exports = {
             // Gag status
             // You can easily feel if you're gagged, so no restrictions here
             if (getGag(inspectuser.id)) {
-                inspectparts.push(`<:Gag:1073495437635506216> Gag: **${convertGagText(getGag(inspectuser.id))}** set to Intensity **${getGagIntensity(inspectuser.id)}**`)
+                let inspecttext = `<:Gag:1073495437635506216> Gag: **`
+                getGags(inspectuser.id).forEach((g) => {
+                    inspecttext = `${inspecttext}${convertGagText(g.gagtype)} (${g.intensity}), `
+                })
+                inspecttext = `${inspecttext}**`
+                inspectparts.push(inspecttext)
             }
             else {
                 inspectparts.push(`<:Gag:1073495437635506216> Gag: Not currently worn.`)
@@ -268,7 +273,7 @@ module.exports = {
                     collarparts.push(`<:collar:1449984183261986939> Collar: **${currentcollartext}**\n-# ‎   ⤷ ${lockemoji} **Key held by <@${getCollar(inspectuser.id).keyholder}>**`)
                 }
                 // Output Collar Perms
-                collarparts.push(`-# Mittens: ${getCollarPerm(inspectuser.id, "mitten") ? "YES":"NO"}, Chastity: ${getCollarPerm(inspectuser.id, "chastity") ? "YES":"NO"}, Heavy: ${getCollarPerm(inspectuser.id, "heavy") ? "YES":"NO"}`)
+                collarparts.push(`-# Mittens: ${getCollarPerm(inspectuser.id, "mitten") ? "YES":"NO"}, Chastity: ${getCollarPerm(inspectuser.id, "chastity") ? "YES":"NO"}, Heavy: ${getCollarPerm(inspectuser.id, "heavy") ? "YES":"NO"}, Masks: ${getCollarPerm(inspectuser.id, "mask") ? "YES":"NO"}`)
             }
             else {
                 collarparts.push(`<:collar:1449984183261986939> Collar: Not currently worn.`)

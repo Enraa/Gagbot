@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const fs = require('fs');
 const path = require('path');
-const { getGag, assignGag, getMitten } = require('./../functions/gagfunctions.js')
+const { getGag, assignGag, getMitten, getGagLast } = require('./../functions/gagfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
@@ -64,10 +64,9 @@ module.exports = {
 			}
 			let gagtype = interaction.options.getString('gag') ? interaction.options.getString('gag') : 'ball'
 			let gagintensity = interaction.options.getNumber('intensity') ? interaction.options.getNumber('intensity') : 5
-			let currentgag = getGag(gaggeduser.id)
-			console.log(currentgag)
+			let currentgag = getGag(gaggeduser.id, gagtype)
 			let gagname = gagtypes.find(g => g.value == gagtype)?.name;
-			let oldgagname = gagtypes.find(g => g.value == currentgag)?.name;
+			let oldgagname = gagtypes.find(g => g.value == getGagLast(gaggeduser.id))?.name;
 			let intensitytext = "loosely"
 			try {
 				let gagfile = require(path.join(commandsPath, `${gagtype}.js`))
@@ -181,10 +180,20 @@ module.exports = {
 					// Gagging ourself
 					data.self = true
 					if (getGag(gaggeduser.id)) {
-						// We are already gagged, so we want to change gags
+						// We are already gagged!
 						data.gag = true
-						interaction.reply(getText(data))
-						assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						if (currentgag) {
+							// We are already gagged with that kind. Remove and put it at the end of the list!
+							data.changetightness = true
+							interaction.reply(getText(data))
+							assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						}
+						else {
+							// We are NOT gagged with this kind. 
+							data.newgag = true
+							interaction.reply(getText(data))
+							assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						}
 					}
 					else {
 						// Not already gagged, lets put one on
@@ -200,24 +209,51 @@ module.exports = {
 						// They are already gagged, so we want to change gags
 						// Note, we should check if we're allowed in this case, since it may interfere.
 						data.gag = true
-						// Now lets make sure the wearer wants that.
-						if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
-							// Allowed immediately, lets go
-							interaction.reply(getText(data))
-							assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						if (currentgag) {
+							// We are already gagged with that kind. Remove and put it at the end of the list!
+							data.changetightness = true
+							// Now lets make sure the wearer wants that.
+							if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
+								// Allowed immediately, lets go
+								interaction.reply(getText(data))
+								assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+							}
+							else {
+								// We need to ask first. 
+								let datatogeneric = Object.assign({}, data.textdata);
+								datatogeneric.c1 = "gag";
+								interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral })
+								let canRemove = await handleBondageRemoval(interaction.user, gaggeduser, "gag", true).then(async (res) => {
+									await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric))
+									await interaction.followUp(getText(data))
+									assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+								}, async (rej) => {
+									await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric))
+								})
+							}
 						}
 						else {
-							// We need to ask first. 
-							let datatogeneric = Object.assign({}, data.textdata);
-							datatogeneric.c1 = "gag";
-							interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral })
-							let canRemove = await handleBondageRemoval(interaction.user, gaggeduser, "gag", true).then(async (res) => {
-								await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric))
-								await interaction.followUp(getText(data))
+							// We are NOT gagged with this kind. 
+							data.newgag = true
+							// Now lets make sure the wearer wants that.
+							if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
+								// Allowed immediately, lets go
+								interaction.reply(getText(data))
 								assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
-							}, async (rej) => {
-								await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric))
-							})
+							}
+							else {
+								// We need to ask first. 
+								let datatogeneric = Object.assign({}, data.textdata);
+								datatogeneric.c1 = "gag";
+								interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral })
+								let canRemove = await handleBondageRemoval(interaction.user, gaggeduser, "gag", true).then(async (res) => {
+									await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric))
+									await interaction.followUp(getText(data))
+									assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+								}, async (rej) => {
+									await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric))
+								})
+							}
 						}
 					}
 					else {

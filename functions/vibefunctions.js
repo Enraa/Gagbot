@@ -897,6 +897,8 @@ function getArousedTexts(user) {
 }
 
 // Given a string, randomly provides a stutter and rarely provides an arousal text per word.
+// Doll Edit - Uses  characters to prevent triggering doll protocol on stutters.
+// Doll Edit - Wraps italics in  so they are not separated by the doll visor.
 function stutterText(msg,text, intensity, arousedtexts) {
     let newtextparts = text.split(" ");
     let outtext = ''
@@ -939,15 +941,15 @@ function stutterText(msg,text, intensity, arousedtexts) {
             stuttered = true;
             modified = true;
             let gasptexts = ["*gasp*", "*pant*", "*shudder*", "*shiver*"]
-            let chosengasptext = gasptexts[Math.floor(Math.random() * gasptexts.length)]
-            modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}...${chosengasptext}-`
+            let chosengasptext = `${gasptexts[Math.floor(Math.random() * gasptexts.length)]}`
+            modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}...${chosengasptext}-`
         }
         prearousalcumulative = prearousalcumulative + prearousalchoicethresh;
         // Modifier 2 - 0.25-0.50 - First syllable stammer, with pause and letter. In...I-Indication
         if (!modified && (prearousalmathroll < prearousalcumulative) && !nosyllable) {
             stuttered = true;
             modified = true;
-            modifiedpart = `${modifiedpart}${stuttertextsyllables[0]}-`
+            modifiedpart = `${modifiedpart}${stuttertextsyllables[0]}-`
         }
         prearousalcumulative = prearousalcumulative + prearousalchoicethresh;
         // Modifier 3 - 0.50-0.75 - Stutter up to a base of 6 times, depending on user options.  I-I-I-I-Indication
@@ -956,7 +958,7 @@ function stutterText(msg,text, intensity, arousedtexts) {
             modified = true;
             stuttertimes = (Math.min(intensity / 10, 6) * usermod)
             for (let y = 0; y < Math.min(Math.floor((Math.random() + 0.5) * stuttertimes), stuttertimes); y++) {
-                modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}-`
+                modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}-`
             }
             modifiedpart = `${modifiedpart}`
         }
@@ -966,8 +968,8 @@ function stutterText(msg,text, intensity, arousedtexts) {
             stuttered = true;
             modified = true;
             let gasptexts = ["*gasp*", "*pant*", "*shudder*", "*shiver*"]
-            let chosengasptext = gasptexts[Math.floor(Math.random() * gasptexts.length)]
-            modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}...${chosengasptext}-`
+            let chosengasptext = `${gasptexts[Math.floor(Math.random() * gasptexts.length)]}`
+            modifiedpart = `${modifiedpart}${parttomodify.charAt(0)}...${chosengasptext}-`
         }
 
         // Add the full word part now
@@ -983,7 +985,7 @@ function stutterText(msg,text, intensity, arousedtexts) {
             postmodified = true;
             modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length-1]}`
             if (Math.random() < postarousalcumulative) {
-                modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length-1]}`
+                modifiedpart = `${modifiedpart}-${stuttertextsyllables[stuttertextsyllables.length-1]}`
             }
         }
         postarousalcumulative = postarousalcumulative + postarousalchoicethresh;
@@ -991,7 +993,7 @@ function stutterText(msg,text, intensity, arousedtexts) {
         if (!postmodified && (postarousalmathroll < postarousalcumulative) && !nosyllable) {
             stuttered = true;
             postmodified = true;
-            modifiedpart = `${modifiedpart}...${stuttertextsyllables[stuttertextsyllables.length-1]}`
+            modifiedpart = `${modifiedpart}...${stuttertextsyllables[stuttertextsyllables.length-1]}`
         }
 
         // Modifier 3 - 0.66-1.00 - Insert an arousal text, with chance scaled based on user option. Indication mmf~

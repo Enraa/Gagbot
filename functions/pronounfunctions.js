@@ -179,6 +179,8 @@ const convertPronounsText = (text, data) => {
     outtext = outtext.replaceAll("USER_S", (user.subject == "they") ? "" : "s");
     // And "try"
     outtext = outtext.replaceAll("USER_TRY", (user.subject == "they") ? "try" : "tries");
+    // And "have"
+    outtext = outtext.replaceAll("USER_HAVE", (target.subject == "they") ? "have" : "has");
 
     // Other Replacements
     outtext = outtext.replaceAll("USER_PRAISEOBJECT", () => {
@@ -234,6 +236,8 @@ const convertPronounsText = (text, data) => {
     outtext = outtext.replaceAll("TARGET_S", (target.subject == "they") ? "" : "s");
     // And "try"
     outtext = outtext.replaceAll("TARGET_TRY", (target.subject == "they") ? "try" : "tries");
+    // And "have"
+    outtext = outtext.replaceAll("TARGET_HAVE", (target.subject == "they") ? "have" : "has");
 
     // Other Replacements
     outtext = outtext.replaceAll("TARGET_PRAISEOBJECT", () => {

@@ -182,7 +182,7 @@ const configoptions = {
             ],
             menutype: "choice",
             default: 1.00,
-            disabled: (userID) => { return (getOption(userID,"fumbling") == "disabled") }
+            disabled: (userID) => { return (getOption(userID,"arousalsystem") == 0) }
         }
     },
     "General": {
@@ -375,8 +375,7 @@ const configoptions = {
         },
         "dollforcedprotocol": {
             name: "Doll Visor Forced Protocol",
-            desc: "Should the Doll Visor punish you for speaking in first person?",
-            //desc: "Should the Doll Visor punish you for speaking in first person?  Punishments escalate with each violation, and can apply mittens and heavy restraints!",
+            desc: "Should the Doll Visor punish you for speaking in first person?  Punishments escalate with each violation, and can apply mittens and heavy restraints!",
             choices: [
                 {
                     name: "No",
@@ -387,9 +386,16 @@ const configoptions = {
                     uname: "DollVisorPunishNo"
                 },
                 {
+                    name: "Warn",
+                    helptext: "Doll Visor will warn on violations, but not punish",
+                    select_function: (userID) => { return false },
+                    value: "warning",
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisorPunishNo"
+                },
+                {
                     name: "Yes",
-                    helptext: "Doll Visor will punish the wearer. This will apply a gag!",
-                    //helptext: "Doll Visor will punish the wearer. This can apply mittens and heavy!",
+                    helptext: "Doll Visor will punish the wearer. This can apply mittens and heavy!",
                     select_function: (userID) => { return false },
                     value: "enabled",
                     style: ButtonStyle.Secondary,
@@ -398,6 +404,55 @@ const configoptions = {
             ],
             menutype: "choice",
             default: "disabled",
+            disabled: (userID) => { return false }
+        },
+        "dollpunishthresh": {
+            name: "Doll Protocol Punishment Threshold",
+            desc: "How many protocol violations before the Doll Visor punishes?",
+            choices: [
+                {
+                    name: "1 Violation",
+                    helptext: "Every violation is a punishment",
+                    select_function: (userID) => { return false },
+                    value: 1,
+                    style: ButtonStyle.Danger,
+                    uname: "DollVisor1x"
+                },
+                {
+                    name: "2 Violations",
+                    helptext: "Every 2 violations",
+                    select_function: (userID) => { return false },
+                    value: 2,
+                    style: ButtonStyle.Danger,
+                    uname: "DollVisor2x"
+                },
+                {
+                    name: "3 Violations",
+                    helptext: "Every 3 violations",
+                    select_function: (userID) => { return false },
+                    value: 3,
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisor3x"
+                },
+                {
+                    name: "4 Violations",
+                    helptext: "Every 4 violations",
+                    select_function: (userID) => { return false },
+                    value: 4,
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisor4x"
+                },
+                {
+                    name: "5 Violations",
+                    helptext: "Every 5 violations",
+                    select_function: (userID) => { return false },
+                    value: 5,
+                    style: ButtonStyle.Secondary,
+                    uname: "DollVisor5x"
+                },
+            ],
+            menutype: "choice",
+            default: 3,
             disabled: (userID) => { return false }
         }
     },

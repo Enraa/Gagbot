@@ -8,8 +8,9 @@ const { getVibeEquivalent } = require('./vibefunctions.js');
 const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require('./headwearfunctions.js')
 const { getOption } = require(`./../functions/configfunctions.js`);
 const { getText } = require(`./../functions/textfunctions.js`);
-const { textGarbleDOLL } = require(`./../functions/dollfunctions.js`);
+const { DOLLMAXPUNISHMENT, textGarbleDOLL } = require(`./../functions/dollfunctions.js`);
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
+const { assignHeavy } = require(`./../functions/heavyfunctions.js`);
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -80,7 +81,7 @@ const convertGagText = (type) => {
     return convertgagarr[type];
 }
 
-const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
+/*const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
     if (process.gags == undefined) { process.gags = {} }
     let originalbinder = process.gags[userID]?.origbinder
     process.gags[userID] = {
@@ -90,11 +91,57 @@ const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
     }
     if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.gags = true;
+}*/
+
+const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
+    if (process.gags == undefined) { process.gags = {} }
+    if (process.gags[userID] == undefined) { process.gags[userID] = []};
+    // Retrieve the index if it is already on the wearer. 
+    let foundgag = process.gags[userID].findIndex((s) => s.gagtype == gagtype);
+    let originalbinder = origbinder;
+    if (foundgag > -1) {
+        originalbinder = process.gags[userID][foundgag].origbinder;
+        process.gags[userID].splice(foundgag, 1);
+    }
+    process.gags[userID].push({
+        gagtype: gagtype,
+        intensity: intensity,
+        origbinder: originalbinder
+    })
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.gags = true;
 }
 
-const getGag = (userID) => {
+// to ensure compatibility with existing code, this will retrieve the first gag
+// in the list, if not called with an extra param for specific gag. 
+const getGag = (userID, gagbyname) => {
     if (process.gags == undefined) { process.gags = {} }
-    return process.gags[userID]?.gagtype
+    if (process.gags[userID] == undefined) { process.gags[userID] = []};
+    if (gagbyname) {
+        let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
+        return foundgag?.gagtype;
+    }
+    else if (process.gags[userID].length > 0) {
+        return process.gags[userID][0].gagtype;
+    }
+    return undefined;
+}
+
+const getGags = (userID) => {
+    if (process.gags == undefined) { process.gags = {} }
+    return process.gags[userID] ?? [];
+}
+
+const getGagLast = (userID) => {
+    if (process.gags == undefined) { process.gags = {} }
+    if (process.gags[userID] == undefined) { process.gags[userID] = []};
+
+    if (process.gags[userID].length > 0) {
+        return process.gags[userID][process.gags[userID].length - 1].gagtype
+    }
+    else {
+        return undefined
+    }
 }
 
 const getGagBinder = (userID) => {
@@ -104,7 +151,10 @@ const getGagBinder = (userID) => {
 
 const getGagIntensity = (userID) => {
     if (process.gags == undefined) { process.gags = {} }
-    return process.gags[userID]?.intensity
+    if (process.gags[userID] && (process.gags[userID].length > 0)) {
+        return process.gags[userID][0].intensity
+    }
+    else { return undefined }
 }
 
 const deleteGag = (userID) => {
@@ -159,6 +209,67 @@ const getMittenName = (userID, mittenname) => {
     }
 }
 
+/**********************************************
+ * Punishes a doll.
+ * @param userID - The user's discord ID number
+ * @param amount - How many violations?
+ **********************************************/
+function punishDoll(userID, amount){
+    if (process.dolls == undefined){process.dolls = {}}
+    let doll = process.dolls[userID]
+    if(doll){
+        doll.violations += amount
+        doll.goodDollStreak = 0;        // BAD DOLL
+
+        console.log("BAD DOLL:")
+        console.log(process.dolls[userID])
+        // Compute punishments by dividing violations by punishThresh.
+        let punishThresh = getOption(userID,"dollpunishthresh")
+        let punishments = Math.floor(doll.violations / punishThresh)
+        // Remove punishments from violation score.
+        doll.violations = doll.violations % punishThresh
+
+        let origPunishLevel = doll.punishmentLevel
+        if(punishments > 0){
+            doll.punishmentLevel += punishments
+        }
+
+        // TODO: Set a max on punishment level.
+        doll.punishmentLevel = Math.min(doll.punishmentLevel, DOLLMAXPUNISHMENT)
+
+        let skipped = ((doll.punishmentLevel - origPunishLevel) > 1) ? true : false
+        // Punish the doll according to punishment level.
+        if(punishments > 0){
+            switch(doll.punishmentLevel){
+                case 0:
+                    // Do nothing.
+                    break;
+                case 1:
+                    // Gag the Doll
+                    assignGag(userID, "ball", 4)
+                    break;
+                case 2:
+                    // Gag and Mitten the Doll
+                    assignGag(userID, "ball", 6)
+                    assignMitten(userID, "mittens_cyberdoll")
+                    break;
+                // Drop through to highest punishment.
+                default:
+                case 3:
+                    // Gag, Mittens, Heavy
+                    assignGag(userID, "ball", 8)
+                    assignMitten(userID, "mittens_cyberdoll")
+                    assignHeavy(userID, "hardlight_looselink")
+                    break;
+            }
+        }
+
+        if (process.readytosave == undefined) { process.readytosave = {} }
+        process.readytosave.dolls = true;
+        return {punish: (punishments > 0 ? true : false), punishmentLevel: doll.punishmentLevel, skipped: skipped}
+    }
+}
+
 const modifymessage = async (msg, threadId) => {
     try {
         console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
@@ -205,7 +316,10 @@ const modifymessage = async (msg, threadId) => {
         modifiedmessage = dolltreturned.modifiedmessage;
         outtext = dolltreturned.outtext;
         let dollIDDisplay = dolltreturned.dollIDDisplay;
-        let dollProtocol = dolltreturned.dollProtocolViolation ? true : false
+        let dollProtocol = dolltreturned.dollProtocolViolations
+
+        // Scrub all control characters used to delineate text.
+        outtext = outtext.replaceAll(/[]/g, "")
 
         // Finally, send it if we modified the message.
         if (modifiedmessage) { 
@@ -306,41 +420,39 @@ function textGarbleGag(messagein, msg, modifiedmessage, outtextin) {
     let modified = modifiedmessage
     let outtext = outtextin
     if (process.gags == undefined) { process.gags = {} }
-    if (process.gags[`${msg.author.id}`]) {
+    if (process.gags[msg.author.id] && (process.gags[msg.author.id].length > 0)) {
+        modified = true;
+
         // Grab all the command files from the commands directory
         const gagtypes = [];
         const commandsPath = path.join(__dirname, '..', 'gags');
         const commandFiles = fs.readdirSync(commandsPath).filter(file => file.endsWith('.js'));
 
-        if (commandFiles.includes(process.gags[`${msg.author.id}`].gagtype + ".js")) {
-            modified = true;
-            let gaggarble = require(path.join(commandsPath, `${process.gags[`${msg.author.id}`].gagtype}.js`))
-            let intensity = process.gags[`${msg.author.id}`].intensity ? process.gags[`${msg.author.id}`].intensity : 5
-            if (gaggarble.messagebegin) {
-                try {
-                    outtext = `${gaggarble.messagebegin(msg.content, intensity)}`
-                }
-                catch (err) { console.log(err) }
-            }
-            for (let i = 0; i < messageparts.length; i++) {
-                try {
-                    if (messageparts[i].garble) {
-                        outtext = `${outtext}${gaggarble.garbleText(messageparts[i].text, intensity)}`
+        let msgpartsbegin = [];
+        let msgparts = messageparts.slice(0); // deep clone the message parts array. 
+        let msgpartsend = [];
+        process.gags[msg.author.id].forEach((gag) => {
+            if (commandFiles.includes(`${gag.gagtype}.js`)) {
+                let gaggarble = require(path.join(commandsPath, `${gag.gagtype}.js`))
+                let intensity = gag.intensity ? gag.intensity : 5
+                if (gaggarble.messagebegin) { msgpartsbegin.push(gaggarble.messagebegin(msg.content, intensity)) }
+                for (let i = 0; i < msgparts.length; i++) {
+                    if (msgparts[i].garble) {
+                        let garbled = gaggarble.garbleText(msgparts[i].text, intensity);
+                        if (typeof garbled == "string") {
+                            msgparts[i].text = garbled;
+                        }
+                        else {
+                            msgparts[i] = garbled;
+                        }
                     }
-                    else {
-                        outtext = `${outtext}${messageparts[i].text}`
-                    }
                 }
-                catch (err) { console.log(err) }
+                if (gaggarble.messageend) { msgpartsend.push(gaggarble.messageend(msg.content, intensity)) }
             }
-            if (gaggarble.messageend) {
-                try {
-                    outtext = `${outtext}${gaggarble.messageend(msg.content, intensity)}`
-                }
-                catch (err) { console.log(err) }
-            }
-            
-        }
+        })
+        outtext = `${outtext}${msgpartsbegin.join("\n")}`;
+        outtext = `${outtext}${msgparts.map((m) => m.text).join("")}`;
+        outtext = `${outtext}${msgpartsend.join("\n")}`;
     }
     else {
         let messagetexts = messageparts.map(m => m.text);
@@ -431,22 +543,23 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
                 msg.delete().then(() => {
                     // If the user violates Doll Protocol, do STUFF
                     if(dollProtocol){
-                        // Gag the doll for being bad.
-                        assignGag(msg.author.id, "ball", 5, msg.author.id)
+                        // Punish the doll for being bad.
+                        let dollPunishment = punishDoll(msg.author.id, dollProtocol);
 
-                        // Send reply
-                        // msg.channel.send("USER has violated their Doll Protocol! Their Doll Visor installs a Ball Gag upon them.");
-
-                        // Build data tree for finding string.
-                        let data = {
-                            textarray: "texts_dollprotocol",
-                            textdata: {
-                                interactionuser: msg.author,
-                                targetuser: msg.author,
+                        // If the doll was actually punished
+                        if(dollPunishment.punish){
+                            // Build data tree for finding string.
+                            let data = {
+                                textarray: "texts_dollprotocol",
+                                textdata: {
+                                    interactionuser: msg.author,
+                                    targetuser: msg.author,
+                                }
                             }
+                            data[`level${dollPunishment.punishmentLevel}`] = true;
+                            //data.skipped = dollPunishment.skipped;
+                            messageSendChannel(getText(data), msg.channel.id)
                         }
-                        data.levelONE = true;
-                        messageSendChannel(getText(data), msg.channel.id)
                     }
                 })
             })
@@ -461,6 +574,8 @@ exports.gagtypesset = gagtypesset;
 
 exports.assignGag = assignGag;
 exports.getGag = getGag;
+exports.getGags = getGags;
+exports.getGagLast = getGagLast;
 exports.getGagBinder = getGagBinder;
 exports.getMittenBinder = getMittenBinder;
 exports.getGagIntensity = getGagIntensity;
