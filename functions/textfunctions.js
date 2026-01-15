@@ -2335,26 +2335,26 @@ const texts_eventfunctions = {
                     `The Doll Processing Facility's arms rip off the VAR_C1 that was on USER_TAG!`,
                     `The Doll Processing Facility's arms carefully remove the VAR_C1 that was on USER_TAG!`,
                     `The Doll Processing Facility's arms use scissors to cut off the VAR_C1 that USER_TAG is wearing!`,
-                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility's arms wipe away USER_TAG's VAR_C2!` }                
+                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility's arms wipe away USER_TAG's VAR_C1!` }                
                 ],
                 // Added before the restraint phase after the facility deemed it was ready to put restraints on the doll!
                 stage2: [
                     `The Doll Processing Facility realizes that there was also a VAR_C1 on USER_TAG. It removes the item with a mildly corrosive substance!`,
                     `The Doll Processing Facility's belt stops for a second, and a set of arms rip off the VAR_C1 on USER_TAG.`,
                     `The Doll Processing Facility appears to make an "oops" sound as it realizes USER_TAG is still wearing a VAR_C1. It removes the item posthaste!`,
-                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility realizes USER_TAG is still wearing VAR_C1. It removes it with haste!` }
+                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility realizes USER_TAG is still wearing VAR_C1. It cleans it off it with haste!` }
                 ],
                 // Added while the Doll is being restrained! 
                 stage3: [
                     `The Doll Processing Facility brings out another restraint, but drops it as it realizes USER_TAG is somehow wearing a VAR_C1. The item is promptly removed.`,
                     `The Doll Processing Facility's belt reverses in direction as it sees offending clothing on USER_TAG. The VAR_C1 is removed in agitation.`,
-                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility realizes USER_TAG has somehow gained VAR_C1. It promptly removes it!` }
+                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility realizes USER_TAG has somehow gained VAR_C1. It promptly removes it with a cloth!` }
                 ],
                 // Added at the final step after all restraints
                 stage4: [
                     `The Doll Processing Facility's belt stalls at the very end as it notices a VAR_C1 on USER_TAG. Dolls do not have a use for these items and so it is discarded.`,
                     `The Doll Processing Facility beeps loudly as it detects a foreign object, VAR_C1 on the new doll, USER_TAG. The item is incinerated immediately.`,
-                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility sounds an alert as it detects someone has applied VAR_C1 on the new doll, USER_TAG. The doll is promptly scrubbed clean.` }
+                    { only: (t) => { return t.c2.includes("Lipstick") || t.c2.includes("Eyeshadow") }, text: `The Doll Processing Facility sounds an alert as it detects someone has applied VAR_C1 on the new doll, USER_TAG. The doll is promptly scrubbed clean!` }
                 ]
             },
             applycatsuit: [
