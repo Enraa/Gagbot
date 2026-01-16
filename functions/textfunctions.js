@@ -30,15 +30,15 @@ const texts_chastity = {
                         `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`,
                         `USER_TAG wraps a VAR_C2 around USER_THEIR waist, turns the lock and then presents the key to TARGET_TAG!`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEMSELF into a VAR_C2, sealing it away until TARGET_TAG says otherwise!`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR waist before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR waist before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
                     ],
                     key_self: [
                         `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
                         `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEMSELF away... but USER_THEY still have the key.`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY wrapUSER_S a VAR_C2 around USER_THEIR waist, sealing USER_THEIR chastity away under lock and key.`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.` },
                     ]
                 },
                 nonamedchastity: {
@@ -46,15 +46,15 @@ const texts_chastity = {
                         `USER_TAG slips into a VAR_C2, slipping on a tiny lock, and then hands TARGET_TAG the key!`,
                         `USER_TAG wraps a VAR_C2 around USER_THEIR waist, turns the lock and then presents the key to TARGET_TAG!`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEMSELF into a VAR_C2, sealing it away until TARGET_TAG says otherwise!`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR waist before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR waist before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
                     ],
                     key_self: [
                         `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
                         `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEMSELF away... but USER_THEY still have the key.`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR waist, sealing USER_THEIR chastity away under lock and key.`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR waist before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.` },
                     ]
                 },
             }
@@ -87,15 +87,15 @@ const texts_chastity = {
                         `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`,
                         `USER_TAG wraps a VAR_C2 around USER_THEIR chest, turns the lock and then presents the key to TARGET_TAG!`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEIR breasts into a VAR_C2, sealing them away until TARGET_TAG says otherwise!`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR chest before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR chest before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR chest before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR chest before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
                     ],
                     key_self: [
                         `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
                         `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still have the key.`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR chest, sealing USER_THEIR chastity away under lock and key.`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.` },
                     ]
                 },
                 nonamedchastity: {
@@ -103,15 +103,15 @@ const texts_chastity = {
                         `USER_TAG slips a VAR_C2 on, also putting on a tiny lock, and then hands TARGET_TAG the key!`,
                         `USER_TAG wraps a VAR_C2 around USER_THEIR chest, turns the lock and then presents the key to TARGET_TAG!`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY lockUSER_S USER_THEIR breasts into a VAR_C2, sealing them away until TARGET_TAG says otherwise!`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR chest before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR chest before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `USER_TAG 'calmly' slips a VAR_C2 onto USER_THEIR chest before USER_THEY can think about it. USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR chest before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!` },
                     ],
                     key_self: [
                         `USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
                         `USER_TAG slips a VAR_C2 on and turns the key, locking USER_THEIR breasts away... but USER_THEY still have the key.`,
                         `USER_TAG whispers a sweet goodbye as USER_THEY wrap a VAR_C2 around USER_THEIR chest, sealing USER_THEIR chastity away under lock and key.`,
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10)}, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...`},
-                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20)}, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.`},
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 10) }, text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP still have the key, but at least it's something...` },
+                        { required: (t) => { return (getArousal(t.interactionuser.id) > 20) }, text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the the key.` },
                     ]
                 },
             }
@@ -211,7 +211,7 @@ const texts_collarequip = {
                     ],
                     allowed: [
                         `USER_TAG pulls a VAR_C3 out and grabs TARGET_TAG, forcing TARGET_THEIR arms and hands into the tight restraint! TARGET_THEY_CAP squirmTARGET_S in protest, but TARGET_THEY can't do anything about it!`,
-                        { only: (t) => { return (t.c3 == "Doll Processing Facility") }, text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!`}
+                        { only: (t) => { return (t.c3 == "Doll Processing Facility") }, text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!` }
                     ],
                     notallowed: [
                         `TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`
@@ -633,7 +633,7 @@ const texts_heavy = {
     ],
     noheavy: [
         `USER_TAG slips into a VAR_C2, rendering USER_THEIR arms and hands completely useless!`,
-        { only: (t) => { return (t.c2 == "Doll Processing Facility") }, text: `Unable to resist the temptation, USER_TAG throws USER_THEMSELF into a VAR_C2 to become a Doll!`}
+        { only: (t) => { return (t.c2 == "Doll Processing Facility") }, text: `Unable to resist the temptation, USER_TAG throws USER_THEMSELF into a VAR_C2 to become a Doll!` }
     ]
 }
 
@@ -2146,7 +2146,7 @@ const texts_wear = {
                 { only: (t) => { return t.c2.includes("Kissmark") }, text: `USER_TAG pulls out a makeup bag and carefully scribbles a VAR_C2 on USER_THEMSELF!` },
                 { only: (t) => { return t.c2.includes("Eyeshadow") }, text: `USER_TAG pulls out a makeup bag and applies VAR_C2 to USER_THEIR eyes!` },
                 { only: (t) => { return (t.c2.includes("lasses") || t.c2.includes("Librarian's Spectacles")) }, text: `USER_TAG unfolds a pair of VAR_C2 and puts them on USER_THEIR nose! USER_THEIR_CAP eyes peer through the glass!` },
-                { only: (t) => { return t.c2.includes("attoo") || t.c2.includes("Barcode") }, text: `USER_TAG uses a tattoo gun to apply a VAR_C2 to USER_THEMSELF!` },                
+                { only: (t) => { return t.c2.includes("attoo") || t.c2.includes("Barcode") }, text: `USER_TAG uses a tattoo gun to apply a VAR_C2 to USER_THEMSELF!` },
                 { only: (t) => { return t.c2.includes("Barcode") }, text: `USER_TAG allows the Doll Terminal to hold them in place while a mechanical arm applies a VAR_C2 to USER_THEM!` },
                 { only: (t) => { return t.c2.includes("Polish") }, text: `USER_TAG applies VAR_C2 to USER_THEIR nails! So pretty!` },
                 { only: (t) => { return (t.c2.includes("Heels") || t.c2.includes("Shoes") || t.c2.includes("Boots") || t.c2.includes("Pumps") || t.c2.includes("Anklets") || t.c2.includes("Greaves")) }, text: `USER_TAG slips a pair of VAR_C2 on USER_THEIR feet!` },
@@ -2375,60 +2375,136 @@ const texts_eventfunctions = {
             processingcomplete: [
                 `As USER_TAG reaches the end of the Doll Processing Facility, USER_THEY USER_ISARE finally released. USER_THEY_CAP USER_ISARE no longer human. USER_THEY_CAP USER_ISARE just a Doll. USER_THEY_CAP serveUSER_S the Dollmaker.`
             ]
+        },
+        costumer_mimic: {
+            removeclothing: [
+                // OMNOMNOMNOM
+                `The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_TAG is wearing!`,
+                `The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing it into its gaping maw and storing it away!`,
+                `The Costumer Mimic's tongue snakes out to lick at the VAR_C1 that USER_TAG is wearing, dissolving it away before swallowing the remains!`,
+            ],
+            donestripping: [
+                `Having finished consuming all of their current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`,
+                `Now that USER_TAG is stripped bare, the Costumer Mimic begins to dress USER_THEM in one of its preferred costumes.`,
+                `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`
+            ],
+            applyingOutfit: {
+                wearable: {
+                    add: [
+                        `The Costumer Mimic pulls out a VAR_C1 from its internal storage and begins to dress USER_TAG in it!`,
+                        `The Costumer Mimic produces a VAR_C1 from within itself and slips it onto USER_TAG!`,
+                        `The Costumer Mimic's tentacles fish out a VAR_C1 from its storage and begins to dress USER_TAG in it!`
+                    ],
+                },
+                mitten: {
+                    replace: [
+                        `The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`
+                    ],
+                    add: [
+                        `The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`
+                    ]
+                },
+                chastitybelt: {
+                    replace: [
+                        `The Costumer Mimic rips off the VAR_C1 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`
+                    ],
+                    add: [
+                        `The Costumer Mimic locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`
+                    ]
+                },
+                chastitybra: {
+                    replace: [
+                        `The Costumer Mimic picks the locking mechanism on USER_TAG's VAR_C1, dragging it into their storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`
+                    ],
+                    add: [
+                        `The Costumer Mimic wraps a VAR_C2 around USER_TAG's chest, locking away their breasts.`
+                    ]
+                },
+                collar: {
+                    replace: [
+                        `The Costumer Mimic forces USER_TAG to lean forward as it removes USER_THEIR VAR_C1, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`
+                    ],
+                    add: [
+                        `USER_TAG is forced to lean forward as the Costumer Mimic moves their hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`
+                    ]
+                },
+                headwear: {
+                    add: [
+                        `The Costumer Mimic produces a VAR_C1 from within itself and secures it onto USER_TAG's head.`
+                    ]
+                },
+                gag: {
+                    add: [
+                        `The Costumer Mimic pulls a VAR_C1 from its storage and secures it into USER_TAG's mouth.`
+                    ]
+                },
+                unknown: [
+                    `The Costumer Mimic tries to dress USER_TAG in a VAR_C1... but it seems to be missing from their storage. Perhaps it ran out of space?`
+                ]
+            },
+            spitout:
+            {
+                add: [
+                    `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume... but not before securing USER_THEM into a VAR_C1 first~.`
+                ],
+                none: [
+                    `The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`
+                ]
+            }
         }
     }
 }
 
 const textarrays = {
-    texts_chastity: texts_chastity,
-    texts_collar: texts_collar,
-    texts_collarequip: texts_collarequip,
-    texts_corset: texts_corset,
-    texts_dollprotocol: texts_dollprotocol,
-    texts_gag: texts_gag,
-    texts_headwear: texts_headwear,
-    texts_heavy: texts_heavy,
-    texts_key: texts_key,
-    texts_letgo: texts_letgo,
-    texts_mitten: texts_mitten,
-    texts_struggle: texts_struggle,
-    texts_unchastity: texts_unchastity,
-    texts_uncollar: texts_uncollar,
-    texts_uncorset: texts_uncorset,
-    texts_ungag: texts_ungag,
-    texts_unheadwear: texts_unheadwear,
-    texts_unheavy: texts_unheavy,
-    texts_unmitten: texts_unmitten,
-    texts_unvibe: texts_unvibe,
-    texts_unwear: texts_unwear,
-    texts_vibe: texts_vibe,
-    texts_wear: texts_wear,
-    texts_timelock: texts_timelock,
-    texts_eventfunctions: texts_eventfunctions
-}
+        texts_chastity: texts_chastity,
+        texts_collar: texts_collar,
+        texts_collarequip: texts_collarequip,
+        texts_corset: texts_corset,
+        texts_dollprotocol: texts_dollprotocol,
+        texts_gag: texts_gag,
+        texts_headwear: texts_headwear,
+        texts_heavy: texts_heavy,
+        texts_key: texts_key,
+        texts_letgo: texts_letgo,
+        texts_mitten: texts_mitten,
+        texts_struggle: texts_struggle,
+        texts_unchastity: texts_unchastity,
+        texts_uncollar: texts_uncollar,
+        texts_uncorset: texts_uncorset,
+        texts_ungag: texts_ungag,
+        texts_unheadwear: texts_unheadwear,
+        texts_unheavy: texts_unheavy,
+        texts_unmitten: texts_unmitten,
+        texts_unvibe: texts_unvibe,
+        texts_unwear: texts_unwear,
+        texts_vibe: texts_vibe,
+        texts_wear: texts_wear,
+        texts_timelock: texts_timelock,
+        texts_eventfunctions: texts_eventfunctions
+    }
 
 // Get generic text and spit out a pronoun respecting version YAY
 const getTextGeneric = (type, data_in) => {
-    let generics = {
-        "unbind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
-        "unbind_decline": "TARGET_TAG has declined your help with USER_THEIR VAR_C1.",
-        "unbind_accept": "TARGET_TAG has accepted your offer to help with USER_THEIR VAR_C1!",
-        "unbind_timeout": "The request to help TARGET_TAG timed out!",
-        "changebind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
-        "changebind_decline": "TARGET_TAG has declined allowing you to change USER_THEIR bindings.",
-        "changebind_accept": "TARGET_TAG has allowed you to change USER_THEIR bindings.",
-        "clone_accept": "TARGET_TAG has allowed you to make a clone of USER_THEIR VAR_C1 key, giving it to VAR_C2!",
-        "clone_accept_self": "Cloning your key...",
-        "clone_decline": "TARGET_TAG has forbidden you from making a clone of USER_THEIR VAR_C1 key for VAR_C2!",
-        "give_accept": "TARGET_TAG has allowed you to give USER_THEIR VAR_C1 key to VAR_C2!",
-        "give_accept_self": "Giving your key...",
-        "give_decline": "TARGET_TAG has forbidden you from giving USER_THEIR VAR_C1 key to VAR_C2!",
-        "revoke_accept": "You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1.",
-    }
+        let generics = {
+            "unbind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
+            "unbind_decline": "TARGET_TAG has declined your help with USER_THEIR VAR_C1.",
+            "unbind_accept": "TARGET_TAG has accepted your offer to help with USER_THEIR VAR_C1!",
+            "unbind_timeout": "The request to help TARGET_TAG timed out!",
+            "changebind": "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
+            "changebind_decline": "TARGET_TAG has declined allowing you to change USER_THEIR bindings.",
+            "changebind_accept": "TARGET_TAG has allowed you to change USER_THEIR bindings.",
+            "clone_accept": "TARGET_TAG has allowed you to make a clone of USER_THEIR VAR_C1 key, giving it to VAR_C2!",
+            "clone_accept_self": "Cloning your key...",
+            "clone_decline": "TARGET_TAG has forbidden you from making a clone of USER_THEIR VAR_C1 key for VAR_C2!",
+            "give_accept": "TARGET_TAG has allowed you to give USER_THEIR VAR_C1 key to VAR_C2!",
+            "give_accept_self": "Giving your key...",
+            "give_decline": "TARGET_TAG has forbidden you from giving USER_THEIR VAR_C1 key to VAR_C2!",
+            "revoke_accept": "You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1.",
+        }
 
-    let chosentext = generics[type];
-    return convertPronounsText(chosentext, data_in)
-}
+        let chosentext = generics[type];
+        return convertPronounsText(chosentext, data_in)
+    }
 
 
 /* ----------------------------------
@@ -2453,73 +2529,73 @@ to get the particular array of texts for that condition.
 THE PROPERTY ORDER IS IMPORTANT TO ENSURE THE TEXT RETRIEVAL WORKS AS INTENDED.
 -------------------------------------*/
 const getText = (data) => {
-    try {
-        let textarray = data.textarray;
-        let data_in = data.textdata;
-        let props = [];
-        for (k in data) {
-            if ((k != "textarray") && (k != "textdata")) {
-                props.push(k); // Should create the same order. 
+        try {
+            let textarray = data.textarray;
+            let data_in = data.textdata;
+            let props = [];
+            for (k in data) {
+                if ((k != "textarray") && (k != "textdata")) {
+                    props.push(k); // Should create the same order. 
+                }
             }
-        }
-        // At first I thought, a reducer might not be good performance. 
-        // Then I remembered, javascript passes *objects* and *arrays* by reference.
-        // This is gonna be so clever.
-        console.log(props)
-        let sentencearr = props.reduce((prev, curr) => {
-            return prev[curr];
-        }, textarrays[textarray]);
-        /* so what is this thing doing? 
-        It is iterating over each property and then returning the object at the named property.
-        This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
-        EXACTLY THE WAY THE TREE IS SET UP */
-        if (Array.isArray(sentencearr)) {
-            // Within the array, we want to handle the following cases:
-            // - Standard strings
-            // - Required strings via "required: (userID) => {}" -- When true, the phrase is included along with standard strings
-            // - Only strings via "only: (userID) => {}" -- When any are true, only use these phrases
-            //
-            // For example, { only: () => { return data_in.c1.includes("Lipstick") }, `USER_TAG wipes off USER_THEIR VAR_C1` }
-            // would allow only this phrase to be used when the chosen item is something Lipstick in the c1 slot. 
-            //
-            // If there are *any* onlyphrases, then chosenphrases will not be used. 
-            let chosenphrases = [];
-            let onlyphrases = [];
-            let only = false;
-            sentencearr.forEach((a) => {
-                if (typeof a == "string") {
-                    chosenphrases.push(a)
+            // At first I thought, a reducer might not be good performance. 
+            // Then I remembered, javascript passes *objects* and *arrays* by reference.
+            // This is gonna be so clever.
+            console.log(props)
+            let sentencearr = props.reduce((prev, curr) => {
+                return prev[curr];
+            }, textarrays[textarray]);
+            /* so what is this thing doing? 
+            It is iterating over each property and then returning the object at the named property.
+            This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
+            EXACTLY THE WAY THE TREE IS SET UP */
+            if (Array.isArray(sentencearr)) {
+                // Within the array, we want to handle the following cases:
+                // - Standard strings
+                // - Required strings via "required: (userID) => {}" -- When true, the phrase is included along with standard strings
+                // - Only strings via "only: (userID) => {}" -- When any are true, only use these phrases
+                //
+                // For example, { only: () => { return data_in.c1.includes("Lipstick") }, `USER_TAG wipes off USER_THEIR VAR_C1` }
+                // would allow only this phrase to be used when the chosen item is something Lipstick in the c1 slot. 
+                //
+                // If there are *any* onlyphrases, then chosenphrases will not be used. 
+                let chosenphrases = [];
+                let onlyphrases = [];
+                let only = false;
+                sentencearr.forEach((a) => {
+                    if (typeof a == "string") {
+                        chosenphrases.push(a)
+                    }
+                    else {
+                        if ((a.only != undefined) && a.only(data_in)) {
+                            onlyphrases.push(a.text);
+                            only = true;
+                        }
+                        else if ((a.required != undefined) && a.required(data_in)) {
+                            chosenphrases.push(a.text);
+                        }
+                    }
+                })
+                let outstring;
+                if (only) {
+                    outstring = onlyphrases[Math.floor(Math.random() * onlyphrases.length)];
                 }
                 else {
-                    if ((a.only != undefined) && a.only(data_in)) {
-                        onlyphrases.push(a.text);
-                        only = true;
-                    }
-                    else if ((a.required != undefined) && a.required(data_in)) {
-                        chosenphrases.push(a.text);
-                    }
+                    outstring = chosenphrases[Math.floor(Math.random() * chosenphrases.length)];
                 }
-            })
-            let outstring;
-            if (only) {
-                outstring = onlyphrases[Math.floor(Math.random() * onlyphrases.length)];
+                outstring = convertPronounsText(outstring, data_in);
+
+                return outstring;
             }
             else {
-                outstring = chosenphrases[Math.floor(Math.random() * chosenphrases.length)];
+                return ("There was an error generating this text. No error, but the destination was not an array of strings. Please tell Enraa that the tree followed this path: " + props.join(", "))
             }
-            outstring = convertPronounsText(outstring, data_in);
-
-            return outstring;
         }
-        else {
-            return ("There was an error generating this text. No error, but the destination was not an array of strings. Please tell Enraa that the tree followed this path: " + props.join(", "))
+        catch (err) {
+            console.log(err)
+            return "There was an error generating this text. See console error."
         }
     }
-    catch (err) {
-        console.log(err)
-        return "There was an error generating this text. See console error."
-    }
-}
 
 exports.getText = getText;
-exports.getTextGeneric = getTextGeneric;
+    exports.getTextGeneric = getTextGeneric;
