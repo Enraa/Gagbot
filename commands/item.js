@@ -93,12 +93,24 @@ module.exports = {
 					let chosenitemparts = chosenitem.split("+")
 					let replytextname;
 					if (chosenitemparts[1] == "head") {
-						addLockedHeadgear(interaction.user.id, chosenitemparts[0])
-						replytextname = getHeadwearName(undefined, chosenitemparts[0])
+						if (getHeadwearName(undefined, chosenitemparts[0])) {
+							addLockedHeadgear(interaction.user.id, chosenitemparts[0])
+							replytextname = getHeadwearName(undefined, chosenitemparts[0])
+						}
+						else {
+							interaction.reply({ content: `Item ${replytextname} is an invalid item! Try again.`, flags: MessageFlags.Ephemeral });
+							return;
+						}
 					}
 					else {
-						addLockedWearable(interaction.user.id, chosenitemparts[0])
-						replytextname = getWearableName(undefined, chosenitemparts[0])
+						if (getWearableName(undefined, chosenitemparts[0])) {
+							addLockedWearable(interaction.user.id, chosenitemparts[0])
+							replytextname = getWearableName(undefined, chosenitemparts[0])
+						}
+						else {
+							interaction.reply({ content: `Item ${replytextname} is an invalid item! Try again.`, flags: MessageFlags.Ephemeral });
+							return;
+						}
 					}
 					interaction.reply({ content: `Item ${replytextname} successfully protected!`, flags: MessageFlags.Ephemeral });
 				}
