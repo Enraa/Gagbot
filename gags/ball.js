@@ -9,7 +9,7 @@ const {ballGagCharMaps} = require('./ball/ballCharMap.js')
 
 const isAllCaps = (text) => {
     //(words[x].match(/[A-Z]/) && !words[x].match(/[a-z]/)) ? true : false;
-    return text == text.toLowerCase().toUpperCase()
+    return (text == text.toLowerCase().toUpperCase()) && /[A-Z]/g.test(text)
 }
 
 const totalAlphas = (text) => {
