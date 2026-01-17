@@ -8,6 +8,7 @@ const { getHeavy } = require("./heavyfunctions");
 const { config } = require("./configfunctions");
 const { findChastityBraKey } = require("./vibefunctions");
 const { messageSendChannel } = require("./messagefunctions.js");
+const { PermissionsBitField } = require("discord.js");
 
 // return true if the user fumbles
 function rollKeyFumble(keyholder, locked) {
@@ -85,8 +86,20 @@ async function handleKeyFinding(message) {
   if (!restraint) return;
 
   if (Math.random() < calcFindSuccessChance(message.author.id)) {
-    const findFunction = getFindFunction(restraint.restraint);
-    if (findFunction(idx, message.author.id)) sendFindMessage(message, restraint.wearer, restraint.restraint);
+    // We found the key! Now lets see if the person could find it anyway
+    let wearerobjectinguild;
+    try {
+      wearerobjectinguild = await message.guild.members.fetch(restraint.wearer)
+      // This person should be in the guild. 
+      const findFunction = getFindFunction(restraint.restraint);
+      if (findFunction(idx, message.author.id) && wearerobjectinguild && message.channel.permissionsFor(wearerobjectinguild).has(PermissionsBitField.Flags.ViewChannel)) {
+        sendFindMessage(message, restraint.wearer, restraint.restraint);
+      }
+    }
+    catch (err) {
+      // member doesn't exist in this channel, don't even bother anymore
+      console.log("Failed to obtain user object for " + restraint.wearer)
+    }
   } else {
     sendFindFumbleMessage(message, restraint.wearer, restraint.restraint);
   }
