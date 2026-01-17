@@ -132,6 +132,8 @@ const convertPronounsText = (text, data) => {
         subjectIs: getPronouns(interactionuser.id, "subjectIs"),
         subjectWill: getPronouns(interactionuser.id, "subjectWill"),
     }
+
+    let isDoll = false;
     if ((getOption(interactionuser.id, "dollforcedit") == "enabled") && (getHeadwear(interactionuser.id).find((headwear) => DOLLVISORS.includes(headwear)))) {
         user.subject = "it",
         user.object = "it",
@@ -140,6 +142,7 @@ const convertPronounsText = (text, data) => {
         user.reflexive = "itself",
         user.subjectIs = "it's",
         user.subjectWill = "it'll"
+        isDoll = true;
     }
 
     let target = {
@@ -151,6 +154,8 @@ const convertPronounsText = (text, data) => {
         subjectIs: getPronouns(targetuser.id, "subjectIs"),
         subjectWill: getPronouns(targetuser.id, "subjectWill"),
     }
+
+    let targetDoll = false;
     if ((getOption(targetuser.id, "dollforcedit") == "enabled") && (getHeadwear(targetuser.id).find((headwear) => DOLLVISORS.includes(headwear)))) {
         target.subject = "it",
         target.object = "it",
@@ -159,6 +164,7 @@ const convertPronounsText = (text, data) => {
         target.reflexive = "itself",
         target.subjectIs = "it's",
         target.subjectWill = "it'll"
+        targetDoll = true;
     }
 
     // Replace interaction user first
@@ -186,7 +192,7 @@ const convertPronounsText = (text, data) => {
     outtext = outtext.replaceAll("USER_PRAISEOBJECT", () => {
         if ((user.subject == "she")) { return "girl" }
         if ((user.subject == "he")) { return "boy" }
-        return "toy"
+        return isDoll ? "doll" : "toy"
     });
 
     // Reflexive - Himself, Herself, Themselves, etc.
@@ -243,7 +249,7 @@ const convertPronounsText = (text, data) => {
     outtext = outtext.replaceAll("TARGET_PRAISEOBJECT", () => {
         if ((target.subject == "she")) { return "girl" }
         if ((target.subject == "he")) { return "boy" }
-        return "toy"
+        return targetDoll ? "doll" : "toy"
     });
 
     // Reflexive - Himself, Herself, Themselves, etc.

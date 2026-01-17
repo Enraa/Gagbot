@@ -4,12 +4,9 @@ const { splitMessage } = require(`./../functions/messagefunctions.js`);
 //const { assignGag, assignMitten } = require('./../functions/gagfunctions.js') // These do not appear to be in use and are creating a circular dependency. 
 const { assignHeavy }  = require(`./../functions/heavyfunctions.js`);
 
-//const DOLLREGEX = /(((?<!\*)\*{1})(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
-// Abomination of a regex for corset compatibility.
-//const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
-
-// Uses EOT characters to prevent separating arousal moans when visored.
-const DOLLREGEX = /(((?<![\*])(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)(?!)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
+// Regex to capture the user's intended text segments post-corset and post-vibrator.
+// NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.
+const DOLLREGEX = /(\s*\-#\s+)?(((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*.*\*|\*{2})+\*)(?!)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 
 const DOLLPROTOCOL = [
     // Regex uses an ENQ character to not rematch matches.
@@ -184,7 +181,8 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/```(js|javascript|ansi)?\s*/g,  "")
             }
         }
-        dollMessageParts = dollMessageParts.filter((part) => {return part.text != ""})
+        // Remove all parts that contain nothing but whitespace.
+        dollMessageParts = dollMessageParts.filter((part) => {return part.text != ""})//{return /\s*(-#\s*[^\s])|-(?!#)|[^-#\s]/g.test(part.text)})//
 
         // Find the last message block that contains garbled text
         let lastDollifiedMessage = undefined
@@ -197,9 +195,10 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         // Put every "garble" messagePart in ANSI.
         for(let i = 0; i < dollMessageParts.length; i++){
             if(dollMessageParts[i].garble){
+                //console.log(dollMessageParts[i])
                 // Uncorset
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/ *-# */g,"")
-                console.log(dollMessageParts[i].text)
+                //console.log(dollMessageParts[i].text)
                 let replacebolds = Array.from(dollMessageParts[i].text.matchAll(/((\*\*)|(\_\_))[^(\*|\_)]+((\*\*)|(\_\_))/g)).map((a) => a[0])
                 //console.log(replacebolds)
                 replacebolds.forEach((b) => {
@@ -239,7 +238,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     
                     // WARN if below punishment threshold. ERROR if exceeded.
                     // CRITICAL if new violations >= punishmentThresh
-                    let violationTier = (totalViolations >= getOption(msg.author.id,"dollpunishthresh")) ? ((dollProtocolViolations >= getOption(msg.author.id,"dollpunishthresh")) ? "CRITICAL" : "ERROR") : "WARN" 
+                    let violationTier = (totalViolations >= getOption(msg.author.id,"dollpunishthresh")) ? ((dollProtocolViolations >= Math.max(getOption(msg.author.id,"dollpunishthresh"),2)) ? "CRITICAL" : "ERROR") : "WARN" 
                     let violationColor = (violationTier == "CRITICAL") ? "31m" : ((violationTier == "ERROR") ? "31m" : "33m")
                     let violationcount = (getOption(msg.author.id,"dollforcedprotocol") == "warning") ? `` : ` (${totalViolations}/${getOption(msg.author.id,"dollpunishthresh")})` // Note, we do not need to check for "No" because the text won't show at all in that case.
                     vioMessage = PROTOCOLVIOLATIONS[dollProtocolVioType][Math.floor(Math.random() * PROTOCOLVIOLATIONS[dollProtocolVioType].length)]
@@ -250,6 +249,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     if(goodDollReturn == "violation")       {dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.author.id].violations}/${getOption(msg.author.id,"dollpunishthresh")}). It is a Good Doll.`}
                     else if(goodDollReturn == "punishlevel"){dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${process.dolls[msg.author.id].punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`}
                 }
+                // Finish the codeblock
                 dollMessageParts[i].text += `\`\`\``
             }
         }
@@ -259,6 +259,15 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         if (partstolinkto) {
             outtext = `${outtext}${partstolinkto.join("\n")}`
         }
+
+        // Remove the escape from escaped symbols.
+        // * Must NOT be an escaped backslash (negative lookbehind), and must be escaping a character in the set.
+        // * Currently just * and ~ suppported.  Add more later!
+        outtext = outtext.replaceAll(/(?<!\\)\\(?=[*~])/g,"")
+
+        // Fix -# attached to the end of a codeblock
+        // This results in an extra line break, unfortunately.
+        outtext = outtext.replaceAll(/```-#/g,"```\n-#")
 
         // Merge any code blocks with nothing but whitespace in between.
         outtext = outtext.replaceAll(/```\s+```ansi/g,"")
