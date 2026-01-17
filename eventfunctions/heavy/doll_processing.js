@@ -9,7 +9,7 @@ const { assignChastityBra } = require("../../functions/vibefunctions.js");
 const { getChastityBraName } = require("../../functions/vibefunctions.js");
 const { getChastityName, assignChastity } = require("../../functions/vibefunctions.js");
 const { getChastity } = require("../../functions/vibefunctions.js");
-const { getWearable, getLockedWearable, deleteWearable, getWearableName, assignWearable } = require("../../functions/wearablefunctions.js");
+const { getWearable, getLockedWearable, deleteWearable, getWearableName, assignWearable, wearablecolors } = require("../../functions/wearablefunctions.js");
 
 // Doll Processing Facility will slowly strip the wearer of all of their clothes!
 // Then after they are naked, it will announce once that it is applying restraints
@@ -19,7 +19,16 @@ let functiontick = async (userID) => {
     if (process.userevents == undefined) { process.userevents = {} }
     if (process.userevents[userID] == undefined) { process.userevents[userID] = {} }
     if (process.userevents[userID].dollprocessing == undefined) { process.userevents[userID].dollprocessing = { stage: 0 } }
-    let currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f)/* && (f !== "catsuit_latex")*/) );
+    let currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f)) ); // These are the worn clothes
+    // Figure out the color of the wearer's current clothing. If none, choose black because black is sexy.
+    wearablecolors.forEach((color) => {
+        if ((process.userevents[userID].dollprocessing.color == undefined) && getWearable(userID).some((clothing) => (clothing.search(color.toLowerCase()) > -1))) {
+            process.userevents[userID].dollprocessing.color = color.toLowerCase();
+        }
+    })
+    if (process.userevents[userID].dollprocessing.color == undefined) { process.userevents[userID].dollprocessing.color = "black" }
+    let droneclothes = [`catsuit_latex_${process.userevents[userID].dollprocessing.color}`, "cyberdoll_harness", "cuffs_cyberdoll", "doll_heels", "cyberdoll_barcode"]
+    currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))).filter((f) => (!droneclothes.includes(f))); // These are the worn clothes, minus drone clothing
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
     let targetobject = await process.client.users.fetch(getHeavy(userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
@@ -44,41 +53,49 @@ let functiontick = async (userID) => {
     //if ((currclothes.length == 1) && (currclothes[0] == "catsuit_latex")) { catsuited = true }
     data.heavy = true;
     data.doll_processing = true;
-    if (!catsuited && (currclothes.length > 0)) {
-        /*if (DOLLVISORS.find(currclothes[0])) {
-
+    if (currclothes.length > 0) {
+        data.textdata.c1 = getWearableName(undefined, currclothes[0]), // wearable name
+        data.removeclothing = true;
+        deleteWearable(userID, currclothes[0]);
+        // Taking off the clothes at the beginning!
+        if (process.userevents[userID].dollprocessing.stage == 0) {
+            data.stage1 = true;
         }
-        else {*/
-            data.textdata.c1 = getWearableName(undefined, currclothes[0]), // wearable name
-            data.removeclothing = true;
-            deleteWearable(userID, currclothes[0]);
-            // Taking off the clothes at the beginning!
-            if (process.userevents[userID].dollprocessing.stage == 0) {
-                data.stage1 = true;
-            }
-            // Singular step before applying restraints
-            else if (process.userevents[userID].dollprocessing.stage == 1) {
-                data.stage2 = true;
-            }
-            // Applying restraints
-            else if (process.userevents[userID].dollprocessing.stage == 2) {
-                data.stage3 = true;
-            }
-            // It is done - wow, such a non-compliant doll! 
-            else {
-                data.stage4 = true;
-            }
-            // Send a message saying it stripped something off the wearer <3
-            messageSendChannel(getText(data), process.recentmessages[userID])
-        //}
+        // Singular step before applying restraints
+        else if (process.userevents[userID].dollprocessing.stage == 1) {
+            data.stage2 = true;
+        }
+        // Applying restraints
+        else if (process.userevents[userID].dollprocessing.stage == 2) {
+            data.stage3 = true;
+        }
+        // It is done - wow, such a non-compliant doll! 
+        else {
+            data.stage4 = true;
+        }
+        // Send a message saying it stripped something off the wearer <3
+        messageSendChannel(getText(data), process.recentmessages[userID])
     }
     else {
-        /*if (currclothes.length == 0) {
-            data.applycatsuit = true
-            assignWearable(userID, "catsuit_latex");
-            messageSendChannel(getText(data), process.recentmessages[userID])
-            return;
-        }*/
+        let newclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f)) ) // Clothing, check for drone clothes
+        let equipped = false;
+        droneclothes.forEach((d) => {
+            if (!newclothes.includes(d) && !equipped) {
+                data.addclothing = true;
+                if (d.includes("catsuit")) { 
+                    data.catsuit = true 
+                }
+                else {
+                    data[d] = true;
+                } 
+                data.textdata.c1 = getWearableName(undefined, d), // wearable name
+                assignWearable(userID, d);
+                messageSendChannel(getText(data), process.recentmessages[userID])
+                equipped = true;
+                return;
+            } 
+        })
+        if (equipped) { return }
         // Done applying clothes, advance to next stage. 
         if (currclothes.length == 0) {
             if (process.userevents[userID].dollprocessing.stage == 0) {

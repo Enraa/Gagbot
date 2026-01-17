@@ -84,6 +84,7 @@ let wearabletypes = [
     { name: "Latex Ankle Cuffs", value: "cuffsankle_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Bondage Thigh Cuffs", value: "cuffsthigh_bondage", colorable: true, uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
     { name: "Latex Thigh Cuffs", value: "cuffsthigh_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
+    { name: "Cyber Doll Cuffs", value: "cuffs_cyberdoll", colorable: true },
     { name: "Latex Legbinder", value: "legbinder_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
     { name: "Leather Legbinder", value: "legbinder_leather", colorable: true },
     { name: "Latex Hobble Skirt", value: "hobble_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
@@ -436,6 +437,7 @@ const getWearableName = (userID, wearablename) => {
 
 exports.wearabletypes = wearabletypes
 exports.loadWearables = loadWearables;
+exports.wearablecolors = colors;
 
 exports.assignWearable = assignWearable
 exports.getWearable = getWearable

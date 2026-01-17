@@ -31,6 +31,10 @@ module.exports = {
 				interaction.update(await generateConfigModal(interaction, interaction.values[0].split("_")[1]));
 			}
 			else if (optionparts[1] == "pageopt") {
+				if (optionparts[2] == "Extreme") {
+					optionparts[3] = optionparts.slice(3).join("_")
+					console.log(optionparts);
+				}
 				// Frankly I hate arrays for this but lets break it down.
 				// We retrieve all of the choices for the given configuration option, mapping their values.
 				// We then find the current value and then increment it, resetting to 0 when out of range.

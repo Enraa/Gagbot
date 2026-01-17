@@ -8,10 +8,11 @@ const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { collartypes, getCollarKeyholder } = require('./collarfunctions.js');
 const { getOption } = require('./../functions/configfunctions.js')
 const { getChastityKeyholder } = require('./../functions/vibefunctions.js')
-const { getHeavyBinder } = require('./../functions/heavyfunctions.js')
+const { getHeavyBinder, convertheavy } = require('./../functions/heavyfunctions.js')
 const { getGagBinder, getMittenBinder } = require('./../functions/gagfunctions.js')
 const { getCorsetBinder } = require('./../functions/corsetfunctions.js')
-const { getHeadwearBinder } = require('./../functions/headwearfunctions.js')
+const { getHeadwearBinder } = require('./../functions/headwearfunctions.js');
+const { configoptions } = require('./configfunctions.js');
 
 // Generates a consent button which the user will have to agree to. 
 const consentMessage = (interaction, user) => {
@@ -766,6 +767,83 @@ async function handleBondageRemoval(user, target, type, change = false) {
     })*/
 }
 
+async function handleExtremeRestraint(user, target, type, restraint) {
+    return new Promise(async (res,rej) => {
+        let hasOption = getOption(target.id, `extreme-${type}-${restraint}`);
+        if ((!hasOption) || (hasOption == "Enabled") || ((hasOption == "PromptOthers") && (user.id == target.id))) { 
+            res(true)
+            return;
+        } // Either it's Enabled, set to Prompt Others if on self, or it doesn't exist. Go away. 
+
+        if ((hasOption == "Disabled")) {
+            rej("Disabled")
+            return;
+        } // NOPE
+
+        let restraintfullname = ``;
+        switch(type) {
+            case "heavy":
+                restraintfullname = convertheavy(restraint)
+                break;
+            case "gag":
+                restraintfullname = process.gagtypes.find((f) => f.value == restraint)?.choicename
+                break;
+            default:
+                console.log(`Could not find a restraint by that type.`)
+                rej("Error")
+                break;
+        }
+
+        // We need to ASK
+        let extrahelptext = configoptions["Extreme"][`extreme-${type}-${restraint}`]?.prompttext ?? "Something went wrong retrieving this text."
+        let prompttext = `## ${user} would like to place a ${type} restraint on you: **${restraintfullname}**\n***This is considered an __extreme__ restraint and comes with the following warning label:***\n\n${extrahelptext}\n\nDo you wish to allow this action?`
+        if (user.id == target.id) {
+            prompttext = `## You are attempting to wear the following restraint: **${restraintfullname}**\n***This is considered an __extreme__ restraint and comes with the following warning label:***\n\n${extrahelptext}\n\nDo you wish to allow this action?`
+        }
+        let buttons = [
+            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+        ]
+        let dmchannel = await target.createDM();
+        await dmchannel.send({
+            content: `${prompttext}`,
+            components: [new ActionRowBuilder().addComponents(...buttons)]
+        }).then((mess) => {
+            // Create a collector for up to 5 minutes
+            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
+
+            collector.on('collect', async (i) => {
+                console.log(i)
+                if (i.customId == "acceptButton") {
+                    await mess.delete().then(() => {
+                        i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`)
+                    })
+                    res(true);
+                }
+                else {
+                    await mess.delete().then(() => {
+                        i.reply(`Rejected - ${restraintfullname} will NOT be equipped on you.`)
+                    })
+                    rej(true);
+                }
+            })
+
+            collector.on('end', async (collected) => {
+                // timed out
+                if (collected.length == 0) {
+                    await mess.delete().then(() => {
+                        i.reply(`Timed out - ${restraintfullname} will NOT be equipped on you.`)
+                    })
+                    rej(true);
+                }
+            })
+        }).catch((err) => {
+            console.log(`Error sending message for Extreme Restraint ${type} to ${target}.`)
+            rej("NoDM")
+        })
+    })
+}
+
 exports.consentMessage = consentMessage
 exports.getConsent = getConsent
 exports.handleConsent = handleConsent
@@ -777,5 +855,6 @@ exports.timelockBuildConfirm = timelockBuildConfirm;
 
 exports.handleBondageRemoval = handleBondageRemoval;
 exports.checkBondageRemoval = checkBondageRemoval;
+exports.handleExtremeRestraint = handleExtremeRestraint;
 
 exports.assignMemeImages = assignMemeImages

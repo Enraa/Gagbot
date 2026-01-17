@@ -4,7 +4,7 @@ const { getCollar, getCollarPerm, canAccessCollar } = require('./../functions/co
 const { getChastity, assignChastity, chastitytypesoptions, getChastityName, getChastityBraName, chastitybratypesoptions } = require('./../functions/vibefunctions.js')
 const { getMittenName, assignMitten, getMitten, mittentypes } = require('./../functions/gagfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
-const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getConsent, handleConsent, handleExtremeRestraint } = require('./../functions/interactivefunctions.js')
 const { getText } = require("./../functions/textfunctions.js");
 const { getChastityBra } = require('../functions/vibefunctions.js');
 const { assignChastityBra } = require('../functions/vibefunctions.js');
@@ -272,8 +272,26 @@ module.exports = {
                             }
                             else {
                                 data.allowed = true
-                                interaction.reply(getText(data))
-                                assignHeavy(collareduser.id, bondagetype)
+                                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                                await handleExtremeRestraint(interaction.user, collareduser, "heavy", bondagetype)
+                                    .then(async (success) => {
+                                        await interaction.followUp({ content: `Equipping ${convertheavy(bondagetype)} onto ${collareduser}!`, withResponse: true})
+                                        await interaction.followUp(getText(data))
+                                        assignHeavy(collareduser.id, bondagetype, interaction.user.id)
+                                    },
+                                    async (reject) => {
+                                        let nomessage = `${collareduser} rejected the ${convertheavy(bondagetype)}.`
+                                        if (reject == "Disabled") {
+                                            nomessage = `${convertheavy(bondagetype)} is currently disabled in ${collareduser}'s Extreme options.`
+                                        }
+                                        if (reject == "Error") {
+                                            nomessage = `Something went wrong - Submit a bug report!`
+                                        }
+                                        if (reject == "NoDM") {
+                                            nomessage = `Something went wrong sending a DM to ${collareduser}, or ${collareduser} has DMs from this server disabled. Cannot obtain consent for this restraint.`
+                                        }
+                                        await interaction.followUp(nomessage)
+                                    })
                             }
                         }
                         else {

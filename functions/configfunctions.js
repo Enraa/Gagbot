@@ -456,6 +456,46 @@ const configoptions = {
             disabled: (userID) => { return false }
         }
     },
+    "Extreme": {
+        "extreme-heavy-doll_processing": {
+            name: "Heavy - Doll Processing Facility",
+            desc: "Creates Dolls by applying Cyber Doll restraints and other things",
+            prompttext: `Doll Processing involves removing all clothing from the wearer. **Everything that isn't locked will be designated to be removed, with a handful of Doll specific exceptions.**\n\nAdditionally, the Facility will apply various restraints, including a chastity belt, chastity bra, collar and a doll visor. Where possible, this will be keyed to the person who put you in the facility, or yourself.`,
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Doll Processing is disabled*",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Prompt",
+                    helptext: "You will be prompted when this is put on you",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Prompt",
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "Prompt (Others)",
+                    helptext: "You will be prompted when others put this on you",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "PromptOthers",
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "Enabled",
+                    helptext: "⚠️ You will automatically accept this restraint",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                }
+            ],
+            menutype: "choice",
+            default: "Prompt",
+            disabled: () => { return false }
+        }
+    },
     "Server": {
         "server-allowgags": {
             name: "Allow Gags",
@@ -771,6 +811,19 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     )
                 pagecomponents.push(buttonsection)
             }
+            /*else if (configoptions[menuset][k].menutype == "choice_extreme") {
+                let buttonsection = new SectionBuilder()
+                    .addTextDisplayComponents(
+                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.helptext}`)
+                    )
+                    .setButtonAccessory((button) =>
+                        button.setCustomId(`config_pageopt_${menuset}_${k}`)
+                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name ?? "Undefined")
+                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style ?? ButtonStyle.Danger)
+                            .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
+                    )
+                pagecomponents.push(buttonsection)
+            }*/
             else if (configoptions[menuset][k].menutype == "choice_textentry") {
                 let helpertext = `${configoptions[menuset][k].choices[0].helptext}${getOption(interaction.user.id,k)}`
                 if (getOption(interaction.user.id,k) == undefined) {
