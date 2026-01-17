@@ -107,6 +107,8 @@ loadHeadwearTypes();
 loadWearables();
 assignMemeImages();
 
+console.log(process.gagtypes.filter((f) => f.value == "ball")[0].name)
+
 // Grab all the command files from the commands directory
 const commands = new Map();
 const modalHandlers = new Map();

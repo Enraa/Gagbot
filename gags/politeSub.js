@@ -4,7 +4,7 @@ const garbleText = (text, intensity) => {
         "miss",
         "master",
         "sir",
-        "ma'am",
+        "ma\'am",
         "maam",
         "lady",
         "lord",
@@ -19,7 +19,7 @@ const garbleText = (text, intensity) => {
         "mxtress",
         "overseer",
         "headmaid",
-        "head maid",
+        "head\ maid",
         "mix",
         "duke",
         "dame",
@@ -42,12 +42,13 @@ const garbleText = (text, intensity) => {
     let garblemode = false;
     let textout = silenttitles[Math.floor(Math.random() * silenttitles.length)]
 
-    honorifictitles.forEach((h) => {
-        if ((text.toLowerCase().search(h)) > -1) {
-            textout = text;
-            garblemode = true;
-        }
-    })
+    let honorificsmap = honorifictitles.join('|');
+    let regexpattern = new RegExp(`\\b(${honorificsmap})\\b`, "i")
+
+    if (regexpattern.test(text)) {
+        textout = text;
+        garblemode = true;
+    }
 
     return { text: textout, garble: garblemode };
 }

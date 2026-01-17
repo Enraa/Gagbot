@@ -4,7 +4,7 @@ const path = require('path');
 const { getGag, assignGag, getMitten, getGagLast } = require('./../functions/gagfunctions.js')
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
-const { getConsent, handleConsent } = require('./../functions/interactivefunctions.js')
+const { getConsent, handleConsent, handleExtremeRestraint } = require('./../functions/interactivefunctions.js')
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require('../functions/interactivefunctions.js');
 
@@ -191,15 +191,51 @@ module.exports = {
 						else {
 							// We are NOT gagged with this kind. 
 							data.newgag = true
-							interaction.reply(getText(data))
-							assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+							await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+							await handleExtremeRestraint(interaction.user, gaggeduser, "gag", gagtype)
+								.then(async (success) => {
+									await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true})
+									await interaction.followUp(getText(data))
+									assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+								},
+								async (reject) => {
+									let nomessage = `You rejected the ${gagname}.`
+									if (reject == "Disabled") {
+										nomessage = `${gagname} is currently disabled in your Extreme options - **/config**`
+									}
+									if (reject == "Error") {
+										nomessage = `Something went wrong - Submit a bug report!`
+									}
+									if (reject == "NoDM") {
+										nomessage = `Something went wrong sending a DM to you, or you have DMs from this server disabled. Cannot obtain consent for this restraint.`
+									}
+									await interaction.followUp(nomessage)
+								})
 						}
 					}
 					else {
 						// Not already gagged, lets put one on
 						data.nogag = true
-						interaction.reply(getText(data))
-						assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+						await handleExtremeRestraint(interaction.user, gaggeduser, "gag", gagtype)
+							.then(async (success) => {
+								await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true})
+								await interaction.followUp(getText(data))
+								assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+							},
+							async (reject) => {
+								let nomessage = `You rejected the ${gagname}.`
+								if (reject == "Disabled") {
+									nomessage = `${gagname} is currently disabled in your Extreme options - **/config**`
+								}
+								if (reject == "Error") {
+									nomessage = `Something went wrong - Submit a bug report!`
+								}
+								if (reject == "NoDM") {
+									nomessage = `Something went wrong sending a DM to you, or you have DMs from this server disabled. Cannot obtain consent for this restraint.`
+								}
+								await interaction.followUp(nomessage)
+							})
 					}
 				}
 				else {
@@ -238,8 +274,26 @@ module.exports = {
 							// Now lets make sure the wearer wants that.
 							if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
 								// Allowed immediately, lets go
-								interaction.reply(getText(data))
-								assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+								await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+								await handleExtremeRestraint(interaction.user, gaggeduser, "gag", gagtype)
+									.then(async (success) => {
+										await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true})
+										await interaction.followUp(getText(data))
+										assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+									},
+									async (reject) => {
+										let nomessage = `${gaggeduser} rejected the ${gagname}.`
+										if (reject == "Disabled") {
+											nomessage = `${gagname} is currently disabled in ${gaggeduser}'s Extreme options.`
+										}
+										if (reject == "Error") {
+											nomessage = `Something went wrong - Submit a bug report!`
+										}
+										if (reject == "NoDM") {
+											nomessage = `Something went wrong sending a DM to ${gaggeduser}, or ${gaggeduser} has DMs from this server disabled. Cannot obtain consent for this restraint.`
+										}
+										await interaction.followUp(nomessage)
+									})
 							}
 							else {
 								// We need to ask first. 
@@ -248,8 +302,25 @@ module.exports = {
 								interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral })
 								let canRemove = await handleBondageRemoval(interaction.user, gaggeduser, "gag", true).then(async (res) => {
 									await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric))
-									await interaction.followUp(getText(data))
-									assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+									await handleExtremeRestraint(interaction.user, gaggeduser, "gag", gagtype)
+										.then(async (success) => {
+											await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true})
+											await interaction.followUp(getText(data))
+											assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+										},
+										async (reject) => {
+											let nomessage = `${gaggeduser} rejected the ${gagname}.`
+											if (reject == "Disabled") {
+												nomessage = `${gagname} is currently disabled in ${gaggeduser}'s Extreme options.`
+											}
+											if (reject == "Error") {
+												nomessage = `Something went wrong - Submit a bug report!`
+											}
+											if (reject == "NoDM") {
+												nomessage = `Something went wrong sending a DM to ${gaggeduser}, or ${gaggeduser} has DMs from this server disabled. Cannot obtain consent for this restraint.`
+											}
+											await interaction.followUp(nomessage)
+										})
 								}, async (rej) => {
 									await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric))
 								})
@@ -261,8 +332,26 @@ module.exports = {
 						// Respects tone currently!
 						data.nogag = true
 						data[tone] = true
-						interaction.reply(getText(data))
-						assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+						await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+						await handleExtremeRestraint(interaction.user, gaggeduser, "gag", gagtype)
+							.then(async (success) => {
+								await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true})
+								await interaction.followUp(getText(data))
+								assignGag(gaggeduser.id, gagtype, gagintensity, interaction.user.id)
+							},
+							async (reject) => {
+								let nomessage = `${gaggeduser} rejected the ${gagname}.`
+								if (reject == "Disabled") {
+									nomessage = `${gagname} is currently disabled in ${gaggeduser}'s Extreme options.`
+								}
+								if (reject == "Error") {
+									nomessage = `Something went wrong - Submit a bug report!`
+								}
+								if (reject == "NoDM") {
+									nomessage = `Something went wrong sending a DM to ${gaggeduser}, or ${gaggeduser} has DMs from this server disabled. Cannot obtain consent for this restraint.`
+								}
+								await interaction.followUp(nomessage)
+							})
 					}
 				}
 			}

@@ -459,12 +459,88 @@ const configoptions = {
     "Extreme": {
         "extreme-heavy-doll_processing": {
             name: "Heavy - Doll Processing Facility",
-            desc: "Creates Dolls by applying Cyber Doll restraints and other things",
+            desc: "Creates Dolls by applying Cyber Doll restraints and appropriate gear",
             prompttext: `Doll Processing involves removing all clothing from the wearer. **Everything that isn't locked will be designated to be removed, with a handful of Doll specific exceptions.**\n\nAdditionally, the Facility will apply various restraints, including a chastity belt, chastity bra, collar and a doll visor. Where possible, this will be keyed to the person who put you in the facility, or yourself.`,
             choices: [
                 {
                     name: "Disabled",
                     helptext: "*Doll Processing is disabled*",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Prompt",
+                    helptext: "You will be prompted when this is put on you",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Prompt",
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "Prompt (Others)",
+                    helptext: "You will be prompted when others put this on you",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "PromptOthers",
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "Enabled",
+                    helptext: "⚠️ You will automatically accept this restraint",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                }
+            ],
+            menutype: "choice",
+            default: "Prompt",
+            disabled: () => { return false }
+        },
+        "extreme-gag-politeSub": {
+            name: "Gag - Polite Sub",
+            desc: "Enforces the use of Honorifics to speak",
+            prompttext: `Polite Sub Gags will force you to address people with honorifics. Examples of this include "Miss," "Sir", "Lady", "Administrator" and so on. Failing to put an honorific in your message will result in the entire message being discarded for a submissive emote instead.`,
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Polite Sub Gag is disabled*",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "Prompt",
+                    helptext: "You will be prompted when this is put on you",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Prompt",
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "Prompt (Others)",
+                    helptext: "You will be prompted when others put this on you",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "PromptOthers",
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "Enabled",
+                    helptext: "⚠️ You will automatically accept this restraint",
+                    select_function: (interaction, serverID) => { return false },
+                    value: "Enabled",
+                    style: ButtonStyle.Secondary
+                }
+            ],
+            menutype: "choice",
+            default: "Prompt",
+            disabled: () => { return false }
+        },
+        "extreme-gag-goodSub": {
+            name: "Gag - Good Sub",
+            desc: "Fully prevents communication, forced deferent speech",
+            prompttext: `Good Sub gags will fully prevent you from saying anything meaningful. All speech is forced into phrases that demonstrate submissiveness towards owners.`,
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Good Sub Gag is disabled*",
                     select_function: (interaction, serverID) => { return false },
                     value: "Disabled",
                     style: ButtonStyle.Danger
@@ -1103,7 +1179,7 @@ function getOption(userID, option) {
         initializeOptions(userID)
     } 
     if (process.configs.users[userID][option] == undefined) {
-        let pages = ["Arousal", "General", "Misc"];
+        let pages = ["Arousal", "General", "Misc", "Extreme"];
         pages.forEach((p) => {
             let optionspages = Object.keys(configoptions[p]);
             optionspages.forEach((k) => {
@@ -1124,7 +1200,7 @@ function getOption(userID, option) {
 }
 
 function initializeOptions(userID) {
-    let pages = ["Arousal", "General", "Misc"];
+    let pages = ["Arousal", "General", "Misc", "Extreme"];
     pages.forEach((p) => {
         let optionspages = Object.keys(configoptions[p]);
         optionspages.forEach((k) => {

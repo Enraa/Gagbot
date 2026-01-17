@@ -27,7 +27,7 @@ let functiontick = async (userID) => {
         }
     })
     if (process.userevents[userID].dollprocessing.color == undefined) { process.userevents[userID].dollprocessing.color = "black" }
-    let droneclothes = [`catsuit_latex_${process.userevents[userID].dollprocessing.color}`, "cyberdoll_harness", "cuffs_cyberdoll", "doll_heels", "cyberdoll_barcode"]
+    let droneclothes = [`catsuit_latex_${process.userevents[userID].dollprocessing.color}`, "cyberdoll_harness", "doll_heels", "cyberdoll_barcode"]
     currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))).filter((f) => (!droneclothes.includes(f))); // These are the worn clothes, minus drone clothing
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
