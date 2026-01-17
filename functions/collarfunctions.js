@@ -246,45 +246,51 @@ async function promptCloneCollarKey(user, target, clonekeyholder) {
 // Called to prompt the wearer if it is okay to give a key.
 async function promptTransferCollarKey(user, target, newKeyholder) {
     return new Promise(async (res,rej) => {
-        let buttons = [
-            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
-            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
-        ]
-        let bondageaccess = `${(getCollarPerm(target.id, "mitten")) ? "mitten you, " : ""}${(getCollarPerm(target.id, "chastity")) ? "put you in chastity, " : ""}${(getCollarPerm(target.id, "chastity")) ? "put heavy bondage on you, " : ""}`.slice(0,-2);
-        let dmchannel = await target.createDM();
-        await dmchannel.send({
-            content: `${user} would like to give ${newKeyholder} your collar key. Do you want to allow this?${(bondageaccess.length > 0) ? `\n\n**Note: ${newKeyholder} will have access to ${bondageaccess}.**` : "" }`,
-            components: [new ActionRowBuilder().addComponents(...buttons)]
-        }).then((mess) => {
-            // Create a collector for up to 5 minutes
-            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
+        try {
+            let buttons = [
+                new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+                new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+            ]
+            let bondageaccess = `${(getCollarPerm(target.id, "mitten")) ? "mitten you, " : ""}${(getCollarPerm(target.id, "chastity")) ? "put you in chastity, " : ""}${(getCollarPerm(target.id, "chastity")) ? "put heavy bondage on you, " : ""}`.slice(0,-2);
+            let dmchannel = await target.createDM();
+            await dmchannel.send({
+                content: `${user} would like to give ${newKeyholder} your collar key. Do you want to allow this?${(bondageaccess.length > 0) ? `\n\n**Note: ${newKeyholder} will have access to ${bondageaccess}.**` : "" }`,
+                components: [new ActionRowBuilder().addComponents(...buttons)]
+            }).then((mess) => {
+                // Create a collector for up to 5 minutes
+                const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
 
-            collector.on('collect', async (i) => {
-                console.log(i)
-                if (i.customId == "acceptButton") {
-                    await mess.delete().then(() => {
-                        i.reply(`Confirmed - ${newKeyholder} will receive the key for your collar!`)
-                    })
-                    res(true);
-                }
-                else {
-                    await mess.delete().then(() => {
-                        i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your collar!`)
-                    })
-                    rej(true);
-                }
-            })
+                collector.on('collect', async (i) => {
+                    console.log(i)
+                    if (i.customId == "acceptButton") {
+                        await mess.delete().then(() => {
+                            i.reply(`Confirmed - ${newKeyholder} will receive the key for your collar!`)
+                        })
+                        res(true);
+                    }
+                    else {
+                        await mess.delete().then(() => {
+                            i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your collar!`)
+                        })
+                        rej(true);
+                    }
+                })
 
-            collector.on('end', async (collected) => {
-                // timed out
-                if (collected.length == 0) {
-                    await mess.delete().then(() => {
-                        i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your collar!`)
-                    })
-                    rej(true);
-                }
+                collector.on('end', async (collected) => {
+                    // timed out
+                    if (collected.length == 0) {
+                        await mess.delete().then(() => {
+                            i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your collar!`)
+                        })
+                        rej(true);
+                    }
+                })
             })
-        })
+        }
+        catch (err) {
+            console.log(`No DMs available for ${target}`);
+            rej("NoDM");
+        }
     })
 }
 

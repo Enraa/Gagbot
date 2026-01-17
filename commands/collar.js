@@ -4,6 +4,7 @@ const { getCollar, assignCollar, collartypes, getCollarName } = require('./../fu
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent, collarPermModal } = require('./../functions/interactivefunctions.js')
 const { getText } = require("./../functions/textfunctions.js");
+const { getOption } = require('../functions/configfunctions.js');
 
 
 module.exports = {
@@ -50,7 +51,13 @@ module.exports = {
             let collarkeyholder = interaction.options.getUser('keyholder') ?? interaction.user;
             let collarselected = interaction.options.getString('type');
             let freeuse = interaction.options.getBoolean('freeuse')
-            console.log(collarselected)
+            
+            // Check if they have free use enabled and it's allowed
+            // If not, tell them to strongly consider what they're doing and review /config
+            if (freeuse && (getOption(interaction.user.id, "publicaccess") != "enabled")) {
+                await interaction.reply({ content: `You have not enabled Free Use. **Please strongly consider what you are doing.**\n\nFree use access will allow ***anyone*** to utilize mittens, chastity, hoods and heavy bondage on you. **You will be unable to say no to specific restraints or specific people by design.**\n\nYou should assume that you *will* become helpless and stuck with this option, including becoming unable to take off the collar. Only enable it if you understand what you're doing. If you do, this can be adjusted in **/config**.`, flags: MessageFlags.Ephemeral })
+                return;
+            }
 
             // Build data tree:
             let data = {
