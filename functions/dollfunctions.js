@@ -9,7 +9,11 @@ const { assignHeavy }  = require(`./../functions/heavyfunctions.js`);
 //const DOLLREGEX = /(((?<!\*)(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 
 // Uses EOT characters to prevent separating arousal moans when visored.
-const DOLLREGEX = /(((?<![\*])(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)(?!)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
+//const DOLLREGEX = /(((?<![\*])(?<!(\*hff|\*hnnf|\*ahff|\*hhh|\*nnh|\*hnn|\*hng|\*uah|\*uhf))\*{1})(?!(hff\*|hnnf\*|ahff\*|hhh\*|nnh\*|hnn\*|hng\*|uah\*|uhf\*))(\*{2})?([^\*]|\*{2})+\*)(?!)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
+
+// Regex to capture the user's intended text segments post-corset and post-vibrator.
+// NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.
+const DOLLREGEX = /(((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*.*\*|\*{2})+\*)(?!)|(((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_)|\n/g
 
 const DOLLPROTOCOL = [
     // Regex uses an ENQ character to not rematch matches.
@@ -259,6 +263,11 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         if (partstolinkto) {
             outtext = `${outtext}${partstolinkto.join("\n")}`
         }
+
+        // Remove the escape from escaped symbols.
+        // * Must NOT be an escaped backslash (negative lookbehind), and must be escaping a charactter in the set.
+        // * Currently just * and ~ suppported.  Add more later!
+        outtext = outtext.replaceAll(/(?<!\\)\\(?=[*~])/g,"")
 
         // Merge any code blocks with nothing but whitespace in between.
         outtext = outtext.replaceAll(/```\s+```ansi/g,"")
