@@ -391,12 +391,13 @@ function textGarbleCorset(messagein, msg, modifiedmessage, threadId) {
     let corseted = false;
     if (getCorset(msg.author.id)) {
         const hadParts = messageparts.length > 0;
-        modified = true
         const toRemove = [];
         for (let i = 0; i < messageparts.length; i++) {
             try {
                 if (messageparts[i].garble) {
-                    messageparts[i].text = corsetLimitWords(msg.author.id, messageparts[i].text)
+                    const newText = corsetLimitWords(msg.author.id, messageparts[i].text);
+                    if (messageparts[i].text != newText) modified = true;
+                    messageparts[i].text = newText;
                     if (messageparts[i].text.length == 0) toRemove.push(i);
                     messageparts[i].text = `${messageparts[i].text}\n`
                 }
