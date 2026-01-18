@@ -211,7 +211,8 @@ const texts_collarequip = {
                     ],
                     allowed: [
                         `USER_TAG pulls a VAR_C3 out and grabs TARGET_TAG, forcing TARGET_THEIR arms and hands into the tight restraint! TARGET_THEY_CAP squirmTARGET_S in protest, but TARGET_THEY can't do anything about it!`,
-                        { only: (t) => { return (t.c3 == "Doll Processing Facility") }, text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!`}
+                        { only: (t) => { return (t.c3 == "Doll Processing Facility") }, text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!`},
+                        { only: (t) => { return (t.c3.endsWith("'s Lap")) }, text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.` }
                     ],
                     notallowed: [
                         `TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`
@@ -837,6 +838,7 @@ const texts_struggle = {
         `USER_TAG tries USER_THEIR *best* to get some leverage and escape USER_THEIR bondage, but stops just short of potentially pulling a muscle.`,
         `USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
         `USER_TAG fights against USER_THEIR VAR_C1, but it doesn't budge even a micrometer...`,
+        { only: (t) => { return (t.c1.endsWith("'s Lap")) }, text: `USER_TAG wiggles a little bit in VAR_C1, but a stern look quickly keeps USER_THEM in check.` }
     ],
     gag: {
         heavy: [
@@ -1607,7 +1609,8 @@ const texts_unheadwear = {
 const texts_unheavy = {
     heavy: {
         self: [
-            `USER_TAG wiggles in USER_THEIR VAR_C1, but obviously USER_THEY USER_ISARE *very* helpless and can't get far with taking it off on USER_THEIR own!`
+            `USER_TAG wiggles in USER_THEIR VAR_C1, but obviously USER_THEY USER_ISARE *very* helpless and can't get far with taking it off on USER_THEIR own!`,
+            { only: (t) => { return (t.c1.endsWith("'s Lap")) }, text: `USER_TAG wiggles a bit in VAR_C1, but it's so warm and comfy there...` }
         ],
         other: [
             `USER_TAG brushes up against TARGET_TAG to help TARGET_THEM out of USER_THEIR VAR_C2, but being trapped in a VAR_C1, USER_THEY can't really help TARGET_THEM out much.`
@@ -1618,6 +1621,7 @@ const texts_unheavy = {
             `USER_TAG helps TARGET_TAG out of TARGET_THEIR VAR_C2! TARGET_THEY_CAP stretchTARGET_ES TARGET_THEIR arms and sighTARGET_S with gratitude!`,
             { only: (t) => { return t.c2.includes("Doll Processing") }, text: `USER_TAG fights off an automated arm as USER_THEY rescueUSER_S TARGET_TAG from the VAR_C2!` },
             { only: (t) => { return t.c2.includes("Doll Processing") }, text: `USER_TAG tackles TARGET_TAG, pulling USER_THEM off of the belt of the VAR_C2!` },
+            { only: (t) => { return (t.c2.endsWith("'s Lap")) }, text: `USER_TAG helps TARGET_TAG off of the warm lap TARGET_THEY TARGET_WERE laying on!` }
         ],
         noheavyequipped: {
             self: [

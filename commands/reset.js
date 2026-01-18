@@ -30,6 +30,7 @@ module.exports = {
             removeHeavy(resetuser.id)
             removeCorset(resetuser.id)
             deleteWearable(resetuser.id)
+            deleteHeadwear(headwearuser.id)
             setArousalCooldown(resetuser.id)
         } else {
             if (getServerOption(interaction.guildId, "server-safewordroleid") === "") {
@@ -48,6 +49,7 @@ module.exports = {
                 removeHeavy(interaction.user.id)
                 removeCorset(interaction.user.id)
                 deleteWearable(interaction.user.id)
+                deleteHeadwear(headwearuser.id)
                 setArousalCooldown(interaction.user.id)
             }
             else {

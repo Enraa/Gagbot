@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
 const { calculateTimeout } = require("./../functions/timefunctions.js")
-const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes } = require('./../functions/heavyfunctions.js')
+const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
 const { getConsent, handleConsent, handleExtremeRestraint } = require('./../functions/interactivefunctions.js')
 const { getText } = require("./../functions/textfunctions.js");
@@ -38,6 +38,7 @@ module.exports = {
 		}
 		else {
 			let heavies = process.heavytypes.filter((f) => (f.name.toLowerCase()).includes(focusedValue.toLowerCase())).slice(0,10)
+            heavies = heavies.filter((f) => !getBaseHeavy(f.value).noself)
 			await interaction.respond(heavies)
 		}
 	},
@@ -68,6 +69,11 @@ module.exports = {
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
                     c2: convertheavy(heavychoice) // New heavy bondage
                 }
+            }
+
+            // This SHOULD retrieve a custom name if any. 
+            if (getBaseHeavy(heavychoice) && getBaseHeavy(heavychoice).namefunction) {
+                data = getBaseHeavy(heavychoice).namefunction(interaction, data);
             }
 
             if (data.textdata.c2 == undefined) {
