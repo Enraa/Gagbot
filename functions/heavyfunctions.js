@@ -92,6 +92,7 @@ const heavytypes = [
 
     // Misc Heavy Restraints
     { name: "Lockdown Virus", value: "lockdown_virus", denialCoefficient: 4 },
+    { name: "Dominant's Lap", value: "dominants_lap", denialCoefficient: 3, nameFn: (user, heavy) => user == heavy.origbinder ? "Dominant's Lap" : `<@${heavy.origbinder}>'s Lap` },
     // { name: "Silk Cocoon", value: "silk_cocoon", denialCoefficient: 2 },   Removed due to Arachnophobia
     { name: "Binding Dress", value: "dress_binding", denialCoefficient: 4.5 },
     { name: "Blanket Burrito", value: "blanket_burrito", denialCoefficient: 2 },
@@ -123,6 +124,10 @@ const convertheavy = (type) => {
     return convertheavyarr[type];
 }
 
+const heavyInfo = (type) => {
+    return heavytypes.find(h => h.value == type);
+}
+
 const heavyDenialCoefficient = (type) => {
     return heavytypes.find(h => h.value == type)?.denialCoefficient;
 }
@@ -130,8 +135,9 @@ const heavyDenialCoefficient = (type) => {
 const assignHeavy = (user, type, origbinder) => {
     if (process.heavy == undefined) { process.heavy = {} }
     let originalbinder = process.heavy[user]?.origbinder
+    const info = heavyInfo(type);
     process.heavy[user] = {
-        type: convertheavy(type),
+        type: info.nameFn ? info.nameFn(user, {origbinder: origbinder}) : info.name,
         typeval: type,
         origbinder: originalbinder ?? origbinder
     }
@@ -164,4 +170,5 @@ exports.getHeavyBinder = getHeavyBinder;
 exports.removeHeavy = removeHeavy
 exports.commandsheavy = heavytypes
 exports.convertheavy = convertheavy
+exports.heavyInfo = heavyInfo;
 exports.heavyDenialCoefficient = heavyDenialCoefficient;

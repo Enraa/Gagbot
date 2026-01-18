@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes } = require('./../functions/heavyfunctions.js')
+const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, heavyInfo } = require('./../functions/heavyfunctions.js')
 const { getCollar, getCollarPerm, canAccessCollar } = require('./../functions/collarfunctions.js')
 const { getChastity, assignChastity, chastitytypesoptions, getChastityName, getChastityBraName, chastitybratypesoptions } = require('./../functions/vibefunctions.js')
 const { getMittenName, assignMitten, getMitten, mittentypes } = require('./../functions/gagfunctions.js')
@@ -182,7 +182,8 @@ module.exports = {
             }
 
             if (actiontotake == "heavy") {
-                data.textdata.c3 = convertheavy(bondagetype)
+                const info = heavyInfo(bondagetype);
+                data.textdata.c3 = info.nameFn ? info.nameFn(collareduser, {origbinder: interaction.user}) : info.name
             }
             else if (actiontotake == "mittens") {
                 data.textdata.c3 = getMittenName(interaction.user.id, bondagetype)
