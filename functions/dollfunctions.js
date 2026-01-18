@@ -195,9 +195,6 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
         // Put every "garble" messagePart in ANSI.
         for(let i = 0; i < dollMessageParts.length; i++){
             if(dollMessageParts[i].garble){
-                // Remove preceding whitespace
-                dollMessageParts[i].text = dollMessageParts[i].text.replace(/[\s]+/,"")
-
                 // Uncorset
                 dollMessageParts[i].text = dollMessageParts[i].text.replaceAll(/ *-# */g,"")
                 let replacebolds = Array.from(dollMessageParts[i].text.matchAll(/((\*\*)|(\_\_))[^(\*|\_)]+((\*\*)|(\_\_))/g)).map((a) => a[0])
@@ -207,6 +204,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     dollMessageParts[i].text = dollMessageParts[i].text.replace(b, replaceb)
                 })
                 let warnmodified;
+
+                // Remove preceding whitespace
+                dollMessageParts[i].text = dollMessageParts[i].text.replace(/^[\s]+/,"")
 
                 // Loop on protocols
                 if(dollProtocol){
