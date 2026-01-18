@@ -214,7 +214,7 @@ const texts_collarequip = {
                         // Doll
                         { only: (t) => { return (t.c3 == "Doll Processing Facility") }, text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!` },
                         // General Types
-                        { only: (t) => { return t.c3.includes("Petsuit") || t.c2.includes("Piddlefours") }, text: `USER_TAG slips into a VAR_C3, trapping USER_THEIR arms and legs and forcing them to crawl like a pet!` },
+                        { only: (t) => { return t.c3.includes("Petsuit") || t.c2.includes("Piddlefours") }, text: `USER_TAG pushes TARGET_TAG to their knees before kneeling down USER_THEMSELF and slipping TARGET_THEIR limbs into a VAR_C3, forcing TARGET_THEM to crawl around like a pet!` },
                         // Stationary
                         { only: (t) => { return t.c3.includes("Display Stand") }, text: `USER_TAG lifts TARGET_TAG into the VAR_C3, securing TARGET_THEIR legs before guiding TARGET_THEIR arms into the rigid cuffs, locking them in place! TARGET_THEIR_CAP body is held in a strict, ramrod position!` },
                         { only: (t) => { return t.c3.includes("One Bar Prison") }, text: `USER_TAG guides TARGET_TAG onto the VAR_C3, forcing TARGET_THEM to spread TARGET_THEIR legs to stand in the footrests before holding TARGET_THEM in place as the pole rises between TARGET_THEIR's legs, trapping TARGET_THEM in place!` },
