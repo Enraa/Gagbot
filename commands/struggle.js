@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require('discord.js');
-const { mittentypes, getMittenName, getGag, convertGagText, assignMitten, getMitten } = require('./../functions/gagfunctions.js')
+const { mittentypes, getMittenName, getGag, convertGagText, assignMitten, getMitten, getGagLast } = require('./../functions/gagfunctions.js')
 const { calculateTimeout } = require("./../functions/timefunctions.js")
 const { getHeavy } = require('./../functions/heavyfunctions.js')
 const { getPronouns } = require('./../functions/pronounfunctions.js')
@@ -24,7 +24,7 @@ module.exports = {
 		const focusedValue = interaction.options.getFocused(); 
 		try {
             let heavybondage = getHeavy(interaction.user.id);
-            let gagbondage = getGag(interaction.user.id);
+            let gagbondage = getGagLast(interaction.user.id);
             let mittenbondage = getMitten(interaction.user.id);
             let chastitybondage = getChastity(interaction.user.id);
             let headbondage = getHeadwear(interaction.user.id);
@@ -33,7 +33,7 @@ module.exports = {
 
             let outopts = [];
             if (heavybondage) { outopts.push({ name: `Heavy Bondage: ${getHeavy(interaction.user.id).type}`, value: "heavy" }) } 
-            if (gagbondage) { outopts.push({ name: `Gag: ${convertGagText(getGag(interaction.user.id))}`, value: "gag" }) } 
+            if (gagbondage) { outopts.push({ name: `Gag: ${convertGagText(getGagLast(interaction.user.id))}`, value: "gag" }) } 
             if (mittenbondage) { outopts.push({ name: `Mittens${(mittenbondage.mittenname ? `: ${getMittenName(interaction.user.id)}` : "")}`, value: "mitten" }) } 
             if (chastitybondage) { outopts.push({ name: `Chastity${(chastitybondage.chastitytype ? `: ${getChastityName(interaction.user.id)}` : "")}`, value: "chastity" }) } 
             if (headbondage.length > 0) { outopts.push({ name: `Head Restraints`, value: "head" }) } 
@@ -60,7 +60,7 @@ module.exports = {
                 return;
             }
             let heavybondage = getHeavy(interaction.user.id)?.type;
-            let gagbondage = getGag(interaction.user.id);
+            let gagbondage = getGagLast(interaction.user.id);
             let mittenbondage = getMitten(interaction.user.id);
             let chastitybondage = getChastity(interaction.user.id);
             let headbondage = getHeadwear(interaction.user.id);
@@ -74,7 +74,7 @@ module.exports = {
                     interactionuser: interaction.user,
                     targetuser: interaction.user, // Doesn't really matter but we're adding to avoid a crash
                     c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-                    c2: convertGagText(getGag(interaction.user.id)),
+                    c2: convertGagText(getGagLast(interaction.user.id)),
                     c3: getMittenName(interaction.user.id) ?? "mittens",
                     c4: getChastityName(interaction.user.id) ?? "chastity belt",
                     c5: getCollarName(interaction.user.id) ?? "collar"

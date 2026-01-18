@@ -219,6 +219,10 @@ client.on('interactionCreate', async (interaction) => {
                 let configfunc = require(`./commands/config.js`)
                 configfunc.interactionresponse(interaction);  
             }
+            else if (interaction.customId.startsWith("list_")) {
+                let configfunc = require(`./commands/list.js`)
+                configfunc.interactionresponse(interaction);  
+            }
             const [key, ...args] = interaction.customId.split("-");
             componentHandlers.get(key)?.handle(interaction, ...args);
             return;

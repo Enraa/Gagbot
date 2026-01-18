@@ -22,7 +22,7 @@ const chastitytypes = [
     { name: "Hardlight Belt", value: "belt_hardlight", denialCoefficient: 10 },
     { name: "Wolf Panties", value: "belt_wolf", denialCoefficient: 7.5 },
     { name: "Maid Chastity Belt", value: "belt_maid", denialCoefficient: 10 },
-    { name: "Chastity Belt of Eternal Denial", value: "belt_eternal", denialCoefficient: 20 },
+    { name: "Chastity Belt of Eternal Denial", value: "belt_eternal", denialCoefficient: 2000 },
     { name: "Queensbelt", value: "belt_queen", denialCoefficient: 10 },
     { name: "Starmetal Belt", value: "belt_starmetal", denialCoefficient: 7.5 }
 ]
@@ -490,44 +490,50 @@ async function promptCloneChastityKey(user, target, clonekeyholder, bra) {
 // Called to prompt the wearer if it is okay to give a key.
 async function promptTransferChastityKey(user, target, newKeyholder) {
     return new Promise(async (res,rej) => {
-        let buttons = [
-            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
-            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
-        ]
-        let dmchannel = await target.createDM();
-        await dmchannel.send({
-            content: `${user} would like to give ${newKeyholder} your chastity belt key. Do you want to allow this?`,
-            components: [new ActionRowBuilder().addComponents(...buttons)]
-        }).then((mess) => {
-            // Create a collector for up to 30 seconds
-            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
+        try {
+            let buttons = [
+                new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+                new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+            ]
+            let dmchannel = await target.createDM();
+            await dmchannel.send({
+                content: `${user} would like to give ${newKeyholder} your chastity belt key. Do you want to allow this?`,
+                components: [new ActionRowBuilder().addComponents(...buttons)]
+            }).then((mess) => {
+                // Create a collector for up to 30 seconds
+                const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
 
-            collector.on('collect', async (i) => {
-                console.log(i)
-                if (i.customId == "acceptButton") {
-                    await mess.delete().then(() => {
-                        i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity belt!`)
-                    })
-                    res(true);
-                }
-                else {
-                    await mess.delete().then(() => {
-                        i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity belt!`)
-                    })
-                    rej(true);
-                }
-            })
+                collector.on('collect', async (i) => {
+                    console.log(i)
+                    if (i.customId == "acceptButton") {
+                        await mess.delete().then(() => {
+                            i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity belt!`)
+                        })
+                        res(true);
+                    }
+                    else {
+                        await mess.delete().then(() => {
+                            i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity belt!`)
+                        })
+                        rej(true);
+                    }
+                })
 
-            collector.on('end', async (collected) => {
-                // timed out
-                if (collected.length == 0) {
-                    await mess.delete().then(() => {
-                        i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity belt!`)
-                    })
-                    rej(true);
-                }
+                collector.on('end', async (collected) => {
+                    // timed out
+                    if (collected.length == 0) {
+                        await mess.delete().then(() => {
+                            i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity belt!`)
+                        })
+                        rej(true);
+                    }
+                })
             })
-        })
+        }
+        catch (err) {
+            console.log(`No DMs available for ${target}`);
+            rej("NoDM");
+        }
     })
 }
 
@@ -578,44 +584,50 @@ async function promptCloneChastityBraKey(user, target, clonekeyholder) {
 // Called to prompt the wearer if it is okay to give a key.
 async function promptTransferChastityBraKey(user, target, newKeyholder) {
     return new Promise(async (res,rej) => {
-        let buttons = [
-            new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
-            new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
-        ]
-        let dmchannel = await target.createDM();
-        await dmchannel.send({
-            content: `${user} would like to give ${newKeyholder} your chastity bra key. Do you want to allow this?`,
-            components: [new ActionRowBuilder().addComponents(...buttons)]
-        }).then((mess) => {
-            // Create a collector for up to 30 seconds
-            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
+        try {
+            let buttons = [
+                new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger),
+                new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)
+            ]
+            let dmchannel = await target.createDM();
+            await dmchannel.send({
+                content: `${user} would like to give ${newKeyholder} your chastity bra key. Do you want to allow this?`,
+                components: [new ActionRowBuilder().addComponents(...buttons)]
+            }).then((mess) => {
+                // Create a collector for up to 30 seconds
+                const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 })
 
-            collector.on('collect', async (i) => {
-                console.log(i)
-                if (i.customId == "acceptButton") {
-                    await mess.delete().then(() => {
-                        i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity bra!`)
-                    })
-                    res(true);
-                }
-                else {
-                    await mess.delete().then(() => {
-                        i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity bra!`)
-                    })
-                    rej(true);
-                }
-            })
+                collector.on('collect', async (i) => {
+                    console.log(i)
+                    if (i.customId == "acceptButton") {
+                        await mess.delete().then(() => {
+                            i.reply(`Confirmed - ${newKeyholder} will receive the key for your chastity bra!`)
+                        })
+                        res(true);
+                    }
+                    else {
+                        await mess.delete().then(() => {
+                            i.reply(`Rejected - ${newKeyholder} will NOT receive the key for your chastity bra!`)
+                        })
+                        rej(true);
+                    }
+                })
 
-            collector.on('end', async (collected) => {
-                // timed out
-                if (collected.length == 0) {
-                    await mess.delete().then(() => {
-                        i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity bra!`)
-                    })
-                    rej(true);
-                }
+                collector.on('end', async (collected) => {
+                    // timed out
+                    if (collected.length == 0) {
+                        await mess.delete().then(() => {
+                            i.reply(`Timed Out - ${newKeyholder} will NOT receive the key for your chastity bra!`)
+                        })
+                        rej(true);
+                    }
+                })
             })
-        })
+        }
+        catch (err) {
+            console.log(`No DMs available for ${target}`);
+            rej("NoDM");
+        }
     })
 }
 

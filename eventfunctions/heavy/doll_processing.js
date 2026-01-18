@@ -116,14 +116,14 @@ let functiontick = async (userID) => {
             if (!getMitten(userID) || (getMitten(userID) && (getMitten(userID).mittenname != "mittens_cyberdoll"))) {
                 data.mitten = true;
                 if (getMitten(userID)) {
-                    data.textdata.c1 = getMittenName(undefined, getMitten(userID).mittenname), // mitten name
+                    data.textdata.c1 = getMittenName(undefined, getMitten(userID).mittenname) ?? "mittens", // mitten name
                     assignMitten(userID, "mittens_cyberdoll", getMitten(userID).origbinder)
                     data.replace = true;
                     appliedrestraint = true;
                 }
                 else {
                     assignMitten(userID, "mittens_cyberdoll", targetobject.id)
-                    data.textdata.c1 = getMittenName(undefined, "mittens_cyberdoll"), // mitten name
+                    data.textdata.c1 = getMittenName(undefined, "mittens_cyberdoll") ?? "mittens", // mitten name
                     data.add = true;
                     appliedrestraint = true;
                 }
@@ -133,14 +133,14 @@ let functiontick = async (userID) => {
             else if (!getChastity(userID) || (getChastity(userID) && (getChastity(userID).chastitytype != "belt_cyberdoll"))) {
                 data.chastitybelt = true;
                 if (getChastity(userID)) {
-                    data.textdata.c1 = getChastityName(undefined, getChastity(userID).chastitytype), // mitten name
+                    data.textdata.c1 = getChastityName(undefined, getChastity(userID).chastitytype) ?? "chastity belt", // mitten name
                     process.chastity[userID].chastitytype = "belt_cyberdoll"
                     data.replace = true;
                     appliedrestraint = true;
                 }
                 else {
                     assignChastity(userID, targetobject.id, "belt_cyberdoll")
-                    data.textdata.c1 = getChastityName(undefined, "belt_cyberdoll"), // mitten name
+                    data.textdata.c1 = getChastityName(undefined, "belt_cyberdoll") ?? "chastity belt", // mitten name
                     data.add = true;
                     appliedrestraint = true;
                 }
@@ -150,14 +150,14 @@ let functiontick = async (userID) => {
             else if (!getChastityBra(userID) || (getChastityBra(userID) && (getChastityBra(userID).chastitytype != "bra_cyberdoll"))) {
                 data.chastitybra = true;
                 if (getChastityBra(userID)) {
-                    data.textdata.c1 = getChastityBraName(undefined, getChastityBra(userID).chastitytype), // mitten name
+                    data.textdata.c1 = getChastityBraName(undefined, getChastityBra(userID).chastitytype) ?? "chastity bra", // mitten name
                     process.chastitybra[userID].chastitytype = "bra_cyberdoll"
                     data.replace = true;
                     appliedrestraint = true;
                 }
                 else {
                     assignChastityBra(userID, targetobject.id, "bra_cyberdoll")
-                    data.textdata.c1 = getChastityBraName(undefined, "bra_cyberdoll"), // mitten name
+                    data.textdata.c1 = getChastityBraName(undefined, "bra_cyberdoll") ?? "chastity bra", // mitten name
                     data.add = true;
                     appliedrestraint = true;
                 }
@@ -167,14 +167,14 @@ let functiontick = async (userID) => {
             else if (!getCollar(userID) || (getCollar(userID) && (getCollar(userID).collartype != "collar_cyberdoll"))) {
                 data.collar = true;
                 if (getCollar(userID)) {
-                    data.textdata.c1 = getCollarName(undefined, getCollar(userID).collartype), // mitten name
+                    data.textdata.c1 = getCollarName(undefined, getCollar(userID).collartype) ?? "collar", // mitten name
                     process.collar[userID].collartype = "collar_cyberdoll"
                     data.replace = true;
                     appliedrestraint = true;
                 }
                 else {
                     assignCollar(userID, targetobject.id, { }, false, "collar_cyberdoll")
-                    data.textdata.c1 = getCollarName(undefined, "collar_cyberdoll"), // mitten name
+                    data.textdata.c1 = getCollarName(undefined, "collar_cyberdoll") ?? "collar", // mitten name
                     data.add = true;
                     appliedrestraint = true;
                 }

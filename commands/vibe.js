@@ -7,7 +7,7 @@ const fs = require('fs');
 const path = require('path');
 const { rollKeyFumbleN } = require('../functions/keyfindingfunctions.js');
 const { getText } = require("./../functions/textfunctions.js");
-const { config } = require('../functions/configfunctions.js');
+const { config, getOption } = require('../functions/configfunctions.js');
 
 const vibetypes = [];
 const commandsPath = path.join(__dirname, '..', 'vibes');
@@ -55,11 +55,19 @@ module.exports = {
                 return;
             }
             // it has an optin now
-            if (config.getDisableVibes(vibeuser.id)) {
-                interaction.reply({
-                    content: `${vibeuser} has disabled vibes`,
-                    flags: MessageFlags.Ephemeral
-                })
+            if (getOption(vibeuser.id, "arousalsystem") == 0) {
+                if (vibeuser.id == interaction.user.id) {
+                    interaction.reply({
+                        content: `You have disabled the Arousal System in **/config** and would not be affected. Please review the Arousal System setting and enable it to use toys.`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                }
+                else {
+                    interaction.reply({
+                        content: `${vibeuser} has disabled the Arousal System in **/config** and would not be affected.`,
+                        flags: MessageFlags.Ephemeral
+                    })
+                }
                 return;
             }
             let data = {

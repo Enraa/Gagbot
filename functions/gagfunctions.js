@@ -53,6 +53,7 @@ const gagtypesout = [
     { name: "Enchanted Dog Gag" },
     { name: "Donald Gag" },
     { name: "Good Sub Gag" },
+    { name: "Polite Sub Gag"},
     { name: "Ring Gag" },
     { name: "Silent Panel Gag" },
     { name: "Stuff Gag" },

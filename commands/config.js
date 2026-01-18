@@ -23,7 +23,6 @@ module.exports = {
     },
 	async interactionresponse(interaction) {
 		try {
-			console.log(interaction)
 			let optionparts = interaction.customId.split("_");
 			
 			// We changed page, new page!
