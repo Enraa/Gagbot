@@ -44,6 +44,7 @@ let wearabletypes = [
     // Bunnygirls
     { name: "Playbunny Headband", value: "outfit_playbunny_headwear" },
     { name: "Playbunny Cuffs", value: "outfit_playbunny_cuffs" },
+    { name: "Playbunny Collar", value: "outfit_playbunny_collar" },
     { name: "Bunny Bustier", value: "bunnybustier", colorable: true },
     { name: "Leather Bunny Bustier", value: "bunnybustier_leather", colorable: true },
     { name: "Latex Bunny Bustier", value: "bunnybustier_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
