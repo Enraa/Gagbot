@@ -38,7 +38,7 @@ async function generateList(listchoice, page, details) {
 		// Page Down
 		new ButtonBuilder()
 			.setCustomId(`list_pagedown_${listchoice}_${page}_${details}`)
-			.setLabel("⮜ Prev Page")
+			.setLabel("← Prev Page")
 			.setStyle(ButtonStyle.Secondary)
 			.setDisabled(page <= 1),
 		// Current Page
@@ -46,7 +46,7 @@ async function generateList(listchoice, page, details) {
 		// Page Up
 		new ButtonBuilder()
 			.setCustomId(`list_pageup_${listchoice}_${page}_${details}`)
-			.setLabel("Next Page ⮞")
+			.setLabel("Next Page →")
 			.setStyle(ButtonStyle.Secondary)
 			.setDisabled(page >= maxpages),
 	];
