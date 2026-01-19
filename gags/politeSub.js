@@ -37,10 +37,10 @@ const garbleText = (text, intensity) => {
 		"dame",
 		"count",
 		"overlord",
-        "(\\w|\\d)+-sama",
-        "(\\w|\\d)+-sensei",
-        "(\\w|\\d)+-san",
-        "(\\w|\\d)+-kun"
+		"(\\w|\\d)+-sama",
+		"(\\w|\\d)+-sensei",
+		"(\\w|\\d)+-san",
+		"(\\w|\\d)+-kun",
 	];
 
 	let silenttitles = [`\n*looks down silently*\n`, `\n*tries to speak, but no words come out*\n`, `\n*nods without a word*\n`, `\n*looks down and to the side*\n`, `\n*twiddles thumbs meekly*\n`, `\n*pouts as the gag stops impolite speech*\n`, `\n*goes mute without an honorific*\n`, `\n*meeps but produces no audible words*\n`, `\n*casts eyes downward, like a good sub*\n`, `\n*blushes and mumbles something*\n`];
