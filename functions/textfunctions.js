@@ -1797,11 +1797,11 @@ const texts_eventfunctions = {
 		costumer_mimic: {
 			removeclothing: [
 				// OMNOMNOMNOM
-				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_THEY USER_ISARE wearing!`,
-				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_THEY USER_ISARE wearing, stuffing it into its gaping maw and storing it away!`,
-				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_THEY USER_ISARE wearing, dissolving it away before absorbing the remains!`,
+				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_TAG is wearing!`,
+				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing it into its gaping maw and storing it away!`,
+				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving it away before absorbing the remains!`,
 			],
-			donestripping: [`Having finished consuming all of their current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`, `Now that USER_TAG is stripped bare, the Costumer Mimic begins to dress USER_THEM in one of its preferred costumes.`, `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`],
+			donestripping: [`Having finished consuming all of USER_TAG's current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`, `Now that USER_TAG is stripped bare, the Costumer Mimic begins to dress USER_THEM in one of its preferred costumes.`, `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`],
 			applyingOutfit: {
 				wearable: { add: [`The Costumer Mimic pulls out a VAR_C1 from its internal storage and begins to dress USER_TAG in it!`, `The Costumer Mimic produces a VAR_C1 from within itself and slips it onto USER_TAG!`, `The Costumer Mimic's tentacles fish out a VAR_C1 from its storage and begins to dress USER_TAG in it!`] },
 				mitten: { replace: [`The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`] },
