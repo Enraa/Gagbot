@@ -1,2 +1,1 @@
-
 exports.choicename = "Bullet Vibe";
