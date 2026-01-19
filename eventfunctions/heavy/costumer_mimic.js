@@ -13,7 +13,7 @@ const { getWearable, getLockedWearable, deleteWearable, getWearableName, assignW
 //const { mimicCostumes } = require('./mimic/mimicCostumes.js')
 
 // File Containing Costumer Mimic Outfits - Wearables, Headwear, Mittens, Gags, Heavy. Only one Heavy item per outfit, and always at the end.
-const maid_outfit = new Array([
+const maid_outfit = [
     {category: "wearable", itemtowear: "maid_dress", color: "Black" },
     {category: "wearable", itemtowear: "maid_apron", color: null },
     {category: "wearable", itemtowear: "maid_headdress", color: null },
@@ -25,9 +25,9 @@ const maid_outfit = new Array([
     {category: "chastitybelt", itemtowear: "belt_maid", color: null },
     {category: "gag", itemtowear: "politesub", color: null },
     {category: "heavy", itemtowear: "straitjacket_maid", color: null },
-]);
+];
 
-const ponygirl_outfit = new Array ([
+const ponygirl_outfit = [
     {category: "wearable", itemtowear: "ponyboots_leather", color: "Red" },
     {category: "wearable", itemtowear: "ponytack_leather", color: "Red" },
     {category: "wearable", itemtowear: "headharness_leather", color: "Red" },
@@ -39,9 +39,9 @@ const ponygirl_outfit = new Array ([
     {category: "chastitybra", itemtowear: "bra_silver", color: null },
     {category: "collar", itemtowear: "collar_posture", color: null },
     {category: "heavy", itemtowear: "armbinder_leather", color: null },
-]);
+];
 
-const bunnygirl_outfit = new Array ([
+const bunnygirl_outfit = [
     {category: "wearable", itemtowear: "outfit_playbunny_headwear", color: "Blue" },  
     {category: "wearable", itemtowear: "suit_outfit", color: "Playbunny" },  
     {category: "wearable", itemtowear: "bunnytights", color: "White" },
@@ -53,9 +53,9 @@ const bunnygirl_outfit = new Array ([
     {category: "gag", itemtowear: "ball", color: null },
     {category: "headwear", itemtowear: "mask_bunny", color: null },
     {category: "heavy", itemtowear: "armbinder_leather", color: null },
-]);
+];
 
-const princess_outfit = new Array ([
+const princess_outfit = [
     {category: "wearable", itemtowear: "bra_lacy", color: "Pink" },
     {category: "wearable", itemtowear: "panties_lacy", color: "Pink" },
     {category: "wearable", itemtowear: "stockings", color: "White" },
@@ -69,9 +69,9 @@ const princess_outfit = new Array ([
     {category: "collar", itemtowear: "collar_princess", color: null },
     {category: "gag", itemtowear: "ball", color: null },
     {category: "heavy", itemtowear: "dress_binding", color: null },
-]);
+];
 
-const lewd_princess_outfit = new Array ([
+const lewd_princess_outfit = [
     {category: "wearable", itemtowear: "panties_lacy", color: "Black" },
     {category: "wearable", itemtowear: "stockings", color: "Black" },
     {category: "wearable", itemtowear: "gartersbelt", color: "Black" },
@@ -85,9 +85,9 @@ const lewd_princess_outfit = new Array ([
     {category: "collar", itemtowear: "collar_princess", color: null },
     {category: "gag", itemtowear: "ball", color: null },
     {category: "heavy", itemtowear: "boxbinder_leather", color: null },
-]);
+];
 
-const kitsune_outfit = new Array ([
+const kitsune_outfit = [
     {category: "wearable", itemtowear: "lingerie", color: "Indigo" },
     {category: "wearable", itemtowear: "thighhighs", color: "White" },
     {category: "wearable", itemtowear: "kimono", color: "Indigo" },
@@ -101,9 +101,9 @@ const kitsune_outfit = new Array ([
     {category: "gag", itemtowear: "ball", color: null },
     {category: "collar", itemtowear: "collar_runic", color: null },
     {category: "heavy", itemtowear: "ribbons", color: null },
-]);
+];
 
-const librarian_outfit = new Array ([
+const librarian_outfit = [
     {category: "wearable", itemtowear: "rope_karada", color: "Red" },
     {category: "wearable", itemtowear: "pencil_skirt", color: "Brown" },
     {category: "wearable", itemtowear: "buttonup_blouse", color: "White" },
@@ -115,9 +115,9 @@ const librarian_outfit = new Array ([
     {category: "gag", itemtowear: "silent", color: null },
     {category: "collar", itemtowear: "collar_posture", color: null },
     {category: "heavy", itemtowear: "straitjacket_comfy", color: null },
-]);
+];
 
-const rogue_outfit = new Array ([
+const rogue_outfit = [
     {category: "wearable", itemtowear: "panties_leather", color: "Gray" },
     {category: "wearable", itemtowear: "bra_leather", color: "Gray" },
     {category: "wearable", itemtowear: "gloves_fingerlesselbow", color: "Gray" },
@@ -131,9 +131,9 @@ const rogue_outfit = new Array ([
     {category: "collar", itemtowear: "collar_moon", color: null },
     {category: "wearable", itemtowear: "cloak", color: "Gray" },
     {category: "heavy", itemtowear: "straitjacket_comfy", color: null },
-]);
+];
 
-const dancer_outfit = new Array ([
+const dancer_outfit = [
     {category: "wearable", itemtowear: "armbands", color: "Gold" },
     {category: "wearable", itemtowear: "anklets", color: "Gold" },
     {category: "wearable", itemtowear: "necklace", color: "Gold" },
@@ -147,9 +147,9 @@ const dancer_outfit = new Array ([
     {category: "collar", itemtowear: "collar_moon", color: null },
     {category: "headwear", itemtowear: "blindfold_cloth", color: null },
     {category: "heavy", itemtowear: "displaystand", color: null },
-]);
+];
 
-const paladin_outfit = new Array ([
+const paladin_outfit = [
     {category: "wearable", itemtowear: "bodystocking", color: "Black" },
     {category: "wearable", itemtowear: "harness_leather", color: "Leather" },
     {category: "wearable", itemtowear: "greaves", color: "Steel" },
@@ -162,9 +162,9 @@ const paladin_outfit = new Array ([
     {category: "gag", itemtowear: "ball", color: null },
     {category: "collar", itemtowear: "collar_steel", color: null },
     {category: "heavy", itemtowear: "yoke", color: null },
-]);
+];
 
-const ranger_outfit = new Array ([
+const ranger_outfit = [
     {category: "wearable", itemtowear: "bra_lacy", color: "Green" },
     {category: "wearable", itemtowear: "panties_lacy", color: "Green" },
     {category: "wearable", itemtowear: "thighhighs", color: "Green" },
@@ -178,9 +178,9 @@ const ranger_outfit = new Array ([
     {category: "collar", itemtowear: "collar_leather", color: null },
     {category: "wearable", itemtowear: "cloak", color: "Green" },
     {category: "heavy", itemtowear: "rope_hogtie", color: null },
-]);
+];
 
-const healer_outfit = new Array ([
+const healer_outfit = [
     {category: "headwear", itemtowear: "blindfold_cloth", color: null },
     {category: "wearable", itemtowear: "bra_lacy", color: "White" },
     {category: "wearable", itemtowear: "panties_lacy", color: "White" },
@@ -196,9 +196,9 @@ const healer_outfit = new Array ([
     {category: "collar", itemtowear: "collar_star", color: null },
     {category: "wearable", itemtowear: "leash", color: "White" },
     {category: "heavy", itemtowear: "armbinder_ancient", color: null },
-]);
+];
 
-const witch_outfit = new Array ([
+const witch_outfit = [
     {category: "wearable", itemtowear: "bra_lacy", color: "Purple" },
     {category: "wearable", itemtowear: "panties_lacy", color: "Purple" },
     {category: "wearable", itemtowear: "stockings", color: "Purple" },
@@ -212,7 +212,7 @@ const witch_outfit = new Array ([
     {category: "gag", itemtowear: "Ball", color: null },
     {category: "collar", itemtowear: "collar_runic", color: null },
     {category: "heavy", itemtowear: "shadowhands", color: null },
-]);
+];
 
 
 const mimicCostumes = {
@@ -274,7 +274,7 @@ let functiontick = async (userID) => {
     console.log(process.userevents[userID].costumermimic)
 
     // Select Item from Chosen Outfit based in index
-    let nextitem = mimicCostumes[process.userevents[userID].costumermimic.outfit][0][process.userevents[userID].costumermimic.costumeidx];
+    let nextitem = mimicCostumes[process.userevents[userID].costumermimic.outfit][process.userevents[userID].costumermimic.costumeidx];
     let itemtoequipcolored = null;
 
     data.heavy = true;
@@ -303,7 +303,7 @@ let functiontick = async (userID) => {
     }
 
     // Apply Outfit Items once stripped until last index of array is reached or a heavy item is found
-    if (process.userevents[userID].costumermimic.stage == 1 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit][0].length && nextitem.category != "heavy") {
+    if (process.userevents[userID].costumermimic.stage == 1 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit].length && nextitem.category != "heavy") {
 
         data.applyingOutfit = true;
         switch (nextitem.category) {
@@ -471,7 +471,7 @@ let functiontick = async (userID) => {
                 break;
         }
 
-    } else if (nextitem.category == "heavy" || process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit][0].length) {
+    } else if (nextitem.category == "heavy" || process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
         // Final Stage - Remove Mimic Heavy and spit them out, then apply Outfit Heavy!
         // heavy item reached or end of outfit reached        
 
