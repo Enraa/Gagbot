@@ -239,7 +239,6 @@ const texts_collarequip = {
                         // Misc
                         { only: (t) => { return (t.c3.includes("Festive Ribbons") || t.c3.includes("Wrapping Paper")) }, text: `USER_TAG carefully wraps TARGET_TAG in VAR_C2! Who are they planning to gift such a present too~?` },
                         { only: (t) => { return t.c3.includes("Magic Mirror") }, text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C2! As TARGET_THEY touch it the Mirror emits a bright flash of light, and TARGET_TAG finds themselves trapped within the reflection!` },
-                        { only: (t) => { return (t.c3 == "Doll Processing Facility") }, text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!`},
                         { only: (t) => { return (t.c3.endsWith("'s Lap")) }, text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.` }
                     ],
                     notallowed: [
