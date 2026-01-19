@@ -231,7 +231,7 @@ let wearabletypes = [
 	{ name: "Latex High Waist Leotard", value: "leotard_highwaist_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
 
 	// Footwear
-	{ name: "High Heels", value: "highheels", colorable: true },
+	{ name: "High Heels", value: "highheels", colorable: true, uniqueColors: ["Ruby", "Glass"] },
 	{ name: "Latex High Heels", value: "highheels_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
 	{ name: "Ballet Heels", value: "balletheels", colorable: true },
 	{ name: "Latex Ballet Heels", value: "balletheels_latex", colorable: true, uniqueColors: ["Starry", "Shadow"] },
