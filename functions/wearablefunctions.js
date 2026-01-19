@@ -289,7 +289,7 @@ let wearabletypes = [
 	{ name: "Hoshi no Tama", value: "tama" },
 	{ name: "Silk Belt", value: "belt_silk", colorable: true },
 	{ name: "Leather Belt", value: "belt_leather", colorable: true },
-	{ name: "Leather Bandolier", value: "belt_leather" },
+	{ name: "Leather Bandolier", value: "bandolier_leather" },
 ];
 
 // Each colorable entry above will have a copy of the following added
