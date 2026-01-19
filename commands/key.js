@@ -249,7 +249,7 @@ module.exports = {
 					return;
 				}
 
-                // If the wearer has disabled key cloning, tell them to leave. 
+				// If the wearer has disabled key cloning, tell them to leave.
 				if (getOption(wearertoclone.id, "keycloning") == "disabled") {
 					interaction.reply({ content: `${wearertoclone} has disabled key cloning.`, flags: MessageFlags.Ephemeral });
 					return;
@@ -281,19 +281,18 @@ module.exports = {
 
 					if (confirmation.customId === "agreetoclonebutton") {
 						// Skip the DM if it's the wearer giving a clone of their key.
-						if ((wearertoclone == interaction.user || wearertoclone == clonedkeyholder) || (getOption(wearertoclone.id, "keycloning")) == "auto") {
+						if (wearertoclone == interaction.user || wearertoclone == clonedkeyholder || getOption(wearertoclone.id, "keycloning") == "auto") {
 							let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
 							let cloneaccept;
-                            console.log(cloneaccept)
-                            data.clone = true;
-                            if (wearertoclone == interaction.user) {
-                                cloneaccept = "clone_accept_self";
-                                data.self = true;
-                            }
-                            else {
-                                cloneaccept = "clone_accept";
-                                data.other = true;
-                            }
+							console.log(cloneaccept);
+							data.clone = true;
+							if (wearertoclone == interaction.user) {
+								cloneaccept = "clone_accept_self";
+								data.self = true;
+							} else {
+								cloneaccept = "clone_accept";
+								data.other = true;
+							}
 							data[chosenrestrainttoclone] = true;
 							if (chosenrestrainttoclone == "collar") {
 								await confirmation.update({ content: getTextGeneric(cloneaccept, data.textdata), components: [] });

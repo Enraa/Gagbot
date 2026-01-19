@@ -219,7 +219,7 @@ const configoptions = {
 			disabled: (userID) => {
 				return getOption(userID, "arousalsystem") == 0;
 			},
-		}
+		},
 	},
 	General: {
 		keygiving: {
@@ -263,7 +263,7 @@ const configoptions = {
 				return false;
 			},
 		},
-        keycloning: {
+		keycloning: {
 			name: "Key Cloning",
 			desc: "Are keyholders allowed to clone your keys for others? You must have DMs from this server turned on to utilize this option.",
 			choices: [
@@ -1166,11 +1166,11 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 		if (process.configs.servers == undefined) {
 			process.configs.servers = {};
 		}
-        let placenum = page ?? 1;
-        let keys = Object.keys(configoptions[menuset]);
-        if (menuset !== "Server") {
-            keys = keys.slice((placenum-1) * 4, (placenum) * 4)
-        }
+		let placenum = page ?? 1;
+		let keys = Object.keys(configoptions[menuset]);
+		if (menuset !== "Server") {
+			keys = keys.slice((placenum - 1) * 4, placenum * 4);
+		}
 
 		keys.forEach(async (k) => {
 			if (configoptions[menuset][k].menutype == "choice") {
@@ -1319,33 +1319,33 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 				pagecomponents.push(buttonsection);
 			}
 		});
-        if (Object.keys(configoptions[menuset]).length > 4) {
-            let optionbuttons = [
-                // Page Down
-                new ButtonBuilder()
-                    .setCustomId(`config_optionbutton_${menuset}_${placenum}_down`)
-                    .setLabel("← Prev Page")
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(placenum <= 1),
-                // Page Up
-                new ButtonBuilder()
-                    .setCustomId(`config_optionbutton_${menuset}_${placenum}_up`)
-                    .setLabel("Next Page →")
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(placenum >= Math.ceil(Object.keys(configoptions[menuset]).length / 4)),
-            ]
-            pagecomponents.push(new ActionRowBuilder().addComponents(...optionbuttons))
-        }
+		if (Object.keys(configoptions[menuset]).length > 4) {
+			let optionbuttons = [
+				// Page Down
+				new ButtonBuilder()
+					.setCustomId(`config_optionbutton_${menuset}_${placenum}_down`)
+					.setLabel("← Prev Page")
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(placenum <= 1),
+				// Page Up
+				new ButtonBuilder()
+					.setCustomId(`config_optionbutton_${menuset}_${placenum}_up`)
+					.setLabel("Next Page →")
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(placenum >= Math.ceil(Object.keys(configoptions[menuset]).length / 4)),
+			];
+			pagecomponents.push(new ActionRowBuilder().addComponents(...optionbuttons));
+		}
 
 		// If bot owner, construct a selector for servers here and allow them to create defaults and then to leave after.
 		await interaction.client.application.fetch();
 		if (menuset == "Bot" && interaction.user.id == interaction.client.application.owner.id) {
 			let choicegap = new TextDisplayBuilder().setContent(`‎`);
 			pagecomponents.push(choicegap);
-            let placenum = page ?? 1;
-			let allguilds = process.joinedguilds.slice((placenum-1) * 4, (placenum) * 4)
+			let placenum = page ?? 1;
+			let allguilds = process.joinedguilds.slice((placenum - 1) * 4, placenum * 4);
 			allguilds.forEach(async (g) => {
-                let guildsection = new SectionBuilder()
+				let guildsection = new SectionBuilder()
 					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`### ${Object.keys(process.configs.servers).includes(g.id) ? "Delete Config in " : "Create Default in "}${g.name}\n-# ‎   ⤷ ${Object.keys(process.configs.servers).includes(g.id) ? `Loaded with ${g.commands} commands` : `*Not Active on this Server*`}`))
 					.setButtonAccessory((button) =>
 						button
@@ -1356,21 +1356,21 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 
 				pagecomponents.push(guildsection);
 			});
-            let buttons = [
-                // Page Down
-                new ButtonBuilder()
-                    .setCustomId(`config_botguilds_${menuset}_${placenum}_down`)
-                    .setLabel("← Prev Page")
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(placenum <= 1),
-                // Page Up
-                new ButtonBuilder()
-                    .setCustomId(`config_botguilds_${menuset}_${placenum}_up`)
-                    .setLabel("Next Page →")
-                    .setStyle(ButtonStyle.Secondary)
-                    .setDisabled(placenum >= Math.ceil(process.joinedguilds.length / 4)),
-            ];
-            pagecomponents.push(new ActionRowBuilder().addComponents(...buttons))
+			let buttons = [
+				// Page Down
+				new ButtonBuilder()
+					.setCustomId(`config_botguilds_${menuset}_${placenum}_down`)
+					.setLabel("← Prev Page")
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(placenum <= 1),
+				// Page Up
+				new ButtonBuilder()
+					.setCustomId(`config_botguilds_${menuset}_${placenum}_up`)
+					.setLabel("Next Page →")
+					.setStyle(ButtonStyle.Secondary)
+					.setDisabled(placenum >= Math.ceil(process.joinedguilds.length / 4)),
+			];
+			pagecomponents.push(new ActionRowBuilder().addComponents(...buttons));
 		}
 
 		// Create Menu Selector
@@ -1907,21 +1907,21 @@ function generateTextEntryModal(interaction, data, optionval) {
 }
 
 async function getAllJoinedGuilds(client) {
-    let allguilds = await client.guilds.fetch();
-    let guilds = [];
-    let actives = 0;
-    for (const guild of allguilds) {
-        let guildfetched = await client.guilds.fetch(guild[0])
-        let guildapps = Array.from(await guildfetched.commands.fetch()).map((g) => g[0])
-        guilds.push({ id: guild[0], name: guildfetched.name, commands: guildapps.length })
-        if (process.configs.servers[guild[0]]) {
-            // Add to number to toast at the end of this function.
-            actives++;
-        }
-    }
-    process.joinedguilds = guilds.slice(0);
+	let allguilds = await client.guilds.fetch();
+	let guilds = [];
+	let actives = 0;
+	for (const guild of allguilds) {
+		let guildfetched = await client.guilds.fetch(guild[0]);
+		let guildapps = Array.from(await guildfetched.commands.fetch()).map((g) => g[0]);
+		guilds.push({ id: guild[0], name: guildfetched.name, commands: guildapps.length });
+		if (process.configs.servers[guild[0]]) {
+			// Add to number to toast at the end of this function.
+			actives++;
+		}
+	}
+	process.joinedguilds = guilds.slice(0);
 
-    console.log(`Joined to ${process.joinedguilds.length} servers; active in ${actives} servers.`)
+	console.log(`Joined to ${process.joinedguilds.length} servers; active in ${actives} servers.`);
 }
 
 exports.generateConfigModal = generateConfigModal;

@@ -166,7 +166,7 @@ module.exports = {
 				console.log(getServerOption(interaction.guildId, "server-channelspermitted"));
 				interaction.update(await generateConfigModal(interaction, optionparts[2], undefined, failedtext.length > 0 ? failedtext : undefined));
 			} else if (optionparts[1] == "botguilds") {
-                let page;
+				let page;
 				if (optionparts[4] == "delete") {
 					leaveServerOptions(optionparts[3]);
 					await removeAllCommands(interaction, optionparts[3]);
@@ -174,10 +174,10 @@ module.exports = {
 					initializeServerOptions(optionparts[3]);
 					await setCommands(interaction, optionparts[3]);
 				} else if (optionparts[4] == "down") {
-                    page = (parseInt(optionparts[3]) - 1)
-                } else if (optionparts[4] == "up") {
-                    page = (parseInt(optionparts[3]) + 1)
-                }
+					page = parseInt(optionparts[3]) - 1;
+				} else if (optionparts[4] == "up") {
+					page = parseInt(optionparts[3]) + 1;
+				}
 				interaction.update(await generateConfigModal(interaction, optionparts[2], page ? page : 1));
 			} else if (optionparts[1] == "createnewconfig") {
 				await interaction.client.application.fetch();
@@ -193,7 +193,7 @@ module.exports = {
 				// Revoke that CONSENT
 				if (process.consented[interaction.user.id]) {
 					delete process.consented[interaction.user.id];
-                    process.readytosave.consented = true;
+					process.readytosave.consented = true;
 				}
 				// Finally, reprompt the user, now with the new choice set.
 				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
@@ -208,14 +208,14 @@ module.exports = {
 				// Finally, reprompt the user, now with the new choice set.
 				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
 			} else if (optionparts[1] == "optionbutton") {
-                let page;
+				let page;
 				if (optionparts[4] == "down") {
-                    page = (parseInt(optionparts[3]) - 1)
-                } else if (optionparts[4] == "up") {
-                    page = (parseInt(optionparts[3]) + 1)
-                }
+					page = parseInt(optionparts[3]) - 1;
+				} else if (optionparts[4] == "up") {
+					page = parseInt(optionparts[3]) + 1;
+				}
 				interaction.update(await generateConfigModal(interaction, optionparts[2], page ? page : 1));
-            } else {
+			} else {
 				console.log(interaction);
 			}
 		} catch (err) {
