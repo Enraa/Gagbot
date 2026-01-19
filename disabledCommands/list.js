@@ -1,7 +1,15 @@
-const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags } = require("discord.js");
+const {
+  SlashCommandBuilder,
+  ComponentType,
+  ButtonStyle,
+  MessageFlags,
+} = require("discord.js");
 const { gagtypes, mittentypes } = require("./../functions/gagfunctions.js");
 const { heavytypes } = require("./../functions/heavyfunctions.js");
-const { chastitytypes, chastitybratypes } = require("./../functions/vibefunctions.js");
+const {
+  chastitytypes,
+  chastitybratypes,
+} = require("./../functions/vibefunctions.js");
 const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { collartypes } = require("./../functions/collarfunctions.js");
 const { wearabletypes } = require("./../functions/wearablefunctions.js");
@@ -9,17 +17,100 @@ const { wearabletypes } = require("./../functions/wearablefunctions.js");
 const PAGE_SIZE = 10;
 
 const restraints = [
-  ["Heavy", heavytypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
-  ["Mittens", mittentypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
-  ["Gags", gagtypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
-  ["Chastity Belts", chastitytypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
-  ["Chastity Bras", chastitybratypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
-  ["Masks", headweartypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: (heavy.blockinspect || heavy.blockemote) ? (`Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`).slice(0,-2) : `-# *No description*`, inline: false }))],
-  ["Collars", collartypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
-  ["Wearables", wearabletypes.sort((a,b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: (heavy.colorable ? `-# (multiple colors)` : `-# *No Colors Available*`), inline: false }))],
+  [
+    "Heavy",
+    heavytypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value: `Denial coefficient: ${heavy.denialCoefficient}`,
+        inline: false,
+      })),
+  ],
+  [
+    "Mittens",
+    mittentypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value: "-# *No description*",
+        inline: false,
+      })),
+  ],
+  [
+    "Gags",
+    gagtypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value: "-# *No description*",
+        inline: false,
+      })),
+  ],
+  [
+    "Chastity Belts",
+    chastitytypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value: `Denial coefficient: ${heavy.denialCoefficient}`,
+        inline: false,
+      })),
+  ],
+  [
+    "Chastity Bras",
+    chastitybratypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value: `Denial coefficient: ${heavy.denialCoefficient}`,
+        inline: false,
+      })),
+  ],
+  [
+    "Masks",
+    headweartypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value:
+          heavy.blockinspect || heavy.blockemote
+            ? `Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`.slice(
+                0,
+                -2,
+              )
+            : `-# *No description*`,
+        inline: false,
+      })),
+  ],
+  [
+    "Collars",
+    collartypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value: "-# *No description*",
+        inline: false,
+      })),
+  ],
+  [
+    "Wearables",
+    wearabletypes
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .map((heavy) => ({
+        name: heavy.name,
+        value: heavy.colorable
+          ? `-# (multiple colors)`
+          : `-# *No Colors Available*`,
+        inline: false,
+      })),
+  ],
 ];
 
-const restraintOptions = restraints.map(([name, _], idx) => ({ label: name, value: idx }));
+const restraintOptions = restraints.map(([name, _], idx) => ({
+  label: name,
+  value: idx,
+}));
 
 module.exports = {
   data: new SlashCommandBuilder()
@@ -29,16 +120,20 @@ module.exports = {
       opt
         .setName("type")
         .setDescription("What kind of restraints to list")
-        .addChoices(restraints.map(([name, _], idx) => ({ name: name, value: String(idx) })))
+        .addChoices(
+          restraints.map(([name, _], idx) => ({
+            name: name,
+            value: String(idx),
+          })),
+        ),
     ),
   async execute(interaction) {
     try {
       const type = interaction.options.getString("type") ?? 0;
 
       interaction.reply(buildMessage(Number(type), 0, false));
-    }
-    catch (err) {
-      console.log(err)
+    } catch (err) {
+      console.log(err);
     }
   },
   componentHandlers: [
@@ -49,10 +144,9 @@ module.exports = {
         details = Number(details) > 0;
 
         if (type == "select") {
-          type = interaction.values[0]
-          page = 0
-        }
-        else type = Number(type);
+          type = interaction.values[0];
+          page = 0;
+        } else type = Number(type);
 
         interaction.update(buildMessage(type, page, details));
       },

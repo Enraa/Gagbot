@@ -5,8 +5,14 @@ const {
   ButtonStyle,
 } = require("discord.js");
 const { getHeavy } = require("../functions/heavyfunctions.js");
-const { discardCollarKey, getCollarKeyholder } = require("../functions/collarfunctions.js");
-const { discardChastityKey, getChastityKeyholder } = require("../functions/vibefunctions.js");
+const {
+  discardCollarKey,
+  getCollarKeyholder,
+} = require("../functions/collarfunctions.js");
+const {
+  discardChastityKey,
+  getChastityKeyholder,
+} = require("../functions/vibefunctions.js");
 const { their, they } = require("../functions/pronounfunctions.js");
 const { config } = require("../functions/configfunctions.js");
 
@@ -19,16 +25,16 @@ module.exports = {
         .setName("chastity")
         .setDescription("Discard chastity key...")
         .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys to who?").setRequired(false)
-        )
+          opt.setName("user").setDescription("Keys to who?").setRequired(false),
+        ),
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("collar")
         .setDescription("Discard collar key...")
         .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys to who?").setRequired(false)
-        )
+          opt.setName("user").setDescription("Keys to who?").setRequired(false),
+        ),
     ),
   async execute(interaction) {
     const keyType = interaction.options.getSubcommand();
@@ -38,7 +44,7 @@ module.exports = {
       interaction.reply({
         content: `${lockedUser} has not opted in to key discarding. ${they(
           lockedUser.id,
-          true
+          true,
         )} can do so using the \`/config\` command.`,
         flags: MessageFlags.Ephemeral,
       });
@@ -95,8 +101,8 @@ module.exports = {
         `${interaction.user} tugs against ${their(interaction.user.id)} ${
           getHeavy(interaction.user.id).type
         }, trying to give ${their(
-          interaction.user.id
-        )} keys to ${lockedUser}'s ${restraint} to someone else, but it is futile!`
+          interaction.user.id,
+        )} keys to ${lockedUser}'s ${restraint} to someone else, but it is futile!`,
       );
       return;
     }
@@ -112,13 +118,13 @@ module.exports = {
     if (lockedUser.id == interaction.user.id) {
       interaction.reply(
         `${interaction.user} discards the keys to ${their(
-          lockedUser.id
-        )} ${restraint}! Who knows when they'll be found.`
+          lockedUser.id,
+        )} ${restraint}! Who knows when they'll be found.`,
       );
       discardFunction(lockedUser.id, interaction.user.id);
     } else {
       interaction.reply(
-        `${interaction.user} discards their keys to ${lockedUser}'s ${restraint}! Who knows when they'll be found.`
+        `${interaction.user} discards their keys to ${lockedUser}'s ${restraint}! Who knows when they'll be found.`,
       );
       discardFunction(lockedUser.id, interaction.user.id);
     }
