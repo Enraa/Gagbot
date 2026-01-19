@@ -6,7 +6,7 @@ const heavytypes = [
     // Armbinders
     { name: "Ancient Armbinder", value: "armbinder_ancient", denialCoefficient: 3.5 },
     { name: "Latex Armbinder", value: "armbinder_latex", denialCoefficient: 2 },
-    { name: "Leather Armbinder", value: "Armbinder_leather", denialCoefficient: 2 },
+    { name: "Leather Armbinder", value: "armbinder_leather", denialCoefficient: 2 },
     { name: "High Security Armbinder", value: "armbinder_secure", denialCoefficient: 3.5 },
     { name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex", denialCoefficient: 3 },
     { name: "Crystal Armbinder", value: "armbinder_crystal", denialCoefficient: 3 },
@@ -103,6 +103,7 @@ const heavytypes = [
     //{ name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
     { name: "Bondage Exosuit", value: "exosuit_bondage", denialCoefficient: 5 },
     { name: "Sticky Glue", value: "stickyglue_bondage", denialCoefficient: 5 },
+    { name: "Costumer Mimic", value: "costumer_mimic", denialCoefficient: 5 },
     
     // Heavy Restraints with unique name functions
     { name: "Dominant's Lap", value: "dominants_lap", denialCoefficient: 3, noself: true, noother: false, namefunction: async (interaction, data) => {
