@@ -1,23 +1,25 @@
 const garbleText = (text, intensity) => {
-  let newtextparts = text.split(" ");
-  let outtext = "";
-  for (let i = 0; i < newtextparts.length; i++) {
-    if (Math.random() > 0.8 - 0.08 * intensity) {
-      let randomlength = newtextparts[i].length + 3 - 6 * Math.random();
-      for (let t = 0; t < randomlength - 2; t++) {
-        if (t == 0) {
-          outtext = `${outtext}M`;
-        } else {
-          outtext = `${outtext}m`;
+    let newtextparts = text.split(" ");
+    let outtext = '';
+    for (let i = 0; i < newtextparts.length; i++) {
+        if (Math.random() > (0.80 - (0.08 * intensity))) {
+            let randomlength = newtextparts[i].length + 3 - (6 * Math.random())
+            for (let t = 0; t < randomlength - 2; t++) {
+                if (t == 0) {
+                    outtext = `${outtext}M`
+                }
+                else {
+                    outtext = `${outtext}m`
+                }
+            }
+            outtext = `${outtext}ph `
         }
-      }
-      outtext = `${outtext}ph `;
-    } else {
-      outtext = `${outtext}${newtextparts[i]} `;
+        else {
+            outtext = `${outtext}${newtextparts[i]} `
+        }
     }
-  }
-  return outtext;
-};
+    return outtext
+}
 
 exports.garbleText = garbleText;
-exports.choicename = "Stuff Gag";
+exports.choicename = "Stuff Gag"

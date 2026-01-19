@@ -4,35 +4,35 @@
  ***************************/
 
 // Character maps stored in an array in a separate file for code cleanliness
-const { leetGagCharMaps } = require("./leet/leetCharMap.js");
+const {leetGagCharMaps} = require('./leet/leetCharMap.js')
 
 // Helper function to garble a text segment.
 const garbleText = (text, intensity) => {
-  let output = "";
-  let itr = 0;
-  for (const char of text) {
-    if (char.match(/[A-Za-z]/)) {
-      let newChar = leetGagCharMaps[Math.ceil(intensity / 2) - 1].get(
-        char.toLowerCase(),
-      );
-      if (newChar) {
-        // Converted Char
-        output += newChar;
-      } else {
-        // Unmapped Char
-        output += char;
-      }
-    } else {
-      // Non-alpha Char
-      output += char;
+    
+    let output = "";
+    let itr = 0;
+    for (const char of text) {
+        if(char.match(/[A-Za-z]/)){
+            let newChar = leetGagCharMaps[(Math.ceil(intensity / 2) - 1)].get(char.toLowerCase());
+            if(newChar){
+                // Converted Char
+                output += newChar;
+            } else {
+                // Unmapped Char
+                output += char;
+            }
+        } else {
+            // Non-alpha Char
+            output += char;
+        }
     }
-  }
 
-  return output;
-};
+    return output
+}
 
 exports.garbleText = garbleText;
-exports.choicename = "L337 Gag";
+exports.choicename = "L337 Gag"
+
 
 // Unit Tests
 
@@ -58,7 +58,7 @@ exports.choicename = "L337 Gag";
 
 // console.log(`\nOriginal:     ${TestStr3}\n`)
 // console.log(`Intensity 1-2:   ${garbleText(TestStr3, 1)}`)
-// console.log(`Intensity 3-4:   ${garbleText(TestStr3, 3)}`)
+// console.log(`Intensity 3-4:   ${garbleText(TestStr3, 3)}`) 
 // console.log(`Intensity 5-6:   ${garbleText(TestStr3, 5)}`)
 // console.log(`Intensity 7-8:   ${garbleText(TestStr3, 7)}`)
 // console.log(`Intensity 9-10:  ${garbleText(TestStr3, 9)}`)

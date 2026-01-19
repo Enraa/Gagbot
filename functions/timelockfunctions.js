@@ -5,15 +5,7 @@ const { messageSendChannel } = require("./messagefunctions.js");
 const fs = require("fs");
 
 // returns whether the locking was successful
-function timelockChastity(
-  client,
-  wearer,
-  keyholder,
-  unlockTime,
-  access,
-  keyholderAfter,
-  webhookchannel,
-) {
+function timelockChastity(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
   const now = Date.now();
   if (now >= unlockTime) return false;
   if (process.chastity == undefined) process.chastity = {};
@@ -24,10 +16,7 @@ function timelockChastity(
     chastity.keyholder = null;
     chastity.keyholderAfter = keyholderAfter ? wearer : null;
     chastity.webhookchannel = webhookchannel;
-  } else
-    chastity.keyholderAfter = [null, wearer, chastity.keyholder][
-      keyholderAfter
-    ];
+  } else chastity.keyholderAfter = [null, wearer, chastity.keyholder][keyholderAfter];
   if (access == 2) chastity.keyholder = null;
   chastity.unlockTime = unlockTime;
   chastity.access = access;
@@ -35,10 +24,8 @@ function timelockChastity(
   setTimeout(() => {
     unlockTimelockChastity(client, wearer);
   }, unlockTime - now);
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.chastity = true;
+  if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastity = true;
   return true;
 }
 
@@ -54,45 +41,28 @@ function unlockTimelockChastity(client, wearer, skipWrite = false) {
   sendTimelockChastityUnlockMessage(client, wearer, chastity.keyholder);
   if (!chastity.keyholder) removeChastity(wearer);
   else if (!skipWrite) {
-    if (process.readytosave == undefined) {
-      process.readytosave = {};
-    }
+    if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.chastity = true;
   }
   return true;
 }
 
 async function sendTimelockChastityUnlockMessage(client, wearer, keyholder) {
-  if (process.chastity[wearer]?.webhookchannel) {
+  if (process.chastity[wearer]?.webhookchannel) { 
     if (!keyholder) {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`,
-        process.chastity[wearer].webhookchannel,
-      );
-    } else if (wearer == keyholder) {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(wearer, "object")} holding the keys!`,
-        process.chastity[wearer].webhookchannel,
-      );
-    } else {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`,
-        process.chastity[wearer].webhookchannel,
-      );
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`, process.chastity[wearer].webhookchannel)
     }
+    else if (wearer == keyholder) {
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.chastity[wearer].webhookchannel)
+    }
+    else {
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, process.chastity[wearer].webhookchannel)
+    };
   }
 }
 
 // returns whether the locking was successful
-function timelockChastityBra(
-  client,
-  wearer,
-  keyholder,
-  unlockTime,
-  access,
-  keyholderAfter,
-  webhookchannel,
-) {
+function timelockChastityBra(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
   const now = Date.now();
   if (now >= unlockTime) return false;
   if (process.chastitybra == undefined) process.chastitybra = {};
@@ -103,10 +73,7 @@ function timelockChastityBra(
     chastitybra.keyholder = null;
     chastitybra.keyholderAfter = keyholderAfter ? wearer : null;
     chastitybra.webhookchannel = webhookchannel;
-  } else
-    chastitybra.keyholderAfter = [null, wearer, chastitybra.keyholder][
-      keyholderAfter
-    ];
+  } else chastitybra.keyholderAfter = [null, wearer, chastitybra.keyholder][keyholderAfter];
   if (access == 2) chastitybra.keyholder = null;
   chastitybra.unlockTime = unlockTime;
   chastitybra.access = access;
@@ -114,10 +81,8 @@ function timelockChastityBra(
   setTimeout(() => {
     unlockTimelockChastity(client, wearer);
   }, unlockTime - now);
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.chastitybra = true;
+  if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.chastitybra = true;
   return true;
 }
 
@@ -133,45 +98,28 @@ function unlockTimelockChastityBra(client, wearer, skipWrite = false) {
   sendTimelockChastityBraUnlockMessage(client, wearer, chastitybra.keyholder);
   if (!chastitybra.keyholder) removeChastityBra(wearer);
   else if (!skipWrite) {
-    if (process.readytosave == undefined) {
-      process.readytosave = {};
-    }
+    if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.chastitybra = true;
   }
   return true;
 }
 
 async function sendTimelockChastityBraUnlockMessage(client, wearer, keyholder) {
-  if (process.chastitybra[wearer]?.webhookchannel) {
+  if (process.chastitybra[wearer]?.webhookchannel) { 
     if (!keyholder) {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`,
-        process.chastitybra[wearer]?.webhookchannel,
-      );
-    } else if (wearer == keyholder) {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(wearer, "object")} holding the keys!`,
-        process.chastitybra[wearer]?.webhookchannel,
-      );
-    } else {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`,
-        process.chastitybra[wearer]?.webhookchannel,
-      );
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, process.chastitybra[wearer]?.webhookchannel)
     }
+    else if (wearer == keyholder) {
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.chastitybra[wearer]?.webhookchannel)
+    }
+    else {
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.chastitybra[wearer]?.webhookchannel)
+    };
   }
 }
 
 // returns whether the locking was successful
-function timelockCollar(
-  client,
-  wearer,
-  keyholder,
-  unlockTime,
-  access,
-  keyholderAfter,
-  webhookchannel,
-) {
+function timelockCollar(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
   const now = Date.now();
   if (now >= unlockTime) return false;
   if (process.collar == undefined) process.collar = {};
@@ -182,8 +130,7 @@ function timelockCollar(
     collar.keyholder = null;
     collar.keyholderAfter = keyholderAfter ? wearer : null;
     collar.webhookchannel = webhookchannel;
-  } else
-    collar.keyholderAfter = [null, wearer, collar.keyholder][keyholderAfter];
+  } else collar.keyholderAfter = [null, wearer, collar.keyholder][keyholderAfter];
   if (access == 2) collar.keyholder = null;
   collar.unlockTime = unlockTime;
   collar.access = access;
@@ -191,10 +138,8 @@ function timelockCollar(
   setTimeout(() => {
     unlockTimelockChastity(client, wearer);
   }, unlockTime - now);
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.collar = true;
+  if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.collar = true;
   return true;
 }
 
@@ -210,32 +155,23 @@ function unlockTimelockCollar(client, wearer, skipWrite = false) {
   sendTimelockCollarUnlockMessage(client, wearer, collar.keyholder);
   if (!collar.keyholder) removeCollar(wearer);
   else if (!skipWrite) {
-    if (process.readytosave == undefined) {
-      process.readytosave = {};
-    }
+    if (process.readytosave == undefined) { process.readytosave = {} }
     process.readytosave.collar = true;
   }
   return true;
 }
 
 async function sendTimelockCollarUnlockMessage(client, wearer, keyholder) {
-  if (process.collar[wearer]?.webhookchannel) {
+  if (process.collar[wearer]?.webhookchannel) { 
     if (!keyholder) {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`,
-        process.collar[wearer]?.webhookchannel,
-      );
-    } else if (wearer == keyholder) {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(wearer, "object")} holding the keys!`,
-        process.collar[wearer]?.webhookchannel,
-      );
-    } else {
-      messageSendChannel(
-        `As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`,
-        process.collar[wearer]?.webhookchannel,
-      );
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, process.collar[wearer]?.webhookchannel)
     }
+    else if (wearer == keyholder) {
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.collar[wearer]?.webhookchannel)
+    }
+    else {
+      messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.collar[wearer]?.webhookchannel)
+    };
   }
 }
 

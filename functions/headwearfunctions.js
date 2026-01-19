@@ -1,433 +1,248 @@
-const fs = require("fs");
-const path = require("path");
+const fs = require('fs');
+const path = require('path');
 
 const headweartypes = [
-  // Hoods
-  {
-    name: "Latex Hood (no eyes)",
-    value: "hood_latexfull",
-    blockinspect: true,
-    blockemote: true,
-  },
-  {
-    name: "Leather Hood (no eyes)",
-    value: "hood_leatherfull",
-    blockinspect: true,
-    blockemote: true,
-  },
-  {
-    name: "Maid Hood (no eyes)",
-    value: "hood_maidfull",
-    blockinspect: true,
-    blockemote: true,
-  },
-  {
-    name: "Hardlight Hood (no eyes)",
-    value: "hood_hardlightfull",
-    blockinspect: true,
-    blockemote: true,
-  },
 
-  // Blindfolds
-  { name: "Leather Blindfold", value: "blindfold_leather", blockinspect: true },
-  { name: "Blackout Lenses", value: "blindfold_blackout", blockinspect: true },
-  { name: "Cloth Blindfold", value: "blindfold_cloth", blockinspect: true },
-  {
-    name: "High-Security Blindfold",
-    value: "blindfold_highsec",
-    blockinspect: true,
-  },
-  { name: "Latex Blindfold", value: "blindfold_latex", blockinspect: true },
-  { name: "Sleep Mask", value: "blindfold_sleep", blockinspect: true },
+    // Hoods
+    { name: "Latex Hood (no eyes)", value: "hood_latexfull", blockinspect: true, blockemote: true },
+    { name: "Leather Hood (no eyes)", value: "hood_leatherfull", blockinspect: true, blockemote: true },
+    { name: "Maid Hood (no eyes)", value: "hood_maidfull", blockinspect: true, blockemote: true },
+    { name: "Hardlight Hood (no eyes)", value: "hood_hardlightfull", blockinspect: true, blockemote: true },
 
-  //Kigus
-  {
-    name: "Kigu Mask (😀)",
-    value: "mask_kigu_😀",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "😀",
-  },
-  {
-    name: "Kigu Mask (🥰)",
-    value: "mask_kigu_🥰",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🥰",
-  },
-  {
-    name: "Kigu Mask (Yesh)",
-    value: "mask_kigu_Yesh",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:Yesh:1448775211838341251>",
-  },
-  {
-    name: "Kigu Mask (Miku)",
-    value: "mask_kigu_miku",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:miku:1455804527570718832>",
-  },
-  {
-    name: "Kigu Mask (Teto)",
-    value: "mask_kigu_teto",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:tetowoah:1455805527199056125>",
-  },
-  {
-    name: "Kigu Mask (Sadistic Maid)",
-    value: "mask_kigu_sadisticmaid",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:sadisticmaid:1244055266815774730>",
-  },
-  {
-    name: "Kigu Mask (Cute Maid)",
-    value: "mask_kigu_cutemaid",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:cutemaid:1244055369169502209>",
-  },
-  {
-    name: "Kigu Mask (Happy Maid)",
-    value: "mask_kigu_happymaid",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:happymaid:1244055447900655666>",
-  },
-  {
-    name: "Kigu Mask (Shy)",
-    value: "mask_kigu_shy",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:ShyUmmm:1457443930131009641>",
-  },
-  {
-    name: "Kigu Mask (Cursed Epicenter)",
-    value: "mask_kigu_epicenter",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "<:EpicenterCursed:1167683745428549632>",
-  },
+    // Blindfolds
+    { name: "Leather Blindfold", value: "blindfold_leather", blockinspect: true },
+    { name: "Blackout Lenses", value: "blindfold_blackout", blockinspect: true },
+    { name: "Cloth Blindfold", value: "blindfold_cloth", blockinspect: true },
+    { name: "High-Security Blindfold", value: "blindfold_highsec", blockinspect: true },
+    { name: "Latex Blindfold", value: "blindfold_latex", blockinspect: true },
+    { name: "Sleep Mask", value: "blindfold_sleep", blockinspect: true },
+    
+    //Kigus
+    { name: "Kigu Mask (😀)", value: "mask_kigu_😀", blockinspect: true, blockemote: true, replaceemote: "😀" },
+    { name: "Kigu Mask (🥰)", value: "mask_kigu_🥰", blockinspect: true, blockemote: true, replaceemote: "🥰" },
+    { name: "Kigu Mask (Yesh)", value: "mask_kigu_Yesh", blockinspect: true, blockemote: true, replaceemote: "<:Yesh:1448775211838341251>" },
+    { name: "Kigu Mask (Miku)", value: "mask_kigu_miku", blockinspect: true, blockemote: true, replaceemote: "<:miku:1455804527570718832>" },
+    { name: "Kigu Mask (Teto)", value: "mask_kigu_teto", blockinspect: true, blockemote: true, replaceemote: "<:tetowoah:1455805527199056125>" },
+    { name: "Kigu Mask (Sadistic Maid)", value: "mask_kigu_sadisticmaid", blockinspect: true, blockemote: true, replaceemote: "<:sadisticmaid:1244055266815774730>" },
+    { name: "Kigu Mask (Cute Maid)", value: "mask_kigu_cutemaid", blockinspect: true, blockemote: true, replaceemote: "<:cutemaid:1244055369169502209>" },
+    { name: "Kigu Mask (Happy Maid)", value: "mask_kigu_happymaid", blockinspect: true, blockemote: true, replaceemote: "<:happymaid:1244055447900655666>" },
+    { name: "Kigu Mask (Shy)", value: "mask_kigu_shy", blockinspect: true, blockemote: true, replaceemote: "<:ShyUmmm:1457443930131009641>" },
+    { name: "Kigu Mask (Cursed Epicenter)", value: "mask_kigu_epicenter", blockinspect: true, blockemote: true, replaceemote: "<:EpicenterCursed:1167683745428549632>" },
 
-  // Masks
-  {
-    name: "Sheep Mask",
-    value: "mask_sheep",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🐑",
-  },
-  {
-    name: "Kitty Mask",
-    value: "mask_kitty",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🐱",
-  },
-  {
-    name: "Bunny Mask",
-    value: "mask_bunny",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🐰",
-  },
-  {
-    name: "Dragon Mask",
-    value: "mask_dragon",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🐉",
-  },
-  {
-    name: "Dog Mask",
-    value: "mask_dog",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🐶",
-  },
-  {
-    name: "Frog Mask",
-    value: "mask_frog",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🐸",
-  },
-  {
-    name: "Turtle Mask",
-    value: "mask_turtle",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🐢",
-  },
-  {
-    name: "Fox Mask",
-    value: "mask_fox",
-    blockinspect: true,
-    blockemote: true,
-    replaceemote: "🦊",
-  },
+    // Masks
+    { name: "Sheep Mask", value: "mask_sheep", blockinspect: true, blockemote: true, replaceemote: "🐑" },
+    { name: "Kitty Mask", value: "mask_kitty", blockinspect: true, blockemote: true, replaceemote: "🐱" },
+    { name: "Bunny Mask", value: "mask_bunny", blockinspect: true, blockemote: true, replaceemote: "🐰" },
+    { name: "Dragon Mask", value: "mask_dragon", blockinspect: true, blockemote: true, replaceemote: "🐉" },
+    { name: "Dog Mask", value: "mask_dog", blockinspect: true, blockemote: true, replaceemote: "🐶" },
+    { name: "Frog Mask", value: "mask_frog", blockinspect: true, blockemote: true, replaceemote: "🐸" },
+    { name: "Turtle Mask", value: "mask_turtle", blockinspect: true, blockemote: true, replaceemote: "🐢" },
+    { name: "Fox Mask", value: "mask_fox", blockinspect: true, blockemote: true, replaceemote: "🦊" },
 
-  // Visors and Headsets
-  { name: "Doll Visor", value: "doll_visor", blockemote: true }, // Doll Visor removes emotes only.
-  {
-    name: "Doll Visor (Opaque)",
-    value: "doll_visor_blind",
-    blockinspect: true,
-    blockemote: true,
-  }, // Blindfolding Doll Visor
-  { name: "Doll Visor (Transparent)", value: "doll_visor_trans" }, // Cosmetic Item
-  { name: "VR Headset", value: "vr_visor", blockinspect: true },
+    // Visors and Headsets
+    { name: "Doll Visor", value: "doll_visor", blockemote: true },                                      // Doll Visor removes emotes only.
+    { name: "Doll Visor (Opaque)", value: "doll_visor_blind", blockinspect: true, blockemote: true },   // Blindfolding Doll Visor
+    { name: "Doll Visor (Transparent)", value: "doll_visor_trans", },                                   // Cosmetic Item
+    { name: "VR Headset", value: "vr_visor", blockinspect: true },
 
-  // Misc
-  { name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
-];
+    // Misc
+    { name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
+]
 
-const DOLLVISORS = ["doll_visor", "doll_visor_blind"];
+const DOLLVISORS = ["doll_visor", "doll_visor_blind"]
 
 /**************
  * Discord API Requires an array of objects in form:
  * { name: "Latex Armbinder", value: "armbinder_latex" }
  ********************/
 const loadHeadwearTypes = () => {
-  process.headtypes = headweartypes.map((item) => {
-    return { name: item.name, value: item.value };
-  });
-};
+    process.headtypes = headweartypes.map((item) => {return { name: item.name, value: item.value }})
+}
 
 const assignHeadwear = (userID, headwear, origbinder) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  let originalbinder = process.headwear[userID]?.origbinder;
-  if (process.headwear[userID]) {
-    process.headwear[userID].wornheadwear.push(headwear);
-  } else {
-    process.headwear[userID] = {
-      wornheadwear: [headwear],
-      origbinder: originalbinder ?? origbinder,
-    };
-  }
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.headwear = true;
-};
+    if (process.headwear == undefined) { process.headwear = {} }
+    let originalbinder = process.headwear[userID]?.origbinder
+    if (process.headwear[userID]) {
+        process.headwear[userID].wornheadwear.push(headwear);
+    }
+    else {
+        process.headwear[userID] = {
+            wornheadwear: [headwear],
+            origbinder: originalbinder ?? origbinder
+        }
+    }
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.headwear = true;
+}
 
 const getHeadwear = (userID) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  return process.headwear[userID]?.wornheadwear
-    ? process.headwear[userID]?.wornheadwear
-    : [];
-};
+    if (process.headwear == undefined) { process.headwear = {} }
+    return process.headwear[userID]?.wornheadwear ? process.headwear[userID]?.wornheadwear : [];
+}
 
 const getHeadwearBinder = (userID) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  return process.headwear[userID]?.origbinder;
-};
+    if (process.headwear == undefined) { process.headwear = {} }
+    return process.headwear[userID]?.origbinder;
+}
 
 const getLockedHeadgear = (userID) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  return process.headwear[userID]?.locked
-    ? process.headwear[userID]?.locked
-    : [];
-};
+    if (process.headwear == undefined) { process.headwear = {} }
+    return process.headwear[userID]?.locked ? process.headwear[userID]?.locked : [];
+}
 
 const addLockedHeadgear = (userID, headwear) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  if (process.headwear[userID]) {
-    if (process.headwear[userID].locked == undefined) {
-      process.headwear[userID].locked = [headwear];
-    } else {
-      process.headwear[userID].locked.push(headwear);
+    if (process.headwear == undefined) { process.headwear = {} }
+    if (process.headwear[userID]) {
+        if (process.headwear[userID].locked == undefined) {
+            process.headwear[userID].locked = [headwear]
+        }
+        else { 
+            process.headwear[userID].locked.push(headwear);
+        }
     }
-  }
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.headwear = true;
-};
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.headwear = true;
+}
 
 const removeLockedHeadgear = (userID, headwear) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  if (process.headwear[userID]) {
-    if (process.headwear[userID].locked == undefined) {
-      return;
-    } else {
-      if (process.headwear[userID].locked.includes(headwear)) {
-        process.headwear[userID].locked.splice(
-          process.headwear[userID].locked.indexOf(headwear),
-          1,
-        );
-      }
-      if (process.headwear[userID].locked.length == 0) {
-        delete process.headwear[userID].locked;
-      }
+    if (process.headwear == undefined) { process.headwear = {} }
+    if (process.headwear[userID]) {
+        if (process.headwear[userID].locked == undefined) {
+            return;
+        }
+        else { 
+            if (process.headwear[userID].locked.includes(headwear)) {
+                process.headwear[userID].locked.splice(process.headwear[userID].locked.indexOf(headwear), 1);
+            }
+            if (process.headwear[userID].locked.length == 0) {
+                delete process.headwear[userID].locked
+            }
+        }
     }
-  }
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.headwear = true;
-};
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.headwear = true;
+}
 
 const deleteHeadwear = (userID, headwear) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  if (!process.headwear[userID]) {
-    return false;
-  }
-  if (
-    headwear &&
-    process.headwear[userID].wornheadwear.includes(headwear) &&
-    !getLockedHeadgear(userID).includes(headwear)
-  ) {
-    process.headwear[userID].wornheadwear.splice(
-      process.headwear[userID].wornheadwear.indexOf(headwear),
-      1,
-    );
-    if (process.headwear[userID].wornheadwear.length == 0) {
-      delete process.headwear[userID];
+    if (process.headwear == undefined) { process.headwear = {} }
+    if (!process.headwear[userID]) { return false }
+    if (headwear && process.headwear[userID].wornheadwear.includes(headwear) && !getLockedHeadgear(userID).includes(headwear)) {
+        process.headwear[userID].wornheadwear.splice(process.headwear[userID].wornheadwear.indexOf(headwear), 1)
+        if (process.headwear[userID].wornheadwear.length == 0) {
+            delete process.headwear[userID]
+        }
     }
-  } else if (process.headwear[userID]) {
-    let locks = getLockedHeadgear(userID);
-    let savedheadgear = [];
-    process.headwear[userID].wornheadwear.forEach((g) => {
-      if (locks.includes(g)) {
-        savedheadgear.push(g);
-      }
-    });
-    process.headwear[userID].wornheadwear = savedheadgear;
-    if (process.headwear[userID].wornheadwear.length == 0) {
-      delete process.headwear[userID];
+    else if (process.headwear[userID]) {
+        let locks = getLockedHeadgear(userID);
+        let savedheadgear = [];
+        process.headwear[userID].wornheadwear.forEach((g) => {
+            if (locks.includes(g)) {
+                savedheadgear.push(g)
+            }
+        })
+        process.headwear[userID].wornheadwear = savedheadgear;
+        if (process.headwear[userID].wornheadwear.length == 0) {
+            delete process.headwear[userID]
+        }
     }
-  }
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.headwear = true;
-};
+    if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.headwear = true;
+}
 
 const getHeadwearName = (userID, headnname) => {
-  if (process.headwear == undefined) {
-    process.headwear = {};
-  }
-  let convertmittenarr = {};
-  for (let i = 0; i < headweartypes.length; i++) {
-    convertmittenarr[headweartypes[i].value] = headweartypes[i].name;
-  }
-  if (headnname) {
-    return convertmittenarr[headnname];
-  }
-  /*
+    if (process.headwear == undefined) { process.headwear = {} }
+    let convertmittenarr = {}
+    for (let i = 0; i < headweartypes.length; i++) {
+        convertmittenarr[headweartypes[i].value] = headweartypes[i].name
+    }
+    if (headnname) {
+        return convertmittenarr[headnname];
+    }
+    /*
     else if (process.headwear[userID]?.wornheadwear) {
         return convertmittenarr[process.mitten[userID]?.mittenname]
-    }*/ // I honestly dont have a clean way to represent this.
-  else {
-    return undefined;
-  }
-};
+    }*/ // I honestly dont have a clean way to represent this. 
+    else {
+        return undefined;
+    }
+}
 
 // Gets the full headwear entry
 // There's a better way to do this.
-// I didnt feel like doing some kind of .some condition checking.
+// I didnt feel like doing some kind of .some condition checking. 
 // Plz simplify.
 const getHeadwearBlocks = (headnname) => {
-  let convertmittenarr = {};
-  for (let i = 0; i < headweartypes.length; i++) {
-    convertmittenarr[headweartypes[i].value] = headweartypes[i];
-  }
-  if (headnname) {
-    return convertmittenarr[headnname];
-  } else {
-    return undefined;
-  }
-};
+    let convertmittenarr = {}
+    for (let i = 0; i < headweartypes.length; i++) {
+        convertmittenarr[headweartypes[i].value] = headweartypes[i]
+    }
+    if (headnname) {
+        return convertmittenarr[headnname];
+    }
+    else {
+        return undefined;
+    }
+}
 
-// Returns an object with true/false if *ANY* headwear they're wearing
-// blocks a given function.
+// Returns an object with true/false if *ANY* headwear they're wearing 
+// blocks a given function. 
 // { canEmote: true, canInspect: true }
 const getHeadwearRestrictions = (userID) => {
-  let allowedperms = {
-    canEmote: true,
-    canInspect: true,
-  };
-  let wornheadwear = getHeadwear(userID);
-  for (let i = 0; i < wornheadwear.length; i++) {
-    if (
-      getHeadwearBlocks(wornheadwear[i]) &&
-      getHeadwearBlocks(wornheadwear[i]).blockemote
-    ) {
-      allowedperms.canEmote = false;
+    let allowedperms = {
+        canEmote: true,
+        canInspect: true
     }
-    if (
-      getHeadwearBlocks(wornheadwear[i]) &&
-      getHeadwearBlocks(wornheadwear[i]).blockinspect
-    ) {
-      allowedperms.canInspect = false;
+    let wornheadwear = getHeadwear(userID);
+    for (let i = 0; i < wornheadwear.length; i++) {
+        if (getHeadwearBlocks(wornheadwear[i]) && (getHeadwearBlocks(wornheadwear[i]).blockemote)) {
+            allowedperms.canEmote = false
+        }
+        if (getHeadwearBlocks(wornheadwear[i]) && (getHeadwearBlocks(wornheadwear[i]).blockinspect)) {
+            allowedperms.canInspect = false
+        }
     }
-  }
 
-  return allowedperms;
-};
+    return allowedperms
+}
 
 // Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
 const processHeadwearEmoji = (userID, text, dollvisoroverride) => {
-  //if (!getHeadwearRestrictions(userID).canEmote) { return text } // Not blocking emotes, no need to change anything
-
-  let regex =
-    /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g;
-  let replaceemote = "";
-  let wornheadwear = getHeadwear(userID);
-  for (let i = 0; i < wornheadwear.length; i++) {
-    if (
-      getHeadwearBlocks(wornheadwear[i]) &&
-      getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined
-    ) {
-      replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote;
+    //if (!getHeadwearRestrictions(userID).canEmote) { return text } // Not blocking emotes, no need to change anything
+    
+    let regex = /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g
+    let replaceemote = "";
+    let wornheadwear = getHeadwear(userID);
+    for (let i = 0; i < wornheadwear.length; i++) {
+        if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
+            replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote
+        }
     }
-  }
 
-  let outtext = text.replaceAll(regex, replaceemote);
+    let outtext = text.replaceAll(regex, replaceemote);
 
-  if (replaceemote && !outtext.includes(replaceemote)) {
-    outtext = `${outtext} ${replaceemote}`;
-  }
+    if (replaceemote && !outtext.includes(replaceemote)) { outtext = `${outtext} ${replaceemote}`}
 
-  if (outtext.length == 0) {
-    let dollIDOverride = dollvisoroverride ?? "Unknown";
+    if (outtext.length == 0) {
+        let dollIDOverride = dollvisoroverride ?? "Unknown"
 
-    // Handle Doll Visors
-    if (getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))) {
-      // Below is a stylistic choice it's uncertain about.
-      //let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
-      outtext = `*(${dollIDOverride}'s face shows no emotion...)*`;
-    } else {
-      outtext = `*(<@${userID}>'s face shows no emotion...)*`;
+        // Handle Doll Visors
+        if(getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))){
+            // Below is a stylistic choice it's uncertain about.
+            //let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
+            outtext = `*(${dollIDOverride}'s face shows no emotion...)*`
+        }else{
+            outtext = `*(<@${userID}>'s face shows no emotion...)*`
+        }
     }
-  }
-  return outtext;
-};
+    return outtext
+}
 
-exports.headweartypes = headweartypes;
+exports.headweartypes = headweartypes
 exports.loadHeadwearTypes = loadHeadwearTypes;
-exports.assignHeadwear = assignHeadwear;
-exports.getHeadwear = getHeadwear;
+exports.assignHeadwear = assignHeadwear
+exports.getHeadwear = getHeadwear
 exports.getHeadwearBinder = getHeadwearBinder;
-exports.deleteHeadwear = deleteHeadwear;
+exports.deleteHeadwear = deleteHeadwear
 exports.getHeadwearName = getHeadwearName;
 exports.getHeadwearRestrictions = getHeadwearRestrictions;
 

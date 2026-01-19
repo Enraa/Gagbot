@@ -1,35 +1,13 @@
 const fs = require("fs");
 
-const MAX_BREATH_TABLE = [
-  2000, 140, 120, 100, 85, 70, 60, 50, 40, 32.5, 25, 17.5, 10, 7.5, 5, 5,
-];
-const MIN_BREATH_TABLE = [
-  0, -300, -290, -280, -270, -260, -240, -220, -200, -180, -150, -150, -120,
-  -100, -75, -50,
-];
-const BREATH_RECOVERY_TABLE = [
-  2000, 11.5, 9.5, 8, 6.5, 5, 4, 3.2, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.02,
-];
+const MAX_BREATH_TABLE = [2000, 140, 120, 100, 85, 70, 60, 50, 40, 32.5, 25, 17.5, 10, 7.5, 5, 5];
+const MIN_BREATH_TABLE = [0, -300, -290, -280, -270, -260, -240, -220, -200, -180, -150, -150, -120, -100, -75, -50];
+const BREATH_RECOVERY_TABLE = [2000, 11.5, 9.5, 8, 6.5, 5, 4, 3.2, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.02];
 
 // NOTE: Encapsulate gaspSounds in EOT characters so the Doll Visor doesn't split on them.
-const gaspSounds = [
-  "*hff*",
-  "*hnnf*",
-  "*ahff*",
-  "*hhh*",
-  "*nnh*",
-  "*hnn*",
-  "*hng*",
-  "*uah*",
-  "*uhf*",
-];
+const gaspSounds = ["*hff*", "*hnnf*", "*ahff*", "*hhh*", "*nnh*", "*hnn*", "*hng*", "*uah*", "*uhf*"];
 const silenceReplacers = [" ", ".", ",", ""];
-const silenceMessages = [
-  "-# *Panting heavily*",
-  "-# *Completely out of breath*",
-  "-# *Desperately gasping for air*",
-  "-# *About to pass out*",
-];
+const silenceMessages = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"];
 const specialCharacterCosts = new Map([
   ["!", 4],
   ["-", 0],
@@ -48,25 +26,21 @@ const specialCharacterCosts = new Map([
   ["<", 0],
   [">", 0],
   ["'", 0],
-  ['"', 0],
+  ["\"", 0],
 ]);
 
 const assignCorset = (user, tightness = 5, origbinder) => {
   if (process.corset == undefined) process.corset = {};
   const currentBreath = process.corset[user] ? getBreath(user) : null;
-  let originalbinder = process.corset[user]?.origbinder;
+  let originalbinder = process.corset[user]?.origbinder
   process.corset[user] = {
     tightness: tightness,
-    breath: currentBreath
-      ? Math.min(currentBreath, MAX_BREATH_TABLE[tightness])
-      : MAX_BREATH_TABLE[tightness],
+    breath: currentBreath ? Math.min(currentBreath, MAX_BREATH_TABLE[tightness]) : MAX_BREATH_TABLE[tightness],
     timestamp: Date.now(),
-    origbinder: originalbinder ?? origbinder, // Preserve original binder until it is removed.
+    origbinder: originalbinder ?? origbinder // Preserve original binder until it is removed. 
   };
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
-  process.readytosave.corset = true;
+  if (process.readytosave == undefined) { process.readytosave = {} }
+    process.readytosave.corset = true;
 };
 
 const getCorset = (user) => {
@@ -82,9 +56,7 @@ const getCorsetBinder = (user) => {
 const removeCorset = (user) => {
   if (process.corset == undefined) process.corset = {};
   delete process.corset[user];
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
+  if (process.readytosave == undefined) { process.readytosave = {} }
   process.readytosave.corset = true;
 };
 
@@ -123,14 +95,9 @@ function corsetLimitWords(user, text) {
       // Shouting is not fitting for a bottom
       if (corset.tightness >= 3 && capitals > 1) word = word.toLowerCase();
 
-      if (word.length < 3)
-        corset.breath -= (3 - word.length) * globalMultiplier;
+      if (word.length < 3) corset.breath -= (3 - word.length) * globalMultiplier;
 
-      if (
-        corset.breath < -MAX_BREATH_TABLE[corset.tightness] &&
-        newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)
-      )
-        silence = true;
+      if (corset.breath < -MAX_BREATH_TABLE[corset.tightness] && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
 
       // add gasping sounds once at half of max breath
       if (
@@ -139,15 +106,10 @@ function corsetLimitWords(user, text) {
         Math.random() <
           Math.min(
             corset.tightness / 10,
-            1 -
-              (Math.max(corset.breath, -MAX_BREATH_TABLE[corset.tightness]) +
-                MAX_BREATH_TABLE[corset.tightness]) /
-                (corset.tightness * MAX_BREATH_TABLE[corset.tightness] * 0.2),
+            1 - (Math.max(corset.breath, -MAX_BREATH_TABLE[corset.tightness]) + MAX_BREATH_TABLE[corset.tightness]) / (corset.tightness * MAX_BREATH_TABLE[corset.tightness] * 0.2)
           )
       ) {
-        newwordsinmessage.push(
-          gaspSounds[Math.floor(Math.random() * gaspSounds.length)],
-        );
+        newwordsinmessage.push(gaspSounds[Math.floor(Math.random() * gaspSounds.length)]);
       }
 
       // SILENCE BOTTOM
@@ -156,9 +118,7 @@ function corsetLimitWords(user, text) {
       if (!silence) newwordsinmessage.push(word);
     }
   }
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
+  if (process.readytosave == undefined) { process.readytosave = {} }
   process.readytosave.corset = true;
   if (newwordsinmessage.length == 0) return "";
   let outtext = newwordsinmessage.join(" ");
@@ -175,14 +135,10 @@ function calcBreath(user) {
   if (process.corset == undefined) process.corset = {};
   const corset = process.corset[user];
   if (!corset) return null;
-  if (corset.breath < MIN_BREATH_TABLE[corset.tightness])
-    corset.breath = MIN_BREATH_TABLE[corset.tightness];
+  if (corset.breath < MIN_BREATH_TABLE[corset.tightness]) corset.breath = MIN_BREATH_TABLE[corset.tightness];
   const now = Date.now();
-  const newBreath =
-    corset.breath +
-    BREATH_RECOVERY_TABLE[corset.tightness] * ((now - corset.timestamp) / 1000);
-  if (newBreath > MAX_BREATH_TABLE[corset.tightness])
-    corset.breath = MAX_BREATH_TABLE[corset.tightness];
+  const newBreath = corset.breath + BREATH_RECOVERY_TABLE[corset.tightness] * ((now - corset.timestamp) / 1000);
+  if (newBreath > MAX_BREATH_TABLE[corset.tightness]) corset.breath = MAX_BREATH_TABLE[corset.tightness];
   else corset.breath = newBreath;
   corset.timestamp = now;
   return corset;
@@ -190,9 +146,7 @@ function calcBreath(user) {
 
 function getBreath(user) {
   const corset = calcBreath(user);
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
+  if (process.readytosave == undefined) { process.readytosave = {} }
   process.readytosave.corset = true;
   return corset.breath;
 }
@@ -201,9 +155,7 @@ function getBreath(user) {
 function tryExpendBreath(user, exertion) {
   const corset = calcBreath(user);
   corset.breath -= exertion;
-  if (process.readytosave == undefined) {
-    process.readytosave = {};
-  }
+  if (process.readytosave == undefined) { process.readytosave = {} }
   process.readytosave.corset = true;
   return corset.breath > 0;
 }
