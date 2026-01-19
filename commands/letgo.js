@@ -1,21 +1,12 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { their } = require("./../functions/pronounfunctions.js");
-const {
-  getConsent,
-  handleConsent,
-} = require("./../functions/interactivefunctions.js");
-const {
-  tryOrgasm,
-  getChastity,
-  setArousalCooldown,
-} = require("../functions/vibefunctions.js");
+const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { tryOrgasm, getChastity, setArousalCooldown } = require("../functions/vibefunctions.js");
 const { getHeavy } = require("../functions/heavyfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 
 module.exports = {
-  data: new SlashCommandBuilder()
-    .setName("letgo")
-    .setDescription(`Try to get release`),
+  data: new SlashCommandBuilder().setName("letgo").setDescription(`Try to get release`),
 
   async execute(interaction) {
     try {
@@ -32,12 +23,12 @@ module.exports = {
           interactionuser: interaction.user,
           targetuser: interaction.user, // Not needed, but required for function parsing anyway.
           c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-        },
-      };
+        }
+      }
 
       if (tryOrgasm(interaction.user.id)) {
-        // User was able to orgasm!
-        data.orgasm = true;
+        // User was able to orgasm! 
+        data.orgasm = true
         interaction.reply(getText(data));
       } else {
         if (getChastity(interaction.user.id)) {
@@ -48,13 +39,13 @@ module.exports = {
 
         const heavy = getHeavy(interaction.user.id);
         if (heavy) {
-          data.heavy = true;
+          data.heavy = true
           interaction.reply(getText(data));
           return;
         }
 
         // cool off response, replace with something good
-        data.free = true;
+        data.free = true
         interaction.reply(getText(data));
         setArousalCooldown(interaction.user.id);
       }

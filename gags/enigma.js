@@ -16,9 +16,7 @@ function garbleText(text, intensity) {
           const aCap = letters[a].toUpperCase() == letters[a];
           const bCap = letters[b].toUpperCase() == letters[b];
           const tmp = letters[a];
-          letters[a] = aCap
-            ? letters[b].toUpperCase()
-            : letters[b].toLowerCase();
+          letters[a] = aCap ? letters[b].toUpperCase() : letters[b].toLowerCase();
           letters[b] = bCap ? tmp.toUpperCase() : tmp.toLowerCase();
         }
       }

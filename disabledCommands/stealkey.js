@@ -24,16 +24,16 @@ module.exports = {
         .setName("chastity")
         .setDescription("Steal chastity key...")
         .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys to who?").setRequired(true),
-        ),
+          opt.setName("user").setDescription("Keys to who?").setRequired(true)
+        )
     )
     .addSubcommand((subcommand) =>
       subcommand
         .setName("collar")
         .setDescription("Steal collar key...")
         .addUserOption((opt) =>
-          opt.setName("user").setDescription("Keys to who?").setRequired(true),
-        ),
+          opt.setName("user").setDescription("Keys to who?").setRequired(true)
+        )
     ),
   async execute(interaction) {
     // temporarily disabled since im not entirely sure what you want as checks to make a steal "valid", so currently it could be used to get around keyholders through an intermediary
@@ -95,7 +95,7 @@ module.exports = {
       interaction.reply(
         `${interaction.user} tugs against ${their(interaction.user.id)} ${
           getHeavy(interaction.user.id).type
-        }, trying to steal the keys to ${lockedUser}'s ${restraint} from someone else, but it is futile!`,
+        }, trying to steal the keys to ${lockedUser}'s ${restraint} from someone else, but it is futile!`
       );
       return;
     }
@@ -105,7 +105,7 @@ module.exports = {
         lockedUser.dmChannel,
         keyType,
         restraint,
-        interaction.user,
+        interaction.user
       );
     } else {
       let dmChannel = await lockedUser.createDM();
@@ -149,10 +149,10 @@ module.exports = {
 
         if (transferFunction(interaction.user.id, newKeyholder)) {
           const channel = await interaction.client.channels.fetch(
-            process.env.CHANNELID,
+            process.env.CHANNELID
           );
           channel.send(
-            `<@${thief}> successfully stole the key to ${interaction.user}'s ${restraint}!`,
+            `<@${thief}> successfully stole the key to ${interaction.user}'s ${restraint}!`
           );
         } else {
           interaction.reply({
