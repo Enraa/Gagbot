@@ -7,6 +7,7 @@ const { removeCorset } = require("../functions/corsetfunctions.js");
 const { deleteWearable } = require("../functions/wearablefunctions.js");
 const { removeChastityBra, setArousalCooldown } = require("../functions/vibefunctions.js");
 const { getServerOption } = require("../functions/configfunctions.js");
+const { deleteHeadwear } = require("../functions/headwearfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,7 +28,7 @@ module.exports = {
 			removeHeavy(resetuser.id);
 			removeCorset(resetuser.id);
 			deleteWearable(resetuser.id);
-			deleteHeadwear(headwearuser.id);
+			deleteHeadwear(resetuser.id);
 			setArousalCooldown(resetuser.id);
 		} else {
 			if (getServerOption(interaction.guildId, "server-safewordroleid") === "") {
@@ -45,7 +46,7 @@ module.exports = {
 				removeHeavy(interaction.user.id);
 				removeCorset(interaction.user.id);
 				deleteWearable(interaction.user.id);
-				deleteHeadwear(headwearuser.id);
+				deleteHeadwear(interaction.user.id);
 				setArousalCooldown(interaction.user.id);
 			} else {
 				// User does not have the permission, send an error message, but only if they don't have the safeworded role. If they do, then

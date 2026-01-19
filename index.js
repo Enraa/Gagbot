@@ -16,6 +16,7 @@ const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, i
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
 const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('./functions/configfunctions.js');
+const { getAllJoinedGuilds } = require('./functions/configfunctions.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -157,6 +158,9 @@ client.on("clientReady", async () => {
         // Load the /config function globally, as we can handle that whereever. 
         setGlobalCommands(client);
 
+        // Check which guilds we're in!
+        getAllJoinedGuilds(client);
+
         // Load webhooks
         await loadWebhooks(client);
         //console.log(`Webhook Channels: [${Array.from(process.webhook.keys()).join(", ")}]`)
@@ -262,6 +266,29 @@ client.on('interactionCreate', async (interaction) => {
     catch (err) {
         console.log(err);
     }
+})
+
+client.on(`guildDelete`, async (guild) => {
+    try {
+        if (process.joinedguilds.includes(guild.id)) {
+            process.joinedguilds.splice(process.joinedguilds.indexOf(guild.id, 1))
+        }
+    }
+    catch (err) {
+        console.log(err);
+    }
+    try {
+        if (process.configs.servers[guild.id]) {
+            delete process.configs.servers[guild.id]
+        }
+    }
+    catch (err) {
+        console.log(err);
+    }
+})
+
+client.on(`guildCreate`, async (guild) => {
+    getAllJoinedGuilds(client) // Rebuild the list!
 })
 
 // I refuse to use a proper database with backups. 

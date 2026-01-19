@@ -219,7 +219,7 @@ const configoptions = {
 			disabled: (userID) => {
 				return getOption(userID, "arousalsystem") == 0;
 			},
-		},
+		}
 	},
 	General: {
 		keygiving: {
@@ -255,6 +255,47 @@ const configoptions = {
 					value: "auto",
 					style: ButtonStyle.Secondary,
 					uname: "KeyGivingAuto",
+				},
+			],
+			menutype: "choice",
+			default: "prompt",
+			disabled: () => {
+				return false;
+			},
+		},
+        keycloning: {
+			name: "Key Cloning",
+			desc: "Are keyholders allowed to clone your keys for others? You must have DMs from this server turned on to utilize this option.",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Key cloning is disabled*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+					uname: "KeyCloningDisabled",
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted for key clones",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "prompt",
+					style: ButtonStyle.Secondary,
+					uname: "KeyCloningPrompt",
+				},
+				{
+					name: "Automatic",
+					helptext: "⚠️ **You will accept key cloning requests automatically**",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "auto",
+					style: ButtonStyle.Secondary,
+					uname: "KeyCloningAuto",
 				},
 			],
 			menutype: "choice",
@@ -1125,14 +1166,19 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 		if (process.configs.servers == undefined) {
 			process.configs.servers = {};
 		}
+        let placenum = page ?? 1;
+        let keys = Object.keys(configoptions[menuset]);
+        if (menuset !== "Server") {
+            keys = keys.slice((placenum-1) * 4, (placenum) * 4)
+        }
 
-		Object.keys(configoptions[menuset]).forEach(async (k) => {
+		keys.forEach(async (k) => {
 			if (configoptions[menuset][k].menutype == "choice") {
 				let buttonsection = new SectionBuilder()
 					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.helptext}`))
 					.setButtonAccessory((button) =>
 						button
-							.setCustomId(`config_pageopt_${menuset}_${k}`)
+							.setCustomId(`config_pageopt_${menuset}_${page}_${k}`)
 							.setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.name ?? "Undefined")
 							.setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.style ?? ButtonStyle.Danger)
 							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),
@@ -1254,7 +1300,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getBotOption(k))?.helptext}`))
 					.setButtonAccessory((button) =>
 						button
-							.setCustomId(`config_bpageopt_${menuset}_${k}`)
+							.setCustomId(`config_bpageopt_${menuset}_${page}_${k}`)
 							.setLabel(configoptions[menuset][k].choices.find((f) => f.value == getBotOption(k))?.name)
 							.setStyle(configoptions[menuset][k].choices.find((f) => f.value == getBotOption(k))?.style)
 							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),
@@ -1273,59 +1319,58 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 				pagecomponents.push(buttonsection);
 			}
 		});
+        if (Object.keys(configoptions[menuset]).length > 4) {
+            let optionbuttons = [
+                // Page Down
+                new ButtonBuilder()
+                    .setCustomId(`config_optionbutton_${menuset}_${placenum}_down`)
+                    .setLabel("← Prev Page")
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(placenum <= 1),
+                // Page Up
+                new ButtonBuilder()
+                    .setCustomId(`config_optionbutton_${menuset}_${placenum}_up`)
+                    .setLabel("Next Page →")
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(placenum >= Math.ceil(Object.keys(configoptions[menuset]).length / 4)),
+            ]
+            pagecomponents.push(new ActionRowBuilder().addComponents(...optionbuttons))
+        }
 
 		// If bot owner, construct a selector for servers here and allow them to create defaults and then to leave after.
 		await interaction.client.application.fetch();
 		if (menuset == "Bot" && interaction.user.id == interaction.client.application.owner.id) {
 			let choicegap = new TextDisplayBuilder().setContent(`‎`);
 			pagecomponents.push(choicegap);
-			let allguilds;
-			try {
-				allguilds = Array.from(await interaction.client.guilds.fetch())
-					.map((m) => m[1].id)
-					.sort((a, b) => {
-						return a - b;
-					})
-					.slice(0, 8);
-			} catch (err) {
-				allguilds = [];
-			}
-			console.log(allguilds);
+            let placenum = page ?? 1;
+			let allguilds = process.joinedguilds.slice((placenum-1) * 4, (placenum) * 4)
 			allguilds.forEach(async (g) => {
-				console.log(g);
-				let guildresolved = await interaction.client.guilds.fetch(g);
-				//console.log(guildresolved);
-				let guildapps;
-				try {
-					guildapps = await guildresolved.commands.fetch();
-					guildapps = guildapps.map((m) => {
-						return { name: m.name, desc: m.description, guildId: m.guildId, id: m.id };
-					});
-				} catch (err) {
-					guildapps = [];
-				}
-
-				let guildappsset = guildapps.length > 0 ? true : false;
-				console.log(guildapps.length);
-				console.log(guildappsset);
-				//guildapps = guildapps.map((m) => { return { name: m.name, desc: m.description, guildId: m.guildId, id: m.id }})
-				let guildsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`### ${guildappsset ? "Delete Config in " : "Create Default in "}${guildresolved.name}\n-# ‎   ⤷ ${guildappsset ? `Loaded with ${guildapps.length} commands` : `*Not Active on this Server*`}`))
+                let guildsection = new SectionBuilder()
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`### ${Object.keys(process.configs.servers).includes(g.id) ? "Delete Config in " : "Create Default in "}${g.name}\n-# ‎   ⤷ ${Object.keys(process.configs.servers).includes(g.id) ? `Loaded with ${g.commands} commands` : `*Not Active on this Server*`}`))
 					.setButtonAccessory((button) =>
 						button
-							.setCustomId(`config_botguilds_${menuset}_${g}_${guildappsset ? "delete" : "setup"}`)
-							.setLabel(guildappsset ? "Delete Config" : "Setup Default Config")
-							.setStyle(guildappsset ? ButtonStyle.Danger : ButtonStyle.Primary),
+							.setCustomId(`config_botguilds_${menuset}_${g.id}_${Object.keys(process.configs.servers).includes(g.id) ? "delete" : "setup"}`)
+							.setLabel(Object.keys(process.configs.servers).includes(g.id) ? "Delete Config" : "Setup Default Config")
+							.setStyle(Object.keys(process.configs.servers).includes(g.id) ? ButtonStyle.Danger : ButtonStyle.Primary),
 					);
-				console.log(guildsection);
+
 				pagecomponents.push(guildsection);
 			});
-			// For whatever STUPID reason, it isn't adding it because of async
-			// So going to forcibly ***wait***. This is *terrible* design.
-			function sleep(ms) {
-				return new Promise((resolve) => setTimeout(resolve, ms));
-			}
-			await sleep(1000); // Pauses for 1000 milliseconds
+            let buttons = [
+                // Page Down
+                new ButtonBuilder()
+                    .setCustomId(`config_botguilds_${menuset}_${placenum}_down`)
+                    .setLabel("← Prev Page")
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(placenum <= 1),
+                // Page Up
+                new ButtonBuilder()
+                    .setCustomId(`config_botguilds_${menuset}_${placenum}_up`)
+                    .setLabel("Next Page →")
+                    .setStyle(ButtonStyle.Secondary)
+                    .setDisabled(placenum >= Math.ceil(process.joinedguilds.length / 4)),
+            ];
+            pagecomponents.push(new ActionRowBuilder().addComponents(...buttons))
 		}
 
 		// Create Menu Selector
@@ -1861,6 +1906,24 @@ function generateTextEntryModal(interaction, data, optionval) {
 	return modal;
 }
 
+async function getAllJoinedGuilds(client) {
+    let allguilds = await client.guilds.fetch();
+    let guilds = [];
+    let actives = 0;
+    for (const guild of allguilds) {
+        let guildfetched = await client.guilds.fetch(guild[0])
+        let guildapps = Array.from(await guildfetched.commands.fetch()).map((g) => g[0])
+        guilds.push({ id: guild[0], name: guildfetched.name, commands: guildapps.length })
+        if (process.configs.servers[guild[0]]) {
+            // Add to number to toast at the end of this function.
+            actives++;
+        }
+    }
+    process.joinedguilds = guilds.slice(0);
+
+    console.log(`Joined to ${process.joinedguilds.length} servers; active in ${actives} servers.`)
+}
+
 exports.generateConfigModal = generateConfigModal;
 exports.generateTextEntryModal = generateTextEntryModal;
 exports.configoptions = configoptions;
@@ -1885,6 +1948,8 @@ exports.leaveServerOptions = leaveServerOptions;
 exports.createWebhook = createWebhook;
 exports.deleteWebhook = deleteWebhook;
 exports.loadWebhooks = loadWebhooks;
+
+exports.getAllJoinedGuilds = getAllJoinedGuilds;
 
 const functions = {};
 

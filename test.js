@@ -11,22 +11,7 @@ nlp.extend(nlpSpeech);
 
 env.config();
 
-let chastityobject = {
-    keyholder:"483321153675591690",
-    timestamp: 1767811537052,
-    extraFrustration:0,
-    chastitytype:"belt_tungsten",
-    keyholderAfter: "483321153675591690",
-    unlockTime: 1769798985767,
-    access:1
-};
-let currnow = Date.now();
 
-console.log(chastityobject.unlockTime)
-console.log(currnow)
-console.log(chastityobject.unlockTime < currnow);
-
-/*
 const client = new discord.Client({
     intents: [
         discord.GatewayIntentBits.Guilds,
@@ -49,17 +34,16 @@ client.on("clientReady", async () => {
 
     // List all guilds the server is in.
     let allguilds = await client.guilds.fetch();
-    let allcommands = await client.application.commands.fetch()
+    let guilds = [];
     for (const guild of allguilds) {
         let guildfetched = await client.guilds.fetch(guild[0])
-        let guildapps = await guildfetched.commands.fetch()
-        console.log(guildapps.length)
-        guildapps = guildapps.map((m) => { return { name: m.name, desc: m.description, guildId: m.guildId, id: m.id }})
-        console.log(guild[1].name)
-        console.log(guildapps.length)
+        let guildapps = Array.from(await guildfetched.commands.fetch()).map((g) => g[0])
+        console.log(guildapps);
+        guilds.push({ name: guildfetched.name, commands: guildapps.length })
     }
+    console.log(guilds)
 })
 
 client.login(process.env.DISCORDBOTTOKEN)
 
-console.log(JSON.stringify(['1443329378560901303']))*/
+console.log(JSON.stringify(['1443329378560901303']))

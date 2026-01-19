@@ -1679,7 +1679,7 @@ const texts_wear = {
 					only: (t) => {
 						return t.c2.includes("Nametag");
 					},
-					text: `USER_TAG clips a VAR_C2 onto TARGET_TAG! Now everyone will know what USER_TAG wants to call TARGET_THEM!`,
+					text: `USER_TAG clips a VAR_C2 onto TARGET_TAG! Now everyone will know what USER_THEY wantUSER_S to call TARGET_THEM!`,
 				},
 				{
 					required: (t) => {

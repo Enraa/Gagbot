@@ -13,7 +13,7 @@ module.exports = {
 	data: new SlashCommandBuilder().setName("config").setDescription(`Configure settings...`),
 	async execute(interaction) {
 		try {
-			interaction.reply(await generateConfigModal(interaction, "General", 0));
+			interaction.reply(await generateConfigModal(interaction, "General", 1));
 		} catch (err) {
 			console.log(err);
 		}
@@ -24,30 +24,30 @@ module.exports = {
 
 			// We changed page, new page!
 			if (optionparts[1] == "menuselector") {
-				interaction.update(await generateConfigModal(interaction, interaction.values[0].split("_")[1]));
+				interaction.update(await generateConfigModal(interaction, interaction.values[0].split("_")[1], 1));
 			} else if (optionparts[1] == "pageopt") {
 				if (optionparts[2] == "Extreme") {
-					optionparts[3] = optionparts.slice(3).join("_");
+					optionparts[4] = optionparts.slice(4).join("_");
 					console.log(optionparts);
 				}
 				// Frankly I hate arrays for this but lets break it down.
 				// We retrieve all of the choices for the given configuration option, mapping their values.
 				// We then find the current value and then increment it, resetting to 0 when out of range.
 				// Then we assign it to setOption. This means that choices are chosen from top to bottom in a circle.
-				let optionschoice = configoptions[optionparts[2]][optionparts[3]].choices.map((c) => c.value);
-				let newindex = optionschoice.indexOf(getOption(interaction.user.id, optionparts[3])) + 1;
+				let optionschoice = configoptions[optionparts[2]][optionparts[4]].choices.map((c) => c.value);
+				let newindex = optionschoice.indexOf(getOption(interaction.user.id, optionparts[4])) + 1;
 				if (newindex >= optionschoice.length) {
 					newindex = 0;
 				}
-				setOption(interaction.user.id, optionparts[3], optionschoice[newindex]);
+				setOption(interaction.user.id, optionparts[4], optionschoice[newindex]);
 
 				// After doing so, run the NEW option's select_function.
-				if (typeof configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function == "function") {
-					configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction.user.id);
+				if (typeof configoptions[optionparts[2]][optionparts[4]].choices[newindex].select_function == "function") {
+					configoptions[optionparts[2]][optionparts[4]].choices[newindex].select_function(interaction.user.id);
 				}
 
 				// Finally, reprompt the user, now with the new choice set.
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2], optionparts[3]));
 			} else if (optionparts[1] == "spageopt") {
 				// Frankly I hate arrays for this but lets break it down. For servers this time.
 				// We retrieve all of the choices for the given configuration option, mapping their values.
@@ -66,22 +66,22 @@ module.exports = {
 				}
 
 				// Finally, reprompt the user, now with the new choice set.
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
 			} else if (optionparts[1] == "bpageopt") {
 				// Frankly I hate arrays for this but lets break it down. For servers this time.
 				// We retrieve all of the choices for the given configuration option, mapping their values.
 				// We then find the current value and then increment it, resetting to 0 when out of range.
 				// Then we assign it to setOption. This means that choices are chosen from top to bottom in a circle.
-				let optionschoice = configoptions[optionparts[2]][optionparts[3]].choices.map((c) => c.value);
-				let newindex = optionschoice.indexOf(getBotOption(optionparts[3])) + 1;
+				let optionschoice = configoptions[optionparts[2]][optionparts[4]].choices.map((c) => c.value);
+				let newindex = optionschoice.indexOf(getBotOption(optionparts[4])) + 1;
 				if (newindex >= optionschoice.length) {
 					newindex = 0;
 				}
-				setBotOption(optionparts[3], optionschoice[newindex]);
+				setBotOption(optionparts[4], optionschoice[newindex]);
 
 				// After doing so, run the NEW option's select_function.
-				if (typeof configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function == "function") {
-					configoptions[optionparts[2]][optionparts[3]].choices[newindex].select_function(interaction, interaction.guildId);
+				if (typeof configoptions[optionparts[2]][optionparts[4]].choices[newindex].select_function == "function") {
+					configoptions[optionparts[2]][optionparts[4]].choices[newindex].select_function(interaction, interaction.guildId);
 				}
 
 				if (optionparts[3] == "bot-timetickrate") {
@@ -95,7 +95,7 @@ module.exports = {
 				}
 
 				// Finally, reprompt the user, now with the new choice set.
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2], optionparts[3]));
 			} else if (optionparts[1] == "tentrypageopt") {
 				// Frankly I hate arrays for this but lets break it down. All we need is to throw a modal at them
 				let buttonpressed = configoptions[optionparts[2]][optionparts[3]];
@@ -166,16 +166,19 @@ module.exports = {
 				console.log(getServerOption(interaction.guildId, "server-channelspermitted"));
 				interaction.update(await generateConfigModal(interaction, optionparts[2], undefined, failedtext.length > 0 ? failedtext : undefined));
 			} else if (optionparts[1] == "botguilds") {
-				console.log(optionparts[4]);
-				console.log(optionparts[3]);
+                let page;
 				if (optionparts[4] == "delete") {
 					leaveServerOptions(optionparts[3]);
 					await removeAllCommands(interaction, optionparts[3]);
 				} else if (optionparts[4] == "setup") {
 					initializeServerOptions(optionparts[3]);
 					await setCommands(interaction, optionparts[3]);
-				}
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+				} else if (optionparts[4] == "down") {
+                    page = (parseInt(optionparts[3]) - 1)
+                } else if (optionparts[4] == "up") {
+                    page = (parseInt(optionparts[3]) + 1)
+                }
+				interaction.update(await generateConfigModal(interaction, optionparts[2], page ? page : 1));
 			} else if (optionparts[1] == "createnewconfig") {
 				await interaction.client.application.fetch();
 				let canadd = getBotOption("bot-allownewsetup") == "Disabled" && interaction.user.id != interaction.client.application.owner.id;
@@ -185,14 +188,15 @@ module.exports = {
 					initializeServerOptions(interaction.guildId);
 					await setCommands(interaction, interaction.guildId);
 				}
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
 			} else if (optionparts[1] == "pageoptrevoke") {
 				// Revoke that CONSENT
 				if (process.consented[interaction.user.id]) {
 					delete process.consented[interaction.user.id];
+                    process.readytosave.consented = true;
 				}
 				// Finally, reprompt the user, now with the new choice set.
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
+				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
 			} else if (optionparts[1] == "serveroptrole") {
 				if (interaction.values.length > 0) {
 					newrole = interaction.values[0];
@@ -202,8 +206,16 @@ module.exports = {
 				}
 
 				// Finally, reprompt the user, now with the new choice set.
-				interaction.update(await generateConfigModal(interaction, optionparts[2]));
-			} else {
+				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
+			} else if (optionparts[1] == "optionbutton") {
+                let page;
+				if (optionparts[4] == "down") {
+                    page = (parseInt(optionparts[3]) - 1)
+                } else if (optionparts[4] == "up") {
+                    page = (parseInt(optionparts[3]) + 1)
+                }
+				interaction.update(await generateConfigModal(interaction, optionparts[2], page ? page : 1));
+            } else {
 				console.log(interaction);
 			}
 		} catch (err) {
@@ -219,7 +231,7 @@ module.exports = {
 			await interaction.reply({ content: `Updated your Doll Visor designation to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral });
 			if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
-					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2]));
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], 1));
 				}
 				delete process.recentinteraction[interaction.user.id];
 			}
