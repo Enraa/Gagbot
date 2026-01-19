@@ -37,6 +37,8 @@ let wearabletypes = [
 	{ name: "Hairstick", value: "hairstick" },
 	{ name: "Kitsune Half-Mask", value: "mask_kitsune" },
 	{ name: "Domino Mask", value: "mask_domino" },
+	{ name: "Rogue Mask", value: "roguemask", colorable: true },
+	{ name: "Leather Rogue Mask", value: "roguemask_leather", colorable: true },
 	{ name: "Eyeshadow", value: "eyeshadow", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Lipstick", value: "lipstick", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Kissmark", value: "kissmark", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
