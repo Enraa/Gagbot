@@ -1,5 +1,5 @@
-const garbleText = (text, intensity) => {
-	let honorifictitles = [
+const messagebegin = (msgcontent, intensity, msgparts) => {
+    let honorifictitles = [
 		// Oh god its hard to type these without caps
 		"miss",
 		"master",
@@ -51,13 +51,28 @@ const garbleText = (text, intensity) => {
 	let honorificsmap = honorifictitles.join("|");
 	let regexpattern = new RegExp(`\\b(${honorificsmap})\\b`, "i");
 
-	if (regexpattern.test(text)) {
-		textout = text;
-		garblemode = true;
+    if (regexpattern.test(msgcontent)) {
+        // They were polite, don't touch it. 
+        return { msgparts: msgparts };
 	}
+    else {
+        let msgpartschanged = msgparts.slice(0);
+        let silented = false;
+        for (let i = 0; i < msgpartschanged.length; i++) {
+            // Twiddle their thumbs
+            if (!silented && msgpartschanged[i].garble) {
+                msgpartschanged[i].text = silenttitles[Math.floor(Math.random() * silenttitles.length)];
+                silented = true;
+            }
+            // Theyve been silenced, no more speech.
+            else if (msgpartschanged[i].garble) {
+                msgpartschanged[i].text = "";
+            }
+        }
+        return { msgparts: msgpartschanged };
+    }
+} 
 
-	return { text: textout, garble: garblemode };
-};
-
-exports.garbleText = garbleText;
+//exports.garbleText = garbleText;
+exports.messagebegin = messagebegin;
 exports.choicename = "Polite Sub Gag";

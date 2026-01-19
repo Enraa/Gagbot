@@ -460,10 +460,17 @@ function textGarbleGag(messagein, msg, modifiedmessage, outtextin) {
 				let gaggarble = require(path.join(commandsPath, `${gag.gagtype}.js`));
 				let intensity = gag.intensity ? gag.intensity : 5;
 				if (gaggarble.messagebegin) {
-					msgpartsbegin.push(gaggarble.messagebegin(msg.content, intensity));
+                    let out = gaggarble.messagebegin(msg.content, intensity, msgparts);
+                    if (typeof out == "string") {
+                        msgpartsbegin.push(out);
+                    }
+					else {
+                        // Do further changes here I guess if necessary. 
+                        msgparts = out.msgparts;
+                    }
 				}
 				for (let i = 0; i < msgparts.length; i++) {
-					if (msgparts[i].garble) {
+					if (msgparts[i].garble && gaggarble.garbleText) {
 						let garbled = gaggarble.garbleText(msgparts[i].text, intensity);
 						if (typeof garbled == "string") {
 							msgparts[i].text = garbled;
