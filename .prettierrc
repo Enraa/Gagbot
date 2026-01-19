@@ -14,7 +14,7 @@
   "htmlWhitespaceSensitivity": "css",
   "vueIndentScriptAndStyle": false,
   "proseWrap": "preserve",
-  "endOfLine": "crlf",
+  "endOfLine": "lf",
   "insertPragma": false,
   "printWidth": 500,
   "requirePragma": false,
