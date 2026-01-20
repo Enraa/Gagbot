@@ -182,10 +182,10 @@ const ranger_outfit = [
 
 const healer_outfit = [
     { category: "headwear", itemtowear: "blindfold_cloth", color: null },
-    { category: "wearable", itemtowear: "bra_lacy", color: "White" },
-    { category: "wearable", itemtowear: "panties_lacy", color: "White" },
     { category: "wearable", itemtowear: "stockings", color: "White" },
     { category: "wearable", itemtowear: "gloves_opera", color: "White" },
+    { category: "chastitybelt", itemtowear: "belt_ancient", color: null },
+    { category: "chastitybra", itemtowear: "bra_ancient", color: null },
     { category: "wearable", itemtowear: "shrine_maiden", color: "White" },
     { category: "wearable", itemtowear: "bigcute_ribbon", color: "Red" },
     { category: "wearable", itemtowear: "headchain", color: "Starveiled" },
