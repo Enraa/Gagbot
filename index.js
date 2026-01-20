@@ -229,7 +229,7 @@ client.on('interactionCreate', async (interaction) => {
                 configfunc.interactionresponse(interaction);  
             }
             else if (interaction.customId.startsWith("outfitter_")) {
-                let configfunc = require(`./commands/test.js`)
+                let configfunc = require(`./commands/outfit.js`)
                 configfunc.interactionresponse(interaction);  
             }
             const [key, ...args] = interaction.customId.split("-");
