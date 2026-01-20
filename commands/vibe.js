@@ -72,7 +72,7 @@ module.exports = {
 			}
 
 			// REFLECT
-			if (targetuser.id == process.client.user.id) {
+			if (data.textdata.targetuser.id == process.client.user.id) {
 				data.gagreflect = true;
 				data.textdata.interactionuser = process.client.user;
 				data.textdata.targetuser = interaction.user;
