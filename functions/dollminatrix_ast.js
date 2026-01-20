@@ -17,12 +17,18 @@ const oldregex = /(<@[0-9]+>)|(>\/+<)|(```((ansi|js)\n)?)|(\u001b\[[0-9];[0-9][0
 
 const REGEX_OOC = /(?<OOC>((\-#\s+)?((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))/g
 
+const REGEX_SENTENCE = /(?<tag><@[0-9]+>)|(?<textEmote>(>\/+<))|(?<codeBlock>```((ansi|js)\n)?)|(?<ANSIUsername>\u001b\[[0-9];[0-9][0-9]m([^\u0000-\u0020]+: ?))|(?<ANSIColor>\u001b\[.+?m) ?|(?<websiteURL><?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)|(?<emoji><a?:[^:]+:[^>]+>)|(?<uncodeEmoji>\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\n/g;
 
 const splitMessageV2Push = (arr, text, type) => {
-    arr.push({
-        "type":     type,
-        "text":     text,
-    })
+    let newObject = {"type": type}
+
+    if(["IC","OOC"].includes(type)){
+        newObject["data"] = text
+    }else{
+        newObject["text"] = text;
+    }
+    
+    arr.push(newObject)
 }
 
 const splitMessageV2 = (text, inRegex=REGEX_OOC, base=true) => {
@@ -40,7 +46,7 @@ const splitMessageV2 = (text, inRegex=REGEX_OOC, base=true) => {
         if(startIndex != curr.index){
             chunk = text.substring(startIndex,curr.index)
             if(base){
-                splitMessageV2Push(output,chunk, "rawText")
+                splitMessageV2Push(output, splitMessageV2(chunk,REGEX_SENTENCE,false), "IC")
             }else{
                 splitMessageV2Push(output,chunk, "rawText")
             }
@@ -48,7 +54,7 @@ const splitMessageV2 = (text, inRegex=REGEX_OOC, base=true) => {
         }
 
         // Get the match itself.
-        splitMessageV2Push(output,curr[0], Object.keys(curr.groups)[0])
+        splitMessageV2Push(output, curr[0], Object.keys(curr.groups).find((e) => {return !!curr.groups[e]}))
         console.log(`Match: ${curr[0]}`)
         startIndex = regex.lastIndex
     }
@@ -67,7 +73,7 @@ const splitMessageV2 = (text, inRegex=REGEX_OOC, base=true) => {
 
 // Unit Testing
 
-let strA = "Test meowssage. *Italics meowssage.* More text. *Meowre text!*uwu"
+let strA = "Test meowssage. >///< *Italics meowssage.* More text. *Meowre text!*uwu"
 let strA_result = splitMessageV2(strA)
 
 console.log(strA)
