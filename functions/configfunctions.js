@@ -1962,7 +1962,7 @@ async function getAllJoinedGuilds(client) {
 		let guildfetched = await client.guilds.fetch(guild[0]);
 		let guildapps = Array.from(await guildfetched.commands.fetch()).map((g) => g[0]);
 		guilds.push({ id: guild[0], name: guildfetched.name, commands: guildapps.length });
-		if (process.configs.servers[guild[0]]) {
+		if (process.configs.servers != undefined && process.configs.servers[guild[0]]) {
 			// Add to number to toast at the end of this function.
 			actives++;
 		}
