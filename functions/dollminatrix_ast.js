@@ -18,9 +18,18 @@ const oldregex = /(<@[0-9]+>)|(>\/+<)|(```((ansi|js)\n)?)|(\u001b\[[0-9];[0-9][0
 const REGEX_OOC = /(?<OOC>((\-#\s+)?((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))/g
 
 
-const splitMessageV2 = (text, inRegex=oldregex) => {
+const splitMessageV2Push = (arr, text, type) => {
+    arr.push({
+        "type":     type,
+        "text":     text,
+    })
+}
+
+const splitMessageV2 = (text, inRegex=REGEX_OOC, base=true) => {
     // RegExp have writable properties - get a fresh copy just in case of synchronization issues.
     let regex = new RegExp(inRegex.source,"g")
+
+    let output = []
 
     // Split IC/OOC
     let curr, chunk
@@ -30,29 +39,37 @@ const splitMessageV2 = (text, inRegex=oldregex) => {
         // If anything is before the match, snag it.
         if(startIndex != curr.index){
             chunk = text.substring(startIndex,curr.index)
+            if(base){
+                splitMessageV2Push(output,chunk, "rawText")
+            }else{
+                splitMessageV2Push(output,chunk, "rawText")
+            }
             console.log(`Chunk: ${chunk}`)
         }
 
         // Get the match itself.
+        splitMessageV2Push(output,curr[0], Object.keys(curr.groups)[0])
         console.log(`Match: ${curr[0]}`)
         startIndex = regex.lastIndex
-
-        // console.log(curr[0])
-        // console.log(curr.index)
-        // console.log(curr)
-        // console.log(regex)
     }
 
     // Get the rest of the text.
-    chunk = text.substring(startIndex)
-    console.log(`Chunk: ${chunk}`)
+    if(startIndex < text.length){
+        chunk = text.substring(startIndex)
+        splitMessageV2Push(output,chunk, "rawText")
+        console.log(`Chunk: ${chunk}`)
+    }
+
+    return output
 }
 
 
 
 // Unit Testing
 
-let strA = "*Meow!* Test meowssage. *Italics meowssage.* More text. *Meowre text!* Even meowre text."
-let strA_result = splitMessageV2(strA, REGEX_OOC)
+let strA = "Test meowssage. *Italics meowssage.* More text. *Meowre text!*uwu"
+let strA_result = splitMessageV2(strA)
 
+console.log(strA)
 console.log(strA_result)
+
