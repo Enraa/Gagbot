@@ -4,6 +4,7 @@ function garbleText(text, intensity) {
 	return text
 		.split(" ")
 		.map((word) => {
+			if (word.startsWith("") && word.endsWith("")) return word;
 			const letters = word.split("");
 			const idxMap = letters
 				.map((letter, idx) => [letter, idx])
