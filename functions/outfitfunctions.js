@@ -586,7 +586,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 			texts = `${texts}${getCollarName(userID)}\n`;
 			texts = `${texts}Primary Keyholder: ${getCollarTimelock(userID) ? `Timelocked` : getCollar(userID).keyholder == userID ? `Self-bound` : `<@${getCollar(userID).keyholder}>`}`;
 			texts = `${texts}${
-				getChastityBra(userID).clonedKeyholders
+				getCollar(userID).clonedKeyholders
 					? `, clones held by ${getCollar(userID)
 							.clonedKeyholders.map((k) => `<@${k}>`)
 							.join(", ")}`
