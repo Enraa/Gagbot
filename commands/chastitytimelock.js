@@ -2,7 +2,7 @@ const { MessageFlags, ComponentType, ButtonStyle } = require("discord.js");
 const { parseTime } = require("../functions/timefunctions.js");
 const { timelockChastity } = require("../functions/timelockfunctions.js");
 const { getChastityKeyholder } = require("../functions/vibefunctions.js");
-const { rollKeyFumbleN, rollKeyFumble } = require("../functions/keyfindingfunctions.js");
+const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 
 module.exports = {

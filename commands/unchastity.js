@@ -4,7 +4,7 @@ const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { rollKeyFumbleN } = require("../functions/keyfindingfunctions.js");
+const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { config } = require("../functions/configfunctions.js");
 const { getChastityBra } = require("../functions/vibefunctions.js");
@@ -81,11 +81,11 @@ module.exports = {
 							if (canAccessChastity(chastitywearer.id, interaction.user.id, true).access) {
 								// We have the key to our belt
 								data.key = true;
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, chastitywearer.id, 2);
-								if (fumbleResults[0]) {
+								const fumbleResult = rollKeyFumble(interaction.user.id, chastitywearer.id, 2);
+								if (fumbleResult > 0) {
 									// We fumbled
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
+									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = discardChastityKey(chastitywearer.id, interaction.user.id);
@@ -120,11 +120,11 @@ module.exports = {
 							if (canAccessChastity(chastitywearer.id, interaction.user.id, true).access) {
 								// We have their chastity key
 								data.key = true;
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, chastitywearer.id, 2);
-								if (fumbleResults[0]) {
+								const fumbleResult = rollKeyFumble(interaction.user.id, chastitywearer.id, 2);
+								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
+									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = discardChastityKey(chastitywearer.id, interaction.user.id);
@@ -195,11 +195,11 @@ module.exports = {
 							if (canAccessChastityBra(chastitywearer.id, interaction.user.id, true).access) {
 								// We have the key to our belt
 								data.key = true;
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, chastitywearer.id, 2);
-								if (fumbleResults[0]) {
+								const fumbleResult = rollKeyFumble(interaction.user.id, chastitywearer.id, 2);
+								if (fumbleResult > 0) {
 									// We fumbled
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
+									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = discardChastityBraKey(chastitywearer.id, interaction.user.id);
@@ -234,11 +234,11 @@ module.exports = {
 							if (canAccessChastityBra(chastitywearer.id, interaction.user.id).access) {
 								// We have their chastity key
 								data.key = true;
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, chastitywearer.id, 2);
-								if (fumbleResults[0]) {
+								const fumbleResult = rollKeyFumble(interaction.user.id, chastitywearer.id, 2);
+								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResults[1]) {
+									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = discardChastityBraKey(chastitywearer.id, interaction.user.id);

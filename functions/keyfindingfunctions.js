@@ -9,45 +9,39 @@ const { config } = require("./configfunctions");
 const { findChastityBraKey } = require("./vibefunctions");
 const { messageSendChannel } = require("./messagefunctions.js");
 const { PermissionsBitField } = require("discord.js");
+const { frustrationPenalties } = require("./vibefunctions.js");
 
-// return true if the user fumbles
-function rollKeyFumble(keyholder, locked) {
+const MAX_FUMBLE_CHANCE = 0.95;
+const FUMBLE_AROUSAL_POTENCY = 11.7;
+const FUMBLE_AROUSAL_COEFFICIENT = 0.38;
+
+// returns how heavy the fumble was (usually 1 = regular, 2 = drop key)
+function rollKeyFumble(keyholder, locked, maxFumbles = 1) {
 	if (process.keyfumbling == undefined) {
 		process.keyfumbling = {};
 	}
-	const fumbleChance = getFumbleChance(keyholder, locked);
-	if (!fumbleChance) return false;
-	if (Math.random() < fumbleChance) {
-		if (config.getBlessedLuck(keyholder)) {
-			const blessing = getUserVar(keyholder, "blessed") ?? 0;
-			setUserVar(keyholder, "blessing", blessing + 1 - fumbleChance);
-		}
-		return true;
-	} else {
-		setUserVar(keyholder, "blessing", 0);
-		return false;
-	}
-}
-
-// use this if the same action causes multiple rolls to not trigger timeout before being done
-function rollKeyFumbleN(keyholder, locked, n) {
-	const fumbleChance = getFumbleChance(keyholder, locked);
-	if (!fumbleChance) return Array(n).fill(false);
-	const results = [];
-	for (let i = 0; i < n; i++) {
+	let fumbleChance = getFumbleChance(keyholder, locked);
+	if (!fumbleChance) return 0;
+	let i;
+	for (i = 0; i < maxFumbles; i++) {
+		const nextFumbleChance = Math.max(0.05, fumbleChance - MAX_FUMBLE_CHANCE);
+		if (fumbleChance > MAX_FUMBLE_CHANCE) fumbleChance = MAX_FUMBLE_CHANCE;
 		if (Math.random() < fumbleChance) {
 			if (config.getBlessedLuck(keyholder)) {
 				const blessing = getUserVar(keyholder, "blessed") ?? 0;
 				setUserVar(keyholder, "blessing", blessing + 1 - fumbleChance);
 			}
-			results[i] = true;
+			fumbleChance = nextFumbleChance;
+
+			// fumbling is frustrating
+			const penalties = frustrationPenalties.get(user) ?? [];
+			penalties.push({ timestamp: now, value: 15, decay: 2 });
+			frustrationPenalties.set(user, penalties);
 		} else {
 			setUserVar(keyholder, "blessing", 0);
-			results[i] = false;
+			return i;
 		}
 	}
-
-	return results;
 }
 
 // return of 0 = never, 1+ = always
@@ -55,13 +49,7 @@ function getFumbleChance(keyholder, locked) {
 	if (!config.getDynamicArousal(keyholder)) return 0;
 	if (config.getKeyLossDisabled(keyholder)) return 0;
 	if (keyholder != locked && (!config.getKeyFumblingOthers(keyholder) || !config.getKeyFumblingOthers(locked))) return 0;
-	let chance = getArousal(keyholder) * 2;
-	const chastity = getChastity(keyholder);
-	if (chastity) {
-		const hoursBelted = (Date.now() - chastity.timestamp) / (60 * 60 * 1000);
-		chance += calcFrustration(hoursBelted);
-		chance += chastity.extraFrustration ?? 0;
-	}
+	let chance = FUMBLE_AROUSAL_POTENCY * Math.log(1 + FUMBLE_AROUSAL_COEFFICIENT * getArousal(keyholder)) + calcFrustration(keyholder);
 
 	// chance is increased if the keyholder is wearing mittens
 	if (getMitten(keyholder)) {
@@ -69,10 +57,10 @@ function getFumbleChance(keyholder, locked) {
 		chance *= 1.1;
 	}
 
-	if (chance < 100 && config.getBlessedLuck(keyholder)) chance -= getUserVar(keyholder, "blessed") ?? 0;
+	if (config.getBlessedLuck(keyholder)) chance -= getUserVar(keyholder, "blessed") ?? 0;
 
 	// divine intervention
-	if (chance < 100 && Math.random() < 0.02) chance -= 50;
+	if (Math.random() < 0.02) chance -= 50;
 
 	return chance / 100;
 }
@@ -144,5 +132,4 @@ function calcFindSuccessChance(user) {
 
 exports.getFumbleChance = getFumbleChance;
 exports.rollKeyFumble = rollKeyFumble;
-exports.rollKeyFumbleN = rollKeyFumbleN;
 exports.handleKeyFinding = handleKeyFinding;
