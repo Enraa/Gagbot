@@ -1000,12 +1000,18 @@ const texts_ungag = {
 		},
 		nomitten: {
 			self: {
-				gag: [`USER_TAG has taken USER_THEIR gag out!`, `With a stream of drool, USER_TAG undoes the straps and takes USER_THEIR gag out!`, `Reaching up and unclasping the straps, USER_TAG unravels USER_THEIR lips from USER_THEIR gag!`, `USER_TAG takes USER_THEIR gag out, stretching USER_THEIR jaw slightly!`],
+				gag: {
+					single: [`USER_TAG has taken USER_THEIR VAR_C2 out!`, `With a stream of drool, USER_TAG undoes the straps and takes USER_THEIR VAR_C2 out!`, `Reaching up and unclasping the straps, USER_TAG unravels USER_THEIR lips from USER_THEIR VAR_C2!`, `USER_TAG takes USER_THEIR VAR_C2 out, stretching USER_THEIR jaw slightly!`],
+					multiple: [`USER_TAG undoes all the straps holding USER_THEIR gags in USER_THEIR mouth, letting them fall into USER_THEIR lap.`, `USER_TAG lets out a "pleh~" as USER_THEY undoUSER_ES the straps holding the gags in USER_THEIR mouth.`, `USER_TAG's gags are covered in drool as USER_THEY gently pullUSER_S them out from between USER_THEIR teeth.`],
+				},
 				// Ephemeral
 				nogag: [`You aren't currently gagged right now!`],
 			},
 			other: {
-				gag: [`USER_TAG undoes the straps holding TARGET_TAG's gag on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, `USER_TAG unclasps the buckle for TARGET_TAG's gag, then carefully pops it out.`, `USER_TAG carefully unbuckle's TARGET_TAG's gag, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`],
+				gag: {
+					single: [`USER_TAG undoes the straps holding TARGET_TAG's VAR_C2 on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, `USER_TAG unclasps the buckle for TARGET_TAG's VAR_C2, then carefully pops it out.`, `USER_TAG carefully unbuckles TARGET_TAG's VAR_C2, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`],
+					multiple: [`USER_TAG undoes all the straps holding TARGET_TAG's gags in TARGET_THEIR mouth, letting them fall into TARGET_THEIR lap.`, `TARGET_TAG lets out a "pleh~" as USER_TAG undoes the straps holding the gags in TARGET_THEIR mouth.`, `TARGET_TAG's gags are covered in drool as USER_TAG gently pulls them out from between TARGET_THEIR teeth.`],
+				},
 				// Ephemeral
 				nogag: [`TARGET_TAG is not currently gagged right now!`],
 			},

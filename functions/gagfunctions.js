@@ -155,11 +155,22 @@ const getGagIntensity = (userID) => {
 	}
 };
 
-const deleteGag = (userID) => {
+const deleteGag = (userID, specificgag) => {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
-	delete process.gags[userID];
+	// Remove all gags if none is specified.
+	if (!specificgag && process.gags[userID]) {
+		delete process.gags[userID];
+	} else if (process.gags[userID]) {
+		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
+		if (loc > -1) {
+			process.gags[userID].splice(loc, 1);
+		}
+		if (process.gags[userID].length == 0) {
+			delete process.gags[userID];
+		}
+	}
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}

@@ -41,7 +41,7 @@ module.exports = {
 				getGags(inspectuser.id).forEach((g) => {
 					inspecttext = `${inspecttext}${convertGagText(g.gagtype)} (${g.intensity}), `;
 				});
-				inspecttext = `${inspecttext}**`;
+				inspecttext = `${inspecttext.slice(0, -2)}**`;
 				inspectparts.push(inspecttext);
 			} else {
 				inspectparts.push(`<:Gag:1073495437635506216> Gag: Not currently worn.`);
