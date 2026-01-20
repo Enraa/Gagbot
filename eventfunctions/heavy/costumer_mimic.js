@@ -294,8 +294,8 @@ let functiontick = async (userID) => {
 
     // Only update a max of once every 20 seconds. 
     if ((process.userevents[userID].costumermimic.nextupdate ?? 0) < Date.now()) {
-        process.userevents[userID].costumermimic.nextupdate = Date.now() + 5000; // Test Speed
-        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
+        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 5000; // Test Speed
+        process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
     }
     else { return };
 
