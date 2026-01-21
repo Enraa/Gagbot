@@ -46,6 +46,7 @@ const heavytypes = [
 
 	// Static Restraints
 	{ name: "Display Stand", value: "displaystand", denialCoefficient: 4 },
+	{ name: "Stocks", value: "stocks", denialCoefficient: 4 },
 	{ name: "One Bar Prison", value: "one_bar_prison", denialCoefficient: 1.5 },
 	{ name: "Latex Encasement Stand", value: "encasementstand_latex", denialCoefficient: 4 },
 	{ name: "Sarcophagus", value: "sarco_mummy", denialCoefficient: 3 },
@@ -82,7 +83,7 @@ const heavytypes = [
 	{ name: "Suspended Frogtie", value: "rope_suspension_frog", denialCoefficient: 3 },
 
 	//Encasement and Wrappings
-	{ name: "Bandage Wrapping", value: "bandage_wrap", denialCoefficient: 1.5 },
+	{ name: "Bandage Wrappings", value: "bandage_wrap", denialCoefficient: 1.5 },
 	{ name: "Autotape Wrapping", value: "autotape_wrap", denialCoefficient: 2 },
 	//{ name: "Slime Coating", value: "encasement_slime", denialCoefficient: 2 },               Names Needed?
 	//{ name: "Solidified Rubber Coating", value: "encasement_slime", denialCoefficient: 3 },

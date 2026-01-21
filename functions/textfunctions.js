@@ -200,17 +200,151 @@ const texts_collarequip = {
 					alreadyworn: [`TARGET_TAG is already in bondage, wearing a VAR_C2!`],
 					allowed: [
 						`USER_TAG pulls a VAR_C3 out and grabs TARGET_TAG, forcing TARGET_THEIR arms and hands into the tight restraint! TARGET_THEY_CAP squirmTARGET_S in protest, but TARGET_THEY can't do anything about it!`,
+						// Doll
 						{
 							only: (t) => {
 								return t.c3 == "Doll Processing Facility";
 							},
 							text: `Snickering to USER_THEMSELF, USER_TAG throws TARGET_TAG into a VAR_C3 to become a Doll!`,
 						},
+						// General Types
+						{
+							only: (t) => {
+								return t.c3.includes("Petsuit") || t.c2.includes("Piddlefours")
+							},
+							text: `USER_TAG pushes TARGET_TAG to their knees before kneeling down USER_THEMSELF and slipping TARGET_THEIR limbs into a VAR_C3, forcing TARGET_THEM to crawl around like a pet!`
+						},
+						// Stationary
+						{
+							only: (t) => {
+								return t.c3.includes("Display Stand")
+							},
+							text: `USER_TAG lifts TARGET_TAG into the VAR_C3, securing TARGET_THEIR legs before guiding TARGET_THEIR arms into the rigid cuffs, locking them in place! TARGET_THEIR_CAP body is held in a strict, ramrod position!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("One Bar Prison")
+							},
+							text: `USER_TAG guides TARGET_TAG onto the VAR_C3, forcing TARGET_THEM to spread TARGET_THEIR legs to stand in the footrests before holding TARGET_THEM in place as the pole rises between TARGET_THEIR's legs, trapping TARGET_THEM in place!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("X-Frame")
+							},
+							text: `USER_TAG presses TARGET_TAG up against the VAR_C3, reaching up and locking TARGET_THEIR arms into the upper cuffs. Then after trapping TARGET_TAG, USER_THEM bends down to lock TARGET_THEIR legs to the frame, leaving TARGET_THEMSELF completely exposed!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Wooden Horse")
+							},
+							text: `TARGET_TAG helps USER_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Latex Encasement")
+							},
+							text: `USER_TAG guides TARGET_TAG into a latex puddle, watching as it spreads over TARGET_THEIR feet and begins to climb up TARGET_THEIR legs. Before long everything below TARGET_THEIR neck is covered in a layer of latex!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Dancer's Pole")
+							},
+							text: `USER_TAG helps TARGET_TAG climb onto the stage and cuffs TARGET_THEMSELF to the VAR_C3, swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for their enjoyment~!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Pet Cage")
+							},
+							text: `USER_TAG opens the door and gestures for TARGET_TAG to crawl into the VAR_C3, swinging the door closed behind TARGET_THEM and locking it in place with a soft but final click!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Leashing Post")
+							},
+							text: `USER_TAG leads TARGET_TAG over to the VAR_C3, forcing TARGET_THEM to kneel down before leashing TARGET_THEM securely to the VAR_C3!`
+						},
+						// Latex
+						{
+							only: (t) => {
+								return t.c3.includes("Latex Vacbed")
+							},
+							text: `USER_TAG lifts the upper sheet of the VAR_C3, waiting while TARGET_TAG slides into the VAR_C3, before dropping it back in place and allowing the sheets to seal together around TARGET_THEM. With a humming sound the air is pumped out, sealing TARGET_TAG helplessly in place!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Latex Vaccube")
+							},
+							text: `USER_TAG helps TARGET_TAG slip into the VAR_C3, leaving only TARGET_THEIR head poking out as TARGET_THEY kneel within the cube. With a humming sound the air is pumped out and the latex seals around TARGET_THEM, trapping TARGET_THEM helplessly inside!`
+						},
+						// Furniture
+						{
+							only: (t) => {
+								return t.c3.includes("Bed Restraints")
+							},
+							text: `Guiding TARGET_TAG to stretch out on the bed, USER_TAG leans over to lock TARGET_THEIR ankles into the VAR_C3 before straddling TARGET_THEM and reaching up to lock TARGET_THEIR arms into the remaining pair of cuffs, leaving TARGET_THEM helplessly spread out beneath USER_THEM~!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Chair with Cuffs")
+							},
+							text: `Sitting TARGET_TAG down in the VAR_C3, USER_TAG kneels and slips TARGET_THEIR ankles into the ankle cuffs, before standing up and walking around to slip TARGET_THEIR arms into cuffs behind TARGET_THEM and snaping them shut!`
+						},
+						// Encasement or Wrappings
+						{
+							only: (t) => {
+								return t.c3.includes("Autotape")
+							},
+							text: `USER_TAG releases a swarm of small drones that zip around TARGET_TAG, dispensing Autotape and binding TARGET_THEM into an VAR_C3!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Bandage")
+							},
+							text: `USER_TAG pulls out a roll of VAR_C3 and begins to wind them around TARGET_TAG! Soon enough TARGET_THEY are completely mummified by the VAR_C3!`
+						},
+						// Comfy
+						{
+							only: (t) => {
+								return t.c3.includes("Weighted Blanket")
+							},
+							text: `USER_TAG tosses a VAR_C3 over TARGET_TAG! It is so comfy that TARGET_THEY can't bring themselves to wriggle out from under the extremely heavy blanket!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Blanket Burrito")
+							},
+							text: `USER_TAG wraps TARGET_TAG up into a VAR_C3! It doesn't take TARGET_TAG long before TARGT_THEY realise USER_TAG has trapped TARGET_THEM in a warm comfy prison!`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Toasty Kotatsu")
+							},
+							text: `As USER_TAG helps TARGET_TAG slide into the warmth of the VAR_C3, TARGET_TAG realises TARGET_THEY can't bring TARGET_THEMSELF to leave the VAR_C3!`
+						},
+						// Misc
+						{
+							only: (t) => {
+								return (t.c3.includes("Festive Ribbons") || t.c3.includes("Wrapping Paper"))
+							},
+							text: `USER_TAG carefully wraps TARGET_TAG in VAR_C2! Who are they planning to gift such a present too~?`
+						},
+						{
+							only: (t) => {
+								return t.c3.includes("Magic Mirror")
+							},
+							text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C2! As TARGET_THEY touch it the Mirror emits a bright flash of light, and TARGET_TAG finds themselves trapped within the reflection!`
+						},
 						{
 							only: (t) => {
 								return t.c3.endsWith("'s Lap");
 							},
 							text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.`,
+						},
+						{
+							only: (t) => {
+								return t.c2.includes("Mimic");
+							},
+							text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C2! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
 						},
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
@@ -627,6 +761,12 @@ const texts_heavy = {
 			},
 			text: `USER_TAG releases a swarm of small drones that zip around USER_THEM, dispensing Autotape and binding USER_THEM into an VAR_C2!`,
 		},
+		{
+			only: (t) => {
+				return t.c3.includes("Bandage")
+			},
+			text: `USER_TAG pulls out a roll of VAR_C3 and enchants them to wind around USER_THEMSELF! Soon enough USER_THEY are completely mummified by the VAR_C3!`
+		},
 		// Comfy
 		{
 			only: (t) => {
@@ -658,6 +798,12 @@ const texts_heavy = {
 				return t.c2.includes("Magic Mirror");
 			},
 			text: `USER_TAG places a hand on the VAR_C2, then in a flash of light finds themselves trapped within the reflection!`,
+		},
+		{
+			only: (t) => {
+				return t.c2.includes("Mimic");
+			},
+			text: `USER_TAG disturbs a VAR_C2! It snaps open and entangles USER_THEIR arms and legs with its tentacles, dragging USER_THEM inside and slamming shut before sealing with a resounding click!`,
 		},
 	],
 };
@@ -1937,28 +2083,44 @@ const texts_eventfunctions = {
 			removeclothing: [
 				// OMNOMNOMNOM
 				`The Costumer Mimic tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C1 that USER_TAG is wearing!`,
-				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing it into its gaping maw and storing it away!`,
-				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving it away before absorbing the remains!`,
+				`The Costumer Mimic's tentacles rip off the VAR_C1 that USER_TAG is wearing, stuffing them into its gaping maw and storing it away!`,
+				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving them away before absorbing the remains!`,
 				{
 					only: (t) => {
 						return t.c1.includes("ipstick") || t.c1.includes("yeshadow");
 					},
-					text: `The Mimic realizes USER_TAG is wearing VAR_C1. It wipes it off it with a damp rag!`,
+					text: `The Mimic senses VAR_C1 on USER_TAG! Its tentacles tear away USER_THEIR clothing, using the scraps to wipe away the makeup!`,
 				},
 				{
 					only: (t) => {
 						return t.c1.includes("attoo") || t.c1.includes("arcode");
 					},
-					text: `The Mimic senses a VAR_C1 on USER_TAG, and erases it with a burst of magic!`,
+					text: `The Mimic senses a VAR_C1 on USER_TAG, erasing the markings with a burst of magic before consuming USER_THEIR clothes!`,
 				},
 				{
 					only: (t) => {
 						return t.c1.includes("olish");
 					},
-					text: `The Costumer Mimic's tentacles secrete some liquid that washes away USER_TAG's VAR_C1!`,
+					text: `The Costumer Mimic's tentacles secrete some liquid that washes away USER_TAG's VAR_C1 leaving bare skin and nails behind!`,
 				},
 			],
-			donestripping: [`Having finished consuming all of USER_TAG's current clothing, the Costumer Mimic begins to dress USER_THEM in its chosen costume.`, `Now that USER_TAG is stripped bare, the Costumer Mimic begins to dress USER_THEM in one of its preferred costumes.`, `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothing and begins to dress USER_THEM in the costume it has chosen.`],
+			donestripping: [
+				`As the Costumer Mimic finishes consuming their clothing, USER_TAG is left completely bare and the Mimic can begin to dress USER_THEM in its chosen costume!`,
+				`Now that the Costumer Mimic has finished removing their outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
+				`With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's clothes and begins to dress USER_THEM in the costume it has picked out!`,
+				{
+					only: (t) => {
+						return t.c1 == "Naked";
+					},
+					text: `The Costumer Mimic realises that USER_TAG is already naked, and immediately moves to dress USER_THEIR helpless form in a costume it thinks will suit USER_THEM!`,
+				},
+				{
+					only: (t) => {
+						return t.c1 != "";
+					},
+					text: `With a satisfied hum, the Costumer Mimic finishes consuming USER_TAG's VAR_C1 and begins to dress USER_THEM in the costume it has chosen!`,
+				},
+			],
 			applyingOutfit: {
 				wearable: { add: [`The Costumer Mimic pulls out a VAR_C1 from its internal storage and begins to dress USER_TAG in it!`, `The Costumer Mimic produces a VAR_C1 from within itself and slips it onto USER_TAG!`, `The Costumer Mimic's tentacles fish out a VAR_C1 from its storage and begins to dress USER_TAG in it!`] },
 				mitten: { replace: [`The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`] },

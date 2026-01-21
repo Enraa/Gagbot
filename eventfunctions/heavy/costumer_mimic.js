@@ -227,7 +227,6 @@ const angel_outfit = [
     { category: "chastitybelt", itemtowear: "belt_featherlight", color: null },
     { category: "chastitybra", itemtowear: "bra_featherlight", color: null },
     { category: "wearable", itemtowear: "nightie_sheer", color: "White" },
-    { category: "wearable", itemtowear: "tome", color: "Angelic Tome" },
     { category: "mittens", itemtowear: "mittens_hardlight", color: null },
     { category: "gag", itemtowear: "politeSub", color: null },
     { category: "collar", itemtowear: "collar_star", color: null },
