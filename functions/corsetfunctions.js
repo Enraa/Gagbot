@@ -66,6 +66,9 @@ const removeCorset = (user) => {
 
 // Consumes breath and returns possibly modified text
 function corsetLimitWords(user, text) {
+	// just do nothing if no text
+	if (text.length == 0) return text;
+
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
 	let globalMultiplier = text.match(/^\s*#+\s/) ? 2 : 1;
 	const corset = calcBreath(user);
