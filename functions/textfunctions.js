@@ -1941,19 +1941,19 @@ const texts_eventfunctions = {
 				`The Costumer Mimic's tentacles snake out to swipe across the VAR_C1 that USER_TAG is wearing, dissolving it away before absorbing the remains!`,
 				{
 					only: (t) => {
-						return t.c1.includes("Lipstick") || t.c1.includes("Eyeshadow");
+						return t.c1.includes("ipstick") || t.c1.includes("yeshadow");
 					},
 					text: `The Mimic realizes USER_TAG is wearing VAR_C1. It wipes it off it with a damp rag!`,
 				},
 				{
 					only: (t) => {
-						return t.c1.includes("Womb Tattoo") || t.c1.includes("Doll Barcode");
+						return t.c1.includes("attoo") || t.c1.includes("arcode");
 					},
 					text: `The Mimic senses a VAR_C1 on USER_TAG, and erases it with a burst of magic!`,
 				},
 				{
 					only: (t) => {
-						return t.c1.includes("Polish");
+						return t.c1.includes("olish");
 					},
 					text: `The Costumer Mimic's tentacles secrete some liquid that washes away USER_TAG's VAR_C1!`,
 				},

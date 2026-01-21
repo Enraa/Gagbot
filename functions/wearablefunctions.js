@@ -268,7 +268,7 @@ let wearabletypes = [
 	{ name: "Long Detached Latex Sleeves", value: "sleeves_longdetached_latex", colorable: true, uniqueColors: ["Gothic", "Starry", "Shadow"] },
 	{ name: "Fingernail Polish", value: "polish_fingernails", colorable: true, uniqueColors: ["Iridescent", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
 	{ name: "Wristcuff", value: "wristcuff", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-	{ name: "Bracelet", value: "bracelet", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Bracelets", value: "bracelets", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Armbands", value: "armbands", colorable: true, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Gauntlets", value: "gauntlet", colorable: true, uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 
