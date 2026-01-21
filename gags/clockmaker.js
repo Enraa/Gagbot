@@ -2,9 +2,9 @@ const outOfTimeMessages = [`\n*looks down silently*\n`, `\n*tries to speak, but 
 
 function messagebegin(_msgcontent, intensity, msgparts) {
 	const duration = 20 - intensity;
-	const period = 30 + 9 * intensity;
+	const period = 25 + 7 * intensity;
 
-	if (Math.floor(Date.now() / 1000) % period < duration) return { msgparts: msgparts };
+	if (Math.floor((Date.now() / 1000)) % period < duration) return { msgparts: msgparts };
 
 	let msgpartschanged = msgparts.slice(0);
 	let silenced = false;
@@ -18,7 +18,10 @@ function messagebegin(_msgcontent, intensity, msgparts) {
 			msgpartschanged[i].garble = false;
 		}
 	}
-	msgpartschanged.push({ text: `\n-# (${period - (Math.floor(Date.now() / 1000) % period)} Second${period - (Math.floor(Date.now() / 1000) % period) == 1 ? "" : "s"} Remaining...)`, garble: false });
+    msgpartschanged.push({
+        text: `\n-# (${period - (Math.floor((Date.now() / 1000)) % period)} Second${(period - (Math.floor((Date.now() / 1000)) % period)) == 1 ? "" : "s"} Remaining...)`,
+        garble: false
+    })
 	return { msgparts: msgpartschanged };
 }
 
