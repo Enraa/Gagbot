@@ -253,7 +253,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 					}
 					if (k == "gag") {
 						let emoji = getHeavy(userID) || getMitten(userID) ? "⚠️" : "✅";
-						textdisplay = `${textdisplay}<:Gag:1073495437635506216> Gag: ${emoji}, `;
+						textdisplay = `${textdisplay}${process.emojis.gag} Gag: ${emoji}, `;
 					}
 					if (k == "mitten") {
 						let emoji = getHeavy(userID) || getMitten(userID) ? "⚠️" : "✅";
