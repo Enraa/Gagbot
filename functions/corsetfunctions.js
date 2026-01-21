@@ -98,8 +98,10 @@ function corsetLimitWords(user, text) {
 
 			// Shouting is not fitting for a bottom
 			if (corset.tightness >= 9 && capitals > 0) word = word.toLowerCase();
-			else if (corset.tightness >= 5 && capitals > 1) word = word.toLowerCase();
-			else if (corset.tightness >= 3 && capitals > 2 && capitals > word.length / 2) word = word.toLowerCase();
+			else if (corset.tightness >= 7 && capitals > 1) word = word.toLowerCase();
+			else if (corset.tightness >= 5 && capitals > 2) word = word.toLowerCase();
+			else if (corset.tightness >= 4 && capitals > 3) word = word.toLowerCase();
+			else if (corset.tightness >= 3 && capitals > 4) word = word.toLowerCase();
 
 			if (word.length < 3) corset.breath -= (3 - word.length) * globalMultiplier;
 
