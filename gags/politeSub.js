@@ -61,7 +61,7 @@ const messagebegin = (msgcontent, intensity, msgparts) => {
 			// Twiddle their thumbs
 			if (!silented && msgpartschanged[i].garble) {
 				msgpartschanged[i].text = silenttitles[Math.floor(Math.random() * silenttitles.length)];
-                msgpartschanged[i].garble = false;
+				msgpartschanged[i].garble = false;
 				silented = true;
 			}
 			// Theyve been silenced, no more speech.
