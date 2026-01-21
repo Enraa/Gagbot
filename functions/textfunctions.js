@@ -212,6 +212,12 @@ const texts_collarequip = {
 							},
 							text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.`,
 						},
+						{
+							only: (t) => {
+								return t.c2.includes("Mimic");
+							},
+							text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C2! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
+						},
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -551,6 +557,12 @@ const texts_heavy = {
 				return t.c2.includes("Magic Mirror");
 			},
 			text: `USER_TAG places a hand on the VAR_C2, then in a flash of light finds themselves trapped within the reflection!`,
+		},
+		{
+			only: (t) => {
+				return t.c2.includes("Mimic");
+			},
+			text: `USER_TAG disturbs a VAR_C2! It snaps open and entangles USER_THEIR arms and legs with its tentacles, dragging USER_THEM inside and slamming shut before sealing with a resounding click!`,
 		},
 	],
 };
