@@ -8,7 +8,8 @@ module.exports = {
 		.addUserOption((opt) => opt.setName("user").setDescription("Who to inspect (blank to inspect yourself)")),
     async execute(interaction) {
         try {
-            interaction.reply(await inspectModal(interaction.user.id, interaction.user.id, "overview", 1))
+            let inspectuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
+            interaction.reply(await inspectModal(interaction.user.id, inspectuser.id, "overview", 1))
         }
         catch (err) {
             console.log(err)

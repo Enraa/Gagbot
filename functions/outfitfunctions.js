@@ -717,7 +717,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         let wearingtext = `### Worn Restraints:`;
         // Gags
         if (getGag(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(inspectuserID).map((g) => convertGagText(g.gagtype)).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(inspectuserID).map((g) => { return `${convertGagText(g.gagtype)} (${g.intensity})`}).join(", ")}**`
         }
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
@@ -733,7 +733,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Vibe
         if (getVibe(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getVibe(inspectuserID).map((vibe) => `${vibe.vibetype}`).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getVibe(inspectuserID).map((vibe) => `${vibe.vibetype} (${vibe.intensity})`).join(", ")}**`
         }
         // Heavy Bondage
         if (getHeavy(inspectuserID)) {
@@ -856,8 +856,8 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         clothingtext = `${clothingtext}\n`
 
         let bartext = ``;
-        if (getArousal(userID) > 2.0) {
-            bartext = `\n💞 Arousal: ${getArousalBar(userID).bar} (${getArousalBar(userID).percentage}%)`
+        if (getArousal(inspectuserID) > 2.0) {
+            bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
         }
 
         let collated = `${wearingtext}${clothingtext}${bartext}`;
@@ -873,7 +873,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         let wearingtext = `### Regular Worn Restraints:`;
         // Gags
         if (getGag(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(inspectuserID).map((g) => convertGagText(g.gagtype)).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(inspectuserID).map((g) => { return `${convertGagText(g.gagtype)} (${g.intensity})`}).join(", ")}**`
         }
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
@@ -889,7 +889,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Vibe
         if (getVibe(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getVibe(inspectuserID).map((vibe) => `${vibe.vibetype}`).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getVibe(inspectuserID).map((vibe) => `${vibe.vibetype} (${vibe.intensity})`).join(", ")}**`
         }
         // Heavy Bondage
         if (getHeavy(inspectuserID)) {
