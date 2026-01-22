@@ -59,7 +59,7 @@ const messagebegin = (msgcontent, intensity, msgparts) => {
 		let silented = false;
 		for (let i = 0; i < msgpartschanged.length; i++) {
 			// Twiddle their thumbs
-			if (!silented && msgpartschanged[i].garble) {
+			if (!silented && msgpartschanged[i].garble && msgpartschanged[i].text.length > 0 && !msgpartschanged[i].text.match(/^\s*$/)) {
 				msgpartschanged[i].text = silenttitles[Math.floor(Math.random() * silenttitles.length)];
 				msgpartschanged[i].garble = false;
 				silented = true;
