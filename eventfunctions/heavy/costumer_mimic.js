@@ -191,6 +191,7 @@ const healer_outfit = [
     { category: "chastitybelt", itemtowear: "belt_ancient", color: null },
     { category: "chastitybra", itemtowear: "bra_ancient", color: null },
     { category: "wearable", itemtowear: "shrine_maiden", color: "White" },
+    { category: "wearable", itemtowear: "sleeves_detatched", color: "White" },
     { category: "wearable", itemtowear: "bigcute_ribbon", color: "Red" },
     { category: "wearable", itemtowear: "headchain", color: "Starveiled" },
     { category: "wearable", itemtowear: "balletheels", color: "White" },
