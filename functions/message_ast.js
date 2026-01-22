@@ -329,16 +329,15 @@ const unpackMessage = (message) => {
 const modifyMessage = (message, inFunction, icOnly = true, type = "rawText", args) => {
 	// For each line
 	for (x in message) {
-		if (message[x].data && (!icOnly || message[x].type != "OOC")) {
+		if (message[x].data && ((message[x].type == "line") || (!icOnly && message[x].type == "OOC") || message[x].type == "IC")) {
 			modifyMessage(message[x].data, inFunction, icOnly, type, args);
 		} else {
 			// Do we edit this message?
 			let modify = Array.isArray(type) ? (type.includes(message[x].type)) : (type == message[x].type)
 			if (modify) {
-				console.log(args)
+				//console.log(args)
 				let ret = inFunction(message[x].text, ...args);
-				//message[x].text = inFunction(message[x].text, ...args);
-				if(ret !== undefined){message[x].text = inFunction(message[x].text, ...args)}
+				if(ret !== undefined){message[x].text = ret}
 			}
 		}
 	}
@@ -468,9 +467,10 @@ const test_callFunc = () => {
 		}
 	}
 
-	testSTR_1 = "Aaaaaaaaaaaaa!!  <:vanillaBlush:395448030003855360> 😀"
+	testSTR_1 = "Meow"
 
 	testAST_1 = new MessageAST(testSTR_1)
+	console.log(testAST_1)
 	testAST_1.callFunc(replaceEmoji,true,["emoji","unicodeEmoji"],["<:Smirk:1462969765835313192>",matchFound])
 	
 	console.log(testAST_1)
@@ -479,6 +479,7 @@ const test_callFunc = () => {
 
 }
 
+testClass_MessageAST();
 test_callFunc();
 
 exports.MessageAST = MessageAST;

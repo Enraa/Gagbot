@@ -318,14 +318,11 @@ const modifymessage = async (msg, threadId) => {
 		// But only if NOT wearing a headwear that replaces it in previous step.
 		if (!messageTreeModified.modified && msg.content.match(/^((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|\s|\n)+$/)) return;
 
-		// At this point, generate all of the parts for the message
-		//let messageparts = splitMessage(replacingtext);
-
 		// Handle weird exceptions for links
 		//messageparts = handleLinkExceptions(messageparts);
 
-		// // Text garbling due to Arousal
-		//textGarbleVibrator(msg, messageTree, messageTreeModified);
+		// Text garbling due to Arousal
+		textGarbleVibrator(msg, messageTree, messageTreeModified);
 
 		// // Text limiting and modifying due to Corset
 		// let corsetreturned = textGarbleCorset(messageparts, msg, modifiedmessage, threadId);
@@ -379,28 +376,29 @@ function handleLinkExceptions(messagein) {
 	return messageparts;
 }
 
+
+
+const replaceStutter = (text, msg, msgModified, intensity, arousedtexts) => {
+	try {
+		let garbledtext = stutterText(msg, text, intensity, arousedtexts);
+		if (garbledtext.stuttered) {
+			msgModified.modified = true;
+			return garbledtext.text;
+		}
+		return
+	}
+	catch (err) {
+		console.log(err);
+	}
+	
+}
+
 function textGarbleVibrator(msg, msgTree, msgModified) {
 	const intensity = getVibeEquivalent(msg.author.id);
 	if (intensity) {
 		const arousedtexts = getArousedTexts(msg.author.id);
-
-		//totalwords = 0 // recalculate eligible word count because they're stimmed out of their mind.
-		for (let i = 0; i < messageparts.length; i++) {
-			try {
-				if (messageparts[i].garble) {
-					let garbledtext = stutterText(msg, messageparts[i].text, intensity, arousedtexts);
-					if (garbledtext.stuttered) {
-						modified = true;
-					}
-					messageparts[i].text = garbledtext.text;
-					//totalwords = totalwords + messageparts[i].text.split(" ").length
-				}
-			} catch (err) {
-				console.log(err);
-			}
-		}
+		msgTree.callFunc(replaceStutter, true, "rawText",[msg, msgModified, intensity, arousedtexts])
 	}
-	return { messageparts: messageparts, modifiedmessage: modified };
 }
 
 function textGarbleCorset(messagein, msg, modifiedmessage, threadId) {
