@@ -66,19 +66,21 @@ const removeCorset = (user) => {
 };
 
 // Consumes breath and returns possibly modified text
-function corsetLimitWords(text, user, msgModified) {
+function corsetLimitWords(text, parent, user, msgModified) {
 	// just do nothing if no text
 	if (text.length == 0 || text.match(/^\s*$/)) return "";//text;
 
-	// TODO - Need subscript property of parent line to implement this.
+	// Is this line subscripted or superscripted?
+	// X = -1    - Subscripted
+	// X = [1-3] - Superscripted, with X #'s. 1 is loudest.
+	let scriptLevel = parent.parent.subscript		
+
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
-	let globalMultiplier = text.match(/^\s*#+\s/) ? 2 : 1;
+	let globalMultiplier = (scriptLevel > 0) ? 2 : 1;
 	const corset = calcBreath(user);
 
-
-	// TODO - Need subscript property of parent line
 	// Tightlaced bottoms must only whisper
-	if (corset.tightness >= 7 && !text.match(/^\s*\-#\s/)) globalMultiplier *= 2;
+	if (corset.tightness >= 7 && scriptLevel >= 0) globalMultiplier *= 2;
 
 
 
@@ -90,13 +92,13 @@ function corsetLimitWords(text, user, msgModified) {
 		if (word.length == 0) {
 			if (!silence) newwordsinmessage.push(word);
 		} else {
+			console.log(word)
 			let capitals = 0;
 			for (const char of word) {
-				if (char > 64 && char < 91) capitals++;
+				if (/[A-Z]/.test(char)) capitals++;
 				const cost = specialCharacterCosts.get(char) ?? 1;
 				corset.breath -= cost * globalMultiplier;
 			}
-
 			// Capitals cost more breath
 			corset.breath -= globalMultiplier * capitals;
 

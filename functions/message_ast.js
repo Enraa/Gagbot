@@ -24,16 +24,23 @@ const HIGHESTLEVELNODES = ["IC", "OOC"];
  ************************************************/
 class MessageAST {
 	constructor(text) {
-		this.data = messageSplit_AST(text);
+		this.data = messageSplit_AST(text, this);
 		this.type = "root";
+		this.parent = null;
 	}
 	rebuild(text){
-		this.data = messageSplit_AST(text);
+		this.data = messageSplit_AST(text, this);
 	}
-	// Run a function on the specified type of segment
+	/**************************************************
+	 * Run a function on the specified type of segment
+	 * @param inFunction - Function to call. First two args MUST be text and parent, handled by this.
+	 * @param icOnly - Run on IC segments, or IC and OOC?
+	 * @param type - Type to run on. Can be a string, or array of strings.
+	 * @param args - Additional arguments to pass into inFunction, AFTER text and parent.
+	 **************************************************/
 	callFunc(inFunction, icOnly = true, type = "rawText", args = []) {
 		// Call a helper due to scope issues with recursive functions
-		modifyMessage(this, inFunction, icOnly, type, args);
+		modifyMessage(this, this, inFunction, icOnly, type, args);
 		return this; // Allow chaining
 	}
 	// Remove all triple-backtick codeblocks
@@ -93,14 +100,14 @@ class MessageAST {
  * Construct an Abstract Syntax Tree-like Model of a Message
  * @param text      - Raw text of the discord message.
  *************************************************/
-const messageSplit_AST = (text) => {
+const messageSplit_AST = (text, parent) => {
 	// Isolate codeblocks on newlines, remove preceding whitespace, then split on newlines.
 	let deepCopy = isolateCodeBlocks(text)
 		.replace(/^[\s]*/, "")
 		.split("\n"); //.filter((e) => e != "")
 	let output = [];
 
-	console.log(deepCopy);
+	//console.log(deepCopy);
 
 	// Recursively split each newline.
 	for (x in deepCopy) {
@@ -110,8 +117,23 @@ const messageSplit_AST = (text) => {
 	// Determine if lines of the message are subscripted
 	configureSubscript(output);
 
+	// Configure parent
+	configureParent(output, parent);
+
 	return output;
 };
+
+
+const configureParent = (dollAST, parent) =>  {
+	for (let x = 0; x < dollAST.length; x++) {
+		dollAST[x].parent = parent
+		if(dollAST[x].data){
+			for(let y = 0; y < dollAST[x].data.length; y++){
+				configureParent(dollAST[x].data, dollAST[x])
+			}
+		}
+	}
+}
 
 //region Helper Functions
 /**************************************************
@@ -176,7 +198,7 @@ const messageSplitPush = (arr, data, type) => {
 		// Lower-level nodes contain raw text only.
 	} else if (type == "line") {
 		newObject["data"] = data;
-		newObject["subscript"] = false;
+		newObject["subscript"] = 0;
 		newObject["disableSubscript"] = false;
 	} else if (type == "linebreak") {
 		newObject["text"] = data;
@@ -328,22 +350,23 @@ const unpackMessage = (message) => {
  * @param icOnly - Run on only IC parts? Default true.
  * @param type - rawText, but can be emoji, etc.
  *************************************************/
-const modifyMessage = (message, inFunction, icOnly = true, type = "rawText", args) => {
+const modifyMessage = (message, parent, inFunction, icOnly = true, type = "rawText", args) => {
 	// Handle lowest-level node by modifying text.
 	if(message.text && !message.data){
 		// Do we edit this message?
 		let modify = Array.isArray(type) ? (type.includes(message.type)) : (type == message.type)
 		if (modify) {
 			//console.log(args)
-			let ret = inFunction(message.text, ...args);
+			let ret = inFunction(message.text, parent, ...args);
 			if(ret !== undefined){message.text = ret}
 		}
 	// Drop into lower levels.
 	}else{
+		// Carry parent down
 		// For each line
 		for (x in message.data) {
 			if (message.data[x].text || message.data[x].type == "IC" || message.data[x].type == "line"  || (!icOnly && message.data[x].type == "OOC")) {
-				modifyMessage(message.data[x], inFunction, icOnly, type, args);
+				modifyMessage(message.data[x], message, inFunction, icOnly, type, args);
 			}
 		}
 		// Filter out empty stuff
@@ -477,14 +500,15 @@ const testClass_MessageAST = () => {
 const test_callFunc = () => {
 
 	let matchFound = {"modified": false,}
-	const replaceEmoji = (text, replaceEmoji, matchFound) => {
+	const replaceEmoji = (text, parent, replaceEmoji, matchFound) => {
 		if(text != replaceEmoji){
 			matchFound.modified = true;
+			console.log(parent.parent.subscript)
 			return replaceEmoji;
 		}
 	}
 
-	const purgeText = (text) => {
+	const purgeText = (text, parent) => {
 		return ""
 	}
 
@@ -492,6 +516,7 @@ const test_callFunc = () => {
 
 	testAST_1 = new MessageAST(testSTR_1)
 	console.log(testAST_1)
+	testAST_1.subscript(1)
 	testAST_1.callFunc(replaceEmoji,true,["emoji","unicodeEmoji"],["",matchFound])
 	
 	console.log(testAST_1)
@@ -507,7 +532,7 @@ const test_callFunc = () => {
 	console.log(testAST_2)
 }
 
-//testClass_MessageAST();
-//test_callFunc();
+testClass_MessageAST();
+test_callFunc();
 
 exports.MessageAST = MessageAST;

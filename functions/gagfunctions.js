@@ -325,7 +325,7 @@ const modifymessage = async (msg, threadId) => {
 		textGarbleVibrator(msg, messageTree, messageTreeModified);
 
 		// Text limiting and modifying due to Corset
-		let corsetreturned = textGarbleCorset(msg, messageTree, messageTreeModified, threadId);
+		textGarbleCorset(msg, messageTree, messageTreeModified, threadId);
 		if (messageTreeModified.corseted) {return;}
 
 		// // Text garbling due to Gag
@@ -374,7 +374,7 @@ function handleLinkExceptions(messagein) {
 
 
 
-const replaceStutter = (text, msg, msgModified, intensity, arousedtexts) => {
+const replaceStutter = (text, parent, msg, msgModified, intensity, arousedtexts) => {
 	try {
 		let garbledtext = stutterText(msg, text, intensity, arousedtexts);
 		if (garbledtext.stuttered) {
@@ -399,24 +399,24 @@ function textGarbleVibrator(msg, msgTree, msgModified) {
 
 function textGarbleCorset(msg, msgTree, msgModified, threadId) {
 	// Now corset any words, using an amount to start with.
-	if (getCorset(msg.author.id)) {
+	let corset = getCorset(msg.author.id)
+	console.log(corset)
+	if (corset) {
 
 		const hadParts = msgTree.toString() != ""
 		msgTree.callFunc(corsetLimitWords, true, "rawText", [msg.author.id, msgModified])
-
-		console.log(hadParts)
-		console.log("POST-CORSET - \"" + msgTree.toString()+ "\"")
 
 		if (hadParts && msgTree.toString() == "") {
 			messageSend(msg, silenceMessage(), msg.member.displayAvatarURL(), msg.member.displayName, threadId, msgModified.modified).then(() => msg.delete());
 			msgModified.corseted = true;
 			return;
 		}
-
-
-		// TODO - Subscript ALL if corset tightness >= 7
-
-
+		// Subscript ALL if corset tightness >= 7
+		if(corset.tightness >= 7){
+			console.log("MAKE SMALL")
+			msgModified.modified = true;
+			msgTree.subscript()
+		}
 	}
 	return;
 }
