@@ -5,11 +5,11 @@ const { ButtonBuilder } = require("@discordjs/builders");
 const { TextDisplayBuilder, MessageFlags, ButtonStyle, ActionRow, SectionBuilder, LabelBuilder, TextInputStyle } = require("discord.js");
 const { getWearable, getLockedWearable, getWearableName } = require("./wearablefunctions");
 const { getGags, getMitten, getGag, convertGagText, getMittenName } = require("./gagfunctions");
-const { getCollar, canAccessCollar, getCollarName, getCollarTimelock } = require("./collarfunctions");
+const { getCollar, canAccessCollar, getCollarName, getCollarTimelock, getCollarPerm, getCollarKeys, getClonedCollarKeysOwned } = require("./collarfunctions");
 const { getCorset } = require("./corsetfunctions");
-const { getChastity, getVibe, getChastityTimelock } = require("./vibefunctions");
+const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys } = require("./vibefunctions");
 const { getChastityBra } = require("./vibefunctions");
-const { getHeadwear, getHeadwearName } = require("./headwearfunctions");
+const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require("./headwearfunctions");
 const { getHeavy, convertheavy } = require("./heavyfunctions");
 const { canAccessChastity } = require("./vibefunctions");
 const { canAccessChastityBra } = require("./vibefunctions");
@@ -18,6 +18,14 @@ const { getChastityBraTimelock } = require("./vibefunctions");
 const { getChastityBraName } = require("./vibefunctions");
 const { ModalBuilder } = require("@discordjs/builders");
 const { TextInputBuilder } = require("@discordjs/builders");
+const { UserSelectMenuBuilder } = require("@discordjs/builders");
+const { arousedtexts } = require("../vibes/aroused/aroused_texts");
+const { getArousalBar } = require("./vibefunctions");
+const { getPronounsSet } = require("./pronounfunctions");
+const { getChastityBraKeys } = require("./vibefunctions");
+const { getClonedChastityKeysOwned } = require("./vibefunctions");
+const { getClonedChastityBraKeysOwned } = require("./vibefunctions");
+const { calcDenialCoefficient } = require("./vibefunctions");
 
 function getOutfits(userID) {
 	if (process.outfits == undefined) {
@@ -664,8 +672,455 @@ function outfitEntryModal(interaction, slot) {
 	return modal;
 }
 
+async function inspectModal(userID, inspectuserIDin, menu, page) {
+    let inspectuserID = inspectuserIDin ?? userID;
+    let userselector = new UserSelectMenuBuilder()
+        .setCustomId(`inspect_overview_newuser_1`)
+        .setMaxValues(1)
+        .setDefaultUsers(inspectuserID)
+        .setPlaceholder("Select a user to display...")
+    let pagecomponents = [new ActionRowBuilder().addComponents(userselector), new TextDisplayBuilder().setContent(`## Inspecting - <@${inspectuserID}>\n-# (${getPronounsSet(inspectuserID)})`)];
+	let tabbuttons = [
+		// Overview
+		new ButtonBuilder()
+			.setCustomId(`inspect_overview_${inspectuserID}_1`)
+			.setLabel("Overview")
+            .setEmoji({ name: "📋" })
+			.setStyle(menu == "overview" ? ButtonStyle.Primary : ButtonStyle.Secondary)
+			.setDisabled(menu == "overview" ? true : false),
+		// Restraints
+		new ButtonBuilder()
+			.setCustomId(`inspect_restraints_${inspectuserID}_1`)
+			.setLabel("Restraints")
+            .setEmoji({ name: "armbinder", id: process.emojis["armbinder"].match(/(?:<:[\w:\d]+:)(\d+)(?:>)/)[1] })
+			.setStyle(menu == "restraints" ? ButtonStyle.Primary : ButtonStyle.Secondary)
+			.setDisabled(menu == "restraints" ? true : false),
+		// Restraints
+		new ButtonBuilder()
+			.setCustomId(`inspect_wearable_${inspectuserID}_1`)
+			.setLabel("Apparel")
+            .setEmoji({ name: "👗" })
+			.setStyle(menu == "wearable" ? ButtonStyle.Primary : ButtonStyle.Secondary)
+			.setDisabled(menu == "wearable" ? true : false),
+        // Restraints
+		new ButtonBuilder()
+			.setCustomId(`inspect_keys_${inspectuserID}_1`)
+			.setLabel("Keys")
+            .setEmoji({ name: "🔑" })
+			.setStyle(menu == "keys" ? ButtonStyle.Primary : ButtonStyle.Secondary)
+			.setDisabled(menu == "keys" ? true : false),
+	];
+	pagecomponents.push(new ActionRowBuilder().addComponents(...tabbuttons));
+
+    // Now do stuff per page
+    if (menu == "overview") {
+        let headwearrestrictions = getHeadwearRestrictions(userID);
+        let wearingtext = `### Worn Restraints:`;
+        // Gags
+        if (getGag(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(inspectuserID).map((g) => { return `${convertGagText(g.gagtype)} (${g.intensity})`}).join(", ")}**`
+        }
+        // Headwear
+        if (getHeadwear(inspectuserID).length > 0) {
+            wearingtext = `${wearingtext}\n👤 Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+        }
+        // Mittens
+        if (getMitten(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.mitten} Mittens: **${getMittenName(inspectuserID) ?? "Standard Mittens"}**`
+        }
+        // Corset
+        if (getCorset(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
+        }
+        // Vibe
+        if (getVibe(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getVibe(inspectuserID).map((vibe) => `${vibe.vibetype} (${vibe.intensity})`).join(", ")}**`
+        }
+        // Heavy Bondage
+        if (getHeavy(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavy(inspectuserID).type}**`
+        }
+
+        // Chastity Belt
+        if (getChastity(inspectuserID)) {
+            let chastitylockemoji = canAccessChastity(inspectuserID, userID).access ? "🔑" : "🔒";
+            if (!headwearrestrictions.canInspect) { chastitylockemoji = "❓" }
+            let currentchastitybelt = getChastityName(inspectuserID) ?? "Standard Chastity Belt"
+            let chastitykeyholderinfo = getChastity(inspectuserID).keyholder
+            let chastitykeyaccess = getChastity(inspectuserID)?.access;
+            let chastitytimelockedtext = "Timelocked (Open)";
+            if (chastitykeyaccess == 1) {
+                chastitytimelockedtext = "Timelocked (Keyed)";
+            }
+            if (chastitykeyaccess == 2) {
+                chastitytimelockedtext = "Timelocked (Sealed)";
+            }
+            wearingtext = `${wearingtext}\n${process.emojis.chastity} Chastity Belt: **${currentchastitybelt}**`
+            if (!headwearrestrictions.canInspect) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Blind!**`
+            }
+            // Lost keys from fumble
+            else if (chastitykeyholderinfo == "discarded") {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Keys are Missing!**`
+            }
+            else if (getChastityTimelock(inspectuserID)) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **${chastitytimelockedtext} until ${getChastityTimelock(inspectuserID, true)}**`
+            }
+            else if (getChastity(inspectuserID).keyholder == inspectuserID) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Self-bound!**`
+            }
+            else {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Key held by <@${getChastity(inspectuserID).keyholder}>**`
+            }
+        }
+        // Chastity Bra
+        if (getChastityBra(inspectuserID)) {
+            let chastitybralockemoji = canAccessChastityBra(inspectuserID, userID).access ? "🔑" : "🔒";
+            if (!headwearrestrictions.canInspect) { chastitybralockemoji = "❓" }
+            let currentbrachastitybelt = getChastityBraName(inspectuserID) ?? "Standard Chastity Bra"
+            let chastitybrakeyholderinfo = getChastityBra(inspectuserID).keyholder
+            let chastitybrakeyaccess = getChastityBra(inspectuserID)?.access;
+            let chastitybratimelockedtext = "Timelocked (Open)";
+            if (chastitybrakeyaccess == 1) {
+                chastitybratimelockedtext = "Timelocked (Keyed)";
+            }
+            if (chastitybrakeyaccess == 2) {
+                chastitybratimelockedtext = "Timelocked (Sealed)";
+            }
+            wearingtext = `${wearingtext}\n${process.emojis.chastitybra} Chastity Bra: **${currentbrachastitybelt}**`
+            if (!headwearrestrictions.canInspect) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Blind!**`
+            }
+            // Lost keys from fumble
+            else if (chastitybrakeyholderinfo == "discarded") {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Keys are Missing!**`
+            }
+            else if (getChastityBraTimelock(inspectuserID)) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **${chastitybratimelockedtext} until ${getChastityBraTimelock(inspectuserID, true)}**`
+            }
+            else if (getChastityBra(inspectuserID).keyholder == inspectuserID) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Self-bound!**`
+            }
+            else {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Key held by <@${getChastityBra(inspectuserID).keyholder}>**`
+            }
+        }
+        // Collar
+        if (getCollar(inspectuserID)) {
+            let collarlockemoji = canAccessCollar(inspectuserID, userID).access ? "🔑" : "🔒";
+            if (!headwearrestrictions.canInspect) { collarlockemoji = "❓" }
+            let collarname = getCollarName(inspectuserID) ?? "Standard Collar"
+            let collarkeyholderinfo = getCollar(inspectuserID).keyholder
+            let collarkeyaccess = getCollar(inspectuserID)?.access;
+            let collartimelockedtext = "Timelocked (Open)";
+            if (collarkeyaccess == 1) {
+                collartimelockedtext = "Timelocked (Keyed)";
+            }
+            if (collarkeyaccess == 2) {
+                collartimelockedtext = "Timelocked (Sealed)";
+            }
+            wearingtext = `${wearingtext}\n${process.emojis.collar} Collar: **${collarname}**`
+            if (!headwearrestrictions.canInspect) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **Blind!**`
+            }
+            // Lost keys from fumble
+            if (collarkeyholderinfo == "discarded") {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **Keys are Missing!**`
+            }
+            else if (getCollarTimelock(inspectuserID)) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **${collartimelockedtext} until ${getCollarTimelock(inspectuserID, true)}**`
+            }
+            else if (getCollar(inspectuserID).keyholder == inspectuserID) {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **Self-bound!**`
+            }
+            else {
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **Key held by <@${getCollar(inspectuserID).keyholder}>**`
+            }
+            wearingtext = `${wearingtext}\n-# Mittens: ${getCollarPerm(inspectuserID, "mitten") ? "✅" : "⛔"}, Chastity: ${getCollarPerm(inspectuserID, "chastity") ? "✅" : "⛔"}, Heavy: ${getCollarPerm(inspectuserID, "heavy") ? "✅" : "⛔"}, Masks: ${getCollarPerm(inspectuserID, "mask") ? "✅" : "⛔"}`
+        }
+
+        if (wearingtext === `### Worn Restraints:`) { 
+            wearingtext = `${wearingtext}\n\nNothing is worn at the moment.`
+        }
+        wearingtext = `${wearingtext}\n`
+
+        let clothingtext = `### Worn Apparel:\n`;
+        if (getWearable(inspectuserID).length > 0) {
+            clothingtext = `${clothingtext}**${getWearable(inspectuserID).map((h) => (!getLockedWearable(inspectuserID).includes(h) ? getWearableName(undefined, h) : `*${getWearableName(undefined, h)}*`)).slice(0,15).join(", ")}**`
+            if (getWearable(inspectuserID).length > 15) {
+                clothingtext = `${clothingtext}... *and ${getWearable(inspectuserID).length - 15} more item${(getWearable(inspectuserID).length - 15) == 1 ? "" : "s"}.*`
+            }
+        }
+        if (clothingtext === `### Worn Apparel:\n`) { 
+            clothingtext = `${clothingtext}\nNothing is worn at the moment`
+        }
+        clothingtext = `${clothingtext}\n`
+
+        let bartext = ``;
+        if (getArousal(inspectuserID) > 2.0) {
+            bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
+            if (calcDenialCoefficient(inspectuserID) > 1) {
+                bartext = `${bartext}\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+            }
+        }
+
+        let collated = `${wearingtext}${clothingtext}${bartext}`;
+
+        if ((userID != inspectuserID) && !headwearrestrictions.canInspect) {
+            collated = `*You are blinded and unable to see what <@${inspectuserID}> is wearing...*`
+        }
+
+        pagecomponents.push(new TextDisplayBuilder().setContent(collated))
+    }
+    else if (menu == "restraints") {
+        let headwearrestrictions = getHeadwearRestrictions(userID);
+        let wearingtext = `### Regular Worn Restraints:`;
+        // Gags
+        if (getGag(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(inspectuserID).map((g) => { return `${convertGagText(g.gagtype)} (${g.intensity})`}).join(", ")}**`
+        }
+        // Headwear
+        if (getHeadwear(inspectuserID).length > 0) {
+            wearingtext = `${wearingtext}\n👤 Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+        }
+        // Mittens
+        if (getMitten(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.mitten} Mittens: **${getMittenName(inspectuserID) ?? "Standard Mittens"}**`
+        }
+        // Corset
+        if (getCorset(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
+        }
+        // Vibe
+        if (getVibe(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getVibe(inspectuserID).map((vibe) => `${vibe.vibetype} (${vibe.intensity})`).join(", ")}**`
+        }
+        // Heavy Bondage
+        if (getHeavy(inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavy(inspectuserID).type}**`
+        }
+
+        let keyedrestraints = `### Keyed Restraints:`
+        // Chastity Belt
+        if (getChastity(inspectuserID)) {
+            let chastitylockemoji = canAccessChastity(inspectuserID, userID).access ? "🔑" : "🔒";
+            if (!headwearrestrictions.canInspect) { chastitylockemoji = "❓" }
+            let currentchastitybelt = getChastityName(inspectuserID) ?? "Standard Chastity Belt"
+            let chastitykeyholderinfo = getChastity(inspectuserID).keyholder
+            let chastitykeyaccess = getChastity(inspectuserID)?.access;
+            let chastitytimelockedtext = "Timelocked (Open)";
+            if (chastitykeyaccess == 1) {
+                chastitytimelockedtext = "Timelocked (Keyed)";
+            }
+            if (chastitykeyaccess == 2) {
+                chastitytimelockedtext = "Timelocked (Sealed)";
+            }
+            keyedrestraints = `${keyedrestraints}\n\n${process.emojis.chastity} Chastity Belt: **${currentchastitybelt}**`
+            if (!headwearrestrictions.canInspect) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Blind!**`
+            }
+            // Lost keys from fumble
+            else if (chastitykeyholderinfo == "discarded") {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Keys are Missing!**`
+            }
+            else if (getChastityTimelock(inspectuserID)) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **${chastitytimelockedtext} until ${getChastityTimelock(inspectuserID, true)}**`
+            }
+            else if (getChastity(inspectuserID).keyholder == inspectuserID) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Self-bound!**`
+            }
+            else {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Key held by <@${getChastity(inspectuserID).keyholder}>**`
+            }
+            if (headwearrestrictions.canInspect && getChastity(inspectuserID).clonedKeyholders && (getChastity(inspectuserID).clonedKeyholders.length > 0)) {
+                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.chastity} held by ${getChastity(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+            }
+            if (getChastity(inspectuserID).timestamp) {
+                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getChastity(inspectuserID).timestamp / 1000)}:f>`
+            }
+        }
+        // Chastity Bra
+        if (getChastityBra(inspectuserID)) {
+            let chastitybralockemoji = canAccessChastityBra(inspectuserID, userID).access ? "🔑" : "🔒";
+            if (!headwearrestrictions.canInspect) { chastitybralockemoji = "❓" }
+            let currentbrachastitybelt = getChastityBraName(inspectuserID, getChastityBra(inspectuserID).chastitytype) ?? "Standard Chastity Bra"
+            let chastitybrakeyholderinfo = getChastityBra(inspectuserID).keyholder
+            let chastitybrakeyaccess = getChastityBra(inspectuserID)?.access;
+            let chastitybratimelockedtext = "Timelocked (Open)";
+            if (chastitybrakeyaccess == 1) {
+                chastitybratimelockedtext = "Timelocked (Keyed)";
+            }
+            if (chastitybrakeyaccess == 2) {
+                chastitybratimelockedtext = "Timelocked (Sealed)";
+            }
+            keyedrestraints = `${keyedrestraints}\n\n${process.emojis.chastitybra} Chastity Bra: **${currentbrachastitybelt}**`
+            if (!headwearrestrictions.canInspect) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Blind!**`
+            }
+            // Lost keys from fumble
+            else if (chastitybrakeyholderinfo == "discarded") {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Keys are Missing!**`
+            }
+            else if (getChastityBraTimelock(inspectuserID)) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **${chastitybratimelockedtext} until ${getChastityBraTimelock(inspectuserID, true)}**`
+            }
+            else if (getChastityBra(inspectuserID).keyholder == inspectuserID) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Self-bound!**`
+            }
+            else {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Key held by <@${getChastityBra(inspectuserID).keyholder}>**`
+            }
+            if (headwearrestrictions.canInspect && getChastityBra(inspectuserID).clonedKeyholders && (getChastityBra(inspectuserID).clonedKeyholders.length > 0)) {
+                keyedrestraints = `${keyedrestraints}\nCloned keys for ${process.emojis.chastitybra} held by ${getChastityBra(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+            }
+            if (getChastityBra(inspectuserID).timestamp) {
+                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getChastityBra(inspectuserID).timestamp / 1000)}:f>`
+            }
+        }
+        // Collar
+        if (getCollar(inspectuserID)) {
+            let collarlockemoji = canAccessCollar(inspectuserID, userID).access ? "🔑" : "🔒";
+            if (!headwearrestrictions.canInspect) { collarlockemoji = "❓" }
+            let collarname = getCollarName(inspectuserID) ?? "Standard Collar"
+            let collarkeyholderinfo = getCollar(inspectuserID).keyholder
+            let collarkeyaccess = getCollar(inspectuserID)?.access;
+            let collartimelockedtext = "Timelocked (Open)";
+            if (collarkeyaccess == 1) {
+                collartimelockedtext = "Timelocked (Keyed)";
+            }
+            if (collarkeyaccess == 2) {
+                collartimelockedtext = "Timelocked (Sealed)";
+            }
+            keyedrestraints = `${keyedrestraints}\n\n${process.emojis.collar} Collar: **${collarname}**`
+            if (!headwearrestrictions.canInspect) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Blind!**`
+            }
+            // Lost keys from fumble
+            if (collarkeyholderinfo == "discarded") {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Keys are Missing!**`
+            }
+            else if (getCollarTimelock(inspectuserID)) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **${collartimelockedtext} until ${getCollarTimelock(inspectuserID, true)}**`
+            }
+            else if (getCollar(inspectuserID).keyholder == inspectuserID) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Self-bound!**`
+            }
+            else {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Key held by <@${getCollar(inspectuserID).keyholder}>**`
+            }
+            if (!headwearrestrictions.canInspect && getCollar(inspectuserID).clonedKeyholders && (getCollar(inspectuserID).clonedKeyholders.length > 0)) {
+                keyedrestraints = `${keyedrestraints}\nCloned keys for ${process.emojis.collar} held by ${getCollar(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+            }
+            if (getCollar(inspectuserID).timestamp) {
+                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getCollar(inspectuserID).timestamp / 1000)}:f>`
+            }
+            keyedrestraints = `${keyedrestraints}\n-# Mittens: ${getCollarPerm(inspectuserID, "mitten") ? "✅" : "⛔"}, Chastity: ${getCollarPerm(inspectuserID, "chastity") ? "✅" : "⛔"}, Heavy: ${getCollarPerm(inspectuserID, "heavy") ? "✅" : "⛔"}, Masks: ${getCollarPerm(inspectuserID, "mask") ? "✅" : "⛔"}`
+        }
+
+        if (wearingtext === `### Regular Worn Restraints:`) { 
+            wearingtext = `${wearingtext}\n\nNothing is worn at the moment.`
+        }
+        wearingtext = `${wearingtext}\n`
+
+        if (keyedrestraints === `### Keyed Restraints:`) { 
+            keyedrestraints = `${keyedrestraints}\n\nNo keyed restraints worn at the moment.`
+        }
+        keyedrestraints = `${keyedrestraints}\n`
+
+        let collated = `${wearingtext}${keyedrestraints}`;
+
+        if ((userID != inspectuserID) && !headwearrestrictions.canInspect) {
+            collated = `*You are blinded and unable to see what <@${inspectuserID}> is wearing...*`
+        }
+
+        pagecomponents.push(new TextDisplayBuilder().setContent(collated))
+    }
+    else if (menu == "wearable") {
+        let headwearrestrictions = getHeadwearRestrictions(userID);
+        let clothingtext = `### Worn Apparel:\n`;
+        if (getWearable(inspectuserID).length > 0) {
+            clothingtext = `${clothingtext}**${getWearable(inspectuserID).map((h) => (!getLockedWearable(inspectuserID).includes(h) ? getWearableName(undefined, h) : `*${getWearableName(undefined, h)}*`)).join(", ")}**`
+        }
+        if (clothingtext.length > 1800) {
+            clothingtext = `${clothingtext.slice(0,1800)}...` // We'll make a more elegant overflow solution later. 
+        }
+        if (clothingtext === `### Worn Apparel:\n`) { 
+            clothingtext = `${clothingtext}\nNothing is worn at the moment`
+        }
+        clothingtext = `${clothingtext}\n`
+
+        let collated = `${clothingtext}`;
+
+        if ((userID != inspectuserID) && !headwearrestrictions.canInspect) {
+            collated = `*You are blinded and unable to see what <@${inspectuserID}> is wearing...*`
+        }
+
+        pagecomponents.push(new TextDisplayBuilder().setContent(collated))
+    }
+    else if (menu == "keys") {
+        let headwearrestrictions = getHeadwearRestrictions(userID);
+        // Keys Held
+        let keysheldtext = "";
+        // Held Primary Keys
+        let keysheldchastity = getChastityKeys(inspectuserID);
+        if (keysheldchastity.length > 0) {
+            keysheldchastity = keysheldchastity.map((k) => `<@${k}>`);
+            let keysstring = keysheldchastity.join(", ");
+            keysheldtext = `- ${process.emojis.chastity} Chastity belt keys: ${keysstring}\n`;
+        }
+        let keysheldchastitybra = getChastityBraKeys(inspectuserID);
+        if (keysheldchastitybra.length > 0) {
+            keysheldchastitybra = keysheldchastitybra.map((k) => `<@${k}>`);
+            let keysstring = keysheldchastitybra.join(", ");
+            keysheldtext = `${keysheldtext}- ${process.emojis.chastitybra} Chastity bra keys: ${keysstring}\n`;
+        }
+        let keysheldcollar = getCollarKeys(inspectuserID);
+        if (keysheldcollar.length > 0) {
+            keysheldcollar = keysheldcollar.map((k) => `<@${k}>`);
+            let keysstring = keysheldcollar.join(", ");
+            keysheldtext = `${keysheldtext}- ${process.emojis.collar} Collar keys: ${keysstring}\n`;
+        }
+        // Held Cloned Keys
+        let keysheldclonedchastity = getClonedChastityKeysOwned(inspectuserID);
+        if (keysheldclonedchastity.length > 0) {
+            keysheldclonedchastity = keysheldclonedchastity.map((k) => `<@${k.split("_")[0]}>`);
+            let keysstring = keysheldclonedchastity.join(", ");
+            keysheldtext = `${keysheldtext}- ${process.emojis.chastityclone} Cloned chastity belt keys: ${keysstring}\n`;
+        }
+        let keysheldclonedchastitybra = getClonedChastityBraKeysOwned(inspectuserID);
+        if (keysheldclonedchastitybra.length > 0) {
+            keysheldclonedchastitybra = keysheldclonedchastitybra.map((k) => `<@${k.split("_")[0]}>`);
+            let keysstring = keysheldclonedchastitybra.join(", ");
+            keysheldtext = `${keysheldtext}- ${process.emojis.chastitybraclone} Cloned chastity bra keys: ${keysstring}\n`;
+        }
+        let keysheldclonedcollar = getClonedCollarKeysOwned(inspectuserID);
+        if (keysheldclonedcollar.length > 0) {
+            keysheldclonedcollar = keysheldclonedcollar.map((k) => `<@${k.split("_")[0]}>`);
+            let keysstring = keysheldclonedcollar.join(", ");
+            keysheldtext = `${keysheldtext}- ${process.emojis.collarclone} Cloned collar keys: ${keysstring}`;
+        }
+        if (keysheldtext.length > 0) {
+            keysheldtext = `### Keys Held\n${keysheldtext}`
+        }
+        else {
+            keysheldtext = `### Keys Held\nNo keys held at the moment`
+        }
+
+        let collated = `${keysheldtext}`;
+
+        if ((userID != inspectuserID) && !headwearrestrictions.canInspect) {
+            collated = `*You are blinded and unable to see what keys <@${inspectuserID}> has...*`
+        }
+
+        pagecomponents.push(new TextDisplayBuilder().setContent(collated))
+    }
+
+    return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
+}
+
 exports.generateOutfitModal = generateOutfitModal;
 exports.outfitEntryModal = outfitEntryModal;
+exports.inspectModal = inspectModal;
 exports.assignOutfit = assignOutfit;
 exports.getOutfits = getOutfits;
 exports.restoreOutfit = restoreOutfit;

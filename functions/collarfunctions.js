@@ -26,7 +26,16 @@ const assignCollar = (user, keyholder, restraints, only, customcollar) => {
 	if (process.collar == undefined) {
 		process.collar = {};
 	}
-	process.collar[user] = { keyholder: keyholder, keyholder_only: only, mitten: restraints?.mitten, chastity: restraints?.chastity, heavy: restraints?.heavy, mask: restraints?.mask, collartype: customcollar };
+	process.collar[user] = { 
+        keyholder: keyholder, 
+        keyholder_only: only, 
+        mitten: restraints?.mitten, 
+        chastity: restraints?.chastity, 
+        heavy: restraints?.heavy, 
+        mask: restraints?.mask, 
+        collartype: customcollar,
+        timestamp: Date.now()
+    };
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -37,6 +46,13 @@ const getCollar = (user) => {
 	if (process.collar == undefined) {
 		process.collar = {};
 	}
+    if (process.collar[user] && !process.collar[user].timestamp) {
+        process.collar[user].timestamp = Date.now();
+        if (process.readytosave == undefined) {
+            process.readytosave = {};
+        }
+        process.readytosave.collar = true;
+    }
 	return process.collar[user];
 };
 

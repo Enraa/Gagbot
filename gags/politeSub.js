@@ -31,7 +31,7 @@ const messagebegin = (msgcontent, intensity, msgparts) => {
 		"overseer",
 		"headmaid",
 		"head\ maid",
-		"mix",
+		"mx",
 		"duke",
 		"dukes",
 		"dame",
@@ -40,7 +40,7 @@ const messagebegin = (msgcontent, intensity, msgparts) => {
 		"(\\w|\\d)+-sama",
 		"(\\w|\\d)+-sensei",
 		"(\\w|\\d)+-san",
-		"(\\w|\\d)+-kun",
+		"(\\w|\\d)+-senpai",
 	];
 
 	let silenttitles = [`\n*looks down silently*\n`, `\n*tries to speak, but no words come out*\n`, `\n*nods without a word*\n`, `\n*looks down and to the side*\n`, `\n*twiddles thumbs meekly*\n`, `\n*pouts as the gag stops impolite speech*\n`, `\n*goes mute without an honorific*\n`, `\n*meeps but produces no audible words*\n`, `\n*casts eyes downward, like a good sub*\n`, `\n*blushes and mumbles something*\n`];
@@ -59,7 +59,7 @@ const messagebegin = (msgcontent, intensity, msgparts) => {
 		let silented = false;
 		for (let i = 0; i < msgpartschanged.length; i++) {
 			// Twiddle their thumbs
-			if (!silented && msgpartschanged[i].garble) {
+			if (!silented && msgpartschanged[i].garble && msgpartschanged[i].text.length > 0 && !msgpartschanged[i].text.match(/^\s*$/)) {
 				msgpartschanged[i].text = silenttitles[Math.floor(Math.random() * silenttitles.length)];
 				msgpartschanged[i].garble = false;
 				silented = true;

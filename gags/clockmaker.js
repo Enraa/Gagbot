@@ -9,7 +9,7 @@ function messagebegin(_msgcontent, intensity, msgparts) {
 	let msgpartschanged = msgparts.slice(0);
 	let silenced = false;
 	for (let i = 0; i < msgpartschanged.length; i++) {
-		if (!silenced && msgpartschanged[i].garble) {
+		if (!silenced && msgpartschanged[i].garble && msgpartschanged[i].text.length > 0 && !msgpartschanged[i].text.match(/^\s*$/)) {
 			msgpartschanged[i].text = `\n${outOfTimeMessages[Math.floor(Math.random() * outOfTimeMessages.length)]}`;
 			msgpartschanged[i].garble = false;
 			silenced = true;
@@ -23,4 +23,10 @@ function messagebegin(_msgcontent, intensity, msgparts) {
 }
 
 exports.messagebegin = messagebegin;
+exports.breathRecovery = (_user, intensity) => {
+	const duration = 20 - intensity;
+	const period = 25 + 7 * intensity;
+	if (Math.floor(Date.now() / 1000) % period < duration) return 1;
+	return 0;
+};
 exports.choicename = "Clockmaker's Gag";

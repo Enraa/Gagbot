@@ -1,8 +1,9 @@
 name: Format Code (Prettier)
 
 on:
-  push:
   pull_request:
+    branches: 
+      - main
 
 jobs:
   format:

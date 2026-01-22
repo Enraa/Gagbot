@@ -20,4 +20,5 @@ const garbleText = (text, intensity) => {
 };
 
 exports.garbleText = garbleText;
+exports.breathRecovery = (_user, intensity) => 1 - intensity / 25;
 exports.choicename = "Stuff Gag";

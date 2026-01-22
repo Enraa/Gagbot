@@ -1256,9 +1256,39 @@ function calcFrustration(hoursBelted) {
 	return unbounded;
 }
 
+// Provides a text string indicating arousal progress
+// Will present the bar as a % of the target orgasm rate
+function getArousalBar(userID) {
+    const arousal = getArousal(userID);
+	const denialCoefficient = calcDenialCoefficient(userID);
+	const orgasmLimit = ORGASM_LIMIT;
+    const filledbar = "■"
+    const unfilled = "□"
+
+    let targetorgasmthresh = orgasmLimit * denialCoefficient
+    let percentagefilled = arousal / targetorgasmthresh;
+
+    // Present this bar as a 20 segment string 
+    let stringout = ``;
+    let currprog = 0.00;
+    for (let i = 0; i < 10; i++) {
+        currprog += (1 / 10);
+        if (currprog < percentagefilled) {
+            stringout = `${stringout}${filledbar}`
+        }
+        else {
+            stringout = `${stringout}${unfilled}`
+        }
+    }
+    
+    return { bar: stringout, percentage: Math.round(percentagefilled * 100) }
+}
+
 exports.getVibeEquivalent = getVibeEquivalent;
 exports.getArousalDescription = getArousalDescription;
 exports.getArousalChangeDescription = getArousalChangeDescription;
+exports.getArousalBar = getArousalBar;
+exports.calcDenialCoefficient = calcDenialCoefficient;
 exports.calcFrustration = calcFrustration;
 exports.getArousal = getArousal;
 exports.addArousal = addArousal;

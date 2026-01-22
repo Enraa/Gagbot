@@ -54,9 +54,16 @@ module.exports = {
 					c2: (braorbelt == "chastitybelt" ? getChastityName(interaction.user.id, bondagetype) : getChastityBraName(interaction.user.id, bondagetype)) ?? (braorbelt == "chastitybelt" ? "chastity belt" : "chastity bra"),
 				},
 			};
-			if (bondagetype && !getChastityName(interaction.user.id, bondagetype)) {
-				bondagetype = undefined; // Just delete it, we got something invalid lol
-			}
+            if (braorbelt == "chastitybelt") {
+                if (bondagetype && !getChastityName(interaction.user.id, bondagetype)) {
+                    bondagetype = undefined; // Just delete it, we got something invalid lol
+                }
+            }
+			else {
+                if (bondagetype && !getChastityBraName(interaction.user.id, bondagetype)) {
+                    bondagetype = undefined; // Just delete it, we got something invalid lol
+                }
+            }
 
 			data[braorbelt] = true;
 			if (braorbelt == "chastitybelt") {

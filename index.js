@@ -226,6 +226,10 @@ client.on('interactionCreate', async (interaction) => {
                 let configfunc = require(`./commands/outfit.js`)
                 configfunc.interactionresponse(interaction);  
             }
+            else if (interaction.customId.startsWith("inspect_")) {
+                let configfunc = require(`./commands/inspect.js`)
+                configfunc.interactionresponse(interaction);  
+            }
             const [key, ...args] = interaction.customId.split("-");
             componentHandlers.get(key)?.handle(interaction, ...args);
             return;
