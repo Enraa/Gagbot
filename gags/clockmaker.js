@@ -23,4 +23,10 @@ function messagebegin(_msgcontent, intensity, msgparts) {
 }
 
 exports.messagebegin = messagebegin;
+exports.breathRecovery = (_user, intensity) => {
+	const duration = 20 - intensity;
+	const period = 25 + 7 * intensity;
+	if (Math.floor(Date.now() / 1000) % period < duration) return 1;
+	return 0;
+};
 exports.choicename = "Clockmaker's Gag";

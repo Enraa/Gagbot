@@ -1,4 +1,5 @@
 const fs = require("fs");
+const path = require("path");
 
 const MAX_BREATH_TABLE = [2000, 140, 120, 100, 85, 70, 60, 50, 40, 32.5, 25, 17.5, 10, 7.5, 5, 5];
 const MIN_BREATH_TABLE = [0, -300, -290, -280, -270, -260, -240, -220, -200, -180, -150, -150, -120, -100, -75, -50];
@@ -135,7 +136,20 @@ function calcBreath(user) {
 	if (!corset) return null;
 	if (corset.breath < MIN_BREATH_TABLE[corset.tightness]) corset.breath = MIN_BREATH_TABLE[corset.tightness];
 	const now = Date.now();
-	const newBreath = corset.breath + BREATH_RECOVERY_TABLE[corset.tightness] * ((now - corset.timestamp) / 1000);
+	let recoveryCoefficient = 1;
+	if (process.gags == undefined) process.gags = {};
+	if (process.gags[user] && process.gags[user].length > 0) {
+		const gagsPaths = path.join(__dirname, "..", "gags");
+		const gagFiles = fs.readdirSync(gagsPaths).filter((file) => file.endsWith(".js"));
+		process.gags[user].forEach((gag) => {
+			if (gagFiles.includes(`${gag.gagtype}.js`)) {
+				let gagData = require(path.join(gagsPaths, `${gag.gagtype}.js`));
+				let intensity = gag.intensity ? gag.intensity : 5;
+				if (gagData.breathRecovery) recoveryCoefficient *= gagData.breathRecovery(user, intensity);
+			}
+		});
+	}
+	const newBreath = corset.breath + BREATH_RECOVERY_TABLE[corset.tightness] * ((now - corset.timestamp) / 1000) * recoveryCoefficient;
 	if (newBreath > MAX_BREATH_TABLE[corset.tightness]) corset.breath = MAX_BREATH_TABLE[corset.tightness];
 	else corset.breath = newBreath;
 	corset.timestamp = now;
