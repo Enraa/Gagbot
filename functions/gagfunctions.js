@@ -319,12 +319,14 @@ const modifymessage = async (msg, threadId) => {
 		textGarbleVibrator(msg, msgTree, msgTreeMods);			// Handle arousal effects (Stutter, gasps.)
 		textGarbleCorset(msg, msgTree, msgTreeMods, threadId);	// Handle corset.
 		if (msgTreeMods.corseted) {return;}						// Abort if the message got corseted - message handled elsewhere.
+		msgTree.rebuild(msgTree.toString())						// Update AST to account for control char-wrapped moans.
 		textGarbleGag(msg, msgTree, msgTreeMods);				// Text garbling due to Gag
 
 		// Convert the AST back to a string.
 		outtext = msgTree.toString()
 
 		// Text garbling due to Doll visors
+		// TODO - Migrate to the AST system.
 		let dolltreturned = await textGarbleDOLL(msg, msgTreeMods.modified, outtext);
 		msgTreeMods.modified = dolltreturned.modifiedmessage;
 		outtext = dolltreturned.outtext;

@@ -1,13 +1,14 @@
 const { Message } = require("discord.js");
 
 // Regex used to separate OOC text from IC text, AND encapsulate linebreaks.
-const REGEX_OOC = /(?<OOC>(((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))|(?<linebreak>\n)/g;
+const REGEX_OOC_NOCONTROLCHARS = /(?<OOC>(((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*{2})+\*)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))|(?<linebreak>\n)/g;
+const REGEX_OOC =/(?<OOC>(((?<![\*\\])\*{1})(\*{2})?(\\\*|[^\*]|\*.*\*|\*{2})+\*)(?!)|((\-#\s+)?((?<!\_)\_{1})(\_{2})?([^\_]|\_{2})+\_))|(?<linebreak>\n)/g;
 
 // Regex used when splitting IC or OOC text.
 // > Named capture groups identify what the regex matches.
 // > NOTE - REGEX_SENTENCE must *NEVER* match more than one named capture group at a time.
-//                      |----  Tags ----| |-Text Emotes >///<-| |------ Match code block ---| |---------------- ANSI Color Username Block -------------------| |-------ANSI Colors -------| |-----------------------------  Match website URLs     ---------------------------------------------------------| |-------- Emojis --------| |----------------- Unicode Emoji ------------------------------------------------| |--- \n -------|
-const REGEX_SENTENCE = /(?<tag><@[0-9]+>)|(?<textEmote>(>\/+<))|(?<codeBlock>```((ansi|js))?)|(?<ANSIUsername>\u001b\[[0-9];[0-9][0-9]m([^\u0000-\u0020]+: ?))|(?<ANSIColor>\u001b\[.+?m) ?|(?<websiteURL><?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)|(?<emoji><a?:[^:]+:[^>]+>)|(?<unicodeEmoji>\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|(?<linebreak>\n)/g;
+//                      |--corset moans--| |----  Tags ----| |-Text Emotes >///<-| |------ Match code block ---| |---------------- ANSI Color Username Block -------------------| |-------ANSI Colors -------| |-----------------------------  Match website URLs     ---------------------------------------------------------| |-------- Emojis --------| |----------------- Unicode Emoji ------------------------------------------------| |--- \n -------|
+const REGEX_SENTENCE = /(?<moan>[^]+)|(?<tag><@[0-9]+>)|(?<textEmote>(>\/+<))|(?<codeBlock>```((ansi|js))?)|(?<ANSIUsername>\u001b\[[0-9];[0-9][0-9]m([^\u0000-\u0020]+: ?))|(?<ANSIColor>\u001b\[.+?m) ?|(?<websiteURL><?https?\:\/\/[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)>?)|(?<emoji><a?:[^:]+:[^>]+>)|(?<unicodeEmoji>\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff])|(?<linebreak>\n)/g;
 
 // Regex to isolate a VALID subscript tag. Identifies if subscript or superscript.
 // > NOTE: A message that is just " -# " is not a valid subscript - discord treats it as plaintext.
