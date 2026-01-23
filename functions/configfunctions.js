@@ -1656,6 +1656,32 @@ function getOption(userID, option) {
 	return process.configs.users[userID][option];
 }
 
+// Fetches a list of all user IDs where option == value
+// Returns array with any users that selected that
+function getUsersWithOption(option, value) {
+    let userswithval = [];
+    if (process.configs && process.configs.users) {
+        Object.keys(process.configs.users).forEach((user) => {
+            if (process.configs.users[option] == value) {
+                userswithval.push(user)
+            }
+        })
+    }
+    return userswithval;
+}
+
+// Fetches a list of all values mapped by user ID
+// Returns a map with matching values. 
+function getAllSelectedOption(option) {
+    let selectedoption = {};
+    if (process.configs && process.configs.users) {
+        Object.keys(process.configs.users).forEach((user) => {
+            selectedoption[user] = process.configs.users[user][option]
+        })
+    }
+    return selectedoption;
+}
+
 function initializeOptions(userID) {
 	let pages = ["Arousal", "General", "Misc", "Extreme"];
 	pages.forEach((p) => {
@@ -1887,7 +1913,42 @@ async function setCommands(interaction, serverID) {
 	Object.keys(commands).forEach((k) => {
 		commandsforrest.push(commands[k].data.toJSON());
 	});
-	console.log(commandsforrest);
+
+    // Context Menu Commands
+    // Grab all the command files from the commands directory
+	const usercontextcommands = {};
+	const usercontextcommandsPath = path.join(__dirname, "..", "contextcommands", "user");
+	const usercontextcommandFiles = fs.readdirSync(usercontextcommandsPath).filter((file) => file.endsWith(".js"));
+
+	// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+	for (const file of usercontextcommandFiles) {
+		const command = require(`./../contextcommands/user/${file}`);
+		if (command.execute && command.data) {
+			usercontextcommands[file] = command;
+		} else {
+			console.log(`Ignoring file at ./../contextcommands/user/${file} because it does not have either a data or an execute export.`);
+		}
+	}
+    Object.keys(usercontextcommands).forEach((k) => {
+		commandsforrest.push(usercontextcommands[k].data.toJSON());
+	});
+
+    const messagecontextcommands = {};
+	const messagecontextcommandsPath = path.join(__dirname, "..", "contextcommands", "user");
+	const messagecontextcommandFiles = fs.readdirSync(messagecontextcommandsPath).filter((file) => file.endsWith(".js"));
+
+	// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
+	for (const file of messagecontextcommandFiles) {
+		const command = require(`./../contextcommands/message/${file}`);
+		if (command.execute && command.data) {
+			messagecontextcommands[file] = command;
+		} else {
+			console.log(`Ignoring file at ./../contextcommands/message/${file} because it does not have either a data or an execute export.`);
+		}
+	}
+    Object.keys(messagecontextcommands).forEach((k) => {
+		commandsforrest.push(messagecontextcommands[k].data.toJSON());
+	});
 
 	// Set up the REST route to overwrite the commands list for that server with our new one.
 	try {
@@ -1899,7 +1960,7 @@ async function setCommands(interaction, serverID) {
 			const data = await rest.put(Routes.applicationGuildCommands(interaction.client.user.id, serverID), { body: commandsforrest }).catch((err) => {
 				console.log(err);
 			});
-			console.log(`Successfully reloaded ${data.length} application (/) commands into server ID ${serverID}.`);
+			console.log(`Successfully reloaded ${data.length} application commands into server ID ${serverID}.`);
 		})();
 
 		console.log(Math.floor(performance.now() + 60000));
@@ -2113,6 +2174,9 @@ exports.generateTextEntryModal = generateTextEntryModal;
 exports.configoptions = configoptions;
 exports.getOption = getOption;
 exports.setOption = setOption;
+
+exports.getUsersWithOption = getUsersWithOption;
+exports.getAllSelectedOption = getAllSelectedOption;
 
 exports.getServerOption = getServerOption;
 exports.setServerOption = setServerOption;

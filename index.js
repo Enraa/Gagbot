@@ -122,6 +122,28 @@ for (const file of commandFiles) {
     if (cmd.autoComplete) autocompletehandlers.set(file, cmd);
 }
 
+// Grab any context menu interactions
+const usercontextcommands = new Map();
+const usercontextcommandsPath = path.join(__dirname, 'contextcommands', "user");
+const usercontextcommandsFiles = fs.readdirSync(usercontextcommandsPath).filter(file => file.endsWith('.js'));
+for (const file of usercontextcommandsFiles) {
+    const cmd = require(path.join(usercontextcommandsPath, file));
+    if ((cmd.execute) && (cmd.data)) {
+        usercontextcommands.set(cmd.data.name, cmd);
+    }
+}
+
+// Grab any context menu interactions
+const messagecontextcommands = new Map();
+const messagecontextcommandsPath = path.join(__dirname, 'contextcommands', "message");
+const messagecontextcommandsFiles = fs.readdirSync(messagecontextcommandsPath).filter(file => file.endsWith('.js'));
+for (const file of messagecontextcommandsFiles) {
+    const cmd = require(path.join(messagecontextcommandsPath, file));
+    if ((cmd.execute) && (cmd.data)) {
+        messagecontextcommands.set(cmd.data.name, cmd);
+    }
+}
+
 var gagged = {}
 
 const client = new discord.Client({
@@ -203,6 +225,16 @@ client.on("messageCreate", async (msg) => {
 
 client.on('interactionCreate', async (interaction) => {
     try {
+        if (interaction.isUserContextMenuCommand()) {
+            usercontextcommands.get(`${interaction.commandName}`)?.execute(interaction)
+            return;
+        }
+
+        if (interaction.isMessageContextMenuCommand()) {
+            messagecontextcommands.get(`${interaction.commandName}`)?.execute(interaction)
+            return;
+        }
+
         if (interaction.isModalSubmit()) {
             // We can't pass custom data through the modal except via the ID, so separate out the first part
             // as IDs will come in like collar_12451251253 - we want the collar part to query the command. 
