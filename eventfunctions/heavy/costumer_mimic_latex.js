@@ -198,6 +198,7 @@ let functiontick = async (userID) => {
             process.userevents[userID].costumermimic.stage = 4;
             data.textdata.c1 = "Naked";
             data.donestripping = true;
+            data.noneremaining = true;
             messageSendChannel(getText(data), process.recentmessages[userID])
             return;
         }
