@@ -454,7 +454,7 @@ const texts_dollprotocol = {
 
 const texts_gag = {
 	heavy: {
-		self: { gag: [`USER_TAG looks at a VAR_C4, attempting to spit out USER_THEIR VAR_C3 and change it, but the straps hold firm! Maybe if USER_THEY had fingers USER_THEY could change USER_THEIR gag!`], nogag: [`USER_TAG squirms a bit, but USER_THEIR arms are trapped! Someone should help USER_THEM with putting a VAR_C3 on!`] },
+		self: { gag: [`USER_TAG looks at a VAR_C3, attempting to spit out USER_THEIR VAR_C4 and change it, but the straps hold firm! Maybe if USER_THEY had fingers USER_THEY could change USER_THEIR gag!`], nogag: [`USER_TAG squirms a bit, but USER_THEIR arms are trapped! Someone should help USER_THEM with putting a VAR_C3 on!`] },
 		other: { gag: [`USER_TAG uses USER_THEIR toes to pick up a VAR_C3 by the straps and put it on TARGET_TAG, but without arms, USER_THEY can't undo TARGET_THEIR VAR_C4 to switch it out!`], nogag: [`USER_TAG flops over a table to pick up a VAR_C3 and take it over to TARGET_TAG and put it on TARGET_THEM, but USER_THEY lackUSER_S arms and fingers to work with the straps!`] },
 	},
 	noheavy: {
@@ -771,9 +771,9 @@ const texts_heavy = {
 		},
 		{
 			only: (t) => {
-				return t.c3.includes("Bandage");
+				return t.c2.includes("Bandage");
 			},
-			text: `USER_TAG pulls out a roll of VAR_C3 and enchants them to wind around USER_THEMSELF! Soon enough USER_THEY are completely mummified by the VAR_C3!`,
+			text: `USER_TAG pulls out a roll of VAR_C2 and enchants them to wind around USER_THEMSELF! Soon enough USER_THEY are completely mummified by the VAR_C3!`,
 		},
 		// Comfy
 		{
