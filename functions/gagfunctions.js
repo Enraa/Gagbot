@@ -316,11 +316,11 @@ const modifymessage = async (msg, threadId) => {
 		// But only if NOT wearing a headwear that replaces it in previous step.
 		if (!msgTreeMods.modified && msg.content.match(SKIPREGEX)) return;
 
-		textGarbleVibrator(msg, msgTree, msgTreeMods);			// Handle arousal effects (Stutter, gasps.)
-		textGarbleCorset(msg, msgTree, msgTreeMods, threadId);	// Handle corset.
-		if (msgTreeMods.corseted) {return;}						// Abort if the message got corseted - message handled elsewhere.
-		msgTree.rebuild(msgTree.toString())						// Update AST to account for control char-wrapped moans.
-		textGarbleGag(msg, msgTree, msgTreeMods);				// Text garbling due to Gag
+		textGarbleVibrator(msg, msgTree, msgTreeMods);				// Handle arousal effects (Stutter, gasps.)
+		textGarbleCorset(msg, msgTree, msgTreeMods, threadId);		// Handle corset.
+		if (msgTreeMods.corseted) {return;}							// Abort if the message got corseted - message handled elsewhere.
+		msgTree.rebuild(msgTree.toString())							// Update AST to account for control char-wrapped moans.
+		textGarbleGag(msg, msgTree, msgTreeMods);					// Text garbling due to Gag
 
 		// Convert the AST back to a string.
 		outtext = msgTree.toString()
@@ -400,7 +400,6 @@ function textGarbleCorset(msg, msgTree, msgModified, threadId) {
 		}
 		// Subscript ALL if corset tightness >= 7
 		if(corset.tightness >= 7){
-			console.log("MAKE SMALL")
 			msgModified.modified = true;
 			msgTree.subscript()
 		}
