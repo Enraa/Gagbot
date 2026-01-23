@@ -103,7 +103,7 @@ class MessageAST {
         // Dollminatrix can cry and rip out my patchwork after applying percussive maintenace 
         // to the corset function probably. 
         let outofbreath = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"]
-        output = output.replace("[object Object]", outofbreath[Math.floor(outofbreath.length * Math.random())])
+        output = output.replace("[object Object]", outofbreath[Math.random(Math.floor(outofbreath.length * Math.random()))])
 		return output;
 	}
 }
