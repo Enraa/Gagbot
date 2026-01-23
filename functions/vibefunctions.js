@@ -13,38 +13,40 @@ const { config } = require("./configfunctions.js");
 const { getOption, getBotOption } = require(`./configfunctions.js`);
 
 const chastitytypes = [
-	{ name: "Featherlight Belt", value: "belt_featherlight", denialCoefficient: 15, minVibe: 2, minArousal: 1 },
-	{ name: "Blacksteel Chastity Belt", value: "belt_blacksteel", denialCoefficient: 7.5 },
-	{ name: "Silver Chastity Belt", value: "belt_silver", denialCoefficient: 5 },
-	{ name: "Latex Lined Chastity Belt", value: "belt_latexlined", denialCoefficient: 5 },
-	{ name: "Ancient Chastity Belt", value: "belt_ancient", denialCoefficient: 15 },
-	{ name: "Cyber Doll Belt", value: "belt_cyberdoll", denialCoefficient: 10 },
-	{ name: "Tungsten Belt", value: "belt_tungsten", denialCoefficient: 7.5 },
-	{ name: "Hardlight Belt", value: "belt_hardlight", denialCoefficient: 10 },
-	{ name: "Wolf Panties", value: "belt_wolf", denialCoefficient: 7.5 },
-	{ name: "Maid Chastity Belt", value: "belt_maid", denialCoefficient: 10 },
-	{ name: "Chastity Belt of Eternal Denial", value: "belt_eternal", denialCoefficient: 2000 },
-	{ name: "Queensbelt", value: "belt_queen", denialCoefficient: 10 },
-	{ name: "Starmetal Belt", value: "belt_starmetal", denialCoefficient: 7.5 },
+	{ name: "Featherlight Belt", value: "belt_featherlight", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 15, minVibe: 2, minArousal: 1 },
+	{ name: "Blacksteel Chastity Belt", value: "belt_blacksteel", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 7.5 },
+	{ name: "Silver Chastity Belt", value: "belt_silver", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 5 },
+	{ name: "Latex Lined Chastity Belt", value: "belt_latexlined", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 5 },
+	{ name: "Ancient Chastity Belt", value: "belt_ancient", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 15 },
+	{ name: "Cyber Doll Belt", value: "belt_cyberdoll", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 10 },
+	{ name: "Tungsten Belt", value: "belt_tungsten", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 7.5 },
+	{ name: "Hardlight Belt", value: "belt_hardlight", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 10 },
+	{ name: "Wolf Panties", value: "belt_wolf", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 7.5 },
+	{ name: "Maid Chastity Belt", value: "belt_maid", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 10 },
+	{ name: "Chastity Belt of Eternal Denial", value: "belt_eternal", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 2000 },
+	{ name: "Queensbelt", value: "belt_queen", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 10 },
+	{ name: "Starmetal Belt", value: "belt_starmetal", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 7.5 },
 ];
 
 const chastitybratypes = [
-	{ name: "Featherlight Bra", value: "bra_featherlight", denialCoefficient: 6, minVibe: 2, minArousal: 1 },
-	{ name: "Blacksteel Chastity Bra", value: "bra_blacksteel", denialCoefficient: 3 },
-	{ name: "Silver Chastity Bra", value: "bra_silver", denialCoefficient: 3 },
-	{ name: "Latex Lined Chastity Bra", value: "bra_latexlined", denialCoefficient: 3 },
-	{ name: "Ancient Chastity Bra", value: "bra_ancient", denialCoefficient: 6 },
-	{ name: "Cyber Doll Bra", value: "bra_cyberdoll", denialCoefficient: 4 },
-	{ name: "Tungsten Bra", value: "bra_tungsten", denialCoefficient: 3 },
-	{ name: "Hardlight Bra", value: "bra_hardlight", denialCoefficient: 4 },
-	{ name: "Wolf Bra", value: "bra_wolf", denialCoefficient: 3 },
-	{ name: "Maid Chastity Bra", value: "bra_maid", denialCoefficient: 3 },
-	{ name: "Queensbra", value: "bra_queen", denialCoefficient: 4 },
-	{ name: "Starmetal Bra", value: "bra_starmetal", denialCoefficient: 3 },
+	{ name: "Featherlight Bra", value: "bra_featherlight", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 6, minVibe: 2, minArousal: 1 },
+	{ name: "Blacksteel Chastity Bra", value: "bra_blacksteel", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
+	{ name: "Silver Chastity Bra", value: "bra_silver", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
+	{ name: "Latex Lined Chastity Bra", value: "bra_latexlined", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
+	{ name: "Ancient Chastity Bra", value: "bra_ancient", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 6 },
+	{ name: "Cyber Doll Bra", value: "bra_cyberdoll", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 4 },
+	{ name: "Tungsten Bra", value: "bra_tungsten", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
+	{ name: "Hardlight Bra", value: "bra_hardlight", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 4 },
+	{ name: "Wolf Bra", value: "bra_wolf", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
+	{ name: "Maid Chastity Bra", value: "bra_maid", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
+	{ name: "Queensbra", value: "bra_queen", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 4 },
+	{ name: "Starmetal Bra", value: "bra_starmetal", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
 ];
 
 const chastitytypesoptions = chastitytypes.map((chastity) => ({ name: chastity.name, value: chastity.value }));
 const chastitybratypesoptions = chastitybratypes.map((chastity) => ({ name: chastity.name, value: chastity.value }));
+
+const frustrationPenalties = new Map();
 
 // the arousal under which it is treated as 0
 const RESET_LIMIT = 0.1;
@@ -55,7 +57,7 @@ const ORGASM_LIMIT = 10;
 // the rate of arousal decay without orgasms when unbelted
 const UNBELTED_DECAY = 0.2;
 // the maximum frustration that can be reached
-const MAX_FRUSTRATION = 1; // Set to 1 to effectively neuter frustration
+const MAX_FRUSTRATION = 50;
 // by how much arousal randomness is biased upwards
 const RANDOM_BIAS = 1;
 // by how much vibe intensity is scaled for the arousal model
@@ -63,10 +65,10 @@ const VIBE_SCALING = 0.6;
 // the rate frustration grows at while belted
 const FRUSTRATION_COEFFICIENT = 1.06;
 // the portion of maximum frustration where the growth rate reduces
-const FRUSTRATION_BREAKPOINT = 0.8;
+const FRUSTRATION_BREAKPOINT = 0.7;
 const FRUSTRATION_BREAKPOINT_TIME = Math.log(FRUSTRATION_BREAKPOINT * MAX_FRUSTRATION) / Math.log(FRUSTRATION_COEFFICIENT);
 // the rate frustration reaches the maximum after the breakpoint
-const FRUSTRATION_MAX_COEFFICIENT = 7;
+const FRUSTRATION_MAX_COEFFICIENT = 6;
 // the minimum time between successful orgasms
 const ORGASM_COOLDOWN = 60 * 1000;
 // the frustration increase caused by failed orgasms
@@ -78,12 +80,14 @@ const AROUSAL_PERIOD_AMPLITUDE = 0.3;
 // the inverses of the period lengths used for arousal variance. The lengths should be coprime
 const AROUSAL_PERIOD_A = 1 / 19;
 const AROUSAL_PERIOD_B = 1 / 33;
+// how much repeated frustration penalties are compounded
+const PENALTY_MULTIPLIER = 1.3;
 
 const assignChastity = (user, keyholder, namedchastity) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
-	process.chastity[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), extraFrustration: 0, chastitytype: namedchastity };
+	process.chastity[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity };
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -112,7 +116,7 @@ const assignChastityBra = (user, keyholder, namedchastity) => {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
-	process.chastitybra[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), extraFrustration: 0, chastitytype: namedchastity };
+	process.chastitybra[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity };
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -1066,24 +1070,47 @@ function updateArousalValues() {
 	try {
 		const now = Date.now();
 		const time = now * (getBotOption("bot-timetickrate") / 60000);
+		// for users in vibe or chastity, make sure they have a value in arousal
 		for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
 		for (const user in process.chastity) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
 		for (const user in process.arousal) {
 			const arousal = process.arousal[user];
+			// if the timestamp is in the future the user is cooling off from an orgasm or similar and should be skipped
 			if (arousal.timestamp > now) continue;
-			const next = calcNextArousal(time, arousal.arousal, arousal.prev, calcGrowthCoefficient(user), calcDecayCoefficient(user));
-			arousal.timestamp = now;
-			arousal.prev = arousal.arousal;
-			arousal.arousal = next < RESET_LIMIT ? 0 : next;
+			let vibes = getVibe(user);
+			let minVibe = 0;
 			let minArousal = 0;
+			let growthCoefficient = 1;
+			let decayCoefficient = UNBELTED_DECAY;
+
 			const chastity = getChastity(user);
 			const chastitybra = getChastityBra(user);
-			if (getChastity(user)) {
-				minArousal = chastitytypes.find((c) => c.value == chastity.chastitytype)?.minArousal ?? 0;
+			// get values from belt and bra
+			if (chastity) {
+				const info = chastitytypes.find((c) => c.value == chastity.chastitytype);
+				minVibe = info?.minVibe ?? 0;
+				minArousal = info?.minArousal ?? 0;
+				growthCoefficient *= info?.growthCoefficient ?? 1;
+				decayCoefficient *= info?.decayCoefficient ?? 0.2;
 			}
-			if (getChastityBra(user)) {
-				minArousal = minArousal + (chastitybratypes.find((c) => c.value == chastitybra.chastitytype)?.minArousal ?? 0);
+			if (chastitybra) {
+				const info = chastitybratypes.find((c) => c.value == chastitybra.chastitytype);
+				minVibe += info?.minVibe ?? 0;
+				minArousal += info?.minArousal ?? 0;
+				growthCoefficient *= info?.growthCoefficient ?? 1;
+				decayCoefficient *= info?.decayCoefficient ?? 0.7;
 			}
+			// if no vibe effect, growth coefficient will be 0
+			if (!vibes && !minVibe) growthCoefficient = 0;
+			// otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
+			else growthCoefficient *= Math.max(vibes?.reduce((a, b) => a + b.intensity, 0) ?? 0, minVibe) * VIBE_SCALING;
+			const next = calcNextArousal(time, arousal.arousal, arousal.prev, growthCoefficient, decayCoefficient);
+			// set the values to the new ones
+			arousal.timestamp = now;
+			arousal.prev = arousal.arousal;
+			// mathematically it would never reach 0 so reset it to 0 if low enough here
+			arousal.arousal = next < RESET_LIMIT ? 0 : next;
+			// if it drops below minimum arousal, set it to the minimum
 			if (arousal.arousal < minArousal) arousal.arousal = minArousal;
 		}
 		if (process.readytosave == undefined) {
@@ -1099,13 +1126,7 @@ function getVibeEquivalent(user) {
 	if (!config.getDynamicArousal(user)) return calcStaticVibeIntensity(user) * 2;
 
 	let intensity = getArousal(user);
-	if (intensity >= STUTTER_LIMIT) {
-		const chastity = getChastity(user);
-		if (chastity) {
-			const hoursBelted = (Date.now() - chastity.timestamp) / (60 * 60 * 1000);
-			intensity += (calcFrustration(hoursBelted) + (chastity.extraFrustration ?? 0)) / 20;
-		}
-	}
+	if (intensity >= STUTTER_LIMIT) intensity += calcFrustration(user) / 20;
 	return intensity;
 }
 
@@ -1160,7 +1181,9 @@ function clearArousal(user) {
 }
 
 function calcNextArousal(time, arousal, prev, growthCoefficient, decayCoefficient) {
+	// first increase it due to vibe effect
 	const noDecay = arousal + ((getBotOption("bot-timetickrate") / 60000) * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(time * AROUSAL_PERIOD_A) * Math.cos(time * AROUSAL_PERIOD_B)) * growthCoefficient * (RANDOM_BIAS + Math.random())) / (RANDOM_BIAS + 1);
+	// then reduce it based on decay
 	const next = noDecay - (getBotOption("bot-timetickrate") / 60000) * decayCoefficient * Math.max(arousal + prev / 2, 0.1);
 	return next;
 }
@@ -1179,7 +1202,6 @@ function tryOrgasm(user) {
 		setArousalCooldown(user);
 		const chastity = getChastity(user);
 		if (chastity) {
-			chastity.extraFrustration = 0;
 			chastity.timestamp = (chastity.timestamp + now) / 2;
 			if (process.readytosave == undefined) {
 				process.readytosave = {};
@@ -1190,15 +1212,9 @@ function tryOrgasm(user) {
 	}
 
 	// failing to orgasm is frustrating
-	const chastity = getChastity(user);
-	if (chastity) {
-		const extraFrustration = chastity.extraFrustration ?? 0;
-		chastity.extraFrustration = extraFrustration + ORGASM_FRUSTRATION;
-		if (process.readytosave == undefined) {
-			process.readytosave = {};
-		}
-		process.readytosave.chastity = true;
-	}
+	const penalties = frustrationPenalties.get(user) ?? [];
+	penalties.push({ timestamp: now, value: 10, decay: 1 });
+	frustrationPenalties.set(user, penalties);
 
 	return false;
 }
@@ -1210,27 +1226,10 @@ function setArousalCooldown(user) {
 }
 
 // modify when more things affect it
-function calcGrowthCoefficient(user) {
-	let vibes = getVibe(user);
-	let minVibe = 0;
-	const chastity = getChastity(user);
-	const chastitybra = getChastityBra(user);
-	if (chastity) minVibe = chastitytypes.find((c) => c.value == chastity.chastitytype)?.minVibe ?? 0;
-	if (chastitybra) minVibe = minVibe + (chastitybratypes.find((c) => c.value == chastitybra.chastitytype)?.minVibe ?? 0);
-	if (!vibes && !minVibe) return 0;
-	return Math.max(vibes?.reduce((a, b) => a + b.intensity, 0) ?? 0, minVibe) * VIBE_SCALING;
-}
-
-// modify when more things affect it
 function calcStaticVibeIntensity(user) {
 	const vibes = getVibe(user);
 	if (!vibes) return 0;
 	return vibes.reduce((a, b) => a + b.intensity, 0) * 0.7;
-}
-
-// modify when more things affect it
-function calcDecayCoefficient(user) {
-	return getChastity(user) ? UNBELTED_DECAY / 5 : UNBELTED_DECAY;
 }
 
 // modify when more things affect it
@@ -1244,16 +1243,41 @@ function calcDenialCoefficient(user) {
 	return heavy ? heavyDenialCoefficient(heavy.typeval) : 1;
 }
 
-// modify when more things affect it
-function calcFrustration(hoursBelted) {
+function calcFrustration(user) {
+	let frustrationmult = getOption(user, "frustration");
+	if (frustrationmult == 0) {
+		return 0;
+	}
+	const chastity = getChastity(user);
+	if (!chastity) return 0;
+	const now = Date.now();
+	const hoursBelted = ((now - chastity.timestamp) / (60 * 60 * 1000)) * frustrationmult;
+	let baseFrustration;
+
 	if (hoursBelted <= FRUSTRATION_BREAKPOINT_TIME) {
-		return Math.pow(FRUSTRATION_COEFFICIENT, hoursBelted);
+		// for low time locked, the frustratio grows exponentially
+		baseFrustration = Math.pow(FRUSTRATION_COEFFICIENT, hoursBelted);
+	} else {
+		// for longer time beyond that it grows slower
+		const unbounded = MAX_FRUSTRATION * FRUSTRATION_BREAKPOINT + FRUSTRATION_MAX_COEFFICIENT * Math.log10(hoursBelted - FRUSTRATION_BREAKPOINT_TIME + 1);
+		// ... until a hard cap
+		baseFrustration = Math.min(unbounded, MAX_FRUSTRATION);
 	}
 
-	const unbounded = MAX_FRUSTRATION * FRUSTRATION_BREAKPOINT + FRUSTRATION_MAX_COEFFICIENT * Math.log10(hoursBelted - FRUSTRATION_BREAKPOINT_TIME + 1);
+	// add frustration from temporary decaying penalties such as from failed orgasms
+	let penalties = frustrationPenalties.get(user);
+	if (!penalties) return baseFrustration;
+	// calculate the current frustration caused and remove ones that reach 0
+	penalties = penalties.map((current) => [current, current.value - (current.decay * (now - current.timestamp)) / 60000]).filter(([_, remaining]) => remaining > 0);
+	// remove ones at 0 from the saved list
+	frustrationPenalties.set(
+		user,
+		penalties.map(([penalty, _]) => penalty),
+	);
 
-	if (unbounded > MAX_FRUSTRATION) return MAX_FRUSTRATION;
-	return unbounded;
+	// return the sum of the other penalties plus the base frustration from hours locked
+	// also, multiple concurrent penalties make it even more frustrating
+	return baseFrustration + Math.pow(PENALTY_MULTIPLIER, penalties.length - 1) * penalties.reduce((acc, [_, remaining]) => acc + remaining, 0);
 }
 
 // Provides a text string indicating arousal progress
@@ -1296,6 +1320,7 @@ exports.clearArousal = clearArousal;
 exports.tryOrgasm = tryOrgasm;
 exports.setArousalCooldown = setArousalCooldown;
 exports.updateArousalValues = updateArousalValues;
+exports.frustrationPenalties = frustrationPenalties;
 
 exports.assignChastity = assignChastity;
 exports.getChastity = getChastity;

@@ -5,7 +5,7 @@ const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const fs = require("fs");
 const path = require("path");
-const { rollKeyFumbleN } = require("../functions/keyfindingfunctions.js");
+const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { config } = require("../functions/configfunctions.js");
 
@@ -122,11 +122,11 @@ module.exports = {
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt and it is NOT timelocked
 								data.key = true;
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
-								if (fumbleResults[0]) {
+								const fumbleResult = rollKeyFumble(interaction.user.id, vibeuser.id, 2);
+								if (fumbleResult > 0) {
 									// User fumbles with the key due to their arousal and frustration
 									data.fumble = true;
-									if (config.getKeyLoss(vibeuser.id) && fumbleResults[1]) {
+									if (config.getKeyLoss(vibeuser.id) && fumbleResult > 1) {
 										// lost the key
 										data.discard = true;
 										if (vibetype) {
@@ -214,11 +214,11 @@ module.exports = {
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt
 								data.key = true;
-								const fumbleResults = rollKeyFumbleN(interaction.user.id, vibeuser.id, 2);
-								if (fumbleResults[0]) {
+								const fumbleResult = rollKeyFumble(interaction.user.id, vibeuser.id, 2);
+								if (fumbleResult > 0) {
 									// User fumbles with the key due to their arousal and frustration
 									data.fumble = true;
-									if (config.getKeyLoss(vibeuser.id) && fumbleResults[1]) {
+									if (config.getKeyLoss(vibeuser.id) && fumbleResult > 1) {
 										// lost the key
 										data.discard = true;
 										if (vibetype) {

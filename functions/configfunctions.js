@@ -149,6 +149,87 @@ const configoptions = {
 				return getOption(userID, "fumbling") == "disabled";
 			},
 		},
+		frustration: {
+			name: "Frustration",
+			desc: "Should time worn with chastity cause frustation? This will add additional chance to fumble and change arousal effects on speech.",
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Frustration is disabled*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: 0,
+					style: ButtonStyle.Danger,
+					uname: "FrustrationDisabled",
+				},
+				{
+					name: "0.5x",
+					helptext: "Frustration adds up to 50% over 2 months",
+					select_function: (userID) => {
+						return false;
+					},
+					value: 0.5,
+					style: ButtonStyle.Secondary,
+					uname: "Frustration05",
+				},
+				{
+					name: "1x",
+					helptext: "Frustration adds up to 50% over 1 month",
+					select_function: (userID) => {
+						return false;
+					},
+					value: 1,
+					style: ButtonStyle.Secondary,
+					uname: "Frustration1",
+				},
+				{
+					name: "2x",
+					helptext: "Frustration adds up to 50% over 2 weeks",
+					select_function: (userID) => {
+						return false;
+					},
+					value: 2,
+					style: ButtonStyle.Secondary,
+					uname: "Frustration2",
+				},
+				{
+					name: "4x",
+					helptext: "Frustration adds up to 50% over 1 week",
+					select_function: (userID) => {
+						return false;
+					},
+					value: 4,
+					style: ButtonStyle.Secondary,
+					uname: "Frustration4",
+				},
+				{
+					name: "10x",
+					helptext: "Frustration adds up to 50% over 3 days",
+					select_function: (userID) => {
+						return false;
+					},
+					value: 10,
+					style: ButtonStyle.Secondary,
+					uname: "Frustration10",
+				},
+				{
+					name: "20x",
+					helptext: "Frustration adds up to 50% over 1.5 days",
+					select_function: (userID) => {
+						return false;
+					},
+					value: 20,
+					style: ButtonStyle.Secondary,
+					uname: "Frustration20",
+				},
+			],
+			menutype: "choice",
+			default: 0,
+			disabled: (userID) => {
+				return getOption(userID, "fumbling") == "disabled";
+			},
+		},
 		arousaleffectpotency: {
 			name: "Arousal Effect Potency",
 			desc: "How much should arousal modify your speech?",
