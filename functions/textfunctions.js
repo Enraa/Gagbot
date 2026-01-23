@@ -218,7 +218,7 @@ const texts_collarequip = {
 						// General Types
 						{
 							only: (t) => {
-								return t.c3.includes("Petsuit") || t.c2.includes("Piddlefours");
+								return t.c3.includes("Petsuit") || t.c3.includes("Piddlefours");
 							},
 							text: `USER_TAG pushes TARGET_TAG to their knees before kneeling down USER_THEMSELF and slipping TARGET_THEIR limbs into a VAR_C3, forcing TARGET_THEM to crawl around like a pet!`,
 						},
