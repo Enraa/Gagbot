@@ -93,6 +93,10 @@ class MessageAST {
 				output += this.data[x].text;
 			}
 		}
+        // Hacky solution to remove all orphaned subscripts?
+        // This searches for any instance of "# " or "-# " that either
+        // starts with a new line or the beginning of the string, and ends with a \n.
+        output = output.replaceAll(/(\n|^)(\-)?\#\s\n/g, "") 
 		return output;
 	}
 }
