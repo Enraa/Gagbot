@@ -1,4 +1,4 @@
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text) => {
 	let newtextparts = text.split(" ");
 	let outtext = "";
 	for (let i = 0; i < newtextparts.length; i++) {

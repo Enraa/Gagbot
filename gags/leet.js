@@ -7,7 +7,7 @@
 const { leetGagCharMaps } = require("./leet/leetCharMap.js");
 
 // Helper function to garble a text segment.
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, intensity) => {
 	let output = "";
 	let itr = 0;
 	for (const char of text) {

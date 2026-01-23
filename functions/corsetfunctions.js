@@ -66,24 +66,22 @@ const removeCorset = (user) => {
 };
 
 // Consumes breath and returns possibly modified text
-function corsetLimitWords(text, parent, user, msgModified) {
+function corsetLimitWords(user, text) {
 	// just do nothing if no text
-	if (text.length == 0 || text.match(/^\s*$/)) return "";//text;
-
-	// Is this line subscripted or superscripted?
-	// X = -1    - Subscripted
-	// X = [1-3] - Superscripted, with X #'s. 1 is loudest.
-	let scriptLevel = parent.parent.subscript		
+	if (text.length == 0 || text.match(/^\s*$/)) return text;
 
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
-	let globalMultiplier = (scriptLevel > 0) ? 2 : 1;
+	let globalMultiplier = text.match(/^\s*#+\s/) ? 2 : 1;
 	const corset = calcBreath(user);
-
 	// Tightlaced bottoms must only whisper
-	if (corset.tightness >= 7 && scriptLevel >= 0) globalMultiplier *= 2;
-
-
-
+	if (corset.tightness >= 7 && !text.match(/^\s*\-#\s/)) globalMultiplier *= 2;
+	// Bottoms cannot shout!
+	text = text.replace(/^\s*#+\s/, "");
+	text = text.replaceAll(/\n\s*#+\s/g, "\n");
+	if (corset.tightness >= 7) {
+		text = text.replace(/^\s*\-#\s/, "");
+		text = text.replaceAll(/\n\s*\-#\s/g, "\n");
+	}
 	let silence = false;
 	let wordsinmessage = text.split(" ");
 	let newwordsinmessage = [];
@@ -94,10 +92,11 @@ function corsetLimitWords(text, parent, user, msgModified) {
 		} else {
 			let capitals = 0;
 			for (const char of word) {
-				if (/[A-Z]/.test(char)) capitals++;
+				if (char.charCodeAt(0) > 64 && char.charCodeAt(0) < 91) capitals++;
 				const cost = specialCharacterCosts.get(char) ?? 1;
 				corset.breath -= cost * globalMultiplier;
 			}
+
 			// Capitals cost more breath
 			corset.breath -= globalMultiplier * capitals;
 
@@ -127,13 +126,13 @@ function corsetLimitWords(text, parent, user, msgModified) {
 		process.readytosave = {};
 	}
 	process.readytosave.corset = true;
-	if (newwordsinmessage.length == 0){
-		msgModified.modified = true;
-		return "";
-	}
+	if (newwordsinmessage.length == 0) return "";
 	let outtext = newwordsinmessage.join(" ");
-
-	if(text != outtext){msgModified.modified = true;}
+	// Replace other instances of small speak so we only have one.
+	if (corset.tightness >= 7) {
+		outtext = outtext.replaceAll(/\n\s*/g, "\n-# ");
+		if (outtext.length > 0) outtext = `-# ${outtext}`;
+	}
 	return outtext;
 }
 

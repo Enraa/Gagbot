@@ -1,5 +1,3 @@
-const { MessageAST } = require(`./../functions/message_ast.js`);
-
 const fs = require("fs");
 const path = require("path");
 
@@ -225,21 +223,11 @@ const getHeadwearRestrictions = (userID) => {
 	return allowedperms;
 };
 
-
-const replaceEmoji = (text, parent, replaceEmoji, msgModified, matchFound) => {
-	if(text !== replaceEmoji){
-		msgModified.modified = true;
-		msgModified.emojiModified = true;
-		return replaceEmoji;
-	}else{
-		matchFound.found = true;
-	}
-}
 // Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
-const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) => {
-	// Do nothing if no headwear blocks.
-	if (getHeadwearRestrictions(userID).canEmote) {return;}
+const processHeadwearEmoji = (userID, text, dollvisoroverride) => {
+	//if (!getHeadwearRestrictions(userID).canEmote) { return text } // Not blocking emotes, no need to change anything
 
+	let regex = /((<a?:[^:]+:[^>]+>)|(\ud83c[\ud000-\udfff]|\ud83d[\ud000-\udfff]|\ud83e[\ud000-\udfff]))+/g;
 	let replaceemote = "";
 	let wornheadwear = getHeadwear(userID);
 	for (let i = 0; i < wornheadwear.length; i++) {
@@ -251,28 +239,26 @@ const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) =
 			}
 		}
 	}
-	// Replace all instances of the emoji
-	let matchFound = { "found": false}
-	msgTree.callFunc(replaceEmoji,true,["emoji","unicodeEmoji"],[replaceemote,msgModified,matchFound])
 
-	// If there is a forced emote, and it wasn't found in the message, and there were no emotes AT ALL, add one.
-	if (replaceemote && !msgModified.modified && !matchFound.found) {
-		msgTree.rebuild(`${msgTree.toString()} ${replaceemote}`)
-		msgModified.modified = true;
+	let outtext = text.replaceAll(regex, replaceemote);
+
+	if (replaceemote && !outtext.includes(replaceemote)) {
+		outtext = `${outtext} ${replaceemote}`;
 	}
 
-	if (msgTree.toString().length == 0) {
+	if (outtext.length == 0) {
 		let dollIDOverride = dollvisoroverride ?? "Unknown";
 
 		// Handle Doll Visors
 		if (getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))) {
 			// Below is a stylistic choice it's uncertain about.
 			//let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
-			msgTree.rebuild(`*(${dollIDOverride}'s face shows no emotion...)*`)
+			outtext = `*(${dollIDOverride}'s face shows no emotion...)*`;
 		} else {
-			msgTree.rebuild(`*(<@${userID}>'s face shows no emotion...)*`)
+			outtext = `*(<@${userID}>'s face shows no emotion...)*`;
 		}
 	}
+	return outtext;
 };
 
 exports.headweartypes = headweartypes;

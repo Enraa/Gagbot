@@ -4,7 +4,7 @@
 const FLATBWEH = 0.15;
 const MODBWEH = 0.05;
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, intensity) => {
 	let sentenceregex = /[^\n.?!;:]+([\n.?!;:]|$)/g; // Find all sentences!
 	// Honestly, I may just need to have Doll check this, I'm not confident in the results...
 	// > DOLL-14: Regex has been checked.

@@ -7,7 +7,7 @@
 // > Code handles changing cases so we don't need to handle 'a' and 'A' separately here.
 const highSecGagCharMap = { w: "woof", a: "awoo", g: "grrrr-", m: "m-mmmhh!", e: "eep!", y: "yelp" };
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, intesity) => {
 	let output = "";
 
 	// Optional feature to handle escaping italicized text.
