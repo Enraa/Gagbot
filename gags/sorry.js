@@ -7,7 +7,10 @@ const apologies = [
     "apologies",
     "I\ should\ apologize",
     "I\ apologize",
-    "I'm\ being\ selfish"
+    "I'm\ being\ selfish",
+    "sor",
+    "sorr",
+    "sor-"
 ];
 
 const affirmations = [
