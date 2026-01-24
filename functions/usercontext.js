@@ -1,7 +1,6 @@
 const fs = require("fs");
 
 function setUserVar(user, key, value) {
-	console.log("aaaaa");
 	if (process.usercontext == undefined) {
 		process.usercontext = {};
 	}
