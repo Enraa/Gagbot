@@ -61,7 +61,7 @@ const messageend = (msg, intensity) => {
 
 	// Add "I am a good girl!" to the list
 	if (msg.member) {
-		endsoundList.push(convertPronounsText(`I am a good USER_PRAISEOBJECT!`, { interactionuser: msg.member, targetuser: msg.member }));
+		endsoundList.push(convertPronounsText(`\nI am a good USER_PRAISEOBJECT!`, { interactionuser: msg.member, targetuser: msg.member }));
 	}
 
 	if (intensity > 5) {
