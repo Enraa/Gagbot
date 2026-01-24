@@ -126,6 +126,16 @@ const chastitytypes = [
 			setUserVar(user, "chastityoverrides", {});
 		},
 	},
+	{
+		name: "Belt of Undying Ardour",
+		value: "belt_ardour",
+		growthCoefficient: 2.5,
+		decayCoefficient: 0.1,
+		denialCoefficient: 1,
+		minVibe: 3,
+		orgasmCooldown: 0.05,
+		orgasmArousalLeft: 0.05
+	},
 ];
 
 const chastitybratypes = [
