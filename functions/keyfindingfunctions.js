@@ -60,7 +60,7 @@ function rollKeyFumble(keyholder, locked, maxFumbles = 1) {
 
 function getFumbleChance(keyholder, locked) {
 	// cannot fumble if disabled
-	if (!config.getDisabledKeyFumbling(locked)) return 0;
+	if (config.getDisabledKeyFumbling(locked)) return 0;
 	// ... or if not using the dynamic arousal system
 	if (!config.getDynamicArousal(keyholder)) return 0;
 	// ... or if it's someone else and either has disable fumbling for others
