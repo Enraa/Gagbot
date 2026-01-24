@@ -1046,7 +1046,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 Cosplay: [],
                 Doll: [],
                 Bondage: [],
-                Dresses: [],
+                Dress: [],
                 "Upper Body": [],
                 "Lower Body": [],
                 Undergarments: [],
