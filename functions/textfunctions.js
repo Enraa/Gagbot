@@ -899,7 +899,7 @@ const texts_struggle = {
 			only: (t) => {
 				return t.c1 == "Doll Processing Facility";
 			},
-			text: `USER_TAG fights against the VAR_C1 as USER_THEY are moved along the belt, but it refuses to acknowledge their struggle! After all, USER_THEY_CAP USER_ISARE just a Doll.`,
+			text: `USER_TAG fights against the VAR_C1 as USER_THEY USER_ISARE moved along the belt, but it refuses to acknowledge USER_THEIR struggle! After all, USER_THEY_CAP USER_ISARE just a Doll.`,
 		},
 		// General Types
 		{
