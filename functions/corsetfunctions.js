@@ -1,34 +1,18 @@
 const fs = require("fs");
 const path = require("path");
+const nlp = require("compromise");
+const nlpSpeech = require("compromise-speech");
+nlp.extend(nlpSpeech);
 
-const MAX_BREATH_TABLE = [2000, 140, 120, 100, 85, 70, 60, 50, 40, 32.5, 25, 17.5, 10, 7.5, 5, 5];
-const MIN_BREATH_TABLE = [0, -300, -290, -280, -270, -260, -240, -220, -200, -180, -150, -150, -120, -100, -75, -50];
-const BREATH_RECOVERY_TABLE = [2000, 11.5, 9.5, 8, 6.5, 5, 4, 3.2, 2.5, 2, 1.5, 1, 0.5, 0.25, 0.1, 0.02];
+const MAX_BREATH_TABLE = [2000, 56, 48, 40, 34, 28, 24, 20, 16, 13, 10, 7, 4, 3, 2, 2];
+const MIN_BREATH_TABLE = [0, -120, -116, -112, -108, -104, -96, -88, -80, -72, -60, -60, -48, -40, -30, -20];
+const BREATH_RECOVERY_TABLE = [2000, 4.6, 3.8, 3.2, 2.6, 2, 1.6, 1.28, 1, 0.8, 0.6, 0.4, 0.2, 0.1, 0.04, 0.008];
 
 // NOTE: Encapsulate gaspSounds in EOT characters so the Doll Visor doesn't split on them.
 const gaspSounds = ["*hff*", "*hnnf*", "*ahff*", "*hhh*", "*nnh*", "*hnn*", "*hng*", "*uah*", "*uhf*"];
 const silenceReplacers = [" ", ".", ",", ""];
 const silenceMessages = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"];
-const specialCharacterCosts = new Map([
-	["!", 4],
-	["-", 0],
-	[".", 0],
-	[",", 0],
-	["?", 0],
-	["(", 0],
-	[")", 0],
-	["[", 0],
-	["]", 0],
-	["{", 0],
-	["}", 0],
-	["*", 0],
-	["\\", 0],
-	["~", 0],
-	["<", 0],
-	[">", 0],
-	["'", 0],
-	['"', 0],
-]);
+const specialCharacterCosts = new Map([["!", 2]]);
 
 const assignCorset = (user, tightness = 5, origbinder) => {
 	if (process.corset == undefined) process.corset = {};
@@ -68,72 +52,88 @@ const removeCorset = (user) => {
 // Consumes breath and returns possibly modified text
 function corsetLimitWords(text, parent, user, msgModified) {
 	// just do nothing if no text
-	if (text.length == 0 || text.match(/^\s*$/)) return "";//text;
+	if (text.length == 0 || text.match(/^\s*$/)) return ""; //text;
 
 	// Is this line subscripted or superscripted?
 	// X = -1    - Subscripted
 	// X = [1-3] - Superscripted, with X #'s. 1 is loudest.
-	let scriptLevel = parent.parent.subscript		
+	let scriptLevel = parent.parent.subscript;
 
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
-	let globalMultiplier = (scriptLevel > 0) ? 2 : 1;
+	let globalMultiplier = scriptLevel > 0 ? 2 : 1;
 	const corset = calcBreath(user);
 
 	// Tightlaced bottoms must only whisper
 	if (corset.tightness >= 7 && scriptLevel >= 0) globalMultiplier *= 2;
 
-
-
 	let silence = false;
-	let wordsinmessage = text.split(" ");
+	const parsed = nlp(text).compute("syllables").terms().json();
+
 	let newwordsinmessage = [];
-	for (const i in wordsinmessage) {
-		let word = wordsinmessage[i];
-		if (word.length == 0) {
-			if (!silence) newwordsinmessage.push(word);
-		} else {
+	for (const i in parsed) {
+		let word = parsed[i].text;
+		if (word.length > 0) {
 			let capitals = 0;
 			for (const char of word) {
 				if (/[A-Z]/.test(char)) capitals++;
-				const cost = specialCharacterCosts.get(char) ?? 1;
+				const cost = specialCharacterCosts.get(char) ?? 0;
 				corset.breath -= cost * globalMultiplier;
 			}
-			// Capitals cost more breath
-			corset.breath -= globalMultiplier * capitals;
 
-			// Shouting is not fitting for a bottom
-			if (corset.tightness >= 9 && capitals > 0) word = word.toLowerCase();
-			else if (corset.tightness >= 7 && capitals > 1) word = word.toLowerCase();
-			else if (corset.tightness >= 5 && capitals > 2) word = word.toLowerCase();
-			else if (corset.tightness >= 4 && capitals > 3) word = word.toLowerCase();
-			else if (corset.tightness >= 3 && capitals > 4) word = word.toLowerCase();
+			let newsyllables = [];
+			let ended = false;
 
-			if (word.length < 3) corset.breath -= (3 - word.length) * globalMultiplier;
+			for (let syllable of parsed[i].terms[0].syllables) {
+				corset.breath -= globalMultiplier;
 
-			if (corset.breath < -MAX_BREATH_TABLE[corset.tightness] && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) silence = true;
+				// if its long its probably from stutters
+				if (syllable.length > 5) corset.breath -= globalMultiplier;
 
-			// add gasping sounds once at half of max breath
-			if (!silence && corset.breath < MAX_BREATH_TABLE[corset.tightness] / 2 && Math.random() < Math.min(corset.tightness / 10, 1 - (Math.max(corset.breath, -MAX_BREATH_TABLE[corset.tightness]) + MAX_BREATH_TABLE[corset.tightness]) / (corset.tightness * MAX_BREATH_TABLE[corset.tightness] * 0.2))) {
-				newwordsinmessage.push(gaspSounds[Math.floor(Math.random() * gaspSounds.length)]);
+				// Capitals cost more breath
+				corset.breath -= (globalMultiplier * capitals) / 2;
+
+				// Shouting is not fitting for a bottom
+				if (corset.tightness >= 9 && capitals > 0) newsyllables = newsyllables.toLowerCase();
+				else if (corset.tightness >= 7 && capitals > 1) newsyllables = newsyllables.toLowerCase();
+				else if (corset.tightness >= 5 && capitals > 2) newsyllables = newsyllables.toLowerCase();
+				else if (corset.tightness >= 4 && capitals > 3) newsyllables = newsyllables.toLowerCase();
+				else if (corset.tightness >= 3 && capitals > 4) newsyllables = newsyllables.toLowerCase();
+
+				if (corset.breath < -MAX_BREATH_TABLE[corset.tightness] && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) {
+					if (!silence) ended = true;
+					silence = true;
+				}
+
+				// add gasping sounds once at half of max breath
+				if (!silence && corset.breath < MAX_BREATH_TABLE[corset.tightness] / 2 && Math.random() < Math.min(corset.tightness / 10, 1 - (Math.max(corset.breath, -MAX_BREATH_TABLE[corset.tightness]) + MAX_BREATH_TABLE[corset.tightness]) / (corset.tightness * MAX_BREATH_TABLE[corset.tightness] * 0.2))) {
+					if (newsyllables.length > 0) newsyllables.push("-" + gaspSounds[Math.floor(Math.random() * gaspSounds.length)] + "-");
+					else newwordsinmessage.push(gaspSounds[Math.floor(Math.random() * gaspSounds.length)]);
+				}
+
+				// SILENCE BOTTOM
+				if (!silence && corset.tightness >= 5) syllable = syllable.replaceAll("!", "\\~");
+
+				if (!silence) newsyllables.push(syllable);
 			}
 
-			// SILENCE BOTTOM
-			if (!silence && corset.tightness >= 5) word = word.replaceAll("!", "\\~");
-
-			if (!silence) newwordsinmessage.push(word);
+			if (newsyllables.length > 0) {
+				newwordsinmessage.push(newsyllables.join("") + (ended ? "-" : ""));
+			}
 		}
 	}
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.corset = true;
-	if (newwordsinmessage.length == 0){
+	if (newwordsinmessage.length == 0) {
 		msgModified.modified = true;
 		return "";
 	}
 	let outtext = newwordsinmessage.join(" ");
 
-	if(text != outtext){msgModified.modified = true;}
+	if (text != outtext) {
+		msgModified.modified = true;
+	}
 	return outtext;
 }
 
