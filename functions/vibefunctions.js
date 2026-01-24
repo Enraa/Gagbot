@@ -119,7 +119,7 @@ const chastitytypes = [
 		denialCoefficient: 5,
 		onOrgasm(user, prevArousal) {
 			addArousal(user, prevArousal);
-			const current = getUserVar(user, "chastityoverrides") ?? 5;
+			const current = getUserVar(user, "chastityoverrides")?.denialCoefficient ?? 5;
 			setUserVar(user, "chastityoverrides", { denialCoefficient: current * 1.2 });
 		},
 		onUnequip(user) {
