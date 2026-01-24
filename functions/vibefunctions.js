@@ -1355,7 +1355,6 @@ function tryOrgasm(user) {
 	const orgasmLimit = ORGASM_LIMIT;
 
 	if ((arousal * (RANDOM_BIAS + Math.random())) / (RANDOM_BIAS + 1) >= orgasmLimit * denialCoefficient) {
-		traits.onOrgasm(user, arousal);
 		setArousalCooldown(user);
 		if (chastity) {
 			chastity.timestamp = (chastity.timestamp + now) / 2;
@@ -1364,14 +1363,15 @@ function tryOrgasm(user) {
 			}
 			process.readytosave.chastity = true;
 		}
+		traits.onOrgasm(user, arousal);
 		return true;
 	}
 
 	// failing to orgasm is frustrating
-	traits.onFailedOrgasm(user, arousal);
 	const penalties = frustrationPenalties.get(user) ?? [];
 	penalties.push({ timestamp: now, value: 10, decay: 1 });
 	frustrationPenalties.set(user, penalties);
+	traits.onFailedOrgasm(user, arousal);
 
 	return false;
 }
