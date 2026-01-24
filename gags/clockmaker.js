@@ -1,4 +1,4 @@
-const outOfTimeMessages = [`\n*looks down silently*\n`, `\n*tries to speak, but no words come out*\n`, `\n*nods without a word*\n`, `\n*looks down and to the side*\n`, `\n*needs to track time better*\n`, `\n*is out of time*\n`, `\n*should have waited more*\n`, `\n*meeps but produces no audible words*\n`, `\n*waits to speak*\n`, `\n*does not speak out of turn*\n`];
+const outOfTimeMessages = [`*looks down silently*`, `*tries to speak, but no words come out*`, `*nods without a word*`, `*looks down and to the side*`, `*needs to track time better*`, `*is out of time*`, `*should have waited more*`, `*meeps but produces no audible words*`, `*waits to speak*`, `*does not speak out of turn*`];
 
 function messagebegin (msg, msgTree, msgTreeMods, intensity) {
 	const duration = 20 - intensity;
@@ -8,7 +8,7 @@ function messagebegin (msg, msgTree, msgTreeMods, intensity) {
 	if (Math.floor(Date.now() / 1000) % period < duration) return;
 
 	let silenced = {"isSilenced":false}
-	msgTree.callFunc(outOfTime,true,"rawText",[silenced])	// Run a function on the tree.
+	msgTree.callFunc(outOfTime,true,["rawText","moan"],[silenced])	// Run a function on the tree.
 	if(silenced.isSilenced){
 		msgTreeMods.modified = true;						// If the function caught anything, the message is modified.
 		msgTree.rebuild(`${msgTree.toString()}${`\n-# (${period - (Math.floor(Date.now() / 1000) % period)} Second${period - (Math.floor(Date.now() / 1000) % period) == 1 ? "" : "s"} Remaining...)`}`)
