@@ -7,11 +7,17 @@ const env = require('dotenv')
 const nlp = require('compromise');
 const nlpSpeech = require('compromise-speech');
 const { getChastity } = require('./functions/vibefunctions.js');
+const { setUpToys } = require('./functions/toyfunctions.js');
 nlp.extend(nlpSpeech);
 
 env.config();
 
 
+setUpToys();
+console.log(process.toytypes)
+console.log(process.toytypes["vibe_bullet"].canEquip({ userID: "125093095405518850", keyholderID: "125093095405518850" }))
+
+/*
 const client = new discord.Client({
     intents: [
         discord.GatewayIntentBits.Guilds,
@@ -46,4 +52,4 @@ client.on("clientReady", async () => {
 
 client.login(process.env.DISCORDBOTTOKEN)
 
-console.log(JSON.stringify(['1443329378560901303']))
+console.log(JSON.stringify(['1443329378560901303']))*/
