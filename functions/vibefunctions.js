@@ -33,12 +33,12 @@ const NO_CHASTITY = {
 	maxDecay: null,
 	orgasmCooldown: 1,
 	orgasmArousalLeft: 0,
-	onOrgasm(user, prevArousal) {},
-	onFailedOrgasm(user, prevArousal) {},
-	onEquip(user) {},
-	onUnequip(user) {},
-	onFumble(wearer, keyholder, fumbleResult) {},
-	afterArousalChange(user, prevArousal, newArousal) {},
+	onOrgasm(user, prevArousal) { },
+	onFailedOrgasm(user, prevArousal) { },
+	onEquip(user) { },
+	onUnequip(user) { },
+	onFumble(wearer, keyholder, fumbleResult) { },
+	afterArousalChange(user, prevArousal, newArousal) { },
 	canUnequip(user) {
 		return true;
 	},
@@ -59,12 +59,12 @@ const DEFAULT_BELT = {
 	maxDecay: null,
 	orgasmCooldown: 1,
 	orgasmArousalLeft: 0,
-	onOrgasm(user, prevArousal) {},
-	onFailedOrgasm(user, prevArousal) {},
-	onEquip(user) {},
-	onUnequip(user) {},
-	onFumble(wearer, keyholder, fumbleResult) {},
-	afterArousalChange(user, prevArousal, newArousal) {},
+	onOrgasm(user, prevArousal) { },
+	onFailedOrgasm(user, prevArousal) { },
+	onEquip(user) { },
+	onUnequip(user) { },
+	onFumble(wearer, keyholder, fumbleResult) { },
+	afterArousalChange(user, prevArousal, newArousal) { },
 	canUnequip(user) {
 		return true;
 	},
@@ -85,12 +85,12 @@ const DEFAULT_BRA = {
 	maxDecay: null,
 	orgasmCooldown: 1,
 	orgasmArousalLeft: 0,
-	onOrgasm(user, prevArousal) {},
-	onFailedOrgasm(user, prevArousal) {},
-	onEquip(user) {},
-	onUnequip(user) {},
-	onFumble(wearer, keyholder, fumbleResult) {},
-	afterArousalChange(user, prevArousal, newArousal) {},
+	onOrgasm(user, prevArousal) { },
+	onFailedOrgasm(user, prevArousal) { },
+	onEquip(user) { },
+	onUnequip(user) { },
+	onFumble(wearer, keyholder, fumbleResult) { },
+	afterArousalChange(user, prevArousal, newArousal) { },
 	canUnequip(user) {
 		return true;
 	},
@@ -136,6 +136,20 @@ const chastitytypes = [
 		orgasmCooldown: 0.05,
 		orgasmArousalLeft: 0.05
 	},
+	{
+		name: "Livingwood Belt",
+		value: "belt_livingwood",
+		growthCoefficient: 0.5,
+		decayCoefficient: 0.2,
+		denialCoefficient: 5,
+		onOrgasm(user, prevArousal) {
+			const current = getUserVar(user, "chastityoverrides")?.minVibe ?? 0;
+			setUserVar(user, "chastityoverrides", { minVibe: min(max(current -= 1, 0), 20) });
+		},
+		onUnequip(user) {
+			setUserVar(user, "chastityoverrides", {});
+		},
+	},
 ];
 
 const chastitybratypes = [
@@ -151,6 +165,20 @@ const chastitybratypes = [
 	{ name: "Maid Chastity Bra", value: "bra_maid", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
 	{ name: "Queensbra", value: "bra_queen", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 4 },
 	{ name: "Starmetal Bra", value: "bra_starmetal", growthCoefficient: 1, decayCoefficient: 0.6, denialCoefficient: 3 },
+	{
+		name: "Livingwood Bra",
+		value: "bra_livingwood",
+		growthCoefficient: 1,
+		decayCoefficient: 0.6,
+		denialCoefficient: 3,
+		onOrgasm(user, prevArousal) {
+			const current = getUserVar(user, "chastityoverrides")?.minVibe ?? 0;
+			setUserVar(user, "chastityoverrides", { minVibe: min(max(current -= 1, 0), 20) });
+		},
+		onUnequip(user) {
+			setUserVar(user, "chastityoverrides", {});
+		},
+	},
 ];
 
 const chastitytypesoptions = chastitytypes.map((chastity) => ({ name: chastity.name, value: chastity.value }));
@@ -274,7 +302,7 @@ const removeChastityBra = (user, force = false) => {
 };
 
 function swapChastity(user, namedchastity) {
-	if(process.chastity == undefined) {
+	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
 	let traits = getChastityTraits(user);
@@ -291,7 +319,7 @@ function swapChastity(user, namedchastity) {
 }
 
 function swapChastityBra(user, namedchastity) {
-	if(process.chastitybra == undefined) {
+	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
 	let traits = getChastityBraTraits(user);

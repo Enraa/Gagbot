@@ -16,6 +16,7 @@ const collartypes = [
 	{ name: "Kitty Collar", value: "collar_kitty" },
 	{ name: "Puppy Collar", value: "collar_puppy" },
 	{ name: "Inari Collar", value: "collar_inari" },
+	{ name: "Livingwood Collar", value: "collar_livingwood" },
 	{ name: "Sheep Collar", value: "collar_sheep" },
 	{ name: "Potion Collar", value: "collar_potion" },
 	{ name: "Princess Collar", value: "collar_princess" },

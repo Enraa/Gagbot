@@ -142,6 +142,7 @@ let wearabletypes = [
 	{ name: "Pleated Skirt", value: "pleated_skirt", colorable: true, category: "Lower Body", uniqueColors: ["Latex", "Witchy", "Gothic", "Starry", "Shadow"] },
 	{ name: "Miniskirt", value: "mini_skirt", colorable: true, category: "Lower Body", uniqueColors: ["Latex", "Witchy", "Gothic", "Cheerleader", "Floral", "Leafy"] },
 	{ name: "Pencil Skirt", value: "pencil_skirt", colorable: true, category: "Lower Body", uniqueColors: ["Latex", "Witchy", "Gothic", "Cheerleader"] },
+	{ name: "Side Split Skirt", value: "split_skirt", colorable: true, category: "Lower Body" },
 	{ name: "Skirt", value: "skirt", colorable: true, category: "Lower Body" },
 	{ name: "Pareo", value: "pareo", colorable: true, category: "Lower Body" },
 	{ name: "Leather Skirt", value: "skirt_leather", colorable: true, category: "Lower Body" },
@@ -166,6 +167,7 @@ let wearabletypes = [
 	{ name: "Salsa Dress", value: "salsa_dress", colorable: true, category: "Dress" },
 	{ name: "Little Black Dress", value: "littleblack_dress", colorable: false, category: "Dress" },
 	{ name: "Flowy Dress", value: "flowy_dress", colorable: true, category: "Dress", uniqueColors: ["Gothic", "Floral", "Leafy"] },
+	{ name: "Side Split Dress", value: "split_dress", colorable: true, category: "Dress", uniqueColors: ["Gothic", "Floral", "Leafy"] },
 	{ name: "Latex Flowy Dress", value: "flowy_dress_latex", colorable: true, category: "Dress", uniqueColors: ["Gothic", "Starry", "Shadow"] },
 	{ name: "Evening Dress", value: "evening_dress", colorable: true, category: "Dress", uniqueColors: ["Gothic", "Golden", "Silver"] },
 	{ name: "Latex Evening Dress", value: "evening_dress_latex", colorable: true, category: "Dress", uniqueColors: ["Gothic", "Starry", "Shadow"] },
@@ -240,7 +242,7 @@ let wearabletypes = [
 	{ name: "Latex Ballet Heels", value: "balletheels_latex", colorable: true, category: "Footwear", uniqueColors: ["Starry", "Shadow"] },
 	{ name: "Ballet Shoes", value: "ballet_shoes", colorable: true, category: "Footwear" },
 	{ name: "Sandals", value: "sandals", colorable: true, category: "Footwear" },
-	{ name: "Strappy Sandals", value: "sandals_strappy", colorable: true, category: "Footwear" },
+	{ name: "Strappy Sandals", value: "sandals_strappy", colorable: true, category: "Footwear", uniqueColors: ["Floral", "Leafy"], },
 	{ name: "Toenail Polish", value: "polish_toenails", colorable: true, category: "Footwear", uniqueColors: ["Iridescent", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
 	{ name: "Ankle Boots", value: "ankleboots", colorable: true, category: "Footwear" },
 	{ name: "Cowboy Boots", value: "cowboyboots", colorable: true, category: "Footwear" },
@@ -249,7 +251,7 @@ let wearabletypes = [
 	{ name: "Latex Thigh High Boots", value: "thighhighboots_latex", colorable: true, category: "Footwear" },
 	{ name: "Platform Heels", value: "platformheels", colorable: true, category: "Footwear" },
 	{ name: "Pumps", value: "pumps", colorable: true, category: "Footwear" },
-	{ name: "Anklets", value: "anklets", colorable: true, category: "Footwear", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Anklets", value: "anklets", colorable: true, category: "Footwear", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Floral", "Leafy"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Greaves", value: "greaves", colorable: true, category: "Footwear", uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 
 	// Gloves and Armwear
@@ -268,8 +270,8 @@ let wearabletypes = [
 	{ name: "Long Detached Latex Sleeves", value: "sleeves_longdetached_latex", colorable: true, category: "Hands", uniqueColors: ["Gothic", "Starry", "Shadow"] },
 	{ name: "Fingernail Polish", value: "polish_fingernails", colorable: true, category: "Hands", uniqueColors: ["Iridescent", "Sparkly", "Glow-in-the-Dark", "Ultraviolet", "Sanguine"] },
 	{ name: "Wristcuff", value: "wristcuff", colorable: true, category: "Hands", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-	{ name: "Bracelets", value: "bracelets", colorable: true, category: "Hands", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-	{ name: "Armbands", value: "armbands", colorable: true, category: "Hands", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Bracelets", value: "bracelets", colorable: true, category: "Hands", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Floral", "Leafy"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Armbands", value: "armbands", colorable: true, category: "Hands", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Floral", "Livingwood"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Gauntlets", value: "gauntlet", colorable: true, category: "Hands", uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 
 	//Misc Accessories

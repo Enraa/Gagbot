@@ -242,15 +242,12 @@ const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) =
 
 	let replaceemote = "";
 	let wornheadwear = getHeadwear(userID);
-	let isDoll = getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))
-	if(!isDoll){		// Doll Visors overwrite all other emoji replacements due to codeblock formatting.
-		for (let i = 0; i < wornheadwear.length; i++) {
-			if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
-				if (getHeadwearBlocks(wornheadwear[i]).replaceemote.startsWith("EMOJI_")) {
-					replaceemote = process.emojis[getHeadwearBlocks(wornheadwear[i]).replaceemote.replace("EMOJI_", "")];
-				} else {
-					replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote;
-				}
+	for (let i = 0; i < wornheadwear.length; i++) {
+		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
+			if (getHeadwearBlocks(wornheadwear[i]).replaceemote.startsWith("EMOJI_")) {
+				replaceemote = process.emojis[getHeadwearBlocks(wornheadwear[i]).replaceemote.replace("EMOJI_", "")];
+			} else {
+				replaceemote = getHeadwearBlocks(wornheadwear[i]).replaceemote;
 			}
 		}
 	}
@@ -269,7 +266,7 @@ const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) =
 		let dollIDOverride = dollvisoroverride ?? "Unknown";
 
 		// Handle Doll Visors
-		if (isDoll) {
+		if (getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))) {
 			// Below is a stylistic choice it's uncertain about.
 			//let dollID = dollDigits//"0".repeat(4 - dollDigits.length) + dollDigits
 			msgTree.rebuild(`*(${dollIDOverride}'s face shows no emotion...)*`)
