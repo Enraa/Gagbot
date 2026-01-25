@@ -74,6 +74,16 @@ function canRemoveToy(userID, placerID, toy) {
     return (process.toytypes && process.toytypes[toy] && process.toytypes[toy].canUnequip({ userID: userID, placerID: placerID }))
 }
 
+// Idk what to name this honestly.
+function userBlockArousingToy(user, toy) {
+    if (toy && (getOption(user, "arousalsystem") == "disabled") && (process.toytypes[toy].vibescale() > 0)) {
+        return true; // Do not add a toy that can increase arousal, thats bad. 
+    }
+    else {
+        return false;
+    }
+}
+
 function assignToy (user, keyholder, intensity, toytype = "bullet_vibe", origbinder) {
     let vibe = process.toytypes[toytype];
     if (!vibe) { return "NoToy" }
@@ -153,6 +163,7 @@ exports.setUpToys = setUpToys;
 
 exports.canPlaceToy = canPlaceToy;
 exports.canRemoveToy = canRemoveToy;
+exports.userBlockArousingToy = userBlockArousingToy;
 exports.assignToy = assignToy;
 exports.getToys = getToys;
 exports.getSpecificToy = getSpecificToy;

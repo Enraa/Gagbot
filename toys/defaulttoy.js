@@ -28,6 +28,12 @@ function Toy() {
     // Condition to allow modification
     this.canModify = (data) => { return true };
 
+    // Condition that rolls a fumble function, returning it's results
+    this.fumble = (data) => { return 0 };
+
+    // Discard function if the .fumble causes it
+    this.discard = (data) => { return false }
+
     // Action when equipping
     this.onEquip = (data) => { return true };
 
