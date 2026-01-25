@@ -1,16 +1,17 @@
 const apologies = [
-    "sorry",
-    "sorries",
-    "sowry",
-    "sowwy",
+    "(s-)*s+o+r+y+",
+    "(s-)*s+o+r+i+e+s+",
+    "(s-)*s+o+w+r+y+",
+    "(s-)*s+o+w+y+",
     "my\ bad",
     "apologies",
     "I\ should\ apologize",
     "I\ apologize",
     "I'm\ being\ selfish",
-    "sor",
-    "sorr",
-    "sor-"
+    "(s-)*s+o+r+",
+    "(s-)*s+o+r+",
+    "(s-)*s+o+r+-",
+    "soz+"
 ];
 
 const affirmations = [
