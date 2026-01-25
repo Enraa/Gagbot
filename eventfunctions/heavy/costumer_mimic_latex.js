@@ -236,7 +236,7 @@ let functiontick = async (userID) => {
     }
 
     // Apply Outfit Items once stripped until last index of array is reached or a heavy item is found
-    if (process.userevents[userID].costumermimic.stage >= 4 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit].length && nextitem.category != "heavy") {
+    if (process.userevents[userID].costumermimic.stage >= 4 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit].length  && nextitem.category != "heavy") {
 
         data.applyingOutfit = true;
         switch (nextitem.category) {
@@ -391,6 +391,24 @@ let functiontick = async (userID) => {
                 process.userevents[userID].costumermimic.costumeidx++;
                 break;
         }
+
+        if (process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
+            // Remove Current Heavy (Mimic) if end of Costume Array Reached Without Heavy
+            let data = {
+                textarray: "texts_eventfunctions",
+                textdata: {
+                    interactionuser: userobject,
+                    targetuser: targetobject,
+                }
+            }
+            data.heavy = true;
+            data.costumer_mimic = true;
+            removeHeavy(userID);
+            data.spitout = true;
+            data.none = true;
+            messageSendChannel(getText(data), process.recentmessages[userID]);
+        }
+
 
     } else if (nextitem.category == "heavy" || process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
         // Final Stage - Remove Mimic Heavy and spit them out, then apply Outfit Heavy!
