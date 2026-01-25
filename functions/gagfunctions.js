@@ -47,6 +47,7 @@ const gagtypesout = [{ name: "Ball Gag" }, { name: "Bast Gag" }, { name: "Bweh G
 const mittentypes = [
 	{ name: "Kitty Paws", value: "mittens_kitty" },
 	{ name: "Oversized Fluffy Paw Mittens", value: "mittens_oversized_fluff" },
+	{ name: "Pom Pom Mittens", value: "mittens_pompom" },
 	{ name: "Cyber Doll Mittens", value: "mittens_cyberdoll" },
 	{ name: "Leather Mittens", value: "mittens_leather" },
 	{ name: "Hardlight Spheres", value: "mittens_hardlight" },
