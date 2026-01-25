@@ -87,7 +87,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 				corset.breath -= globalMultiplier;
 
 				// if its long its probably from stutters
-				if (syllable.length > 5) corset.breath -= globalMultiplier;
+				if (syllable.length > 5 && syllable.includes("-")) corset.breath -= globalMultiplier;
 
 				// Capitals cost more breath
 				corset.breath -= (globalMultiplier * capitals) / 2;
