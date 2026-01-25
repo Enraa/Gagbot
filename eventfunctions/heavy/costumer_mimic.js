@@ -249,6 +249,19 @@ const mermaid_outfit = [
     { category: "heavy", itemtowear: "armbinder_latex", color: null },
 ];
 
+const mer_maid_outfit = [
+    { category: "wearable", itemtowear: "mermaid_latex", color: "Black" },
+    { category: "wearable", itemtowear: "bikini", color: "Frilly" },
+    { category: "wearable", itemtowear: "sleeves_detatched", color: "Black" },
+    { category: "wearable", itemtowear: "maid_apron", color: null },
+    { category: "mittens", itemtowear: "mittens_maid", color: null },
+    { category: "gag", itemtowear: "politeSub", color: null },
+    { category: "collar", itemtowear: "collar_maid", color: null },
+    { category: "headwear", itemtowear: "mask_kigu_sadisticmaid", color: null },
+    { category: "wearable", itemtowear: "maid_headdress", color: null },
+    { category: "heavy", itemtowear: "straitjacket_maid", color: null },
+];
+
 const cheerleader_outfit = [
     { category: "wearable", itemtowear: "thighhighs", color: "White" },
     { category: "wearable", itemtowear: "gloves_fingerlesselbow", color: "White" },
@@ -280,7 +293,8 @@ const mimicCostumes = {
     //witch_outfit: witch_outfit,
     //angel_outfit: angel_outfit,
     //mermaid_outfit: mermaid_outfit,
-    cheerleader_outfit: cheerleader_outfit,
+    mer_maid_outfit: mer_maid_outfit,
+    //cheerleader_outfit: cheerleader_outfit,
 };
 
 //*/ Shuffler Application
