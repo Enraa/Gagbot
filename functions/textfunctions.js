@@ -1538,7 +1538,7 @@ const texts_unheavy = {
 				text: `USER_TAG wiggles a bit in VAR_C1, but it's so warm and comfy there...`,
 			},
 		],
-		other: [`USER_TAG brushes up against TARGET_TAG to help TARGET_THEM out of USER_THEIR VAR_C2, but being trapped in a VAR_C1, USER_THEY can't really help TARGET_THEM out much.`],
+		other: [`USER_TAG brushes up against TARGET_TAG to help TARGET_THEM out of TARGET_THEIR VAR_C2, but being trapped in a VAR_C1, USER_THEY can't really help TARGET_THEM out much.`],
 	},
 	noheavy: {
 		heavyequipped: [
