@@ -339,6 +339,8 @@ const modifymessage = async (msg, threadId) => {
 
 		// Finally, send it if we modified the message.
 		if (msgTreeMods.modified) {
+            // If the message content is *exactly* the same as the input, return
+            if (msg.content === outtext) { return }
 			await sendTheMessage(msg, outtext, dollIDDisplay, threadId, dollProtocol, msgTreeMods.emojiModified );
 		}
 	} catch (err) {
