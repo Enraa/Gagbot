@@ -185,13 +185,11 @@ function runMessageEvents(data) {
 	}*/ // This will cause a circular to have it. 
 	// Headwear
 	if (process.headwear) {
-		Object.keys(process.headwear).forEach((userid) => {
-			getHeadwear(userid).forEach((h) => {
-				if (process.msgfunctions.headwear && process.msgfunctions.headwear[h]) {
-					process.msgfunctions.headwear[h](userid, data);
-				}
-			});
-		});
+        getHeadwear(data.msg.author.id).forEach((h) => {
+            if (process.msgfunctions.headwear && process.msgfunctions.headwear[h]) {
+                process.msgfunctions.headwear[h](data.msg.author.id, data);
+            }
+        });
 	}
 	// Mittens
 	/*if (process.mitten) {
@@ -205,43 +203,35 @@ function runMessageEvents(data) {
 	}*/ // This will cause a circular to have it. 
 	// Heavy Bondage
 	if (process.heavy) {
-		Object.keys(process.heavy).forEach((userid) => {
-			if (getHeavy(userid)) {
-				if (process.msgfunctions.heavy && process.msgfunctions.heavy[getHeavy(userid).typeval]) {
-					process.msgfunctions.heavy[getHeavy(userid).typeval](userid, data);
-				}
-			}
-		});
+        if (getHeavy(data.msg.author.id)) {
+            if (process.msgfunctions.heavy && process.msgfunctions.heavy[getHeavy(data.msg.author.id).typeval]) {
+                process.msgfunctions.heavy[getHeavy(data.msg.author.id).typeval](data.msg.author.id, data);
+            }
+        }
 	}
 	// Wearables
 	if (process.wearable) {
-		Object.keys(process.wearable).forEach((userid) => {
-			getWearable(userid).forEach((h) => {
-				if (process.msgfunctions.wearable && process.msgfunctions.wearable[h]) {
-					process.msgfunctions.wearable[h](userid, data);
-				}
-			});
-		});
+        getWearable(data.msg.author.id).forEach((h) => {
+            if (process.msgfunctions.wearable && process.msgfunctions.wearable[h]) {
+                process.msgfunctions.wearable[h](data.msg.author.id, data);
+            }
+        });
 	}
     // Toys
     if (process.toys) {
-		Object.keys(process.toys).forEach((userid) => {
-			getToys(userid).forEach((h) => {
-				if (process.msgfunctions.toys && process.msgfunctions.toys[h.type]) {
-					process.msgfunctions.toys[h.type](userid, data);
-				}
-			});
-		});
+        getToys(data.msg.author.id).forEach((h) => {
+            if (process.msgfunctions.toys && process.msgfunctions.toys[h.type]) {
+                process.msgfunctions.toys[h.type](data.msg.author.id, data);
+            }
+        });
 	}
     // Collars
     if (process.collar) {
-		Object.keys(process.collar).forEach((userid) => {
-			if (getCollar(userid)) {
-                if (process.msgfunctions.collar && process.msgfunctions.collar[getCollar(userid).collartype]) {
-					process.msgfunctions.collar[getCollar(userid).collartype](userid, data);
-				}
+        if (getCollar(data.msg.author.id)) {
+            if (process.msgfunctions.collar && process.msgfunctions.collar[getCollar(data.msg.author.id).collartype]) {
+                process.msgfunctions.collar[getCollar(data.msg.author.id).collartype](data.msg.author.id, data);
             }
-		});
+        }
 	}
 }
 

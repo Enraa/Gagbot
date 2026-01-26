@@ -341,7 +341,7 @@ const modifymessage = async (msg, threadId) => {
 		outtext = outtext.replaceAll(/[]/g, "");
 
         // Iterate through any speech events in process.msgfunctions
-        runMessageEvents({ msgcontent: msg.content, outtext: outtext })
+        runMessageEvents({ msg: msg, msgcontent: msg.content, outtext: outtext })
 
 		// Finally, send it if we modified the message.
 		if (msgTreeMods.modified) {
