@@ -1,16 +1,16 @@
 const apologies = [
-    "sorry",
-    "sorries",
-    "sowry",
-    "sowwy",
+    "(\\w|\\d)*(s-)*s+o+r+y+(\\w|\\d)*",
+    "(\\w|\\d)*(s-)*s+o+r+i+e+s+(\\w|\\d)*",
+    "(\\w|\\d)*(s-)*s+o+w+r+y+(\\w|\\d)*",
+    "(\\w|\\d)*(s-)*s+o+w+y+(\\w|\\d)*",
     "my\ bad",
     "apologies",
     "I\ should\ apologize",
     "I\ apologize",
     "I'm\ being\ selfish",
-    "sor",
-    "sorr",
-    "sor-"
+    "(s-)*s+o+r+",
+    "(\\w|\\d)*(s-)*s+o+r+-(\\w|\\d)*",
+    "soz+"
 ];
 
 const affirmations = [
@@ -20,6 +20,13 @@ const affirmations = [
     `I am a great person.`, 
     `I am beautiful.`, 
     `I am cute.`, 
+    "I am capable.",
+    "I am growing every day.",
+    "I deserve good things.",
+    "I am strong.",
+    "I matter.",
+    "I am worthy of love.",
+    "I am proud of myself.",
 ];
 
 const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {

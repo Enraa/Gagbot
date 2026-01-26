@@ -195,12 +195,12 @@ const AROUSAL_PERIOD_B = 1 / 33;
 // how much repeated frustration penalties are compounded
 const PENALTY_MULTIPLIER = 1.3;
 
-const assignChastity = (user, keyholder, namedchastity) => {
+const assignChastity = (user, keyholder, namedchastity, force = false) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
 	let traits = getChastityTraits(user);
-	if (traits && !traits.canUnequip(user)) return false;
+	if (traits && !traits.canUnequip(user) && !force) return false;
 	traits?.onUnequip(user);
 	process.chastity[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity };
 	traits = getChastityTraits(user);
@@ -219,12 +219,12 @@ const getChastity = (user) => {
 	return process.chastity[user];
 };
 
-const removeChastity = (user) => {
+const removeChastity = (user, force = false) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
 	let traits = getChastityTraits(user);
-	if (traits && !traits.canUnequip(user)) return false;
+	if (traits && !traits.canUnequip(user) && !force) return false;
 	traits?.onUnequip(user);
 	delete process.chastity[user];
 	if (process.readytosave == undefined) {
@@ -234,12 +234,12 @@ const removeChastity = (user) => {
 	return true;
 };
 
-const assignChastityBra = (user, keyholder, namedchastity) => {
+const assignChastityBra = (user, keyholder, namedchastity, force = false) => {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
 	let traits = getChastityBraTraits(user);
-	if (traits && !traits.canUnequip(user)) return false;
+	if (traits && !traits.canUnequip(user) && !force) return false;
 	traits?.onUnequip(user);
 	process.chastitybra[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity };
 	traits = getChastityBraTraits(user);
@@ -258,12 +258,12 @@ const getChastityBra = (user) => {
 	return process.chastitybra[user];
 };
 
-const removeChastityBra = (user) => {
+const removeChastityBra = (user, force = false) => {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
 	let traits = getChastityBraTraits(user);
-	if (traits && !traits.canUnequip(user)) return false;
+	if (traits && !traits.canUnequip(user) && !force) return false;
 	traits?.onUnequip(user);
 	delete process.chastitybra[user];
 	if (process.readytosave == undefined) {
@@ -272,6 +272,40 @@ const removeChastityBra = (user) => {
 	process.readytosave.chastitybra = true;
 	return true;
 };
+
+function swapChastity(user, namedchastity) {
+	if(process.chastity == undefined) {
+		process.chastity = {};
+	}
+	let traits = getChastityTraits(user);
+	if (traits && !traits.canUnequip(user)) return false;
+	traits?.onUnequip(user);
+	process.chastity[user].chastitytype = namedchastity;
+	traits = getChastityTraits(user);
+	traits?.onEquip(user);
+	if (process.readytosave == undefined) {
+		process.readytosave = {};
+	}
+	process.readytosave.chastity = true;
+	return true;
+}
+
+function swapChastityBra(user, namedchastity) {
+	if(process.chastitybra == undefined) {
+		process.chastitybra = {};
+	}
+	let traits = getChastityBraTraits(user);
+	if (traits && !traits.canUnequip(user)) return false;
+	traits?.onUnequip(user);
+	process.chastitybra[user].chastitytype = namedchastity;
+	traits = getChastityBraTraits(user);
+	traits?.onEquip(user);
+	if (process.readytosave == undefined) {
+		process.readytosave = {};
+	}
+	process.readytosave.chastitybra = true; // I will need to merge all those readytosave flags into their own functions. this is a hazard to write - NBS
+	return true;
+}
 
 const assignVibe = (user, intensity, vibetype = "bullet vibe", origbinder) => {
 	if (config.getDisableVibes(user)) return;
@@ -1588,3 +1622,6 @@ exports.getClonedChastityBraKey = getClonedChastityBraKey;
 exports.getClonedChastityBraKeysOwned = getClonedChastityBraKeysOwned;
 exports.getOtherKeysChastityBra = getOtherKeysChastityBra;
 exports.getChastityBraTimelock = getChastityBraTimelock;
+
+exports.swapChastity = swapChastity;
+exports.swapChastityBra = swapChastityBra

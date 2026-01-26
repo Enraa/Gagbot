@@ -77,7 +77,7 @@ let functiontick = async (userID) => {
         messageSendChannel(getText(data), process.recentmessages[userID])
     }
     else {
-        let newclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f)) ) // Clothing, check for drone clothes
+        let newclothes = getWearable(userID) // Clothing, check for drone clothes
         let equipped = false;
         droneclothes.forEach((d) => {
             if (!newclothes.includes(d) && !equipped) {

@@ -21,8 +21,8 @@ module.exports = {
 			await interaction.reply({ content: `Resetting ${resetuser}`, flags: MessageFlags.Ephemeral });
 			deleteGag(resetuser.id);
 			deleteMitten(resetuser.id);
-			removeChastity(resetuser.id);
-			removeChastityBra(resetuser.id);
+			removeChastity(resetuser.id, true);
+			removeChastityBra(resetuser.id, true);
 			removeVibe(resetuser.id);
 			removeCollar(resetuser.id);
 			removeHeavy(resetuser.id);

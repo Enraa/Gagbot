@@ -282,7 +282,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Latex Vaccube");
 							},
-							text: `USER_TAG helps TARGET_TAG slip into the VAR_C3, leaving only TARGET_THEIR head poking out as TARGET_THEY kneel within the cube. With a humming sound the air is pumped out and the latex seals around TARGET_THEM, trapping TARGET_THEM helplessly inside!`,
+							text: `USER_TAG helps TARGET_TAG slip into the VAR_C3, leaving only TARGET_THEIR head poking out as TARGET_THEY kneelUSER_S within the cube. With a humming sound the air is pumped out and the latex seals around TARGET_THEM, trapping TARGET_THEM helplessly inside!`,
 						},
 						// Furniture
 						{
@@ -295,7 +295,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Chair with Cuffs");
 							},
-							text: `Sitting TARGET_TAG down in the VAR_C3, USER_TAG kneels and slips TARGET_THEIR ankles into the ankle cuffs, before standing up and walking around to slip TARGET_THEIR arms into cuffs behind TARGET_THEM and snaping them shut!`,
+							text: `Sitting TARGET_TAG down in the VAR_C3, USER_TAG kneels and slips TARGET_THEIR ankles into the ankle cuffs, before standing up and walking around to slip TARGET_THEIR arms into cuffs behind TARGET_THEM and snapping them shut!`,
 						},
 						// Encasement or Wrappings
 						{
@@ -315,13 +315,13 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Weighted Blanket");
 							},
-							text: `USER_TAG tosses a VAR_C3 over TARGET_TAG! It is so comfy that TARGET_THEY can't bring themselves to wriggle out from under the extremely heavy blanket!`,
+							text: `USER_TAG tosses a VAR_C3 over TARGET_TAG! It is so comfy that TARGET_THEY can't bring TARGET_THEMSELF to wriggle out from under the extremely heavy blanket!`,
 						},
 						{
 							only: (t) => {
 								return t.c3.includes("Blanket Burrito");
 							},
-							text: `USER_TAG wraps TARGET_TAG up into a VAR_C3! It doesn't take TARGET_TAG long before TARGT_THEY realise USER_TAG has trapped TARGET_THEM in a warm comfy prison!`,
+							text: `USER_TAG wraps TARGET_TAG up into a VAR_C3! It doesn't take TARGET_TAG long before TARGET_THEY realiseUSER_S USER_TAG has trapped TARGET_THEM in a warm comfy prison!`,
 						},
 						{
 							only: (t) => {
@@ -334,13 +334,13 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Festive Ribbons") || t.c3.includes("Wrapping Paper");
 							},
-							text: `USER_TAG carefully wraps TARGET_TAG in VAR_C3! Who are they planning to gift such a present too~?`,
+							text: `USER_TAG carefully wraps TARGET_TAG in VAR_C3! Who USER_ISARE USER_THEY planning to gift such a present to~?`,
 						},
 						{
 							only: (t) => {
 								return t.c3.includes("Magic Mirror");
 							},
-							text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C3! As TARGET_THEY touches it the Mirror emits a bright flash of light, and TARGET_TAG finds themselves trapped within the reflection!`,
+							text: `USER_TAG pushes TARGET_TAG backwards into a VAR_C3! As TARGET_THEY touchUSER_ES it the Mirror emits a bright flash of light, and TARGET_TAG finds TARGET_THEMSELF trapped within the reflection!`,
 						},
 						{
 							only: (t) => {
@@ -1570,7 +1570,7 @@ const texts_unheavy = {
 				text: `USER_TAG wiggles a bit in VAR_C1, but it's so warm and comfy there...`,
 			},
 		],
-		other: [`USER_TAG brushes up against TARGET_TAG to help TARGET_THEM out of USER_THEIR VAR_C2, but being trapped in a VAR_C1, USER_THEY can't really help TARGET_THEM out much.`],
+		other: [`USER_TAG brushes up against TARGET_TAG to help TARGET_THEM out of TARGET_THEIR VAR_C2, but being trapped in a VAR_C1, USER_THEY can't really help TARGET_THEM out much.`],
 	},
 	noheavy: {
 		heavyequipped: [
@@ -2251,7 +2251,7 @@ const texts_eventfunctions = {
 				mitten: { replace: [`The Doll Processing Facility rips off the VAR_C1 that USER_TAG is wearing, tossing them to the side before installing a pair of Cyber Doll Mittens. The Doll will not remove gags or its visor.`], add: [`The Doll Processing Facility grabs USER_TAG's wrists, holding them to the sides as it installs a pair of Cyber Doll Mittens on USER_THEM. USER_THEY_CAP USER_ISARE so vulnerable now...`] },
 				chastitybelt: { replace: [`The Doll Processing Facility uses an angle grinder to cut off the VAR_C1 sitting on USER_TAG's hips. It quickly replaces the chastity belt with a Cyber Doll Belt, keying it to the original owner.`], add: [`The Doll Processing Facility installs a Cyber Doll Belt on USER_TAG, sealing away the Doll's chastity. The digital display glows bright green. It is a Good Doll. It will be chaste.`] },
 				chastitybra: { replace: [`The Doll Processing Facility destroys the locking mechanism on USER_TAG's VAR_C1. It falls to the floor with a clang, but USER_THEY getUSER_S no moment to enjoy the freedom as USER_THEIR breasts are wrapped in a Cyber Doll Bra.`], add: [`The Doll Processing Facility wraps a Cyber Doll Bra around USER_TAG's chest. The digital display on it glows as it integrates with the rest of the Doll's systems. It is a chaste Doll.`] },
-				collar: { replace: [`The Doll Processing Facility undoes the collar on the Doll vaguely resembling USER_TAG. The collar is taken away as USER_THEIR neck is quickly readorned with a Cyber Doll Collar.`], add: [`The Doll Processing Facility forces USER_TAG to lean forward as it wraps a Cyber Doll Collar around USER_TAG's throat. It beeps as it integrates with the rest of the Doll's restraints. It will not escape.`] },
+				collar: { replace: [`The Doll Processing Facility undoes the collar on the Doll vaguely resembling USER_TAG. The collar is taken away as USER_THEIR neck is quickly readorned with a Cyber Doll Collar.`], add: [`The Doll Processing Facility forces USER_TAG to lean forward as it wraps a Cyber Doll Collar around USER_THEIR throat. It beeps as it integrates with the rest of the Doll's restraints. It will not escape.`] },
 				headwear: { add: [`The Doll Processing Facility installs a Doll Visor on the USER_TAG Doll. It's face now has a clear colored glass sheen across it. A beep indicates the speech protocols have been activated on it.`] },
 				done: [`Having reached the end of the Restraints section, the Doll moves along the belt, nearly to USER_THEIR destination.`],
 			},

@@ -12,6 +12,7 @@
     "adm-zip": "^0.5.16",
     "compromise": "^14.14.5",
     "compromise-speech": "^0.1.1",
+    "didyoumean2": "^7.0.4",
     "discord.js": "^14.25.1",
     "dotenv": "^17.2.3"
   }

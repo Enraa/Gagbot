@@ -5,6 +5,7 @@ const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
 const { getWearable, assignWearable, getWearableName } = require("../functions/wearablefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
+const { default: didYouMean, ReturnTypeEnums, ThresholdTypeEnums } = require("didyoumean2");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -27,9 +28,19 @@ module.exports = {
 				let itemsworn = getWearable(chosenuserid);
 
 				// Remove anything we're already wearing from the list
-				let sorted = process.wearableslist.filter((f) => !itemsworn.includes(f.value));
-				let headstoreturn = sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 20);
-				await interaction.respond(headstoreturn);
+                const focusedValue = interaction.options.getFocused();
+                let autocompletes = process.wearableslist.filter((f) => !itemsworn.includes(f.value));
+                console.log(autocompletes)
+                let matches = didYouMean(focusedValue, autocompletes, {
+                    matchPath: ['name'], 
+                    returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                    threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+                })
+                console.log(matches.slice(0,25))
+                if (matches.length == 0) {
+                    matches = autocompletes;
+                }
+                interaction.respond(matches.slice(0,25))
 			} catch (err) {
 				console.log(err);
 			}

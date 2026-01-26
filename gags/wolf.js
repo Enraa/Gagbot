@@ -27,7 +27,7 @@ const garbleText = (text, parent, intensity) => {
 		let newChar = highSecGagCharMap[char.toLowerCase()];
 
 		// Edit the text if we are not escaped
-		if (!escapedText && newChar && Math.random() > 0.9 - 0.08 * intesity) {
+		if (!escapedText && newChar && Math.random() > 0.9 - 0.08 * intensity) {
 			// Append the character with correct case. Only capitalize the first letter. (Ex: "I" becomes "Hm".)
 			output += isUppercase ? newChar[0].toUpperCase() + (newChar[1] ? newChar[1] : "") : newChar;
 		} else {

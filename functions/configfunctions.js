@@ -962,6 +962,54 @@ const configoptions = {
 				return false;
 			},
 		},
+        "extreme-gag-sorry": {
+			name: "Gag - Sorry Gag",
+			desc: "Prevents apologies, forcing positive affirmations",
+			prompttext: `The Sorry gag will suppress many forms of "sorry" and force you to instead say something positive about yourself.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Sorry Gag is disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
 	},
 	Server: {
 		"server-allowgags": {
