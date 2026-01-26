@@ -1595,13 +1595,13 @@ const texts_toy = {
                 },
                 noblocker: {
                     "Nipple Vibrator": [
-                        `USER_TAG grabs a pair of VAR_C2 and places them gingerly on USER_THEIR breasts!`
+                        `USER_TAG grabs a pair of VAR_C2 and places them gingerly on TARGET_TAG's breasts!`
                     ],
                     "Vibrator": [
-                        `USER_TAG grabs a VAR_C2 and inserts it into USER_THEMSELF!`
+                        `USER_TAG grabs a VAR_C2 and inserts it into TARGET_TAG!`
                     ],
                     default: [
-                        `USER_TAG potentially summons a black hole putting on a VAR_C2! (This is a bug, report!)`
+                        `USER_TAG potentially summons a black hole putting a VAR_C2 on TARGET_TAG! (This is a bug, report!)`
                     ]
                 }
             }
