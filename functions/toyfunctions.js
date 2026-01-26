@@ -85,7 +85,7 @@ function userBlockArousingToy(user, toy) {
     }
 }
 
-function assignToy (user, keyholder, intensity, toytype = "bullet_vibe", origbinder) {
+function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbinder) {
     let vibe = process.toytypes[toytype];
     if (!vibe) { return "NoToy" }
     if ((getOption(user, "arousalsystem") == "disabled") && (vibe.vibescale() > 0)) {
@@ -93,7 +93,8 @@ function assignToy (user, keyholder, intensity, toytype = "bullet_vibe", origbin
     }
     if (process.toys == undefined) { process.toys = {} }
     if (process.toys[user] == undefined) { process.toys[user] = [] }
-    let toy = process.toys[user].find((toy) => { toy.type == toytype })
+    let toy = process.toys[user].find((toy) => toy.type == toytype)
+    console.log(process.toys[user])
     // Toy already exists, modify it to the new intensity, if allowed. 
     if (toy) {
         if (vibe.canModify({ userID: user, keyholderID: keyholder ?? user })) {

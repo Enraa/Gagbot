@@ -1,4 +1,4 @@
-const { SlashCommandBuilder } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getBaseToy, getSpecificToy, getToys, removeToy } = require("../functions/toyfunctions");
 const { getText } = require("../functions/textfunctions");
@@ -48,9 +48,9 @@ module.exports = {
             let toyintensity = interaction.options.getNumber("intensity") ?? 5;
             let toytype = interaction.options.getString("type");
             if (getToys(toyuser.id) && ((toytype != undefined) || (!getToys(toyuser.id).includes(toytype)))) {
-                toytype = getToys(toyuser.id)[0].type
+                toytype = getToys(toyuser.id)[0]?.type
             }
-            else if (getToys(toyuser.id) == undefined) {
+            if (toytype == undefined) {
                 toytype = "vibe_bullet"
             }
             let toybase = getBaseToy(toytype);
@@ -71,7 +71,7 @@ module.exports = {
 					interactionuser: interaction.user,
 					targetuser: toyuser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
-					c2: getBaseToy(toytype).toyname, // the chosen vibe type
+					c2: getBaseToy(toytype)?.toyname, // the chosen vibe type
 					c3: toyintensity,
 				},
 			};
