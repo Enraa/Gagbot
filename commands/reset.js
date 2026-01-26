@@ -23,7 +23,9 @@ module.exports = {
 			deleteMitten(resetuser.id);
 			removeChastity(resetuser.id, true);
 			removeChastityBra(resetuser.id, true);
-			removeVibe(resetuser.id);
+			if (process.toys) {
+                delete process.toys[resetuser.id];
+            }
 			removeCollar(resetuser.id);
 			removeHeavy(resetuser.id);
 			removeCorset(resetuser.id);
@@ -41,7 +43,9 @@ module.exports = {
 				deleteMitten(interaction.user.id);
 				removeChastity(interaction.user.id);
 				removeChastityBra(interaction.user.id);
-				removeVibe(interaction.user.id);
+				if (process.toys) {
+                    delete process.toys[interaction.user.id];
+                }
 				removeCollar(interaction.user.id);
 				removeHeavy(interaction.user.id);
 				removeCorset(interaction.user.id);
