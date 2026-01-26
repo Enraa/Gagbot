@@ -10,7 +10,8 @@ const apologies = [
     "I'm\ being\ selfish",
     "(s-)*s+o+r+",
     "(\\w|\\d)*(s-)*s+o+r+-(\\w|\\d)*",
-    "soz+"
+    "soz+",
+    "(\\w|\\d)*(s-)*s+r+y+(\\w|\\d)*"
 ];
 
 const affirmations = [
