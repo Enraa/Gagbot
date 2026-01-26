@@ -888,15 +888,32 @@ const texts_mitten = {
 
 const texts_struggle = {
 	heavy: [
-		`USER_TAG squirms in USER_THEIR VAR_C1, trying to squeeze out of it but USER_THEY really didn't think about how challenging that'd be.`,
+		// Generic
 		`Despite USER_THEIR best efforts, the VAR_C1 binding USER_TAG's arms (and maybe legs) refuses to budge!`,
 		`The VAR_C1 creaks loudly as USER_TAG *thrashes* in USER_THEIR bondage, trying to escape!`,
 		`USER_TAG tries USER_THEIR *best* to get some leverage and escape USER_THEIR bondage, but stops just short of potentially pulling a muscle.`,
-		`USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
-		`USER_TAG fights against USER_THEIR VAR_C1, but it doesn't budge even a micrometer...`,
+		// Blacklisted Generics - Filter Out Messages that will not read smoothly with some types
+		{
+			required: (t) => {
+				return !t.c1.includes("Doll Processing") && !t.c1.includes("Mimic");
+			},
+			text: `USER_TAG squirms in USER_THEIR VAR_C1, trying to squeeze out of it but USER_THEY really didn't think about how challenging that'd be.`,
+		},
+		{
+			required: (t) => {
+				return !t.c1.includes("Doll Processing") && !t.c1.includes("Mimic");
+			},
+			text: `USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
+		},
+		{
+			required: (t) => {
+				return !t.c1.includes("Doll Processing") && !t.c1.includes("Mimic");
+			},
+			text: `USER_TAG fights against USER_THEIR VAR_C1, but it doesn't budge even a micrometer...`,
+		},
 		// Doll
 		{
-			only: (t) => {
+			required: (t) => {
 				return t.c1 == "Doll Processing Facility";
 			},
 			text: `USER_TAG fights against the VAR_C1 as USER_THEY USER_ISARE moved along the belt, but it refuses to acknowledge USER_THEIR struggle! After all, USER_THEY USER_ISARE just a Doll.`,
@@ -992,7 +1009,7 @@ const texts_struggle = {
 			text: `As USER_THEY relaxUSER_ES under the VAR_C1, USER_TAG realises USER_THEY can't bring USER_THEMSELF to leave the comfortable warmth!`,
 		},
 		{
-			only: (t) => {
+			required: (t) => {
 				return t.c1.includes("Mimic");
 			},
 			text: `USER_TAG struggles against the tentacles of the VAR_C1 to no avail! It seems USER_THEY will be trapped inside until it has finished with USER_THEM!`,
