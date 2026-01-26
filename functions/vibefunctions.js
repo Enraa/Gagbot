@@ -139,15 +139,30 @@ const chastitytypes = [
 	{
 		name: "Livingwood Belt",
 		value: "belt_livingwood",
-		growthCoefficient: 0.5,
-		decayCoefficient: 0.2,
+		growthCoefficient: 1,
+		decayCoefficient: 0.1,
 		denialCoefficient: 5,
+		orgasmCooldown: 1,
+		minVibe: 0,
+		//Increment Vibe every 15 minutes
+		minVibeFn: (user) => minVibe = Math.max(Math.min(Math.floor((Date.now() - (getUserVar(user, "livingwoodbelt") ?? Date.now())) / 900000), 20), getUserVar(user, "livingwoodvibe")),
 		onOrgasm(user, prevArousal) {
-			const current = getUserVar(user, "chastityoverrides")?.minVibe ?? 0;
-			setUserVar(user, "chastityoverrides", { minVibe: min(max(current -= 1, 0), 20) });
+			setUserVar(user, "livingwoodvibe", Math.max((minVibe -= 10), 0));
+			setUserVar(user, "livingwoodbelt", Date.now());
+		},
+		onFailedOrgasm(user, prevArousal) {
+			setUserVar(user, "livingwoodvibe", Math.min((minVibe += 1), 20));
+		},
+		onEquip(user) {
+			setUserVar(user, "livingwoodvibe", 0);
+			setUserVar(user, "livingwoodbelt", Date.now());
 		},
 		onUnequip(user) {
-			setUserVar(user, "chastityoverrides", {});
+			setUserVar(user, "livingwoodvibe", {});
+			setUserVar(user, "livingwoodbelt", {});
+		},
+		afterArousalChange(user, prevArousal, newArousal) {
+			//console.log(minVibe, Math.min(Math.floor((Date.now() - (getUserVar(user, "livingwoodbelt") ?? Date.now())) / 900000), 20), Math.max(Math.min(Math.floor((Date.now() - (getUserVar(user, "livingwoodbelt") ?? Date.now())) / 900000), 20), getUserVar(user, "livingwoodvibe")));
 		},
 	},
 ];
@@ -171,12 +186,12 @@ const chastitybratypes = [
 		growthCoefficient: 1,
 		decayCoefficient: 0.6,
 		denialCoefficient: 3,
+		minVibeFn: (user) => (minVibe = min(Round(Date.now() - (getUserVar(user, "livingwoodbelt") ?? Date.now()) / 9000000), 20)),
 		onOrgasm(user, prevArousal) {
-			const current = getUserVar(user, "chastityoverrides")?.minVibe ?? 0;
-			setUserVar(user, "chastityoverrides", { minVibe: min(max(current -= 1, 0), 20) });
+			setUserVar(user, "livingwoodbelt", Date.now())
 		},
 		onUnequip(user) {
-			setUserVar(user, "chastityoverrides", {});
+			setUserVar(user, "livingwoodbelt", {});
 		},
 	},
 ];
@@ -214,7 +229,7 @@ const ORGASM_COOLDOWN = 60 * 1000;
 // the frustration increase caused by failed orgasms
 const ORGASM_FRUSTRATION = 5;
 const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE ?? "6000") ?? 6000;
-const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000;
+const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 900000;
 // how large an impact the arousal variance has
 const AROUSAL_PERIOD_AMPLITUDE = 0.3;
 // the inverses of the period lengths used for arousal variance. The lengths should be coprime
@@ -1338,7 +1353,7 @@ function stutterText(msg, text, intensity, arousedtexts) {
 function updateArousalValues() {
 	try {
 		const now = Date.now();
-		const time = now * (getBotOption("bot-timetickrate") / 60000);
+		const time = now * (getBotOption("bot-timetickrate") / 900000);
 		// for users in vibe or chastity, make sure they have a value in arousal
 		for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
 		for (const user in process.chastity) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
@@ -1398,7 +1413,7 @@ function getArousalChangeDescription(user) {
 
 	const arousal = process.arousal[user];
 	if (!arousal) return null;
-	const lastChange = (arousal.arousal - arousal.prev) / (getBotOption("bot-timetickrate") / 60000);
+	const lastChange = (arousal.arousal - arousal.prev) / (getBotOption("bot-timetickrate") / 900000);
 	if (Math.abs(lastChange) < 0.01) return null;
 	// these numbers are mostly arbitrary
 	if (lastChange < -2) return "and cooling off rapidly";
@@ -1428,7 +1443,7 @@ function clearArousal(user) {
 }
 
 function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCoefficient) {
-	const tickScale = getBotOption("bot-timetickrate") / 60000;
+	const tickScale = getBotOption("bot-timetickrate") / 900000;
 
 	// first increase it due to vibe effect
 	const growth = tickScale * bounded(traits.minGrowth, traits.timescale * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(traits.timescale * time * AROUSAL_PERIOD_A) * Math.cos(traits.timescale * time * AROUSAL_PERIOD_B)) * growthCoefficient * ((RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1)), traits.maxGrowth);
@@ -1520,7 +1535,7 @@ function calcFrustration(user) {
 	let penalties = frustrationPenalties.get(user);
 	if (!penalties) return baseFrustration;
 	// calculate the current frustration caused and remove ones that reach 0
-	penalties = penalties.map((current) => [current, current.value - (current.decay * (now - current.timestamp)) / 60000]).filter(([_, remaining]) => remaining > 0);
+	penalties = penalties.map((current) => [current, current.value - (current.decay * (now - current.timestamp)) / 900000]).filter(([_, remaining]) => remaining > 0);
 	// remove ones at 0 from the saved list
 	frustrationPenalties.set(
 		user,
