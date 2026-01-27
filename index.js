@@ -18,6 +18,7 @@ const { loadWearables } = require("./functions/wearablefunctions.js");
 const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('./functions/configfunctions.js');
 const { getAllJoinedGuilds } = require('./functions/configfunctions.js');
 const { setUpToys } = require('./functions/toyfunctions.js');
+const { setUpChastity } = require('./functions/chastityfunctions.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -135,7 +136,8 @@ loadHeadwearTypes();
 loadWearables();
 assignMemeImages();
 
-setUpToys()
+setUpToys();
+setUpChastity();
 
 // Grab all the command files from the commands directory
 const commands = new Map();

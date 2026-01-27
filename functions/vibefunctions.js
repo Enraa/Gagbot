@@ -485,8 +485,8 @@ const getChastityBraKeyholder = (user) => {
 function getCombinedTraits(user) {
     // Build an object which references the combined properties
     // Any FUNCTIONS will be called from both when their respective unlock is called.
-    const beltbase = getBaseChastity(getChastity(user).chastitytype)
-    const brabase = getBaseChastity(getChastityBra(user).chastitytype)
+    const beltbase = getChastity(user) ? getBaseChastity(getChastity(user).chastitytype) : undefined;
+    const brabase = getChastityBra(user) ? getBaseChastity(getChastityBra(user).chastitytype) : undefined;
 	if (!beltbase && !brabase) return NO_CHASTITY;
 	if (!brabase) return beltbase;
 	if (!beltbase) return brabase;

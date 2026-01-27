@@ -22,7 +22,7 @@ function setUpChastity() {
             let chastitydefaultoverrides = Object.keys(chastitydefaults)
             chastitiesinfolder.forEach((t) => {
                 if (t != "default.js") {
-                    let newchastity = new newchastityref.chastity(); // Instantiate a copy of the chastity object.
+                    let newchastity = new newchastityref.Chastity(); // Instantiate a copy of the chastity object.
                     // Overwrite with the chastity type defaults, if specified.
                     chastitydefaultoverrides.forEach((override) => {
                         newchastity[override] = chastitydefaults[override]
