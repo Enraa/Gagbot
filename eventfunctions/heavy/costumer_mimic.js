@@ -22,7 +22,7 @@ const maid_outfit = [
     { category: "wearable", itemtowear: "maid_dress", color: "Black" },
     { category: "wearable", itemtowear: "maid_apron", color: null },
     { category: "gag", itemtowear: "politeSub", color: null },
-    { category: "collar", itemtowear: "collar_maid", color: null },
+    { category: "collar", itemtowear: "collar_maidtraining", color: null },
     { category: "headwear", itemtowear: "mask_kigu_cutemaid", color: null },
     { category: "wearable", itemtowear: "maid_headdress", color: null },
     { category: "heavy", itemtowear: "straitjacket_maid", color: null },
@@ -44,6 +44,7 @@ const ponygirl_outfit = [
 
 const bunnygirl_outfit = [
     { category: "wearable", itemtowear: "outfit_playbunny_headwear", color: "Blue" },
+    { category: "chastitybelt", itemtowear: "belt_ardour", color: null },
     { category: "wearable", itemtowear: "bunnytights", color: "White" },
     { category: "wearable", itemtowear: "suit_outfit", color: "Playbunny" },
     { category: "wearable", itemtowear: "highheels", color: "Blue" },
