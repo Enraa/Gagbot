@@ -225,7 +225,7 @@ const ORGASM_COOLDOWN = 60 * 1000;
 // the frustration increase caused by failed orgasms
 const ORGASM_FRUSTRATION = 5;
 const AROUSAL_STEP_SIZE = Number(process.env.AROUSALSTEPSIZE ?? "6000") ?? 6000;
-const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 900000; // This just aint even used. 
+const AROUSAL_STEP_SIZE_SCALING = AROUSAL_STEP_SIZE / 60000; // This just aint even used. 
 // how large an impact the arousal variance has
 const AROUSAL_PERIOD_AMPLITUDE = 0.3;
 // the inverses of the period lengths used for arousal variance. The lengths should be coprime
