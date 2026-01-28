@@ -2479,8 +2479,9 @@ function generateTextEntryModal(interaction, data, optionval) {
 
 // Gets all blocked or preferred tags
 function getUserTags(userID, preferred = false) {
+    if (!userID) { return [] }
     let tags = [];
-    let optionstocheck = Object.keys(configoptions.Tags).map((t) => t.replace("wearabletags-", ""))
+    let optionstocheck = Object.keys(configoptions.Content).map((t) => t.replace("wearabletags-", ""))
     optionstocheck.forEach((tag) => {
         if (getOption(userID, `wearabletags-${tag}`) == (preferred ? "preferred" : "none")) {
             tags.push(tag)
