@@ -1,14 +1,4 @@
-const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { gagtypes, mittentypes } = require("./../functions/gagfunctions.js");
-const { heavytypes } = require("./../functions/heavyfunctions.js");
-const { chastitytypes, chastitybratypes } = require("./../functions/vibefunctions.js");
-const { headweartypes } = require("./../functions/headwearfunctions.js");
-const { collartypes } = require("./../functions/collarfunctions.js");
-const { wearabletypes } = require("./../functions/wearablefunctions.js");
-const { ButtonBuilder } = require("discord.js");
-const { ActionRowBuilder } = require("discord.js");
-const { StringSelectMenuOptionBuilder } = require("discord.js");
-const { StringSelectMenuBuilder } = require("discord.js");
+const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags } = require("discord.js");
 const { assignOutfit, restoreOutfit, getOutfits, generateOutfitModal, outfitEntryModal, renameOutfit } = require("../functions/outfitfunctions.js");
 
 const PAGE_SIZE = 5;

@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
 const { getCollar, getCollarPerm, canAccessCollar } = require("./../functions/collarfunctions.js");
-const { getChastity, assignChastity, chastitytypesoptions, getChastityName, getChastityBraName, chastitybratypesoptions } = require("./../functions/vibefunctions.js");
+const { getChastity, assignChastity, getChastityName, getChastityBraName, } = require("./../functions/vibefunctions.js");
 const { getMittenName, assignMitten, getMitten, mittentypes } = require("./../functions/gagfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
@@ -75,7 +75,7 @@ module.exports = {
 			}
 		} else if (subc == "chastity") {
 			let beltorbra = interaction.options.get("braorbelt")?.value ?? "chastitybelt"; // Note we can only retrieve the user ID here!
-			let optionstouse = beltorbra == "chastitybelt" ? chastitytypesoptions : chastitybratypesoptions;
+			let optionstouse = beltorbra == "chastitybelt" ? process.autocompletes.chastitybelt : process.autocompletes.chastitybra;
 			if (focusedValue == "") {
 				// User hasn't entered anything, lets give them a suggested set of 10
 				let chastitytoreturn = optionstouse.slice(0, 10);

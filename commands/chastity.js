@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getChastity, assignChastity, getChastityName, chastitytypesoptions, chastitybratypesoptions } = require("./../functions/vibefunctions.js");
+const { getChastity, assignChastity, getChastityName } = require("./../functions/vibefunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
@@ -7,6 +7,7 @@ const { getConsent, handleConsent } = require("./../functions/interactivefunctio
 const { getText } = require("./../functions/textfunctions.js");
 const { getChastityBra } = require("../functions/vibefunctions.js");
 const { assignChastityBra, getChastityBraName } = require("../functions/vibefunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -16,21 +17,25 @@ module.exports = {
 		.addStringOption((opt) => opt.setName("braorbelt").setDescription("Chastity belt or bra?").setChoices({ name: "Chastity Belt", value: "chastitybelt" }, { name: "Chastity Bra", value: "chastitybra" }))
 		.addStringOption((opt) => opt.setName("type").setDescription("What flavor of cruel chastity to wear...").setAutocomplete(true)),
 	async autoComplete(interaction) {
-		const focusedValue = interaction.options.getFocused();
-		let beltorbra = interaction.options.get("braorbelt")?.value ?? "chastitybelt"; // Note we can only retrieve the user ID here!
-		let optionstouse = beltorbra == "chastitybelt" ? chastitytypesoptions : chastitybratypesoptions;
-		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let chastitytoreturn = optionstouse.slice(0, 10);
-			await interaction.respond(chastitytoreturn);
-		} else {
-			try {
-				let chastitytoreturn = optionstouse.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-				await interaction.respond(chastitytoreturn);
-			} catch (err) {
-				console.log(err);
-			}
-		}
+		try {
+            const focusedValue = interaction.options.getFocused();
+            let beltorbra = interaction.options.get("braorbelt")?.value ?? "chastitybelt";
+            let autocompletes = process.autocompletes[beltorbra];
+            console.log(autocompletes)
+            let matches = didYouMean(focusedValue, autocompletes, {
+                matchPath: ['name'], 
+                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+            })
+            console.log(matches.slice(0,25))
+            if (matches.length == 0) {
+                matches = autocompletes;
+            }
+            interaction.respond(matches.slice(0,25))
+        }
+        catch (err) {
+            console.log(err);
+        }
 	},
 	async execute(interaction) {
 		try {

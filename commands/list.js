@@ -1,7 +1,7 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { gagtypes, mittentypes } = require("./../functions/gagfunctions.js");
 const { heavytypes } = require("./../functions/heavyfunctions.js");
-const { chastitytypes, chastitybratypes } = require("./../functions/vibefunctions.js");
+//const { chastitytypes, chastitybratypes } = require("./../functions/vibefunctions.js");
 const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { collartypes } = require("./../functions/collarfunctions.js");
 const { wearabletypes } = require("./../functions/wearablefunctions.js");
@@ -12,12 +12,15 @@ const { StringSelectMenuBuilder } = require("discord.js");
 
 const PAGE_SIZE = 20;
 
+// ... this is a problem. 
+// We can't effectively list these at runtime unless we generate this list dynamically. 
+// This needs to be moved to allow seeing chastity belts and bras again. 
 const restraints = {
 	Heavy: heavytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
 	Mitten: mittentypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
 	Gag: gagtypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
-	"Chastity Belt": chastitytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
-	"Chastity Bra": chastitybratypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
+	//"Chastity Belt": chastitytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
+	//"Chastity Bra": chastitybratypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
 	Mask: headweartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.blockinspect || heavy.blockemote ? `Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`.slice(0, -2) : `` })),
 	Collar: collartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
 	Wearable: wearabletypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.colorable ? `Colorable` : `` })),

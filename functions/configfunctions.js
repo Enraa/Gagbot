@@ -820,7 +820,7 @@ const configoptions = {
 		},
         "extreme-mask-dollmaker_visor": {
 			name: "Mask - Dollmaker's Visor",
-			desc: "Forces DOLL-#### syntax, it/its pronouns and at least WARN protocol.",
+			desc: "Forces DOLL-#### syntax, it/its pronouns and Doll Protocol.",
 			prompttext: `The Dollmaker's Visor is a variant of the Doll Visor as it was originally designed. It will deliberately ignore your customizations for visors and enforce the following settings:\n-Doll Name will be DOLL-####\n-Pronouns will be it/its\n-Punishment Protocol will be set to WARN, if it is disabled\n-Punishment Threshold will be set to 2`,
 			choices: [
 				{

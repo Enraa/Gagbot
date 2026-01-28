@@ -52,12 +52,12 @@ function rollKeyFumble(keyholder, locked, maxFumbles = 1) {
 			// if it was the first attempt, clear their saved up blessing
 			if (i == 0) setUserVar(keyholder, "blessing", 0);
 			// return how many fumbles it took before a success
-			getCombinedTraits(locked).onFumble(locked, keyholder, i);
+			getCombinedTraits(locked).onFumble({ userID: locked, keyholderID: keyholder, fumbles: i});
 			return i;
 		}
 	}
 	// succeeding returns early so if we get here they failed every time
-	getCombinedTraits(locked).onFumble(locked, keyholder, maxFumbles);
+	getCombinedTraits(locked).onFumble({ userID: locked, keyholderID: keyholder, fumbles: maxFumbles});
 	return maxFumbles;
 }
 

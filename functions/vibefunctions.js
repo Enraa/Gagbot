@@ -14,12 +14,12 @@ const { getOption, getBotOption } = require(`./configfunctions.js`);
 const { getUserVar, setUserVar } = require("./usercontext.js");
 const { getToys } = require("./toyfunctions.js");
 const { logConsole } = require("./logfunctions.js");
+const { getBaseChastity } = require("./chastityfunctions.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
 
-const TRAITS = ["growthCoefficient", "decayCoefficient", "denialCoefficient", "timescale", "minVibe", "maxVibe", "minArousal", "maxArousal", "minGrowth", "maxGrowth", "minDecay", "maxDecay", "orgasmCooldown", "orgasmArousalLeft", "onOrgasm", "onFailedOrgasm", "onEquip", "onUnequip", "onFumble", "afterArousalChange", "canUnequip"];
-const SAVEABLE_TRAITS = ["growthCoefficient", "decayCoefficient", "denialCoefficient", "timescale", "minVibe", "minArousal", "maxVibe", "maxArousal", "minGrowth", "maxGrowth", "minDecay", "maxDecay", "orgasmCooldown", "orgasmArousalLeft"];
+// We can PROBABLY have this reference the chastity/defaultchastity.js function as those should just be default "nothing" values.
 const NO_CHASTITY = {
 	growthCoefficient: 1,
 	decayCoefficient: 1,
@@ -44,60 +44,12 @@ const NO_CHASTITY = {
 	canUnequip(user) {
 		return true;
 	},
+    calcVibeEffect(data) {
+        return 0
+    }
 };
-
-const DEFAULT_BELT = {
-	growthCoefficient: 0.5,
-	decayCoefficient: 0.2,
-	denialCoefficient: 5,
-	timescale: 1,
-	minVibe: null,
-	minArousal: null,
-	maxVibe: null,
-	maxArousal: null,
-	minGrowth: null,
-	maxGrowth: null,
-	minDecay: null,
-	maxDecay: null,
-	orgasmCooldown: 1,
-	orgasmArousalLeft: 0,
-	onOrgasm(user, prevArousal) { },
-	onFailedOrgasm(user, prevArousal) { },
-	onEquip(user) { },
-	onUnequip(user) { },
-	onFumble(wearer, keyholder, fumbleResult) { },
-	afterArousalChange(user, prevArousal, newArousal) { },
-	canUnequip(user) {
-		return true;
-	},
-};
-
-const DEFAULT_BRA = {
-	growthCoefficient: 1,
-	decayCoefficient: 0.6,
-	denialCoefficient: 3,
-	timescale: 1,
-	minVibe: null,
-	minArousal: null,
-	maxVibe: null,
-	maxArousal: null,
-	minGrowth: null,
-	maxGrowth: null,
-	minDecay: null,
-	maxDecay: null,
-	orgasmCooldown: 1,
-	orgasmArousalLeft: 0,
-	onOrgasm(user, prevArousal) { },
-	onFailedOrgasm(user, prevArousal) { },
-	onEquip(user) { },
-	onUnequip(user) { },
-	onFumble(wearer, keyholder, fumbleResult) { },
-	afterArousalChange(user, prevArousal, newArousal) { },
-	canUnequip(user) {
-		return true;
-	},
-};
-
+/* We can probably remove these, but leaving for reference for now.
+// They have been transposed into relevant files in chastity/__/__.js
 const chastitytypes = [
 	{ name: "Featherlight Belt", value: "belt_featherlight", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 15, minVibe: 2, minArousal: 1 },
 	{ name: "Blacksteel Chastity Belt", value: "belt_blacksteel", growthCoefficient: 0.5, decayCoefficient: 0.2, denialCoefficient: 7.5 },
@@ -192,11 +144,12 @@ const chastitybratypes = [
 	},
 ];
 
+
 const chastitytypesoptions = chastitytypes.map((chastity) => ({ name: chastity.name, value: chastity.value }));
 const chastitybratypesoptions = chastitybratypes.map((chastity) => ({ name: chastity.name, value: chastity.value }));
 
 const chastitylookup = new Map(chastitytypes.map((type) => [type.value, type]));
-const chastitybralookup = new Map(chastitybratypes.map((type) => [type.value, type]));
+const chastitybralookup = new Map(chastitybratypes.map((type) => [type.value, type]));*/
 const frustrationPenalties = new Map();
 
 // the arousal under which it is treated as 0
@@ -238,12 +191,23 @@ const assignChastity = (user, keyholder, namedchastity, force = false) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
-	let traits = getChastityTraits(user);
-	if (traits && !traits.canUnequip(user) && !force) return false;
-	traits?.onUnequip(user);
+    // Get the current and new bases to reference
+    let oldchastitybase = getChastity(user) ? getBaseChastity(getChastity(user).chastitytype) : undefined;
+    let newchastitybase = getBaseChastity(namedchastity ?? "belt_silver")
+
+    // Stop this function immediately if the current chastity belt can't be removed. 
+    // If there is none worn, no worries! 
+    if ((oldchastitybase && !oldchastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) { return false };
+
+    // Call the on unequip for existing chastity if relevant. 
+    if (oldchastitybase) { oldchastitybase.onUnequip({ userID: user, keyholderID: keyholder }) }
+
+    // Assign the new chastity belt to the user
 	process.chastity[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity };
-	traits = getChastityTraits(user);
-	traits?.onEquip(user);
+
+    // Call the on equip for the new chastity belt!
+    newchastitybase.onEquip({ userID: user, keyholderID: keyholder })
+
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -261,15 +225,19 @@ const getChastity = (user) => {
 const removeChastity = (user, force = false) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
-	}
-	let traits = getChastityTraits(user);
-	if (traits && !traits.canUnequip(user) && !force) return false;
-	traits?.onUnequip(user);
+    }
+    let chastitybase = getBaseChastity(getChastity(user).chastitytype ?? "belt_silver")
+
+	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
+
+	chastitybase.onUnequip({ userID: user });
+
 	delete process.chastity[user];
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.chastity = true;
+
 	return true;
 };
 
@@ -277,12 +245,23 @@ const assignChastityBra = (user, keyholder, namedchastity, force = false) => {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
-	let traits = getChastityBraTraits(user);
-	if (traits && !traits.canUnequip(user) && !force) return false;
-	traits?.onUnequip(user);
+    // Get the current and new bases to reference
+    let oldchastitybase = getChastityBra(user) ? getBaseChastity(getChastityBra(user).chastitytype) : undefined
+    let newchastitybase = getBaseChastity(namedchastity ?? "bra_silver")
+
+    // Stop this function immediately if the current chastity belt can't be removed. 
+    // If there is none worn, no worries! 
+    if ((oldchastitybase && !oldchastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) { return false };
+
+    // Call the on unequip for existing chastity if relevant. 
+    if (oldchastitybase) { oldchastitybase.onUnequip({ userID: user, keyholderID: keyholder }) }
+
+    // Assign the new chastity belt to the user
 	process.chastitybra[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity };
-	traits = getChastityBraTraits(user);
-	traits?.onEquip(user);
+
+    // Call the on equip for the new chastity belt!
+    newchastitybase.onEquip({ userID: user, keyholderID: keyholder })
+
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -300,15 +279,19 @@ const getChastityBra = (user) => {
 const removeChastityBra = (user, force = false) => {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
-	}
-	let traits = getChastityBraTraits(user);
-	if (traits && !traits.canUnequip(user) && !force) return false;
-	traits?.onUnequip(user);
+    }
+    let chastitybase = getBaseChastity(getChastityBra(user).chastitytype ?? "bra_silver")
+
+	if ((chastitybase && !chastitybase.canUnequip({ userID: user })) && !force) return false;
+
+	chastitybase.onUnequip({ userID: user });
+
 	delete process.chastitybra[user];
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.chastitybra = true;
+
 	return true;
 };
 
@@ -316,12 +299,12 @@ function swapChastity(user, namedchastity) {
 	if (process.chastity == undefined) {
 		process.chastity = {};
 	}
-	let traits = getChastityTraits(user);
-	if (traits && !traits.canUnequip(user)) return false;
-	traits?.onUnequip(user);
+    let chastitybase = getBaseChastity(getChastity(user).chastitytype ?? "belt_silver")
+	if (chastitybase && !chastitybase.canUnequip({ userID: user })) return false;
+	chastitybase.onUnequip({ userID: user });
 	process.chastity[user].chastitytype = namedchastity;
-	traits = getChastityTraits(user);
-	traits?.onEquip(user);
+	let newchastitybase = getBaseChastity(namedchastity)
+	newchastitybase.onEquip({ userID: user });
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -333,12 +316,12 @@ function swapChastityBra(user, namedchastity) {
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
-	let traits = getChastityBraTraits(user);
-	if (traits && !traits.canUnequip(user)) return false;
-	traits?.onUnequip(user);
+	let chastitybase = getBaseChastity(getChastityBra(user).chastitytype ?? "bra_silver")
+	if (chastitybase && !chastitybase.canUnequip({ userID: user })) return false;
+	chastitybase.onUnequip({ userID: user });
 	process.chastitybra[user].chastitytype = namedchastity;
-	traits = getChastityBraTraits(user);
-	traits?.onEquip(user);
+	let newchastitybase = getBaseChastity(namedchastity)
+	newchastitybase.onEquip({ userID: user });
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -412,8 +395,8 @@ const getChastityName = (userID, chastityname) => {
 		process.chastity = {};
 	}
 	let convertchastityarr = {};
-	for (let i = 0; i < chastitytypes.length; i++) {
-		convertchastityarr[chastitytypes[i].value] = chastitytypes[i].name;
+	for (let i = 0; i < process.autocompletes.chastitybelt.length; i++) {
+		convertchastityarr[process.autocompletes.chastitybelt[i].value] = process.autocompletes.chastitybelt[i].name;
 	}
 	if (chastityname) {
 		return convertchastityarr[chastityname];
@@ -442,8 +425,8 @@ const getChastityBraName = (userID, chastityname) => {
 		process.chastitybra = {};
 	}
 	let convertchastityarr = {};
-	for (let i = 0; i < chastitybratypes.length; i++) {
-		convertchastityarr[chastitybratypes[i].value] = chastitybratypes[i].name;
+	for (let i = 0; i < process.autocompletes.chastitybra.length; i++) {
+		convertchastityarr[process.autocompletes.chastitybra[i].value] = process.autocompletes.chastitybra[i].name;
 	}
 	if (chastityname) {
 		return convertchastityarr[chastityname];
@@ -502,79 +485,77 @@ const getChastityBraKeyholder = (user) => {
 	return process.chastitybra[user]?.keyholder;
 };
 
-function getChastityTraits(user, chastity = undefined) {
-	chastity ??= getChastity(user);
-	if (!chastity) return null;
-	const traits = { ...chastitylookup.get(chastity.chastitytype) };
-	if (!traits) return DEFAULT_BELT;
-	const overrides = getUserVar(user, "chastityoverrides") ?? {};
-	for (const trait of SAVEABLE_TRAITS) if (overrides[trait]) traits[trait] = overrides[trait];
-	for (const trait of SAVEABLE_TRAITS) if (traits[trait + "Fn"]) traits[trait] = traits[trait + "Fn"](user, chastity);
-	for (const trait of TRAITS) if (!traits[trait]) traits[trait] = DEFAULT_BELT[trait];
-	return traits;
-}
-
-function getChastityBraTraits(user, chastity = undefined) {
-	chastity ??= getChastityBra(user);
-	if (!chastity) return null;
-	const traits = { ...chastitybralookup.get(chastity.chastitytype) };
-	if (!traits) return DEFAULT_BRA;
-	const overrides = getUserVar(user, "chastitybraoverrides") ?? {};
-	for (const trait of SAVEABLE_TRAITS) if (overrides[trait]) traits[trait] = overrides[trait];
-	for (const trait of SAVEABLE_TRAITS) if (traits[trait + "Fn"]) traits[trait] = traits[trait + "Fn"](user, chastity);
-	for (const trait of TRAITS) if (!traits[trait]) traits[trait] = DEFAULT_BRA[trait];
-	return traits;
-}
-
-function getCombinedTraits(user, belt = undefined, bra = undefined) {
-	const beltTraits = getChastityTraits(user, belt);
-	const braTraits = getChastityBraTraits(user, bra);
-	if (!beltTraits && !braTraits) return NO_CHASTITY;
-	if (!beltTraits) return braTraits;
-	if (!braTraits) return beltTraits;
-	return {
-		growthCoefficient: beltTraits.growthCoefficient * braTraits.growthCoefficient,
-		decayCoefficient: beltTraits.decayCoefficient * braTraits.decayCoefficient,
-		denialCoefficient: beltTraits.denialCoefficient + braTraits.denialCoefficient,
-		timescale: beltTraits.timescale * braTraits.timescale,
-		minVibe: max(beltTraits.minVibe, braTraits.minVibe),
-		maxVibe: min(beltTraits.maxVibe, braTraits.maxVibe),
-		minArousal: max(beltTraits.minArousal, braTraits.minArousal),
-		maxArousal: min(beltTraits.maxArousal, braTraits.maxArousal),
-		minGrowth: max(beltTraits.minGrowth, braTraits.minGrowth),
-		maxGrowth: min(beltTraits.maxGrowth, braTraits.maxGrowth),
-		minDecay: max(beltTraits.minDecay, braTraits.minDecay),
-		maxDecay: min(beltTraits.maxDecay, braTraits.maxDecay),
-		orgasmCooldown: beltTraits.orgasmCooldown * braTraits.orgasmCooldown,
-		orgasmArousalLeft: beltTraits.orgasmArousalLeft + braTraits.orgasmArousalLeft,
-		onOrgasm(user, prevArousal) {
-			beltTraits.onOrgasm(user, prevArousal);
-			braTraits.onOrgasm(user, prevArousal);
-		},
-		onFailedOrgasm(user, prevArousal) {
-			beltTraits.onFailedOrgasm(user, prevArousal);
-			braTraits.onFailedOrgasm(user, prevArousal);
-		},
-		onEquip(user) {
-			beltTraits.onEquip(user);
-			braTraits.onEquip(user);
-		},
-		onUnequip(user) {
-			beltTraits.onUnequip(user);
-			braTraits.onUnequip(user);
-		},
-		onFumble(wearer, keyholder, fumbleResult) {
-			beltTraits.onFumble(wearer, keyholder, fumbleResult);
-			braTraits.onFumble(wearer, keyholder, fumbleResult);
-		},
-		afterArousalChange(user, prevArousal, newArousal) {
-			beltTraits.afterArousalChange(user, prevArousal, newArousal);
-			braTraits.afterArousalChange(user, prevArousal, newArousal);
-		},
-		canUnequip(user) {
-			return beltTraits.canUnequip(user) && braTraits.canUnequip(user);
-		},
-	};
+function getCombinedTraits(user) {
+    // Build an object which references the combined properties
+    // Any FUNCTIONS will be called from both when their respective unlock is called.
+    const beltbase = getChastity(user) ? getBaseChastity(getChastity(user).chastitytype) : undefined;
+    const brabase = getChastityBra(user) ? getBaseChastity(getChastityBra(user).chastitytype) : undefined;
+	if (!beltbase && !brabase) return NO_CHASTITY;
+    let datatopass = {
+        userID: user
+    }
+    // Because the usual stuff found in return object are typically referenced NOT as functions, we're gonna
+    // parse them here. I don't think this is the best solution, admittedly, but it should suffice.
+    let singlebase;
+	if (!brabase) singlebase = Object.assign({}, beltbase);
+	if (!beltbase) singlebase = Object.assign({}, brabase);
+    if (singlebase) {
+        let props = ["growthCoefficient", "decayCoefficient", "denialCoefficient",
+                    "timescale", "minVibe", "maxVibe",
+                    "minArousal", "maxArousal", "minGrowth",
+                    "maxGrowth", "minDecay", "maxDecay",
+                    "orgasmCooldown", "orgasmArousalLeft"]
+        props.forEach((p) => {
+            singlebase[p] = singlebase[p](datatopass)
+        })
+        return singlebase;
+    }
+    let returnobject = {
+        growthCoefficient: beltbase.growthCoefficient(datatopass) * brabase.growthCoefficient(datatopass),
+		decayCoefficient: beltbase.decayCoefficient(datatopass) * brabase.decayCoefficient(datatopass),
+		denialCoefficient: beltbase.denialCoefficient(datatopass) + brabase.denialCoefficient(datatopass),
+		timescale: beltbase.timescale(datatopass) * brabase.timescale(datatopass),
+		minVibe: max(beltbase.minVibe(datatopass), brabase.minVibe(datatopass)),
+		maxVibe: min(beltbase.maxVibe(datatopass), brabase.maxVibe(datatopass)),
+		minArousal: max(beltbase.minArousal(datatopass), brabase.minArousal(datatopass)),
+		maxArousal: min(beltbase.maxArousal(datatopass), brabase.maxArousal(datatopass)),
+		minGrowth: max(beltbase.minGrowth(datatopass), brabase.minGrowth(datatopass)),
+		maxGrowth: min(beltbase.maxGrowth(datatopass), brabase.maxGrowth(datatopass)),
+		minDecay: max(beltbase.minDecay(datatopass), brabase.minDecay(datatopass)),
+		maxDecay: min(beltbase.maxDecay(datatopass), brabase.maxDecay(datatopass)),
+		orgasmCooldown: beltbase.orgasmCooldown(datatopass) * brabase.orgasmCooldown(datatopass),
+		orgasmArousalLeft: beltbase.orgasmArousalLeft(datatopass) + brabase.orgasmArousalLeft(datatopass),
+    }
+    // Add each function defined on the base object! (defaultchastity.js)
+    let props = Object.getOwnPropertyNames(beltbase)
+    props.forEach((f) => {
+        if ((typeof beltbase[f] === "function") && (f.startsWith("on"))) {
+            returnobject[f] = function (data) {
+                beltbase[f](data);
+                brabase[f](data);
+            }
+        }
+        // canEquip and canUnlock, maybe eventually add other stuff like canOrgasm :D
+        if ((typeof beltbase[f] === "function") && (f.startsWith("can"))) {
+            returnobject[f] = function (data) {
+                return beltbase[f](data) && brabase[f](data)
+            }
+        }
+    })
+    // Extra props that aren't listed
+    // Note, fumbles are NOT listed here, but we can add them later if needed. 
+    returnobject.afterArousalChange = function (data) {
+        beltbase.afterArousalChange(data);
+        brabase.afterArousalChange(data);
+    }
+    // Arousal gain as if wearer is wearing vibes - used for featherlight
+    returnobject.calcVibeEffect = function (data) {
+        let sum = 0;
+        sum = sum + beltbase.calcVibeEffect(data)
+        sum = sum + brabase.calcVibeEffect(data)
+        return sum;
+    }
+	return returnobject;
 }
 
 // Returns an object you can check the .access prop of.
@@ -1365,17 +1346,20 @@ function updateArousalValues() {
                 let vibedata = { intensity: currVibe.intensity, userID: user }
                 return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
             }, 0)
+            // Calculate any arousal gain purely from the chastity devices worn. Add to vibearousal change. 
+            let chastityvibegains = traits.calcVibeEffect({ userID: user });
             let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0
+            // I want to pull away from using VIBE_SCALING here, may need to change this later. 
             let minvibegain = traits.minVibe ? (traits.minVibe * VIBE_SCALING) : -9999
             let maxvibegain = traits.maxVibe ? (traits.maxVibe * VIBE_SCALING) : 9999
-			const vibearousalchange = growthmult * bounded(minvibegain, vibegains, maxvibegain);
+			const vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
 			const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, vibearousalchange, traits.decayCoefficient * UNBELTED_DECAY);
 			// set the values to the new ones
 			arousal.timestamp = now;
 			arousal.prev = arousal.arousal;
 			// mathematically it would never reach 0 so reset it to 0 if low enough here
 			arousal.arousal = next < RESET_LIMIT ? 0 : next;
-			traits.afterArousalChange(user, arousal.prev, arousal.arousal);
+			traits.afterArousalChange({ userID: user, prevArousal: arousal.prev, currArousal: arousal.arousal });
 		}
 		if (process.readytosave == undefined) {
 			process.readytosave = {};
@@ -1433,7 +1417,7 @@ function getArousal(user) {
 function addArousal(user, change) {
 	if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: Date.now() };
 	process.arousal[user].arousal += change;
-	getCombinedTraits(user).afterArousalChange(process.arousal[user].arousal - change, process.arousal[user].arousal);
+	getCombinedTraits(user).afterArousalChange({ userID: user, prevArousal: (process.arousal[user].arousal - change), currArousal: process.arousal[user].arousal });
 	return process.arousal[user].arousal;
 }
 
@@ -1453,6 +1437,7 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
 	const noDecay = (arousal ?? 0) + growth;
 	// then reduce it based on decay
 	const decay = tickScale * bounded(traits.minDecay, traits.timescale * decayCoefficient * Math.max((arousal ?? 0) + prev / 2, 0.1), traits.maxDecay);
+    //logConsole(`calcNextArousal: ${growth}, ${noDecay}, ${decay}`, 1);
     logConsole(`calcNextArousal: ${bounded(traits.minArousal, noDecay - decay, traits.maxArousal)}`, 1);
     return bounded(traits.minArousal, noDecay - decay, traits.maxArousal);
 }
@@ -1466,7 +1451,7 @@ function tryOrgasm(user) {
 	const arousal = getArousal(user);
 	const denialCoefficient = calcDenialCoefficient(user);
 	const chastity = getChastity(user);
-	const traits = getCombinedTraits(user, chastity);
+	const traits = getCombinedTraits(user);
 	const orgasmLimit = ORGASM_LIMIT;
 
 	if ((arousal * (RANDOM_BIAS + Math.random())) / (RANDOM_BIAS + 1) >= orgasmLimit * denialCoefficient) {
@@ -1478,7 +1463,7 @@ function tryOrgasm(user) {
 			}
 			process.readytosave.chastity = true;
 		}
-		traits.onOrgasm(user, arousal);
+		traits.onOrgasm({ userID: user, prevArousal: arousal });
 		return true;
 	}
 
@@ -1486,7 +1471,7 @@ function tryOrgasm(user) {
 	const penalties = frustrationPenalties.get(user) ?? [];
 	penalties.push({ timestamp: now, value: 10, decay: 1 });
 	frustrationPenalties.set(user, penalties);
-	traits.onFailedOrgasm(user, arousal);
+	traits.onFailedOrgasm({ userID: user, arousal: arousal });
 
 	return false;
 }
@@ -1496,7 +1481,7 @@ function setArousalCooldown(user, cooldownModifier = 1, arousalLeft = 0) {
 	process.arousal[user].timestamp = now + ORGASM_COOLDOWN * cooldownModifier;
 	const old = process.arousal[user].arousal;
 	process.arousal[user].arousal *= arousalLeft;
-	getCombinedTraits(user).afterArousalChange(user, old, process.arousal[user].arousal);
+	getCombinedTraits(user).afterArousalChange({ userID: user, prevArousal: old, currArousal: process.arousal[user].arousal });
 }
 
 // modify when more things affect it
@@ -1506,7 +1491,7 @@ function calcStaticVibeIntensity(user) {
 	return vibes.reduce((prev, currVibe) => {
         let vibedata = { intensity: currVibe.intensity }
         return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
-    })
+    }, 0)
 }
 
 // modify when more things affect it
@@ -1636,8 +1621,6 @@ exports.transferChastityKey = transferChastityKey;
 exports.discardChastityKey = discardChastityKey;
 exports.findChastityKey = findChastityKey;
 
-exports.chastitytypes = chastitytypes;
-exports.chastitytypesoptions = chastitytypesoptions;
 exports.getChastityName = getChastityName;
 exports.canAccessChastity = canAccessChastity;
 
@@ -1659,8 +1642,6 @@ exports.transferChastityBraKey = transferChastityBraKey;
 exports.discardChastityBraKey = discardChastityBraKey;
 exports.findChastityBraKey = findChastityBraKey;
 
-exports.chastitybratypes = chastitybratypes;
-exports.chastitybratypesoptions = chastitybratypesoptions;
 exports.getChastityBraName = getChastityBraName;
 exports.canAccessChastityBra = canAccessChastityBra;
 

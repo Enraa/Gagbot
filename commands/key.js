@@ -2,7 +2,7 @@ const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, But
 const { generateConfigModal, configoptions, getOption, setOption, config } = require("./../functions/configfunctions.js");
 const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require("./../functions/headwearfunctions.js");
 const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar, transferCollarKey, promptTransferCollarKey, collartypes, getCollarName } = require("./../functions/collarfunctions.js");
-const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity, transferChastityKey, promptTransferChastityKey, chastitytypesoptions, chastitybratypesoptions } = require("./../functions/vibefunctions.js");
+const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity, transferChastityKey, promptTransferChastityKey } = require("./../functions/vibefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { getPronouns } = require("../functions/pronounfunctions.js");
 const { getChastityBra } = require("../functions/vibefunctions.js");
@@ -180,9 +180,9 @@ module.exports = {
 						if (chosenrestrainttype == "collar") {
 							choices = collartypes;
 						} else if (chosenrestrainttype == "chastitybelt") {
-							choices = chastitytypesoptions;
+							choices = process.autocompletes.chastitybelt;
 						} else if (chosenrestrainttype == "chastitybra") {
-							choices = chastitybratypesoptions;
+							choices = process.autocompletes.chastitybra;
 						} else {
 							choices = [{ name: "Nothing", value: "nothing" }];
 						}

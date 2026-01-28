@@ -2,31 +2,10 @@ const fs = require("fs");
 const path = require("path");
 const { getOption } = require("./configfunctions");
 
-const toytypes = [
-    // Vibes
-    { name: "Bullet Vibe", value: "vibe_bullet", category: "Vibrator" },
-    { name: "Rising Vibe", value: "vibe_rising", category: "Vibrator" },
-    { name: "Pulse Vibe", value: "vibe_pulse", category: "Vibrator" },
-
-    // Rear Plugs
-    { name: "Plug", value: "plug_rear", category: "Plug" },
-
-    // Nipple Vibes
-    { name: "Nipple Massager", value: "nipplevibe_massager", category: "Nipple" },
-
-    // Misc
-    { name: "Shock Module", value: "shock_collar_module", category: "Misc", 
-        canAdd: (userID) => { return (process.collar && process.collar[userID]) }, 
-        canRemove: (userID, placerID) => { return canAccessCollar(userID, placerID, true)},
-        forceRemove: (userID) => { return !(process.collar && process.collar[userID]) }
-    }
-]
-
 // Imports each toy in ./toys and makes them accessible as objects
 // in process.toyslist mapped to their respective ids.
 // Toys are constructed as default -> class -> specific toy, overwriting in that order.
 function setUpToys() {
-    let toys = {}
     let toysfunctionsroot = path.join(__dirname, "..", "toys");
     let newtoyref = require(`${toysfunctionsroot}/defaulttoy.js`);
     let toytypes = fs.readdirSync(toysfunctionsroot)

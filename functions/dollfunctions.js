@@ -147,7 +147,6 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let dollmaker = getHeadwear(msg.member.id).find((headwear) => headwear === "dollmaker_visor");
     // This creates a circular, so, access the variable directly. Oh well. 
     let eldritchcorrupted = (process.gags && process.gags[msg.member.id] && process.gags[msg.member.id].find((g) => g.gagtype === "eldritch"))
-    console.log("ELDRITCH")
 	let dollProtocolViolations = 0;
 	let dollProtocolVioType = undefined;
 	if (dollified) {
@@ -342,6 +341,14 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 
 		// Merge any code blocks with nothing but whitespace in between.
 		outtext = outtext.replaceAll(/```\s+```ansi/g, "");
+
+        // Insert a newline to any ```ansi codeblocks which do not start on a new line.
+        // This appears to be a product of not having doll message parts in AST yet.
+        // Because we need to do a match where theres a negative lookbehind, we cant just do a replaceAll. 
+        let matches = outtext.matchAll(/(?:.)(\`\`\`ansi)/g)
+        for (let match of matches) {
+            outtext = outtext.slice(0,match.index+1) + "\n```ansi" + outtext.slice(match.index+8)
+        }
 	}
 	return { modifiedmessage: modified, outtext: outtext, dollIDDisplay: dollIDDisplay, dollProtocolViolations: dollProtocolViolations };
 }
