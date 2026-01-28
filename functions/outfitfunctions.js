@@ -975,7 +975,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Key held by <@${getChastityBra(inspectuserID).keyholder}>**`
             }
             if (headwearrestrictions.canInspect && getChastityBra(inspectuserID).clonedKeyholders && (getChastityBra(inspectuserID).clonedKeyholders.length > 0)) {
-                keyedrestraints = `${keyedrestraints}\nCloned keys for ${process.emojis.chastitybra} held by ${getChastityBra(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.chastitybra} held by ${getChastityBra(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
             }
             if (getChastityBra(inspectuserID).timestamp) {
                 keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getChastityBra(inspectuserID).timestamp / 1000)}:f>`
@@ -1016,7 +1016,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}, **Free Use!**`
             }
             if (headwearrestrictions.canInspect && getCollar(inspectuserID).clonedKeyholders && (getCollar(inspectuserID).clonedKeyholders.length > 0)) {
-                keyedrestraints = `${keyedrestraints}\nCloned keys for ${process.emojis.collar} held by ${getCollar(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.collar} held by ${getCollar(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
             }
             if (getCollar(inspectuserID).timestamp) {
                 keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getCollar(inspectuserID).timestamp / 1000)}:f>`
