@@ -1463,7 +1463,7 @@ function tryOrgasm(user) {
 			}
 			process.readytosave.chastity = true;
 		}
-		traits.onOrgasm({ userID: user, arousal: arousal });
+		traits.onOrgasm({ userID: user, prevArousal: arousal });
 		return true;
 	}
 
@@ -1491,7 +1491,7 @@ function calcStaticVibeIntensity(user) {
 	return vibes.reduce((prev, currVibe) => {
         let vibedata = { intensity: currVibe.intensity }
         return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
-    })
+    }, 0)
 }
 
 // modify when more things affect it
