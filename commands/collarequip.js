@@ -161,7 +161,7 @@ module.exports = {
                     let tags = getUserTags(collareduser.id);
                     let i = getBaseHeavy(bondagetype)
                     tags.forEach((t) => {
-                        if (i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
+                        if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
                             return;
                         }
@@ -173,7 +173,7 @@ module.exports = {
                     let tags = getUserTags(collareduser.id);
                     let i = getBaseMitten(bondagetype)
                     tags.forEach((t) => {
-                        if (i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
+                        if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
                             return;
                         }
@@ -185,7 +185,7 @@ module.exports = {
                     let tags = getUserTags(collareduser.id);
                     let i = getBaseChastity(bondagetype)
                     tags.forEach((t) => {
-                        if (i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
+                        if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
                             return;
                         }
