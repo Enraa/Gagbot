@@ -168,7 +168,7 @@ module.exports = {
                     })
                 }
             }
-            else if (actiontotake == "mitten") {
+            else if (actiontotake == "mittens") {
                 if (bondagetype) {
                     let tags = getUserTags(collareduser.id);
                     let i = getBaseMitten(bondagetype)
@@ -199,7 +199,7 @@ module.exports = {
 				if (actiontotake == "heavy") {
 					bondagetype = "armbinder_latex";
 				} else if (actiontotake == "mittens") {
-					bondagetype = "mittens_latex";
+					bondagetype = undefined;
 				} else if (actiontotake == "chastity") {
 					if (braorbelt == "chastitybelt") {
 						bondagetype = "belt_silver";
@@ -231,7 +231,7 @@ module.exports = {
 					data.textdata.c3 = convertheavy(bondagetype);
 				}
 			} else if (actiontotake == "mittens") {
-				data.textdata.c3 = getMittenName(interaction.user.id, bondagetype);
+				    data.textdata.c3 = getMittenName(interaction.user.id, bondagetype);
 			} else if (actiontotake == "chastity") {
 				if (braorbelt == "chastitybelt") {
 					data.textdata.c3 = getChastityName(interaction.user.id, bondagetype);
@@ -245,6 +245,21 @@ module.exports = {
 				// and ACTUALLY CHOOSE SOMETHING
 				data.textdata.c3 = "Latex Armbinder";
 				bondagetype = "armbinder_latex";
+                if (actiontotake == "heavy") {
+                    data.textdata.c3 = "Latex Armbinder";
+				    bondagetype = "armbinder_latex";
+                } else if (actiontotake == "mittens") {
+                    data.textdata.c3 = "mittens";
+				    bondagetype = undefined;
+                } else if (actiontotake == "chastity") {
+                    if (braorbelt == "chastitybelt") {
+                        data.textdata.c3 = "chastity belt";
+				        bondagetype = "belt_silver";
+                    } else {
+                        data.textdata.c3 = "chastity bra";
+				        bondagetype = "bra_chastity";
+                    }
+                }
 			}
 
 			if (getHeavy(interaction.user.id)) {
