@@ -77,6 +77,19 @@ const corsets = [
 			}
 		},
 	},
+	// has high max breath but very low recovery
+	{
+		name: "Timekeeper's Corset",
+		type: "corset_timekeeper",
+		maxBreath: [2000, 168, 144, 120, 102, 88, 72, 60, 48, 39, 30, 21, 12, 9, 6, 5],
+		minBreath: [0, -120, -116, -112, -108, -104, -96, -88, -80, -72, -60, -60, -48, -40, -30, -20],
+		breathRecovery: [500, 1.15, 0.95, 0.8, 0.65, 0.5, 0.4, 0.32, 0.25, 0.2, 0, 0, 0, 0, 0, 0],
+		gaspCoefficient: 1.2,
+		gaspLimit: [1333, 112, 96, 80, 68, 59, 48, 40, 32, 26, 20, 14, 8, 6, 4, 3],
+		silenceLimit: [-2000, -56, -48, -40, -34, -28, -24, -20, -16, -13, -10, -7, -4, -3, -2, -2],
+		minWords: [10, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+		afterUsingBreath: (user, corset) => {},
+	},
 ];
 
 const lookup = new Map(corsets.map((corset) => [corset.type, corset]));
