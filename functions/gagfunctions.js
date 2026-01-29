@@ -350,7 +350,7 @@ const modifymessage = async (msg, threadId) => {
 		let dollProtocol = dolltreturned.dollProtocolViolations;
 
 		// Scrub all control characters used to delineate text.
-		outtext = outtext.replaceAll(/[]/g, "");
+		outtext = outtext.replaceAll(/[]/g, "");
 
         // Iterate through any speech events in process.msgfunctions
         runMessageEvents({ msg: msg, msgcontent: msg.content, outtext: outtext })

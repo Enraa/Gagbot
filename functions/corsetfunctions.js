@@ -12,7 +12,6 @@ const BREATH_RECOVERY_TABLE = [2000, 4.6, 3.8, 3.2, 2.6, 2, 1.6, 1.28, 1, 0.8, 0
 const gaspSounds = ["*hff*", "*hnnf*", "*ahff*", "*hhh*", "*nnh*", "*hnn*", "*hng*", "*uah*", "*uhf*"];
 const silenceReplacers = [" ", ".", ",", ""];
 const silenceMessages = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"];
-const specialCharacterCosts = new Map([["!", 2]]);
 
 const assignCorset = (user, tightness = 5, origbinder) => {
 	if (process.corset == undefined) process.corset = {};
@@ -52,7 +51,7 @@ const removeCorset = (user) => {
 // Consumes breath and returns possibly modified text
 function corsetLimitWords(text, parent, user, msgModified) {
 	// just do nothing if no text
-	if (text.length == 0 || text.match(/^\s*$/)) return ""; //text;
+	if (text.length == 0 || text.match(/^\s*$/)) return text;
 
 	// Is this line subscripted or superscripted?
 	// X = -1    - Subscripted
@@ -66,28 +65,43 @@ function corsetLimitWords(text, parent, user, msgModified) {
 	// Tightlaced bottoms must only whisper
 	if (corset.tightness >= 7 && scriptLevel >= 0) globalMultiplier *= 2;
 
-	let silence = false;
-	const parsed = nlp(text).compute("syllables").terms().json();
+	const idxMap = [];
+	let escaped = false;
+	text
+		.trimEnd()
+		.split("")
+		.forEach((char, idx) => {
+			if (char == "") {
+				escaped = !escaped;
+				return;
+			}
+			if (escaped) return;
+			if (char.match(/[a-zA-Z]/)) idxMap.push(idx);
+			else if (idxMap.length > 0 && char.match(/\s/)) idxMap.push(idx);
+		});
 
-	let newwordsinmessage = [];
+	let silence = false;
+	const parsed = nlp(idxMap.map((idx) => text[idx]).join(""))
+		.compute("syllables")
+		.terms()
+		.json();
+
+	const chars = text.split("");
+
+	let currIdx = 0;
+	let silenceIdx;
+
 	for (const i in parsed) {
 		let word = parsed[i].text;
 		if (word.length > 0) {
 			let capitals = 0;
-			for (const char of word) {
-				if (/[A-Z]/.test(char)) capitals++;
-				const cost = specialCharacterCosts.get(char) ?? 0;
-				corset.breath -= cost * globalMultiplier;
-			}
+			for (const char of word) if (/[A-Z]/.test(char)) capitals++;
 
-			let newsyllables = [];
-			let ended = false;
+			const syllables = parsed[i].terms[0].syllables;
 
-			for (let syllable of parsed[i].terms[0].syllables) {
+			for (const j in syllables) {
+				let syllable = syllables[j];
 				corset.breath -= globalMultiplier;
-
-				// if its long its probably from stutters
-				if (syllable.length > 5 && syllable.includes("-")) corset.breath -= globalMultiplier;
 
 				// Capitals cost more breath
 				corset.breath -= (globalMultiplier * capitals) / 2;
@@ -99,41 +113,48 @@ function corsetLimitWords(text, parent, user, msgModified) {
 				else if (corset.tightness >= 4 && capitals > 3) syllable = syllable.toLowerCase();
 				else if (corset.tightness >= 3 && capitals > 4) syllable = syllable.toLowerCase();
 
-				if (corset.breath < -MAX_BREATH_TABLE[corset.tightness] && newwordsinmessage.length > 5 - Math.ceil(corset.tightness / 2)) {
-					if (!silence) ended = true;
+				let ended = false;
+				if (corset.breath < -MAX_BREATH_TABLE[corset.tightness] && i > 5 - Math.ceil(corset.tightness / 2)) {
+					if (!silence) {
+						ended = true;
+						silenceIdx = currIdx;
+					}
 					silence = true;
 				}
 
 				// add gasping sounds once at half of max breath
+				let gasp = "";
 				if (!silence && corset.breath < MAX_BREATH_TABLE[corset.tightness] / 2 && Math.random() < Math.min(corset.tightness / 10, 1 - (Math.max(corset.breath, -MAX_BREATH_TABLE[corset.tightness]) + MAX_BREATH_TABLE[corset.tightness]) / (corset.tightness * MAX_BREATH_TABLE[corset.tightness] * 0.2))) {
-					if (newsyllables.length > 0) newsyllables.push("-" + gaspSounds[Math.floor(Math.random() * gaspSounds.length)] + "-");
-					else newwordsinmessage.push(gaspSounds[Math.floor(Math.random() * gaspSounds.length)]);
+					if (j == 0) gasp = " " + gaspSounds[Math.floor(Math.random() * gaspSounds.length)] + " ";
+					else gasp = "-" + gaspSounds[Math.floor(Math.random() * gaspSounds.length)] + "-";
 				}
 
-				// SILENCE BOTTOM
-				if (!silence && corset.tightness >= 5) syllable = syllable.replaceAll("!", "\\~");
-
-				if (!silence) newsyllables.push(syllable);
-			}
-
-			if (newsyllables.length > 0) {
-				newwordsinmessage.push(newsyllables.join("") + (ended ? "-" : ""));
+				for (const k in syllable) {
+					if (ended && k == 0) chars[idxMap[currIdx++]] = "-";
+					else if (silence) chars[idxMap[currIdx++]] = "";
+					else if (k == 0) chars[idxMap[currIdx++]] = gasp + syllable[k];
+					else chars[idxMap[currIdx++]] = syllable[k];
+				}
 			}
 		}
+		currIdx++;
 	}
+
+	let outtext = (silence ? chars.slice(0, silenceIdx + 1) : chars).join("");
+
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
 	process.readytosave.corset = true;
-	if (newwordsinmessage.length == 0) {
+	if (outtext.length == 0) {
 		msgModified.modified = true;
 		return "";
 	}
-	let outtext = newwordsinmessage.join(" ");
 
 	if (text != outtext) {
 		msgModified.modified = true;
 	}
+
 	return outtext;
 }
 
