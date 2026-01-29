@@ -130,7 +130,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 				}
 
 				for (const k in syllable) {
-					if (ended && k == 0) chars[idxMap[currIdx++]] = "-";
+					if (ended && k == 0 & j > 0) chars[idxMap[currIdx++]] = "-";
 					else if (silence) chars[idxMap[currIdx++]] = "";
 					else if (k == 0) chars[idxMap[currIdx++]] = gasp + syllable[k];
 					else chars[idxMap[currIdx++]] = syllable[k];
