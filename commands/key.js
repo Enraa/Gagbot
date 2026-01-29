@@ -178,7 +178,8 @@ module.exports = {
 					await interaction.respond(choices);
 				} else {
 					let chosenrestrainttype = interaction.options.get("restraint")?.value;
-					let choices = [];
+					let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+                    let choices = [];
                     let choicefunc;
 					if (chosenrestrainttype) {
 						if (chosenrestrainttype == "collar") {
