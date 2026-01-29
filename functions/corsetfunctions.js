@@ -136,8 +136,8 @@ function corsetLimitWords(text, parent, user, msgModified) {
 					else chars[idxMap[currIdx++]] = syllable[k];
 				}
 			}
+			currIdx++;
 		}
-		currIdx++;
 	}
 
 	let outtext = (silence ? chars.slice(0, silenceIdx + 1) : chars).join("");
