@@ -4,6 +4,14 @@ const nlp = require("compromise");
 const nlpSpeech = require("compromise-speech");
 nlp.extend(nlpSpeech);
 
+const TRAITS = ["name"];
+
+const DEFAULT_CORSET = { name: "Leather Corset", type: "corset_leather" };
+
+const corsets = [DEFAULT_CORSET, { name: "Latex Corset", type: "corset_latex" }];
+
+const lookup = new Map(corsets.map((corset) => [corset.type, corset]));
+
 const MAX_BREATH_TABLE = [2000, 56, 48, 40, 34, 28, 24, 20, 16, 13, 10, 7, 4, 3, 2, 2];
 const MIN_BREATH_TABLE = [0, -120, -116, -112, -108, -104, -96, -88, -80, -72, -60, -60, -48, -40, -30, -20];
 const BREATH_RECOVERY_TABLE = [2000, 4.6, 3.8, 3.2, 2.6, 2, 1.6, 1.28, 1, 0.8, 0.6, 0.4, 0.2, 0.1, 0.04, 0.008];
@@ -13,15 +21,17 @@ const gaspSounds = ["*hff*", "*hnnf*", "*ahff*", "*hhh*", "*nnh*", "*
 const silenceReplacers = [" ", ".", ",", ""];
 const silenceMessages = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"];
 
-const assignCorset = (user, tightness = 5, origbinder) => {
+const assignCorset = (user, type, tightness, origbinder) => {
 	if (process.corset == undefined) process.corset = {};
-	const currentBreath = process.corset[user] ? getBreath(user) : null;
-	let originalbinder = process.corset[user]?.origbinder;
+	const old = process.corset[user];
+	const currentBreath = old ? getBreath(user) : null;
+	let originalbinder = old?.origbinder;
 	process.corset[user] = {
-		tightness: tightness,
+		tightness: tightness ?? old?.tightness ?? 5,
 		breath: currentBreath ? Math.min(currentBreath, MAX_BREATH_TABLE[tightness]) : MAX_BREATH_TABLE[tightness],
 		timestamp: Date.now(),
 		origbinder: originalbinder ?? origbinder, // Preserve original binder until it is removed.
+		type: type ?? old?.type ?? DEFAULT_CORSET.type,
 	};
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
@@ -31,7 +41,11 @@ const assignCorset = (user, tightness = 5, origbinder) => {
 
 const getCorset = (user) => {
 	if (process.corset == undefined) process.corset = {};
-	return process.corset[user];
+	const corset = process.corset[user];
+	if (!corset) return corset;
+	const traits = lookup.get(corset?.type ?? DEFAULT_CORSET.type) ?? DEFAULT_CORSET;
+	for (const trait of TRAITS) corset[trait] = traits[trait];
+	return corset;
 };
 
 const getCorsetBinder = (user) => {
@@ -208,6 +222,9 @@ function tryExpendBreath(user, exertion) {
 function silenceMessage() {
 	return silenceMessages[Math.floor(Math.random() * silenceMessages.length)];
 }
+
+exports.corsetChoices = corsets.map(({ type, name }) => ({ name: name, value: type }));
+exports.corsets = lookup;
 
 exports.assignCorset = assignCorset;
 exports.getCorset = getCorset;

@@ -550,7 +550,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getCorset(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
-			texts = `${texts}Laced to Length ${getCorset(userID).tightness}`;
+			texts = `${texts}${getCorset(inspectuserID).name} laced to Length ${getCorset(userID).tightness}`;
 		}
 		pagecomponents.push(
 			new SectionBuilder()
@@ -731,7 +731,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Corset
         if (getCorset(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
+            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **${getCorset(inspectuserID).name} laced with strings at length ${getCorset(inspectuserID).tightness}**`
         }
         // Vibe
         if (getToys(inspectuserID).length > 0) {
@@ -893,7 +893,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Corset
         if (getCorset(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
+            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **${getCorset(inspectuserID).name} laced with strings at length ${getCorset(inspectuserID).tightness}**`
         }
         // Vibe
         if (getToys(inspectuserID).length > 0) {
