@@ -4,25 +4,25 @@ const https = require("https");
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
 
 const collartypes = [
-	{ name: "Latex Collar", value: "collar_latex" },
-	{ name: "Leather Collar", value: "collar_leather" },
+	{ name: "Latex Collar", value: "collar_latex", tags: ["latex"] },
+	{ name: "Leather Collar", value: "collar_leather", tags: ["leather"] },
 	{ name: "Cyber Doll Collar", value: "collar_cyberdoll" },
 	{ name: "Hardlight Collar", value: "collar_hardlight" },
 	{ name: "Runic Collar", value: "collar_runic" },
 	{ name: "Tall Posture Collar", value: "collar_posture" },
 	{ name: "Ruffled Maid Collar", value: "collar_maid" },
-	{ name: "Nevermere Tracking Collar", value: "collar_nevermere" },
-	{ name: "Steel Collar", value: "collar_steel" },
+	{ name: "Nevermere Tracking Collar", value: "collar_nevermere", tags: ["leather"] },
+	{ name: "Steel Collar", value: "collar_steel", tags: ["metal"] },
 	{ name: "Kitty Collar", value: "collar_kitty" },
 	{ name: "Puppy Collar", value: "collar_puppy" },
 	{ name: "Inari Collar", value: "collar_inari" },
-	{ name: "Livingwood Collar", value: "collar_livingwood" },
+	{ name: "Livingwood Collar", value: "collar_livingwood", tags: ["living"] },
 	{ name: "Sheep Collar", value: "collar_sheep" },
 	{ name: "Potion Collar", value: "collar_potion" },
 	{ name: "Princess Collar", value: "collar_princess" },
 	{ name: "Star-cursed Collar", value: "collar_star" },
 	{ name: "Moonveil Collar", value: "collar_moon" },
-	{ name: "Starmetal Collar", value: "collar_starmetal" },
+	{ name: "Starmetal Collar", value: "collar_starmetal", tags: ["metal"] },
     { name: "Maid Training Collar", value: "collar_maidtraining" }
 ];
 
