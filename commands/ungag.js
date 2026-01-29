@@ -13,24 +13,29 @@ module.exports = {
 		.addUserOption((opt) => opt.setName("user").setDescription("The user to remove gag from (leave blank for yourself)"))
 		.addStringOption((opt) => opt.setName("gag").setDescription("Which gag to remove?").setAutocomplete(true)),
 	async autoComplete(interaction) {
-		const focusedValue = interaction.options.getFocused();
-		let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-		let worngags = getGags(chosenuserid).map((g) => {
-			return { name: process.gagtypes.find((t) => t.value == g.gagtype).name, value: g.gagtype };
-		});
+		try {
+            const focusedValue = interaction.options.getFocused();
+            let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+            let worngags = getGags(chosenuserid).map((g) => {
+                return { name: process.gagtypes.find((t) => t.value == g.gagtype).name, value: g.gagtype };
+            });
 
-		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let gagtoreturn = worngags.slice(0, 10);
-			await interaction.respond(gagtoreturn);
-		} else {
-			try {
-				let gagtoreturn = worngags.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-				await interaction.respond(gagtoreturn);
-			} catch (err) {
-				console.log(err);
-			}
-		}
+            if (focusedValue == "") {
+                // User hasn't entered anything, lets give them a suggested set of 10
+                let gagtoreturn = worngags.slice(0, 10);
+                await interaction.respond(gagtoreturn);
+            } else {
+                try {
+                    let gagtoreturn = worngags.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
+                    await interaction.respond(gagtoreturn);
+                } catch (err) {
+                    console.log(err);
+                }
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
 	},
 	async execute(interaction) {
 		try {

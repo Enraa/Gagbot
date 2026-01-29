@@ -8,15 +8,20 @@ module.exports = {
 		.setDescription(`Post a meme`)
 		.addStringOption((opt) => opt.setName("image").setDescription("What to post").setRequired(true).setAutocomplete(true)),
 	async autoComplete(interaction) {
-		const focusedValue = interaction.options.getFocused();
-		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let memes = process.memes.slice(0, 10);
-			await interaction.respond(memes);
-		} else {
-			let memes = process.memes.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-			await interaction.respond(memes);
-		}
+        try {
+            const focusedValue = interaction.options.getFocused();
+            if (focusedValue == "") {
+                // User hasn't entered anything, lets give them a suggested set of 10
+                let memes = process.memes.slice(0, 10);
+                await interaction.respond(memes);
+            } else {
+                let memes = process.memes.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
+                await interaction.respond(memes);
+            }
+        }
+		catch (err) {
+            console.log(err);
+        }
 	},
 	async execute(interaction) {
 		try {

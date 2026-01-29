@@ -16,14 +16,19 @@ module.exports = {
 		const focusedValue = interaction.options.getFocused();
 		let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
 		if (focusedValue == "") {
-			// User hasn't entered anything, lets give them a suggested set of 10
-			let itemsworn = getWearable(chosenuserid);
-			let itemslocked = getLockedWearable(chosenuserid);
+            try {
+                // User hasn't entered anything, lets give them a suggested set of 10
+                let itemsworn = getWearable(chosenuserid);
+                let itemslocked = getLockedWearable(chosenuserid);
 
-			// Remove anything we're already wearing from the list
-			let sorted = process.autocompletes.wearables.filter((f) => itemsworn.includes(f.value));
-			sorted = sorted.filter((f) => !itemslocked.includes(f.value));
-			await interaction.respond(sorted.slice(0, 10));
+                // Remove anything we're already wearing from the list
+                let sorted = process.autocompletes.wearables.filter((f) => itemsworn.includes(f.value));
+                sorted = sorted.filter((f) => !itemslocked.includes(f.value));
+                await interaction.respond(sorted.slice(0, 10));
+            }
+			catch (err) {
+                console.log(err)
+            }
 		} else {
 			try {
 				let itemsworn = getWearable(chosenuserid);

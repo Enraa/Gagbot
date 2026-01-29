@@ -17,6 +17,8 @@ const { promptTransferChastityBraKey } = require("../functions/vibefunctions.js"
 const { getChastityName } = require("../functions/vibefunctions.js");
 const { getChastityBraName } = require("../functions/vibefunctions.js");
 const { swapChastity, swapChastityBra } = require("../functions/vibefunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -178,7 +180,7 @@ module.exports = {
 					let choices = [];
 					if (chosenrestrainttype) {
 						if (chosenrestrainttype == "collar") {
-							choices = collartypes;
+							choices = process.autocompletes.collar;
 						} else if (chosenrestrainttype == "chastitybelt") {
 							choices = process.autocompletes.chastitybelt;
 						} else if (chosenrestrainttype == "chastitybra") {
@@ -187,18 +189,29 @@ module.exports = {
 							choices = [{ name: "Nothing", value: "nothing" }];
 						}
 					}
-
-					if (focusedValue === "") {
-						let choicestoreturn = choices.slice(0, 10);
-						await interaction.respond(choicestoreturn);
-					} else {
-						try {
-							let choicestoreturn = choices.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10);
-							await interaction.respond(choicestoreturn);
-						} catch (err) {
-							console.log(err);
-						}
-					}
+                    
+                    let matches = didYouMean(focusedValue, autocompletes, {
+                        matchPath: ['name'], 
+                        returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                        threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+                    })
+                    if (matches.length == 0) {
+                        matches = autocompletes.slice(0,25);
+                    }
+                    let tags = getUserTags(chosenuserid);
+                    let newsorted = [];
+                    matches.forEach((f) => {
+                        let tagged = false;
+                        let i = choices.find((w) => w.value == f.value)
+                        tags.forEach((t) => {
+                            if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                            else if (i.tags && (i.tags[t])) { tagged = true }
+                        })
+                        if (!tagged) {
+                            newsorted.push(f);
+                        }
+                    })
+                    interaction.respond(newsorted.slice(0,25))
 				}
 			}
 		} catch (err) {

@@ -22,7 +22,6 @@ module.exports = {
             // Remove anything we're already wearing from the list
             const focusedValue = interaction.options.getFocused();
             let autocompletes = process.autocompletes.wearables.filter((f) => !itemsworn.includes(f.value));
-            console.log(autocompletes)
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input

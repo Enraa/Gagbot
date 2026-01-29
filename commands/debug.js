@@ -7,7 +7,7 @@ const { getConsent, handleConsent, timelockChastityModal } = require("./../funct
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("debug")
-		.setDescription(`Enraa Only - Debug command`)
+		.setDescription(`Bot Owner Only - Debug command`)
 		.addStringOption((opt) => opt.setName("command").setDescription("What eval to attempt to run...").setRequired(true))
 		.setDefaultMemberPermissions(PermissionFlagsBits.BanMembers), // Hide this from most people to limit people who can attempt anyway
 	async execute(interaction) {

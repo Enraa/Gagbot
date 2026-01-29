@@ -6,10 +6,6 @@ const PAGE_SIZE = 5;
 module.exports = {
 	data: new SlashCommandBuilder().setName("outfit").setDescription("Set up or restore outfits"),
 	async execute(interaction) {
-		/*if (interaction.user.id !== interaction.client?.application?.owner?.id) {
-            await interaction.reply(`You're not ${interaction.client?.application?.owner?.displayName}. This command is not for you.`);
-            return;
-        }*/
 		try {
 			interaction.reply(await generateOutfitModal(interaction.user.id, "restore", 1, "0000000000"));
 		} catch (err) {
