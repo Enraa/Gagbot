@@ -238,8 +238,6 @@ function corsetLimitWords(text, parent, user, msgModified) {
 
 			const syllables = parsed[i].terms[0].syllables;
 
-			console.log(word);
-			console.log(syllables);
 			for (const j in syllables) {
 				let syllable = word.substring(wordIdx, wordIdx + syllables[j].length);
 				wordIdx += syllable.length;

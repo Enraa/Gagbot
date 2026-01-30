@@ -1271,6 +1271,14 @@ const texts_toy = {
                 "Wand": [
                     `USER_TAG squirms with USER_THEIR VAR_C1, but can't reach the buttons on a VAR_C2 to pleasure USER_THEMSELF.`
                 ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off...`,
+                    }
+                ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
                 ]
@@ -1284,6 +1292,14 @@ const texts_toy = {
                 ],
                 "Wand": [
                     `USER_TAG squirms with USER_THEIR VAR_C1, but can't get a grip on a VAR_C2 to pleasure USER_THEMSELF. (this is a bug, please report)`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off... (this is a bug, please report)`,
+                    }
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to add it! (This is a bug, report)`
@@ -1300,6 +1316,14 @@ const texts_toy = {
                 ],
                 "Wand": [
                     `USER_TAG squirms with USER_THEIR VAR_C1, but can't get a grip on a VAR_C2 to pleasure TARGET_TAG!`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG bats around a piece of ice, but can't fanagle it onto TARGET_TAG to cool TARGET_THEM off...`,
+                    }
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -1367,6 +1391,14 @@ const texts_toy = {
                                 `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY continue to rock USER_THEIR hips while holding it to USER_THEIR crotch!`
                             ]
                         },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1396,6 +1428,14 @@ const texts_toy = {
                         "Wand": [
                             `USER_TAG grabs the VAR_C2 but can't change it for some reason... Huh. (This is a bug, report)!`
                         ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to place some ice but... can't? (this is a bug, please report)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to adjust USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1410,6 +1450,14 @@ const texts_toy = {
                     ],
                     "Wand": [
                         `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY continue to rock USER_THEIR hips while holding it to USER_THEIR crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
+                        }
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting USER_THEIR VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -1460,6 +1508,14 @@ const texts_toy = {
                                 `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into USER_THEIR crotch!`
                             ]
                         },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1489,6 +1545,14 @@ const texts_toy = {
                         "Wand": [
                             `USER_TAG grabs a VAR_C2 but can't apply it for some reason... Huh. (This is a bug, report)!`
                         ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG takes a piece of ice to apply to USER_THEMSELF, but can't? (This is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to add a VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1503,6 +1567,14 @@ const texts_toy = {
                     ],
                     "Wand": [
                         `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into USER_THEIR crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
+                        }
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting on a VAR_C2 at VAR_C3 power! (This is a bug, report!)`
@@ -1555,6 +1627,14 @@ const texts_toy = {
                                 `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY continue holding it against TARGET_TAG's crotch!`
                             ]
                         },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1584,6 +1664,14 @@ const texts_toy = {
                         "Wand": [
                             `USER_TAG grabs the VAR_C2 on TARGET_TAG but can't change it for some reason... Huh. (This is a bug, report)!`
                         ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG grabs a new piece of ice to put on TARGET_TAG, but can't because of unforeseen magic. (this is a bug, report)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to adjust TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1598,6 +1686,14 @@ const texts_toy = {
                     ],
                     "Wand": [
                         `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as TARGET_TAG continues to rock TARGET_THEIR hips while holding it to TARGET_THEIR crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
+                        }
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting TARGET_TAG's VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -1648,6 +1744,14 @@ const texts_toy = {
                                 `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into TARGET_TAG's crotch!`
                             ]
                         },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1677,6 +1781,14 @@ const texts_toy = {
                         "Wand": [
                             `USER_TAG grabs a VAR_C2 but can't apply it to TARGET_TAG for some reason... Huh. (This is a bug, report)!`
                         ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to place a piece of ice on TARGET_TAG, but can't! (this is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to add a VAR_C2 to TARGET_TAG, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1691,6 +1803,14 @@ const texts_toy = {
                     ],
                     "Wand": [
                         `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY lustfully shoveUSER_S it into TARGET_TAG's crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
+                        }
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting a VAR_C2 on TARGET_TAG at VAR_C3! (This is a bug, report!)`
@@ -2077,6 +2197,14 @@ const texts_untoy = {
                 "Wand": [
                     `USER_TAG twists USER_THEIR thighs slightly, but can't click the button on USER_THEIR VAR_C2 to turn it off!`
                 ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice on USER_THEIR crotch... but can't grip it without hands!`,
+                    }
+                ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to take off USER_THEIR VAR_C2, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
                 ]
@@ -2090,6 +2218,14 @@ const texts_untoy = {
                 ],
                 "Wand": [
                     `USER_TAG twists USER_THEIR thighs slightly, but can't click the button on USER_THEIR VAR_C2 to turn it off! (this is a bug, please report)`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
+                    }
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove USER_THEIR VAR_C2 from USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -2107,6 +2243,14 @@ const texts_untoy = {
                 "Wand": [
                     `USER_TAG wiggles towards TARGET_TAG, but can't click the button on TARGET_THEIR VAR_C2 to turn it off!`
                 ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice on TARGET_TAG's crotch... but can't grip it without hands!`,
+                    }
+                ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove the VAR_C2 on TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
                 ]
@@ -2120,6 +2264,14 @@ const texts_untoy = {
                 ],
                 "Wand": [
                     `USER_TAG wiggles towards TARGET_TAG, but can't click the button on TARGET_THEIR VAR_C2 to turn it off! (this is a bug, please report)`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
+                    }
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove a VAR_C2 from TARGET_TAG, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -2173,6 +2325,14 @@ const texts_untoy = {
                                 `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
                             ]
                         },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -2202,6 +2362,14 @@ const texts_untoy = {
                         "Wand": [
                             `USER_TAG tries to press the button on USER_THEIR VAR_C2, but... can't? (this is a bug, please report)`
                         ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to remove the ice but can't?! (This is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to remove USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -2216,6 +2384,14 @@ const texts_untoy = {
                     ],
                     "Wand": [
                         `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
+                        }
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from USER_THEM! (This is a bug, report)`
@@ -2271,6 +2447,14 @@ const texts_untoy = {
                                 `USER_TAG presses the button on TARGET_TAG's VAR_C2, turning off the pleasurable vibrations for now...`
                             ]
                         },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -2300,6 +2484,14 @@ const texts_untoy = {
                         "Wand": [
                             `USER_TAG tries to press the button on TARGET_TAG's VAR_C2, but... can't? (this is a bug, please report)`
                         ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to remove the ice from TARGET_TAG... but can't access it somehow. (this is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to remove TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -2314,6 +2506,14 @@ const texts_untoy = {
                     ],
                     "Wand": [
                         `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
+                        }
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from TARGET_TAG! (This is a bug, report)`

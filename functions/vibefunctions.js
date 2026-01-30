@@ -1351,6 +1351,7 @@ function updateArousalValues() {
                 let vibedata = { intensity: currVibe.intensity, userID: user }
                 return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
             }, 0)
+            console.log(vibegains);
             // Calculate any arousal gain purely from the chastity devices worn. Add to vibearousal change. 
             let chastityvibegains = traits.calcVibeEffect({ userID: user });
             let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0
