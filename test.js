@@ -12,12 +12,6 @@ nlp.extend(nlpSpeech);
 
 env.config();
 
-
-setUpToys();
-console.log(process.toytypes)
-console.log(process.toytypes["vibe_bullet"].canEquip({ userID: "125093095405518850", keyholderID: "125093095405518850" }))
-
-/*
 const client = new discord.Client({
     intents: [
         discord.GatewayIntentBits.Guilds,
@@ -43,13 +37,10 @@ client.on("clientReady", async () => {
     let guilds = [];
     for (const guild of allguilds) {
         let guildfetched = await client.guilds.fetch(guild[0])
-        let guildapps = Array.from(await guildfetched.commands.fetch()).map((g) => g[0])
-        console.log(guildapps);
-        guilds.push({ name: guildfetched.name, commands: guildapps.length })
+        let guildmembers = await guildfetched.members.fetch()
+        console.log(guildmembers.get("125093095405518850"))
     }
     console.log(guilds)
 })
 
 client.login(process.env.DISCORDBOTTOKEN)
-
-console.log(JSON.stringify(['1443329378560901303']))*/

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getBaseToy, getSpecificToy, userBlockArousingToy, assignToy } = require("../functions/toyfunctions");
 const { getText } = require("../functions/textfunctions");
@@ -324,5 +324,15 @@ module.exports = {
         catch (err) {
             console.log(err);
         }
+    },
+    async help(userid, page) {
+        let overviewtext = `## Toy
+### Usage: /toy (user) (type)
+### Remove:  /untoy (user) (type)
+-# Certain toys have various restrictions
+
+Applies a toy to a user, with differing effects on what each toy can do. Different toys can be blocked by different restraints.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
     }
 }

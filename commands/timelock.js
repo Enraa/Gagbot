@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { timelockChastityModal, timelockChastityBraModal, timelockCollarModal, timelockBuildConfirm } = require("./../functions/interactivefunctions.js");
 const { getChastity, getChastityBra, canAccessChastity, canAccessChastityBra } = require("../functions/vibefunctions.js");
 const { getCollar, canAccessCollar } = require("../functions/collarfunctions.js");
@@ -244,4 +244,12 @@ module.exports = {
 			confirmation.update({ content: `Timelock cancelled!`, components: [] });
 		}
 	},
+    async help(userid, page) {
+        let overviewtext = `## Timelock
+### Usage: /timelock (wearer) (device)
+
+Opens a window to configure a timelock to apply to your **Chastity Belt**, **Chastity Bra**, or **Collar**. Can be configured to temporarily designate someone else to have keyholder access to your device, as well as temporarily granting public access.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

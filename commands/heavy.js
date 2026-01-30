@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
@@ -124,4 +124,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let restrictedtext = (getHeavy(userid)) ? `***You are in heavy bondage***\n` : ""
+        let overviewtext = `## Heavy
+### Usage: /heavy (type)
+### Remove:  /unheavy (user)
+-# Restricted if in heavy bondage
+${restrictedtext}
+Applies some form of **Heavy Bondage** to yourself. While in heavy bondage, you will be unable to use nearly all commands and will require someone else to **/unheavy** you to gain access to them again.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

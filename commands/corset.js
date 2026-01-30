@@ -1,5 +1,5 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getChastity, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
+const { getChastity, getVibe, assignVibe, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
@@ -430,4 +430,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let restrictedtext = (getCorset(userid) && getChastity(userid) && !canAccessChastity(userid, userid).access) ? `***You cannot change or remove your corset currently***\n` : ""
+        let overviewtext = `## Corset
+### Usage: /corset (user) (tightness)
+### Remove:  /uncorset (user)
+-# Restricted if in a chastity belt without the key
+${restrictedtext}
+Places a tight **Corset** on the user, which limits their speech in various ways, reducing their ability to speak in capital letters until they are eventually only able to speak a few words at a time. **Breath** is consumed with each syllable and regenerates over time, slower at higher **Tightness** levels. When out of breath, the user is unable to speak.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

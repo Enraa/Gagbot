@@ -1,11 +1,12 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
-const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar } = require("./../functions/collarfunctions.js");
+const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar, canAccessCollar } = require("./../functions/collarfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { getOption } = require("../functions/configfunctions.js");
 const { getUserTags } = require("../functions/configfunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -204,4 +205,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let restrictedtext = (getCollar(userid) && !canAccessCollar(userid, userid, true).access) ? `***You cannot unlock your collar currently***\n` : ""
+        let overviewtext = `## Collar
+### Usage: /collar (keyholder) (freeuse) (type)
+### Remove:  /uncollar (user)
+-# Restricted if not holding the device's key or in heavy bondage
+${restrictedtext}
+Opens a window to configure settings for a collar for options your **keyholder** can do to you using the **/collarequip** command. These settings include permissions to **Mitten, Chastity, Heavy Bondage** and to **Mask**. **Freeuse** (if configured in **/config**) will allow everyone to do these permissions to you. Once selected, you will put on the collar. Please note, **/uncollar** requires arms and cannot be done if in **Heavy Bondage**.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

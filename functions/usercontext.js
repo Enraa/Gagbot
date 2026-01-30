@@ -8,7 +8,7 @@ function setUserVar(user, key, value) {
 		process.usercontext[user] = {};
 	}
 	process.usercontext[user][key] = value;
-	console.log(process.usercontext);
+	console.log(process.usercontext[user]);
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}

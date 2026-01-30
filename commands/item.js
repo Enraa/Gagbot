@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { generateConfigModal, configoptions, getOption, setOption } = require("./../functions/configfunctions.js");
 const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require("./../functions/headwearfunctions.js");
 const { getWearable, getLockedWearable, addLockedWearable, getWearableName, removeLockedWearable } = require("../functions/wearablefunctions.js");
@@ -134,4 +134,14 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        //let restrictedtext = (getHeavy(userid)) ? `***You are in heavy bondage***\n` : ""
+        let overviewtext = `## Item
+### Usage: /item protect (type)
+### Remove:  /item unprotect (type)
+
+Binds an item to you, which will prevent it's removal via the **/unwear** command from you or anyone, as well as preventing removal by certain **Restraint** effects.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

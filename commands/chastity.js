@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getChastity, assignChastity, getChastityName } = require("./../functions/vibefunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
@@ -219,4 +219,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let restrictedtext = (getChastity(userid) || getChastityBra(userid)) ? `***You may be unable to use this command due to worn chastity***\n` : ""
+        let overviewtext = `## Chastity
+### Usage: /chastity (keyholder) (braorbelt) (type)
+### Remove:  /unchastity (user)
+-# Restricted if not holding the device's key or in heavy bondage
+${restrictedtext}
+Applies a **Chastity Belt** or **Chastity Bra** to yourself, which will prevent the use of commands to change, add or remove certain **Toys** on you, as well as **Corsets** when wearing a **Chastity Belt**. Chastity will increase the threshold required to successfully **/letgo** and can potentially have other arousing effects. If configured, worn time with chastity can contribute to Frustration which impacts fumble chance when unlocking the device.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

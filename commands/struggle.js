@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { mittentypes, getMittenName, getGag, convertGagText, assignMitten, getMitten, getGagLast } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
@@ -258,4 +258,12 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let overviewtext = `## Struggle
+### Usage: /struggle (type)
+
+Struggle with a restraint or nothing at all. This will print out a relevant struggle text (or a joke line if "Nothing"). Note, this does not actually do anything to the restraint you're struggling with.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

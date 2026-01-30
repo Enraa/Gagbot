@@ -799,6 +799,37 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 	});
 }
 
+async function generateHelpModal(userid, section, page) {
+    let pagecomponents = [];
+    // This should only ever exist but lol
+    // If we returned an array, spread it. 
+    if (process.helpmodals && process.helpmodals[section]) {
+        let output = await process.helpmodals[section](userid, page);
+        if (Array.isArray(output)) { pagecomponents.push(...output) }
+        else { pagecomponents.push(output) }
+    }
+    // Now we should take every section listed in process.helpmodals and make a LIST!
+    // Create Menu Selector
+    let pagemenutext = section;
+    // Construct the menu selector
+    let menupageoptions = new StringSelectMenuBuilder().setCustomId("help_SELECTMENU_0");
+
+    let menupageoptionsarr = [];
+    Object.keys(process.helpmodals).forEach((k) => {
+        let opt = new StringSelectMenuOptionBuilder().setLabel(k).setValue(`help_SELECTMENU_${k}`);
+        menupageoptionsarr.push(opt);
+    });
+
+    menupageoptions.setPlaceholder(pagemenutext);
+
+    // Add all of the available options we have for the menu selection
+    menupageoptions.addOptions(...menupageoptionsarr);
+
+    pagecomponents.push(new ActionRowBuilder().addComponents(menupageoptions));
+
+    return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] }
+}
+
 exports.consentMessage = consentMessage;
 exports.getConsent = getConsent;
 exports.handleConsent = handleConsent;
@@ -811,5 +842,7 @@ exports.timelockBuildConfirm = timelockBuildConfirm;
 exports.handleBondageRemoval = handleBondageRemoval;
 exports.checkBondageRemoval = checkBondageRemoval;
 exports.handleExtremeRestraint = handleExtremeRestraint;
+
+exports.generateHelpModal = generateHelpModal;
 
 exports.assignMemeImages = assignMemeImages;

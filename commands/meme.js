@@ -35,4 +35,12 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    /*async help(userid, page) {
+        let overviewtext = `## Meme
+### Usage: /meme (type)
+
+Posts a meme!`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }*/
 };

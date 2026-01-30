@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
 const { getGag, assignGag, getMitten, getGagLast } = require("./../functions/gagfunctions.js");
@@ -350,4 +350,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let restrictedtext = (getMitten(userid)) ? `***You cannot gag anyone because of your mittens***\n` : ""
+        let overviewtext = `## Gag
+### Usage: /gag (user) (intensity) (tone)
+### Remove:  /ungag (user) (gag)
+-# Restricted if wearing mittens
+${restrictedtext}
+Applies a gag to the target **user**, impairing their speech in various ways. The standard gag is the **Ball Gag**, but others exist which will garble the wearer's speech in other ways. **Intensity** will sometimes influence how much the gag affects speech. **Tone** will affect the tone of the application text to others.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

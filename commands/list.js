@@ -98,4 +98,13 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        //let restrictedtext = (getHeavy(userid)) ? `***You are in heavy bondage***\n` : ""
+        let overviewtext = `## List
+### Usage: /list
+
+Displays all items of a given category that can be applied, such as gags, mittens, chastity devices or others.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

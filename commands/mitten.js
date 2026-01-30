@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { mittentypes, getMittenName, getGag, assignMitten, getMitten, getBaseMitten } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
@@ -127,4 +127,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let restrictedtext = (getMitten(userid)) ? `***You cannot remove your mittens***\n` : ""
+        let overviewtext = `## Mitten
+### Usage: /mitten (type)
+### Remove:  /unmitten (user)
+-# Restricted if wearing mittens
+${restrictedtext}
+Applies mittens to yourself. Mittens prevent the use of **/gag** and **/mask**, as well as **/unmitten**. If you apply mittens to yourself, others will be able to gag you without you being able to remove it!`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
 const { getCollar, getCollarPerm, canAccessCollar } = require("./../functions/collarfunctions.js");
 const { getChastity, assignChastity, getChastityName, getChastityBraName, } = require("./../functions/vibefunctions.js");
@@ -451,4 +451,14 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        //let restrictedtext = (getCollar(userid) && !canAccessCollar(userid, userid, true).access) ? `***You cannot unlock your collar currently***\n` : ""
+        let overviewtext = `## Collarequip
+### Usage: /collarequip subcommand (user) (type) (keyholder)
+-# Restricted if not holding the user's collar key
+
+Applies **Mittens**, **Chastity** or **Heavy Bondage** to a wearer if their collar's permissions allow them, commands normally restricted to self only. Chastity applied this way is permanent as if the wearer applied the chastity themself, including if you designate a keyholder.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

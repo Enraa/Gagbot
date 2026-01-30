@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getMitten } = require("./../functions/gagfunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
@@ -153,4 +153,14 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let overviewtext = `## Wear
+### Usage: /wear (user) (type)
+### Remove:  /unwear (user) (type)
+-# Restricted if in heavy bondage
+
+Applies clothing, makeup or other ornamentation to the user. These items can be protected by the wearer using **/item**. Outfits can be saved using the **/outfit** menu.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

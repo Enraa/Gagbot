@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getMitten } = require("./../functions/gagfunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
@@ -197,4 +197,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let restrictedtext = (getMitten(userid)) ? `***You are wearing mittens***\n` : ""
+        let overviewtext = `## Mask
+### Usage: /mask (user) (type)
+### Remove:  /unmask (user) (type)
+-# Restricted if in mittens or not holding the user's collar key
+${restrictedtext}
+Applies some kind of headwear to the user. This headwear can potentially restrict **Emotes** and **Inspect** when worn, as well as other unique effects such as the **Doll Visor**. Requires **Collar** permissions in order to use it on others.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };
