@@ -93,29 +93,35 @@ const corsets = [
 ];
 
 function setUpCorsets() {
-    let corsetsfunctionsroot = path.join(__dirname, "..", "corset");
-    let newcorsetref = require(`${corsetsfunctionsroot}/defaultcorset.js`);
-    let corsettypes = fs.readdirSync(corsetsfunctionsroot)
-    corsettypes.forEach((foldertype) => {
-        if (foldertype != "defaultcorset.js") {
-            let newcorset = new newcorsetref.Corset(); // Instantiate a copy of the corset object.
-            let specificcorset = require(`${corsetsfunctionsroot}/${foldertype}`);
-            let specificcorsetoverrides = Object.keys(specificcorset);
-            specificcorsetoverrides.forEach((specificover) => {
-                newcorset[specificover] = specificcorset[specificover]
-            })
-            if (process.corsettypes == undefined) { process.corsettypes = {} };
-            // Push to corsettypes for reference by corset functions
-            process.corsettypes[foldertype.replace(".js", "")] = newcorset;
-            if (process.autocompletes == undefined) { process.autocompletes = {} }
-            if (process.autocompletes.corset == undefined) { process.autocompletes.corset = [] }
-            process.autocompletes.corset.push({ name: newcorset.name, value: foldertype.replace(".js", "") })
-        }
-    })
+	let corsetsfunctionsroot = path.join(__dirname, "..", "corset");
+	let newcorsetref = require(`${corsetsfunctionsroot}/defaultcorset.js`);
+	let corsettypes = fs.readdirSync(corsetsfunctionsroot);
+	corsettypes.forEach((foldertype) => {
+		if (foldertype != "defaultcorset.js") {
+			let newcorset = new newcorsetref.Corset(); // Instantiate a copy of the corset object.
+			let specificcorset = require(`${corsetsfunctionsroot}/${foldertype}`);
+			let specificcorsetoverrides = Object.keys(specificcorset);
+			specificcorsetoverrides.forEach((specificover) => {
+				newcorset[specificover] = specificcorset[specificover];
+			});
+			if (process.corsettypes == undefined) {
+				process.corsettypes = {};
+			}
+			// Push to corsettypes for reference by corset functions
+			process.corsettypes[foldertype.replace(".js", "")] = newcorset;
+			if (process.autocompletes == undefined) {
+				process.autocompletes = {};
+			}
+			if (process.autocompletes.corset == undefined) {
+				process.autocompletes.corset = [];
+			}
+			process.autocompletes.corset.push({ name: newcorset.name, value: foldertype.replace(".js", "") });
+		}
+	});
 }
 
 function getBaseCorset(corsettype) {
-    return process.corsettypes[corsettype];
+	return process.corsettypes[corsettype];
 }
 
 // NOTE: Encapsulate gaspSounds in EOT characters so the Doll Visor doesn't split on them.
@@ -128,24 +134,24 @@ const assignCorset = (user, type, tightness, origbinder) => {
 	const old = Object.assign({}, process.corset[user]);
 	const currentBreath = process.corset[user] ? getBreath(user) : null;
 	let originalbinder = old?.origbinder;
-    if (old && old.type != type) { 
-        // Call the unequip function on the old corset
-        getBaseCorset(old?.type)?.onUnequip({ userID: user, oldcorset: old })
-    }
-    const newMaxBreath = getBaseCorset(type)?.getMaxBreath({ tightness: 0 }) ?? getBaseCorset("corset_leather").getMaxBreath({ tightness: 0 });
-    process.corset[user] = {
+	if (old && old.type != type) {
+		// Call the unequip function on the old corset
+		getBaseCorset(old?.type)?.onUnequip({ userID: user, oldcorset: old });
+	}
+	const newMaxBreath = getBaseCorset(type)?.getMaxBreath({ tightness: 0 }) ?? getBaseCorset("corset_leather").getMaxBreath({ tightness: 0 });
+	process.corset[user] = {
 		tightness: tightness ?? old?.tightness ?? 5,
 		breath: currentBreath ? Math.min(currentBreath, newMaxBreath) : newMaxBreath,
 		timestamp: Date.now(),
 		origbinder: originalbinder ?? origbinder, // Preserve original binder until it is removed.
 		type: type,
 	};
-    if (old.type == type) {
-        getBaseCorset(old?.type)?.onAdjustTightness({ userID: user, oldTightness: old.tightness, newTightness: tightness })
-    }
-    if (old.type != type) {
-        getBaseCorset(type)?.onEquip({ userID: user })
-    }
+	if (old.type == type) {
+		getBaseCorset(old?.type)?.onAdjustTightness({ userID: user, oldTightness: old.tightness, newTightness: tightness });
+	}
+	if (old.type != type) {
+		getBaseCorset(type)?.onEquip({ userID: user });
+	}
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
 	}
@@ -185,7 +191,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
 	let globalMultiplier = scriptLevel > 0 ? 2 : 1;
 	const corset = calcBreath(user);
-    const basecorset = getBaseCorset(corset.type)
+	const basecorset = getBaseCorset(corset.type);
 
 	// Tightlaced bottoms must only whisper
 	if (corset.tightness >= 7 && scriptLevel >= 0) globalMultiplier *= 2;
@@ -226,12 +232,18 @@ function corsetLimitWords(text, parent, user, msgModified) {
 		let word = parsed[i].text;
 		if (word.length > 0) {
 			let capitals = 0;
+			let wordIdx = 0;
+
 			for (const char of word) if (/[A-Z]/.test(char)) capitals++;
 
 			const syllables = parsed[i].terms[0].syllables;
 
+			console.log(word);
+			console.log(syllables);
 			for (const j in syllables) {
-				let syllable = syllables[j];
+				let syllable = word.substring(wordIdx, wordIdx + syllables[j].length);
+				wordIdx += syllable.length;
+
 				corset.breath -= globalMultiplier;
 
 				// Capitals cost more breath
@@ -294,7 +306,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 // calculates current breath and returns corset. Does not save to file.
 function calcBreath(user) {
 	const corset = getCorset(user);
-    const basecorset = getBaseCorset(corset.type)
+	const basecorset = getBaseCorset(corset.type);
 	if (!corset) return null;
 	if (corset.breath < basecorset.getMinBreath({ tightness: corset.tightness })) corset.breath = basecorset.getMinBreath({ tightness: corset.tightness });
 	const now = Date.now();
@@ -330,7 +342,7 @@ function getBreath(user) {
 // consumes specified breath and returns true if user had enough
 function tryExpendBreath(user, exertion) {
 	const corset = calcBreath(user);
-    const basecorset = getBaseCorset(corset.type ?? "corset_leather")
+	const basecorset = getBaseCorset(corset.type ?? "corset_leather");
 	corset.breath -= exertion;
 	basecorset.afterUsingBreath({ userID: user, corset: corset });
 	if (process.readytosave == undefined) {
