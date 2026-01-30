@@ -294,7 +294,8 @@ client.on("messageCreate", async (msg) => {
             channelid = msg.channel.parentId
         }
         if (process.webhook[channelid]) {
-            handleKeyFinding(msg);
+            // FUCK THIS SYSTEM
+            // handleKeyFinding(msg); 
             process.recentmessages[msg.author.id] = msg.channel.id;
             modifymessage(msg, thread ? msg.channelId : null);
         }
