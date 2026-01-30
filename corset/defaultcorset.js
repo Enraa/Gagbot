@@ -9,16 +9,16 @@ function Corset() {
     // Min Breath - this is the least breath a wearer can have, from 0-15
     this.minBreath = [0, -120, -116, -112, -108, -104, -96, -88, -80, -72, -60, -60, -48, -40, -30, -20];
 
-    // Breath Recovery - This is how fast a wearer recovers their breath per second?
+    // Breath Recovery - this is the breath recovered per second before modifications from worn gags
     this.breathRecovery = [2000, 4.6, 3.8, 3.2, 2.6, 2, 1.6, 1.28, 1, 0.8, 0.6, 0.4, 0.2, 0.1, 0.04, 0.008];
 
-    // Gasp Coefficient
+    // Gasp Coefficient - increases the likelyhood of gasps being added
     this.gaspCoefficient = 1
 
-    // Gasp Limit - The amount of syllables that can be said before a gasp is heard!
+    // Gasp Limit - the maximum breath to start adding gasps
     this.gaspLimit = [1000, 28, 24, 20, 17, 14, 12, 10, 8, 6.5, 5, 3.5, 2, 1.5, 1, 1]
 
-    // Silence Limit - ... Im not sure what this does lol
+    // Silence Limit - the minimum breath before no longer being able to speak
     this.silenceLimit = [-2000, -56, -48, -40, -34, -28, -24, -20, -16, -13, -10, -7, -4, -3, -2, -2]
 
     // Minimum Words - At LEAST this number of words can be said!
