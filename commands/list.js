@@ -12,27 +12,13 @@ const { StringSelectMenuBuilder } = require("discord.js");
 
 const PAGE_SIZE = 20;
 
-// ... this is a problem. 
-// We can't effectively list these at runtime unless we generate this list dynamically. 
-// This needs to be moved to allow seeing chastity belts and bras again. 
-const restraints = {
-	Heavy: heavytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
-	Mitten: mittentypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
-	Gag: gagtypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
-	//"Chastity Belt": chastitytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
-	//"Chastity Bra": chastitybratypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
-	Mask: headweartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.blockinspect || heavy.blockemote ? `Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`.slice(0, -2) : `` })),
-	Collar: collartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
-	Wearable: wearabletypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.colorable ? `Colorable` : `` })),
-};
-
 async function generateList(listchoice, page, details) {
-	let fulltext = `## Available **${listchoice.replace("+", " ")}** Restraints:\n`;
-	let maxpages = Math.ceil(restraints[listchoice.replace("+", " ")].length / PAGE_SIZE);
-	for (let i = (page - 1) * PAGE_SIZE; i < Math.min(page * PAGE_SIZE, restraints[listchoice.replace("+", " ")].length); i++) {
-		fulltext = `${fulltext}\n- **${restraints[listchoice.replace("+", " ")][i].name}**`;
-		if (details && restraints[listchoice.replace("+", " ")][i].value.length > 0) {
-			let backticked = "`" + restraints[listchoice.replace("+", " ")][i].value + "`";
+	let fulltext = `## Available **${listchoice.replace("+", " ")}** ${listchoice.replace("+", " ") == "Wearable" ? "Clothing" : "Restraints"}:\n`;
+	let maxpages = Math.ceil(process.listtexts[listchoice.replace("+", " ")].length / PAGE_SIZE);
+	for (let i = (page - 1) * PAGE_SIZE; i < Math.min(page * PAGE_SIZE, process.listtexts[listchoice.replace("+", " ")].length); i++) {
+		fulltext = `${fulltext}\n- **${process.listtexts[listchoice.replace("+", " ")][i].name}**`;
+		if (details && process.listtexts[listchoice.replace("+", " ")][i].value.length > 0) {
+			let backticked = "`" + process.listtexts[listchoice.replace("+", " ")][i].value + "`";
 			fulltext = `${fulltext} - ${backticked}`;
 		}
 	}
@@ -60,7 +46,7 @@ async function generateList(listchoice, page, details) {
 	let menupageoptions = new StringSelectMenuBuilder().setCustomId(`list_menuselector_${details}`);
 
 	let menupageoptionsarr = [];
-	Object.keys(restraints).forEach((k) => {
+	Object.keys(process.listtexts).forEach((k) => {
 		let opt = new StringSelectMenuOptionBuilder().setLabel(k).setValue(`list_pageselect_${k.replace(" ", "+")}_${details}`);
 		menupageoptionsarr.push(opt);
 	});

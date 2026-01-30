@@ -7,32 +7,51 @@ const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
-
-// Grab all the command files from the commands directory
-const gagtypes = [];
-const commandsPath = path.join(__dirname, "..", "gags");
-const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
-
-// Push the gag name over to the choice array.
-for (const file of commandFiles) {
-	const gag = require(`./../gags/${file}`);
-	gagtypes.push({ name: gag.choicename, value: file.replace(".js", "") });
-}
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("gag")
 		.setDescription("Apply a gag to the user")
 		.addUserOption((opt) => opt.setName("user").setDescription("The user to gag"))
-		.addStringOption((opt) =>
-			opt
-				.setName("gag")
-				.setDescription("Type of gag to use")
-				.addChoices(...gagtypes),
+		.addStringOption((opt) => opt.setName("gag").setDescription("Type of gag to use").setAutocomplete(true)
 		)
 		.addNumberOption((opt) => opt.setName("intensity").setDescription("How tightly to gag. Range 1-10").setMinValue(1).setMaxValue(10))
 		.addStringOption((opt) => opt.setName("tone").setDescription("What tone to use for the RP output?").addChoices({ name: "Gentle", value: "gentle" }, { name: "Forceful", value: "forceful" }, { name: "Requesting", value: "requesting" })),
-	async execute(interaction) {
+	async autoComplete(interaction) {
+		try {
+            const focusedValue = interaction.options.getFocused();
+            let autocompletes = process.autocompletes.gag;
+            let matches = didYouMean(focusedValue, autocompletes, {
+                matchPath: ['name'], 
+                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
+            })
+            
+            if (matches.length == 0) {
+                matches = autocompletes;
+            }
+            let tags = getUserTags(interaction.user.id);
+            let newsorted = [];
+            matches.forEach((f) => {
+                let tagged = false;
+                let i = process.gagtypes[f.value]
+                tags.forEach((t) => {
+                    if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                    else if (i.tags && (i.tags[t])) { tagged = true }
+                })
+                if (!tagged) {
+                    newsorted.push(f);
+                }
+            })
+            interaction.respond(newsorted.slice(0,25))
+        }
+        catch (err) {
+            console.log(err);
+        }
+	},
+    async execute(interaction) {
 		try {
 			let gaggeduser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
@@ -49,21 +68,9 @@ module.exports = {
 			let gagtype = interaction.options.getString("gag") ? interaction.options.getString("gag") : "ball";
 			let gagintensity = interaction.options.getNumber("intensity") ? interaction.options.getNumber("intensity") : 5;
 			let currentgag = getGag(gaggeduser.id, gagtype);
-			let gagname = gagtypes.find((g) => g.value == gagtype)?.name;
-			let oldgagname = gagtypes.find((g) => g.value == getGagLast(gaggeduser.id))?.name;
+			let gagname = process.gagtypes[gagtype]?.choicename;
+			let oldgagname = process.gagtypes[getGagLast(gaggeduser.id)]?.choicename;
 			let intensitytext = "loosely";
-			try {
-				let gagfile = require(path.join(commandsPath, `${gagtype}.js`));
-				if (gagfile.intensity) {
-					intensitytext = gagfile.intensity(gagintensity);
-				}
-				/* ------------ This idea needs some investigation to ensure gag texts retrieve this properly.
-				if (gagfile.gagnamecustom) {
-					gagname = gagfile.gagnamecustom(gagintensity)
-				} */
-			} catch (err) {
-				console.log(err);
-			}
 			if (intensitytext == "loosely") {
 				if (gagintensity > 2) {
 					intensitytext = "moderately loosely";
@@ -78,6 +85,9 @@ module.exports = {
 					intensitytext = "as tightly as possible";
 				}
 			}
+            if (gagname && process.gagtypes[gagtype].intensityText) {
+                intensitytext = process.gagtypes[gagtype].intensityText(gagintensity)
+            }
 
 			let tone = interaction.options.getString("tone");
 			// Choose a random choice if the user did not choose.

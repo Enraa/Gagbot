@@ -25,19 +25,23 @@ for (const file of commandFiles) {
 	gagtypes.push({ name: gag.choicename, value: file.replace(".js", "") });
 }
 
-const gagtypesset = () => {
+const setUpGags = () => {
 	// Grab all the command files from the commands directory
-	const gagtypes = [];
+	const gagautocompletes = [];
+    const gagtypes = [];
 	const commandsPath = path.join(__dirname, "..", "gags");
 	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
 
 	// Push the gag name over to the choice array.
 	for (const file of commandFiles) {
 		const gag = require(`./../gags/${file}`);
-		gagtypes.push({ name: gag.choicename, value: file.replace(".js", "") });
+        gagtypes[file.replace(".js", "")] = gag;
+		gagautocompletes.push({ name: gag.choicename, value: file.replace(".js", "") });
 	}
 
 	process.gagtypes = gagtypes;
+    if (process.autocompletes == undefined) { process.autocompletes = {} }
+    process.autocompletes.gag = gagautocompletes;
 };
 
 // This should probably be better maintained with automation
@@ -434,19 +438,11 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 		process.gags = {};
 	}
 	if (process.gags[msg.author.id] && process.gags[msg.author.id].length > 0) {
-		
-		// Grab all the command files from the commands directory
-		const commandsPath = path.join(__dirname, "..", "gags");
-		const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
-
+        // Go over each gag and if there's a gag file loaded for it, run the messagebegin, garbletext and messageend functions if they exist.
 		process.gags[msg.author.id].forEach((gag) => {
-			if (commandFiles.includes(`${gag.gagtype}.js`)) {
-				let gaggarble = require(path.join(commandsPath, `${gag.gagtype}.js`));
-				let intensity = gag.intensity ? gag.intensity : 5;
-
-				// TODO - Message Begin
-				if (gaggarble.messagebegin) {
-					let out = gaggarble.messagebegin(msg, msgTree, msgTreeMods, intensity);
+            if (process.gagtypes && process.gagtypes[gag.gagtype]) {
+                if (process.gagtypes[gag.gagtype].messagebegin) {
+                    let out = process.gagtypes[gag.gagtype].messagebegin(msg, msgTree, msgTreeMods, gag.intensity ?? 5);
 					if (typeof out == "string") {
 						msgTree.rebuild(`${out}${msgTree.toString()}`)
 						msgTreeMods.modified = true;
@@ -454,16 +450,16 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 						// Do further changes here I guess if necessary.
 						//msgparts = out.msgparts;
 					}
-				}
-				if(gaggarble.garbleText){
-					msgTree.callFunc(gaggarble.garbleText,true,"rawText",[intensity])		// Run garble on all IC segments.
+                }
+                if(process.gagtypes[gag.gagtype].garbleText){
+					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5])		// Run garble on all IC segments.
 					msgTreeMods.modified = true;
 				}
-				if (gaggarble.messageend) {												// Run messageEnd
-					msgTree.rebuild(`${msgTree.toString()}${gaggarble.messageend(msg, intensity)}`)
+                if (process.gagtypes[gag.gagtype].messageend) {												// Run messageEnd
+					msgTree.rebuild(`${msgTree.toString()}${process.gagtypes[gag.gagtype].messageend(msg, gag.intensity ?? 5)}`)
 					msgTreeMods.modified = true;
 				}
-			}
+            }
 		});
 	}
 }
@@ -576,7 +572,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 	}
 }
 
-exports.gagtypesset = gagtypesset;
+exports.setUpGags = setUpGags;
 exports.loadMittenTypes = loadMittenTypes;
 
 exports.getBaseMitten = getBaseMitten;

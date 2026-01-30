@@ -311,15 +311,11 @@ function calcBreath(user) {
 	let recoveryCoefficient = 1;
 	if (process.gags == undefined) process.gags = {};
 	if (process.gags[user] && process.gags[user].length > 0) {
-		const gagsPaths = path.join(__dirname, "..", "gags");
-		const gagFiles = fs.readdirSync(gagsPaths).filter((file) => file.endsWith(".js"));
-		process.gags[user].forEach((gag) => {
-			if (gagFiles.includes(`${gag.gagtype}.js`)) {
-				let gagData = require(path.join(gagsPaths, `${gag.gagtype}.js`));
-				let intensity = gag.intensity ? gag.intensity : 5;
-				if (gagData.breathRecovery) recoveryCoefficient *= gagData.breathRecovery(user, intensity);
-			}
-		});
+        process.gags[user].forEach((g) => {
+            if (process.gagtypes && process.gagtypes[g.gagtype]?.breathRecovery) {
+                recoveryCoefficient *= process.gagtypes[g.gagtype]?.breathRecovery(user, g.intensity ?? 5)
+            }
+        })
 	}
 	const newBreath = corset.breath + basecorset.getBreathRecovery({ tightness: corset.tightness }) * ((now - corset.timestamp) / 1000) * recoveryCoefficient;
 	if (newBreath > basecorset.getMaxBreath({ tightness: corset.tightness })) corset.breath = basecorset.getMaxBreath({ tightness: corset.tightness });

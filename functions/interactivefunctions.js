@@ -6,12 +6,13 @@ const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { collartypes, getCollarKeyholder, canAccessCollar } = require("./collarfunctions.js");
 const { getOption } = require("./../functions/configfunctions.js");
 const { getChastityKeyholder } = require("./../functions/vibefunctions.js");
-const { getHeavyBinder, convertheavy } = require("./../functions/heavyfunctions.js");
-const { getGagBinder, getMittenBinder } = require("./../functions/gagfunctions.js");
+const { getHeavyBinder, convertheavy, heavytypes } = require("./../functions/heavyfunctions.js");
+const { getGagBinder, getMittenBinder, mittentypes, gagtypes } = require("./../functions/gagfunctions.js");
 const { getCorsetBinder } = require("./../functions/corsetfunctions.js");
-const { getHeadwearBinder } = require("./../functions/headwearfunctions.js");
+const { getHeadwearBinder, headweartypes } = require("./../functions/headwearfunctions.js");
 const { configoptions } = require("./configfunctions.js");
 const { canAccessChastity } = require("./vibefunctions.js");
+const { wearabletypes } = require("./wearablefunctions.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
@@ -830,6 +831,22 @@ async function generateHelpModal(userid, section, page) {
     return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] }
 }
 
+function generateListTexts() {
+    const restraints = {
+        Heavy: heavytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
+        Mitten: mittentypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
+        Gag: Object.entries(process.gagtypes).map((f) => f[1]).sort((a, b) => a.choicename.localeCompare(b.choicename)).map((heavy) => ({ name: heavy.choicename, value: "" })),
+        "Chastity Belt": Object.entries(process.chastitytypes).filter((f) => f[1].category == "Chastity Belt").map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),
+        "Chastity Bra": Object.entries(process.chastitytypes).filter((f) => f[1].category == "Chastity Bra").map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),
+        Corset: Object.entries(process.corsettypes).map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),
+        Mask: headweartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.blockinspect || heavy.blockemote ? `Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`.slice(0, -2) : `` })),
+        Collar: collartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
+        Toys: Object.entries(process.toytypes).map((f) => f[1]).sort((a, b) => a.toyname.localeCompare(b.toyname)).map((heavy) => ({ name: heavy.toyname, value: heavy.category })),
+        Wearable: wearabletypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.colorable ? `Colorable` : `` })),
+    };
+    process.listtexts = restraints;
+}
+
 exports.consentMessage = consentMessage;
 exports.getConsent = getConsent;
 exports.handleConsent = handleConsent;
@@ -846,3 +863,5 @@ exports.handleExtremeRestraint = handleExtremeRestraint;
 exports.generateHelpModal = generateHelpModal;
 
 exports.assignMemeImages = assignMemeImages;
+
+exports.generateListTexts = generateListTexts;

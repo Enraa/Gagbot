@@ -5,13 +5,13 @@ dotenv.config()
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { assignMitten, garbleMessage, gagtypesset, modifymessage, loadMittenTypes } = require(`./functions/gagfunctions.js`);
+const { assignMitten, garbleMessage, setUpGags, modifymessage, loadMittenTypes } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
 const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
 const { assignCorset, setUpCorsets } = require('./functions/corsetfunctions.js');
-const { assignMemeImages } = require('./functions/interactivefunctions.js');
+const { assignMemeImages, generateListTexts } = require('./functions/interactivefunctions.js');
 const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames, scavengeUsers } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
@@ -122,7 +122,7 @@ catch (err) {
 }
 
 // Later loaders for autocompletes
-gagtypesset();
+setUpGags();
 loadHeavyTypes(); 
 loadHeadwearTypes();
 loadMittenTypes();
@@ -260,6 +260,8 @@ client.on("clientReady", async () => {
         // Load webhooks
         await loadWebhooks(client);
         //console.log(`Webhook Channels: [${Array.from(process.webhook.keys()).join(", ")}]`)
+
+        generateListTexts();
 
         scavengeUsers(client);
         setInterval(() => {
