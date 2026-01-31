@@ -20,6 +20,7 @@ const { swapChastity, swapChastityBra } = require("../functions/vibefunctions.js
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getUserTags } = require("../functions/configfunctions.js");
 const { getBaseChastity } = require("../functions/chastityfunctions.js");
+const { discardKey } = require("../functions/keyfindingfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -800,7 +801,58 @@ module.exports = {
 						interaction.reply(getText(data));
 					}
 				}
-			}
+			} else if (subcommand == "discardkey") {
+                let wearer = interaction.options.getUser("wearer") ?? interaction.user;
+				let restrainttype = interaction.options.getString("restraint");
+
+				if (!wearer || !restrainttype) {
+					interaction.reply({ content: `Something went wrong. The command was parsed as:\nDiscard ${wearer}'s ${restrainttype} key!`, flags: MessageFlags.Ephemeral });
+					return;
+				}
+
+                let discardedhelp = "collar";
+                let permitted = false;
+				if (restrainttype == "collar") {
+					if (getCollar(wearer.id) && getCollar(wearer.id).keyholder == interaction.user.id && !getCollar(wearer.id).fumbled) {
+						permitted = true;
+					}
+				} else if (restrainttype == "chastitybelt") {
+					if (getChastity(wearer.id) && getChastity(wearer.id).keyholder == interaction.user.id && !getChastity(wearer.id).fumbled) {
+                        discardedhelp = "chastity belt"
+						permitted = true;
+					}
+				} else if (restrainttype == "chastitybra") {
+					if (getChastityBra(wearer.id) && getChastityBra(wearer.id).keyholder == interaction.user.id && !getChastityBra(wearer.id).fumbled) {
+                        discardedhelp = "chastity bra"
+						permitted = true;
+					}
+				}
+
+				// Catch if they ARE NOT ALLOWED
+				if (!permitted) {
+					interaction.reply({ content: `You don't have the primary keys to ${wearer}'s ${restrainttype}!`, flags: MessageFlags.Ephemeral });
+					return;
+				}
+
+                // Okay they're probably allowed lol
+				let data = { 
+                    textarray: "texts_key", textdata: { 
+                        interactionuser: interaction.user, 
+                        targetuser: wearer 
+                    },
+                    c1: discardedhelp
+                };
+                data.discardkey = true;
+                let discardedkey = discardKey(wearer.id, interaction.user.id, discardedhelp);
+                if (wearer.id == interaction.user.id) {
+                    data.self = true
+                }
+                else {
+                    data.other = true
+                }
+                data[discardedkey] = true;
+                interaction.reply(getText(data));
+            }
 		} catch (err) {
 			console.log(err);
 		}

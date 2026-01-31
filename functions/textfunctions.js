@@ -1,6 +1,7 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
 const { getChastity, getArousal } = require("./vibefunctions.js");
+const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 
 const texts_chastity = {
 	chastitybelt: {
@@ -849,6 +850,53 @@ const texts_key = {
 			chastitybra: [`USER_TAG unlocks the little lock on the front of TARGET_TAG's VAR_C1. TARGET_THEIR_CAP chest is free for a brief moment before it is bound once more with a VAR_C2!`],
 		},
 	},
+    discardkey: {
+        self: {
+            keyholder: [
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) < 20;
+                    },
+                    text: `USER_TAG looks one last time at USER_THEIR key to USER_THEIR VAR_C1 and tosses it without a second thought.`,
+                },
+                {
+                    required: (t) => {
+                        return !getHeadwearRestrictions(t.interactionuser.id).canInspect;
+                    },
+                    text: `USER_TAG is unable to see, so USER_THEY toss the key to USER_THEIR VAR_C1 somewhere... Who knows where?`,
+                },
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) > 10;
+                    },
+                    text: `USER_TAG shudders slightly as USER_THEY stareUSER_S at USER_THEIR VAR_C1 key before flinging it off into the void!`,
+                },
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) > 20;
+                    },
+                    text: `Desperate to stay helpless and horny, USER_TAG throws USER_THEIR VAR_C1 key off into the distance!`,
+                },
+            ],
+            none: [
+                `USER_TAG tries to throw away USER_THEIR key... but a mysterious entity stops USER_THEM!? (this is a bug, report)`
+            ]
+        },
+        other: {
+            keyholder: [
+                `USER_TAG smirks at TARGET_TAG before tossing TARGET_THEIR VAR_C1 key off into the nether.`,
+                {
+                    required: (t) => {
+                        return !getHeadwearRestrictions(t.targetuser.id).canInspect;
+                    },
+                    text: `USER_TAG taunts TARGET_TAG with the key for a moment, dangling it in front of TARGET_THEIR eyes before flinging it away.`,
+                }
+            ],
+            none: [
+                `USER_TAG tries to throw away TARGET_TAG's key... but a mysterious entity stops USER_THEM!? (this is a bug, report)`
+            ]
+        }
+    }
 };
 
 // This follows an inconsistent flat structure - consider reworking in the future.

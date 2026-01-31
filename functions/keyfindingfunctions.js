@@ -14,54 +14,56 @@ const { getCombinedTraits } = require("./vibefunctions.js");
 const { logConsole } = require("./logfunctions.js");
 const { getBaseChastity } = require("./chastityfunctions.js");
 const { getTextGeneric } = require("./textfunctions.js");
+const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 
 const MAX_FUMBLE_CHANCE = 0.95;
-const FUMBLE_AROUSAL_POTENCY = 11.7;
-const FUMBLE_AROUSAL_COEFFICIENT = 0.38;
 
 // returns how heavy the fumble was (usually 1 = regular, 2 = drop key)
-function rollKeyFumble(keyholder, locked, maxFumbles = 1) {
+function rollKeyFumble(keyholder, locked) {
 	if (process.keyfumbling == undefined) {
 		process.keyfumbling = {};
 	}
 	// get the initial fumble chance
 	let fumbleChance = getFumbleChance(keyholder, locked);
+
 	// just save time and skip this thing if they cannot fumble
-	if (!fumbleChance) return 0;
-	let i;
-	// roll until they succeed or the maximum fumbles
-	for (i = 0; i < maxFumbles; i++) {
-		// the overcap for the current fumble chance is used for the next fumble, with a minimum of a 5% chance for all but the first roll
-		const nextFumbleChance = Math.max(0.05, fumbleChance - MAX_FUMBLE_CHANCE);
-		// if overcapped, reduce to the cap
-		if (fumbleChance > MAX_FUMBLE_CHANCE) fumbleChance = MAX_FUMBLE_CHANCE;
-		if (Math.random() < fumbleChance) {
-			// user fumbled
-			if (config.getBlessedLuck(keyholder)) {
-				// if they use blessed luck, add the success chance to their saved blessing
-				const blessing = getUserVar(keyholder, "blessed") ?? 0;
-				setUserVar(keyholder, "blessing", blessing + 1 - fumbleChance);
-			}
+	if (fumbleChance <= 0) return 0;
+    console.log(fumbleChance)
+    
+    // Fumbles have AT MOST 95% chance to happen.
+    if (Math.random() < Math.min(fumbleChance, MAX_FUMBLE_CHANCE)) {
+        // They fumbled, lets work with that.
+        // Push the chance they had to fumble to blessings
+        if (config.getBlessedLuck(keyholder)) {
+            // if they use blessed luck, add the success chance to their saved blessing
+            const blessing = getUserVar(keyholder, "blessed") ?? 0;
+            setUserVar(keyholder, "blessing", blessing + 1 - fumbleChance);
+        }
 
-			// set the fumble chance for next roll
-			fumbleChance = nextFumbleChance;
+        // fumbling is frustrating
+        const penalties = frustrationPenalties.get(keyholder) ?? [];
+        penalties.push({ timestamp: Date.now(), value: 15, decay: 2 });
+        frustrationPenalties.set(keyholder, penalties);
 
-			// fumbling is frustrating
-			const penalties = frustrationPenalties.get(keyholder) ?? [];
-			penalties.push({ timestamp: Date.now(), value: 15, decay: 2 });
-			frustrationPenalties.set(keyholder, penalties);
-		} else {
-			// user didn't fumble
-			// if it was the first attempt, clear their saved up blessing
-			if (i == 0) setUserVar(keyholder, "blessing", 0);
-			// return how many fumbles it took before a success
-			getCombinedTraits(locked).onFumble({ userID: locked, keyholderID: keyholder, fumbles: i});
-			return i;
-		}
-	}
-	// succeeding returns early so if we get here they failed every time
-	getCombinedTraits(locked).onFumble({ userID: locked, keyholderID: keyholder, fumbles: maxFumbles});
-	return maxFumbles;
+        console.log(Math.max(0.05, (Math.min((fumbleChance / 2.5), MAX_FUMBLE_CHANCE))))
+
+        // Reduce further fumble chance to some % of the fumble chance
+        // Further fumbles have at LEAST 5% chance to happen and AT MOST 95% chance to happen.
+        if (Math.random() < Math.max(0.05, (Math.min((fumbleChance / 2.5), MAX_FUMBLE_CHANCE)))) {
+            // CASCADE OF FAILURES
+            // Dropping the key is even more frustrating.
+            const penalties = frustrationPenalties.get(keyholder) ?? [];
+            penalties.push({ timestamp: Date.now(), value: 15, decay: 2 });
+            frustrationPenalties.set(keyholder, penalties);
+            return 2; // They dropped the key.
+        }
+        else {
+            return 1; // They kept their fingers on the key
+        }
+    }
+    else {
+        return 0; // They did not drop the key!
+    }
 }
 
 function getFumbleChance(keyholder, locked) {
@@ -72,13 +74,21 @@ function getFumbleChance(keyholder, locked) {
 	// ... or if it's someone else and either has disable fumbling for others
 	if (keyholder != locked && (!config.getKeyFumblingOthers(keyholder) || !config.getKeyFumblingOthers(locked))) return 0;
 
-	// calculate the base chance from arousal (which affects it logarithmically) and frustration (which affects it exponentially until a point)
-	let chance = FUMBLE_AROUSAL_POTENCY * Math.log(1 + FUMBLE_AROUSAL_COEFFICIENT * getArousal(keyholder)) + calcFrustration(keyholder);
+    // Add frustration if trying to unlock OWN device
+    // Idk why frustration is broken apparently, but w/e, can fix later. 
+    let frustrationaddition = (locked == keyholder) ? calcFrustration(keyholder) : 0;
+
+    // "simple" math that models a simple quadratic equation
+    // Target numbers are 15 arousal = 0, 150 arousal = 100
+    // Frustration influences how sharply the curve tilts upwards as well as adding a tiny bit to the start
+    // The notable part is that frustration SEVERELY affects higher arousal levels. 
+    console.log((((0.0045 + frustrationaddition * 0.0004) * Math.pow(getArousal(locked), 2) - 1) + (frustrationaddition / 100)))
+	let chance = Math.max(0, (((0.0045 + frustrationaddition * 0.0004) * Math.pow(getArousal(locked), 2) - 1) + (frustrationaddition / 100)))
 
 	// chance is increased if the keyholder is wearing mittens
 	if (getMitten(keyholder)) {
+        chance *= 1.1;
 		chance += 10;
-		chance *= 1.1;
 	}
 
 	// reduce the fumble chance by saved up blessing from prior unlucky rolls
@@ -93,8 +103,8 @@ function getFumbleChance(keyholder, locked) {
 async function handleKeyFinding(message) {
     let processvars = ["collar", "chastity", "chastitybra"];
     processvars.forEach((pv) => {
-        if (processvars[pv] == undefined) { processvars[pv] = {}}
-        Object.entries(processvars[pv]).forEach(async (en) => {
+        if (process[pv] == undefined) { process[pv] = {}}
+        Object.entries(process[pv]).forEach(async (en) => {
             try {
                 if (en[1].fumbled) {
                     if (Math.random() < (Math.max(Math.min(message.content.length * 0.0005, 0.2), 0.01))) {
@@ -119,26 +129,31 @@ async function handleKeyFinding(message) {
                                 chance = 0.0;
                                 extrafindkeypart = "_heavy"
                             }
+                            // Blind people cannot see.
+                            if (!getHeadwearRestrictions(message.member.id).canInspect) {
+                                chance = Math.min(chance, 0.25)
+                            }
                             let data = {
                                 interactionuser: message.member,
                                 targetuser: weareruser
                             }
                             if ((pv == "chastity") || (pv == "chastitybra")) {
-                                data.c1 = getBaseChastity(en[1].chastitytype).name
+                                let def = (pv == "chastity") ? "belt" : "bra"
+                                data.c1 = getBaseChastity(en[1].chastitytype ?? `${def}_silver`).name
                             }
                             else if (pv == "collar") {
-                                data.c1 = getBaseCollar(en[1].collartype).name
+                                data.c1 = getBaseCollar(en[1].collartype ?? `collar_leather`).name
                             }
                             if (Math.random() < chance) {
                                 // Successfully found the key!
                                 messageSendChannel(getTextGeneric(`find_key_${finderpart}${extrafindkeypart}`, data), message.channel.id)
                                 // Destroy cloned keyholders if the keyholder is new!
-                                if (message.member.id != processvars[pv][en[0]].keyholder) {
-                                    processvars[pv][en[0]].clonedKeyholders = [];
+                                if (message.member.id != process[pv][en[0]].keyholder) {
+                                    process[pv][en[0]].clonedKeyholders = [];
                                 }
                                 // Assign the new keyholder and then delete the fumbled date. 
-                                processvars[pv][en[0]].keyholder = message.member.id;
-                                delete processvars[pv][en[0]].fumbled;
+                                process[pv][en[0]].keyholder = message.member.id;
+                                delete process[pv][en[0]].fumbled;
                             }
                             else {
                                 // Fumbled finding the key lol
@@ -153,6 +168,38 @@ async function handleKeyFinding(message) {
             }
         })
     })
+}
+
+// Discards a key held by keyholderid for userid. Varying effect based on device.
+function discardKey(userid, keyholderid, device) {
+    // If it isnt one of the three devices we know about, go away
+    if ((device != "collar") && (device != "chastity belt") && (device != "chastity bra")) { 
+        console.log(`Unknown device ${device}. Use "collar", "chastity belt" or "chastity bra"`)
+        return false 
+    }
+    let processvar = "collar";
+    if (device == "chastity belt") { processvar = "chastity" }
+    if (device == "chastity bra") { processvar = "chastitybra" }
+    // If this is undefined, we have some big problems lol
+    let typelocked = "none";
+    if (process[processvar] == undefined) { process[processvar] = {} }
+    if (process[processvar][userid]) {
+        if (process[processvar][userid].keyholder == keyholderid) {
+            // Lost primary keys
+            process[processvar][userid].fumbled = Date.now(); // We might be able to track time with this?
+            typelocked = "keyholder";
+        }
+        else if (process[processvar][userid].clonedKeyholders.includes(keyholderid)) {
+            // Lost a clone. Clones should be destroyed.
+            process[processvar][userid].clonedKeyholders.splice(process[processvar][userid].clonedKeyholders.indexOf(keyholderid), 1)
+            typelocked = "clone";
+        }
+    }
+    if (process.readytosave == undefined) {
+		process.readytosave = {};
+	}
+    process.readytosave[processvar] = true;
+    return typelocked;
 }
 
 function getFindFunction(restraint) {
@@ -196,3 +243,5 @@ function calcFindSuccessChance(user) {
 exports.getFumbleChance = getFumbleChance;
 exports.rollKeyFumble = rollKeyFumble;
 exports.handleKeyFinding = handleKeyFinding;
+
+exports.discardKey = discardKey;

@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getChastity, getVibe, assignVibe, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js");
+const { getChastity, getVibe, assignVibe, canAccessChastity } = require("./../functions/vibefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
@@ -10,6 +10,7 @@ const { checkBondageRemoval, handleBondageRemoval } = require("../functions/inte
 const { config } = require("../functions/configfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getUserTags } = require("../functions/configfunctions.js");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -117,7 +118,7 @@ module.exports = {
 				if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
 					// User tries to modify the corset settings for someone in chastity that they do have the key for
 					data.key = true;
-					const fumbleResult = rollKeyFumble(interaction.user.id, corsetuser.id, 2);
+					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
 					if (fumbleResult > 0) {
 						// User fumbles with the key due to their arousal and frustration
 						data.fumble = true;
@@ -130,27 +131,28 @@ module.exports = {
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
 							} else {
+                                data.other = true;
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}

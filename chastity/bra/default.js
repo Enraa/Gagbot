@@ -11,6 +11,21 @@ exports.denialCoefficient = (data) => { return 3 }
 // Default vibe scaling is 0.3.
 exports.vibeScaling = (data) => { return 0.3 }
 
+// Fumble for bras.
+exports.fumble = (data) => {
+    if (getOption(data.userID, "fumbling") == "disabled") { return 0 }
+    let fumble = rollKeyFumble(data.keyholderID, data.userID);
+    if (fumble > 1 && (getOption(data.userID, "keyloss") == "disabled")) {
+        fumble = 1; // force it back to a no key loss
+    }
+    return fumble;
+}
+
+// Discard for bras
+exports.discard = (data) => {
+    return discardKey(data.userID, data.keyholderID, "chastitybra")
+}
+
 // Category
 exports.category = "Chastity Bra"
 

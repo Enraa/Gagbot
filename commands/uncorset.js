@@ -8,6 +8,7 @@ const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { config } = require("../functions/configfunctions.js");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -98,7 +99,7 @@ module.exports = {
 									if (config.getKeyLoss(corsetuser.id) && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
-										let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {
@@ -148,7 +149,7 @@ module.exports = {
 									if (config.getKeyLoss(corsetuser.id) && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
-										let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {

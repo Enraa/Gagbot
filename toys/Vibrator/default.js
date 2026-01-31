@@ -1,6 +1,6 @@
+const { getBaseChastity } = require("../../functions/chastityfunctions")
 const { getOption } = require("../../functions/configfunctions")
-const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
-const { canAccessChastity, addArousal, discardChastityKey, getChastity } = require("../../functions/vibefunctions")
+const { canAccessChastity, addArousal, getChastity } = require("../../functions/vibefunctions")
 
 // These values are used whenever they're unspecified on the vibe in this folder.
 // Arousal gain per intensity for this vibe type
@@ -27,20 +27,15 @@ exports.blocker = (data) => { return getChastity(data.userID) }
 // Condition to allow modification
 exports.canModify = (data) => { return (!canAccessChastity(data.userID, data.keyholderID).hasbelt || canAccessChastity(data.userID, data.keyholderID).access) };
 
-// Condition that rolls a fumble function, returning it's results
+// Condition that rolls a fumble function from the blocking device, returning it's results
 // 0 = Success, 1 = Fail, no loss, 2 = Fail, loss
 exports.fumble = (data) => {
-    if (getOption(data.userID, "fumbling") == "disabled") { return 0 }
-    let fumble = rollKeyFumble(data.keyholderID, data.userID);
-    if (fumble > 1 && (getOption(data.userID, "keyloss") == "disabled")) {
-        fumble = 1; // force it back to a no key loss
-    }
-    return fumble;
+    return getBaseChastity(getChastity(data.userID).chastitytype).fumble(data);
 };
 
 // Discard function if the .fumble causes it
 exports.discard = (data) => {
-    return discardChastityKey(data.userID, data.keyholderID);
+    return getBaseChastity(getChastity(data.userID).chastitytype).discard(data);
 }
 
 // Action when equipping

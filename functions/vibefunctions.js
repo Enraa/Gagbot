@@ -1063,38 +1063,6 @@ const transferChastityKey = (lockedUser, newKeyholder) => {
 	return false;
 };
 
-// Discards a key held by keyholderid for userid. Varying effect based on device.
-function discardKey(userid, keyholderid, device) {
-    // If it isnt one of the three devices we know about, go away
-    if ((device != "collar") && (device != "chastity belt") && (device != "chastity bra")) { 
-        console.log(`Unknown device ${device}. Use "collar", "chastity belt" or "chastity bra`)
-        return false 
-    }
-    let processvar = "collar";
-    if (device == "chastity belt") { processvar = "chastity" }
-    if (device == "chastity bra") { processvar = "chastitybra" }
-    // If this is undefined, we have some big problems lol
-    let typelocked = "none";
-    if (process[processvar] == undefined) { process[processvar] = {} }
-    if (process[processvar][userid]) {
-        if (process[processvar][userid].keyholder == keyholderid) {
-            // Lost primary keys
-            process[processvar][userid].fumbled = Date.now(); // We might be able to track time with this?
-            typelocked = "keyholder";
-        }
-        else if (process[processvar][userid].clonedKeyholders.includes(keyholderid)) {
-            // Lost a clone. Clones should be destroyed.
-            process[processvar][userid].clonedKeyholders.splice(process[processvar][userid].clonedKeyholders.indexOf(keyholderid), 1)
-            typelocked = "clone";
-        }
-    }
-    if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-    process.readytosave[processvar] = true;
-    return typelocked;
-}
-
 const discardChastityKey = (user, locker) => {
 	if (process.chastity == undefined) {
 		process.chastity = {};
@@ -1693,5 +1661,3 @@ exports.getChastityBraTimelock = getChastityBraTimelock;
 
 exports.swapChastity = swapChastity;
 exports.swapChastityBra = swapChastityBra
-
-exports.discardKey = discardKey;
