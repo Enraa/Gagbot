@@ -236,7 +236,7 @@ let functiontick = async (userID) => {
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
-                        if (f.tags && f.tags.includes(t)) {
+                        if (f.tags && Object.keys(f.tags).includes(t)) {
                             goodtoreturn = false;
                         }
                     })
@@ -244,7 +244,7 @@ let functiontick = async (userID) => {
                 })
                 arr.forEach((w) => {
                     goodtags.forEach((t) => {
-                        if (w.tags && w.tags.includes(t)) {
+                        if (w.tags && Object.keys(w.tags).includes(t)) {
                             arr.push(w) // double the chance to get a thing of that tag
                         }
                     })

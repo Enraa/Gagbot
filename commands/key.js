@@ -54,7 +54,14 @@ module.exports = {
 				.addUserOption((opt) => opt.setName("wearer").setDescription("Whose restraint to give key for?"))
 				.addStringOption((opt) => opt.setName("restraint").setDescription("Which restraint of theirs to give key for?").setAutocomplete(true))
 				.addStringOption((opt) => opt.setName("restrainttype").setDescription("What new restraint to put on them?").setAutocomplete(true)),
-		),
+		)
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName("discardKey")
+                .setDescription("Discard a key you're holding...")
+                .addUserOption((opt) => opt.setName("wearer").setDescription("Whose restraint to discard the key?"))
+                .addStringOption((opt) => opt.setName("restraint").setDescription("Which restraint of theirs to discard?").setAutocomplete(true))
+        ),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		let subcommand = interaction.options.getSubcommand();
@@ -210,7 +217,7 @@ module.exports = {
                         let tagged = false;
                         let i = choicefunc(f.value)
                         tags.forEach((t) => {
-                            if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
+                            if (i && i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
                             else if (i.tags && (i.tags[t])) { tagged = true }
                         })
                         if (!tagged) {
@@ -219,7 +226,33 @@ module.exports = {
                     })
                     interaction.respond(newsorted.slice(0,25))
 				}
-			}
+			} else if (subcommand == "discardkey") {
+                // Note, we only need to know if we can ***unlock*** a restraint to swap it.
+				if (interaction.options.get("restraint")?.focused) {
+					let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+					let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id)
+					let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id)
+					let chastitybrakeyholder = getChastityBra(chosenuserid) (getChastityBra(chosenuserid).keyholder == interaction.user.id)
+
+					let choices = [];
+					if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
+						choices = [{ name: "No Keys Available", value: "nokeys" }];
+					}
+					if (collarkeyholder) {
+						choices.push({ name: "Collar", value: "collar" });
+					}
+					if (chastitykeyholder) {
+						choices.push({ name: "Chastity Belt", value: "chastitybelt" });
+					}
+					if (chastitybrakeyholder) {
+						choices.push({ name: "Chastity Bra", value: "chastitybra" });
+					}
+
+					console.log(interaction.options.get("restraint"));
+
+					await interaction.respond(choices);
+				}
+            }
 		} catch (err) {
 			console.log(err);
 		}
