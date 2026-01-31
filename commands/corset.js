@@ -74,7 +74,7 @@ module.exports = {
 					targetuser: corsetuser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
 					c2: tightness, // corset tightness
-					c3: current?.name ?? "Leather Corset", // current corset
+					c3: getBaseCorset(current?.type)?.name ?? "Leather Corset", // current corset
 					c4: getBaseCorset(type)?.name ?? "Leather Corset", // new corset
 				},
 			};
