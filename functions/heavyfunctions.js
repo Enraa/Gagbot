@@ -71,6 +71,9 @@ const heavytypes = [
 	// Metal Restraints
 	{ name: "Scavenger's Daughter", value: "scavengersdaughter", tags: ["metal"], denialCoefficient: 4 },
 	{ name: "Yoke", value: "yoke", tags: ["metal"], denialCoefficient: 2 },
+    { name: "Handcuffs", value: "handcuffs", tags: ["metal"], denialCoefficient: 2 },
+    { name: "Handcuffs (Irish-8)", value: "handcuffs_irish8", tags: ["metal"], denialCoefficient: 4 },
+    { name: "Handcuffs (Hinged)", value: "handcuffs_hinged", tags: ["metal"], denialCoefficient: 4 },
 	{ name: "Hardlight Cuffs (loose links)", value: "hardlight_looselink", denialCoefficient: 1.5 },
 	{ name: "Hardlight Cuffs (hogtie)", value: "hardlight_hogtie", denialCoefficient: 3 },
 	{ name: "Hardlight Cuffs (strict)", value: "hardlight_strict", denialCoefficient: 4.5 },
