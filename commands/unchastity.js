@@ -196,14 +196,14 @@ module.exports = {
 							if (canAccessChastityBra(chastitywearer.id, interaction.user.id, true).access) {
 								// We have the key to our belt
 								data.key = true;
-								const fumbleResult = getBaseChastity(getChastity(chastitywearer.id).chastitytype).fumble({ userID: chastitywearer.id, keyholderID: interaction.user.id })
+								const fumbleResult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").fumble({ userID: chastitywearer.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled
 									data.fumble = true;
 									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
-										let discardresult = getBaseChastity(getChastity(chastitywearer.id).chastitytype ?? "belt_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })
+										let discardresult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {
@@ -235,14 +235,14 @@ module.exports = {
 							if (canAccessChastityBra(chastitywearer.id, interaction.user.id).access) {
 								// We have their chastity key
 								data.key = true;
-								const fumbleResult = getBaseChastity(getChastity(chastitywearer.id).chastitytype).fumble({ userID: chastitywearer.id, keyholderID: interaction.user.id })
+								const fumbleResult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").fumble({ userID: chastitywearer.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
 									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
-										let discardresult = getBaseChastity(getChastity(chastitywearer.id).chastitytype ?? "belt_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })
+										let discardresult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {
