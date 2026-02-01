@@ -79,9 +79,13 @@ module.exports = {
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
 					c2: tightness, // corset tightness
 					c3: current?.name ?? "Leather Corset", // current corset
-					c4: getBaseCorset(type)?.name ?? "Leather Corset", // new corset
+					c4: getBaseCorset(type)?.name, // new corset
 				},
 			};
+            if (data.textdata.c4 == undefined) {
+                interaction.reply({ content: `Something went wrong with your corset selection. Please try again and choose a corset option.`, flags: MessageFlags.Ephemeral });
+				return;
+            }
 			// REFLECT
 			if (corsetuser.id == process.client.user.id) {
 				data.gagreflect = true;

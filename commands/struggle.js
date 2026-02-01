@@ -178,6 +178,31 @@ module.exports = {
 						interaction.reply(getText(data));
 					}
 				}
+			} else if (chosenopt == "chastitybra" && chastitybondage) {
+				data.chastitybra = true;
+				// Chastity is influenced by heavy bondage, inherently.
+				// Added chance for dextrous fingers if not in mittens, like above with gags
+				if (heavybondage) {
+					// Heavy Bondage is disabling.
+					data.heavy = true;
+					interaction.reply(getText(data));
+				} else {
+					// Because the number of responses vary so much, going to use 33% chance for mitten/finger text
+					data.noheavy = true;
+					if (mittenbondage || Math.random() > 0.5) {
+						// Either mittened, or not using fingers or similar
+						data.nofingers = true;
+						interaction.reply(getText(data));
+					} else if (mittenbondage && Math.random() > 0.5) {
+						// Mittened and random chance!
+						data.mitten = true;
+						interaction.reply(getText(data));
+					} else {
+						// No mittens and ABLE TO USE FINGERS!
+						data.nomitten = true;
+						interaction.reply(getText(data));
+					}
+				}
 			} else if (chosenopt == "head" && headbondage.length > 0) {
 				data.headwear = true;
 				// Headwear is influenced by heavy bondage, inherently.
