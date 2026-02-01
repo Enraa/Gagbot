@@ -1185,25 +1185,25 @@ const texts_struggle = {
 	},
     chastitybra: {
         heavy: [
-            `USER_TAG wriggles USER_THEIR chest, but *obviously* USER_THEY USER_ISARE not going to be able to slip off USER_THEIR VAR_C4 while in a VAR_C1.`,
+            `USER_TAG wriggles USER_THEIR chest, but *obviously* USER_THEY USER_ISARE not going to be able to slip off USER_THEIR VAR_C6 while in a VAR_C1.`,
             `Sighing to USER_THEMSELF, USER_TAG gives up on the hopes of ever fighting the VAR_C4 USER_THEY USER_ISARE wearing.`,
             `Unfortunately, USER_TAG's breasts will have to remain bound because USER_TAG is stuck in a VAR_C1.`
         ],
         noheavy: {
             // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
             nofingers: [
-                `USER_TAG uses USER_THEIR wrists to push USER_THEIR VAR_C4 back and forth on USER_THEIR breasts. It succeeds only in making USER_THEM feel hornier in USER_THEIR chastity!`,
-                `USER_TAG fidgets with USER_THEIR VAR_C4 absentmindedly, but is unable to pull USER_THEIR breasts free from the prison!`,
-                `USER_TAG uses one wrist to squish against the top of USER_THEIR breast in the VAR_C4, but it's still just as inaccessible as before...`
+                `USER_TAG uses USER_THEIR wrists to push USER_THEIR VAR_C6 back and forth on USER_THEIR breasts. It succeeds only in making USER_THEM feel hornier in USER_THEIR chastity!`,
+                `USER_TAG fidgets with USER_THEIR VAR_C6 absentmindedly, but is unable to pull USER_THEIR breasts free from the prison!`,
+                `USER_TAG uses one wrist to squish against the top of USER_THEIR breast in the VAR_C6, but it's still just as inaccessible as before...`
             ],
             // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
             mitten: [
-                `Thinking only of freedom, if at all, USER_TAG bats at the locking mechanism on USER_THEIR VAR_C4, but cannot do much without fingers.`,
-                `USER_TAG imagines having the key to USER_THEIR VAR_C4. Of course, having mittens might make it hard to use but USER_THEIR imagination ran wild anyway.`
+                `Thinking only of freedom, if at all, USER_TAG bats at the locking mechanism on USER_THEIR VAR_C6, but cannot do much without fingers.`,
+                `USER_TAG imagines having the key to USER_THEIR VAR_C6. Of course, having mittens might make it hard to use but USER_THEIR imagination ran wild anyway.`
             ],
             // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
             nomitten: [
-                `USER_TAG gently taps USER_THEIR VAR_C4 on USER_THEIR chest, locked on and sealing away USER_THEIR breasts... if only USER_THEY could touch...`,
+                `USER_TAG gently taps USER_THEIR VAR_C6 on USER_THEIR chest, locked on and sealing away USER_THEIR breasts... if only USER_THEY could touch...`,
                 `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
             ]
         }

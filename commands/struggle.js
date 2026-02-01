@@ -7,7 +7,7 @@ const { getConsent, handleConsent } = require("./../functions/interactivefunctio
 const { getText } = require("./../functions/textfunctions.js");
 const { getHeadwear } = require("../functions/headwearfunctions.js");
 const { getCorset } = require("../functions/corsetfunctions.js");
-const { getChastity, getChastityName } = require("../functions/vibefunctions.js");
+const { getChastity, getChastityBra, getChastityName, getChastityBraName } = require("../functions/vibefunctions.js");
 const { getCollar, getCollarName } = require("../functions/collarfunctions.js");
 
 module.exports = {
@@ -23,6 +23,7 @@ module.exports = {
 			let gagbondage = getGagLast(interaction.user.id);
 			let mittenbondage = getMitten(interaction.user.id);
 			let chastitybondage = getChastity(interaction.user.id);
+            let chastitybrabondage = getChastityBra(interaction.user.id)
 			let headbondage = getHeadwear(interaction.user.id);
 			let corsetbondage = getCorset(interaction.user.id);
 			let collarbondage = getCollar(interaction.user.id);
@@ -39,6 +40,9 @@ module.exports = {
 			}
 			if (chastitybondage) {
 				outopts.push({ name: `Chastity${chastitybondage.chastitytype ? `: ${getChastityName(interaction.user.id)}` : ""}`, value: "chastity" });
+			}
+            if (chastitybrabondage) {
+				outopts.push({ name: `Chastity Bra${chastitybrabondage.chastitytype ? `: ${getChastityBraName(interaction.user.id)}` : ""}`, value: "chastitybra" });
 			}
 			if (headbondage.length > 0) {
 				outopts.push({ name: `Head Restraints`, value: "head" });
@@ -71,6 +75,7 @@ module.exports = {
 			let gagbondage = getGagLast(interaction.user.id);
 			let mittenbondage = getMitten(interaction.user.id);
 			let chastitybondage = getChastity(interaction.user.id);
+            let chastitybrabondage = getChastityBra(interaction.user.id)
 			let headbondage = getHeadwear(interaction.user.id);
 			let corsetbondage = getCorset(interaction.user.id);
 			let collarbondage = getCollar(interaction.user.id);
@@ -86,6 +91,7 @@ module.exports = {
 					c3: getMittenName(interaction.user.id) ?? "mittens",
 					c4: getChastityName(interaction.user.id) ?? "chastity belt",
 					c5: getCollarName(interaction.user.id) ?? "collar",
+                    c6: getChastityBraName(interaction.user.id) ?? "chastity bra"
 				},
 			};
 
@@ -178,7 +184,7 @@ module.exports = {
 						interaction.reply(getText(data));
 					}
 				}
-			} else if (chosenopt == "chastitybra" && chastitybondage) {
+			} else if (chosenopt == "chastitybra" && chastitybrabondage) {
 				data.chastitybra = true;
 				// Chastity is influenced by heavy bondage, inherently.
 				// Added chance for dextrous fingers if not in mittens, like above with gags
