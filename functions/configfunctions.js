@@ -423,7 +423,67 @@ const configoptions = {
 				return false;
 			},
 		},
-		removebondage: {
+        canfindkeys: {
+			name: "Find Keys",
+			desc: "Can you discover misplaced keys that others dropped?",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Keys cannot be picked up*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "You may be able to pick up keys",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+		},
+		publicaccess: {
+			name: "Public Access",
+			desc: "Can you put on a free use collar or enable public access timelocks?",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Public Access is disabled*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+					uname: "PublicAccessDisabled",
+				},
+				{
+					name: "Yes",
+					helptext: "**⚠️ You can select public access options on collars and timelocks!**",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Success,
+					uname: "PublicAccess",
+				},
+			],
+			menutype: "choice",
+			default: "disabled",
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        removebondage: {
 			name: "Prompt to Modify Non-Keyed Bondage",
 			desc: "Should you be prompted for others to **/ungag** you, etc? You must have DMs from this server turned on to utilize this option.",
 			choices: [
@@ -473,37 +533,6 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			},
-		},
-		publicaccess: {
-			name: "Public Access",
-			desc: "Can you put on a free use collar or enable public access timelocks?",
-			choices: [
-				{
-					name: "No",
-					helptext: "*Public Access is disabled*",
-					select_function: (userID) => {
-						return false;
-					},
-					value: "disabled",
-					style: ButtonStyle.Danger,
-					uname: "PublicAccessDisabled",
-				},
-				{
-					name: "Yes",
-					helptext: "**⚠️ You can select public access options on collars and timelocks!**",
-					select_function: (userID) => {
-						return false;
-					},
-					value: "enabled",
-					style: ButtonStyle.Success,
-					uname: "PublicAccess",
-				},
-			],
-			menutype: "choice",
-			default: "disabled",
-			disabled: (userID) => {
-				return false;
-			}, // if true, button is greyed out
 		},
 		revokeconsent: {
 			name: "Revoke Consent",

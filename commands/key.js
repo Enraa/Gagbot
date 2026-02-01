@@ -834,9 +834,9 @@ module.exports = {
 				let data = { 
                     textarray: "texts_key", textdata: { 
                         interactionuser: interaction.user, 
-                        targetuser: wearer 
+                        targetuser: wearer,
+                        c1: discardedhelp
                     },
-                    c1: discardedhelp
                 };
                 data.discardkey = true;
                 let discardedkey = discardKey(wearer.id, interaction.user.id, discardedhelp);
