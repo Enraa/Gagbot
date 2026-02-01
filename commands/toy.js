@@ -120,7 +120,7 @@ module.exports = {
                 data.noheavy = true;
                 if (toyuser == interaction.user) {
                     // self
-                    data.other = true;
+                    data.self = true;
                     if (getSpecificToy(toyuser.id, toytype)) {
                         // toy already on wearer
                         data.toy = true;

@@ -47,7 +47,7 @@ module.exports = {
             let toyuser = interaction.options.getUser("user") ?? interaction.user;
             let toyintensity = interaction.options.getNumber("intensity") ?? 5;
             let toytype = interaction.options.getString("type");
-            if (getToys(toyuser.id) && ((toytype != undefined) || (!getToys(toyuser.id).includes(toytype)))) {
+            if ((toytype == undefined) && (getToys(toyuser)) && (getToys(toyuser)[0] != undefined)) {
                 toytype = getToys(toyuser.id)[0]?.type
             }
             if (toytype == undefined) {

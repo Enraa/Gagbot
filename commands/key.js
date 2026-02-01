@@ -228,31 +228,27 @@ module.exports = {
                     interaction.respond(newsorted.slice(0,25))
 				}
 			} else if (subcommand == "discardkey") {
-                // Note, we only need to know if we can ***unlock*** a restraint to swap it.
-				if (interaction.options.get("restraint")?.focused) {
-					let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-					let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id)
-					let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id)
-					let chastitybrakeyholder = getChastityBra(chosenuserid) (getChastityBra(chosenuserid).keyholder == interaction.user.id)
+                // We need to know if we're holding the primary keys to throw them away. 
+                let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
+                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id)
+                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id)
+                let chastitybrakeyholder = getChastityBra(chosenuserid) (getChastityBra(chosenuserid).keyholder == interaction.user.id)
 
-					let choices = [];
-					if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
-						choices = [{ name: "No Keys Available", value: "nokeys" }];
-					}
-					if (collarkeyholder) {
-						choices.push({ name: "Collar", value: "collar" });
-					}
-					if (chastitykeyholder) {
-						choices.push({ name: "Chastity Belt", value: "chastitybelt" });
-					}
-					if (chastitybrakeyholder) {
-						choices.push({ name: "Chastity Bra", value: "chastitybra" });
-					}
+                let choices = [];
+                if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
+                    choices = [{ name: "No Keys Available", value: "nokeys" }];
+                }
+                if (collarkeyholder) {
+                    choices.push({ name: "Collar", value: "collar" });
+                }
+                if (chastitykeyholder) {
+                    choices.push({ name: "Chastity Belt", value: "chastitybelt" });
+                }
+                if (chastitybrakeyholder) {
+                    choices.push({ name: "Chastity Bra", value: "chastitybra" });
+                }
 
-					console.log(interaction.options.get("restraint"));
-
-					await interaction.respond(choices);
-				}
+                await interaction.respond(choices);
             }
 		} catch (err) {
 			console.log(err);
