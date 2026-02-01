@@ -232,7 +232,7 @@ module.exports = {
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
                 let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id)
                 let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id)
-                let chastitybrakeyholder = getChastityBra(chosenuserid) (getChastityBra(chosenuserid).keyholder == interaction.user.id)
+                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id)
 
                 let choices = [];
                 if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
