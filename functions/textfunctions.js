@@ -1314,6 +1314,8 @@ const texts_struggle = {
 		`USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY_CAP blushUSER_ES a little at the thought~`,
 		`USER_TAG prepares for battle with a sword and flourishes it. USER_THEY_CAP USER_ISARE going to hunt the legendary sHE!`,
 		`USER_TAG sits and looks around patiently because USER_THEY USER_ISARE a **good USER_PRAISEOBJECT!**`,
+		`USER_TAG hears a strange sound, almost like something heavy was sliding across the floor. As USER_THEY turn around USER_THEY are left wondering if that chest has always been there`,
+		`USER_TAG glances around, spotting a strange mechanical looking door with a strange scanning mechanism and keypad. USER_THEY feel a strange mix of arousal and foreboding when thinking about what might lie beyond it, but deep down they have a feeling that if USER_THEY went in it wouldn't be USER_THEM coming back out~`,
 		// 2 hours in chastity
 		{
 			required: (t) => {
