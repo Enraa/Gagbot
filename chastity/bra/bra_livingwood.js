@@ -6,7 +6,7 @@ const { getUserVar, setUserVar } = require("../../functions/usercontext")
 // or every 15 minutes, until the wearer successfully orgasms. 
 //
 // This code is copied from chastity/belt/belt_livingwood.js and should be reviewed. Commented out for now.
-/*
+
 exports.growthCoefficient = (data) => { return 1 }
 exports.decayCoefficient = (data) => { return 0.1 }
 exports.minVibe = (data) => { 
@@ -21,13 +21,16 @@ exports.onFailedOrgasm = function(data) {
     setUserVar(data.userID, "livingwoodvibe", Math.min((this.minVibe() + 1), 20));
 }
 exports.onEquip = (data) => {
-    setUserVar(data.userID, "livingwoodvibe", 0);
-	setUserVar(data.userID, "livingwoodbelt", Date.now());
+    if (getUserVar(data.userID, "livingwoodvibe") == {}) setUserVar(data.userID, "livingwoodvibe", 0);
+    if (getUserVar(data.userID, "livingwoodbelt") == {}) setUserVar(data.userID, "livingwoodbelt", Date.now());
 }
 exports.onUnequip = (data) => {
-    setUserVar(data.userID, "livingwoodvibe", 0);
-	setUserVar(data.userID, "livingwoodbelt", Date.now());
-}*/
+    // Check if user is wearing a Livingwood Belt otherwise Null Out Vars
+    if (getChastity(data.userID).chastitytype.includes("Livingwood")) {
+        setUserVar(data.userID, "livingwoodvibe", {});
+        setUserVar(data.userID, "livingwoodbelt", {});
+    }
+}
 
 // Name
 exports.name = "Livingwood Bra"
