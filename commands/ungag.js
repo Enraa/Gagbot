@@ -17,7 +17,9 @@ module.exports = {
             const focusedValue = interaction.options.getFocused();
             let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
             let worngags = getGags(chosenuserid).map((g) => {
-                return { name: process.gagtypes.find((t) => t.value == g.gagtype).name, value: g.gagtype };
+                if (process.autocompletes.gag.find((t) => t.value == g.gagtype)) {
+                    return { name: process.autocompletes.gag.find((t) => t.value == g.gagtype).name, value: g.gagtype };
+                }
             });
 
             if (focusedValue == "") {

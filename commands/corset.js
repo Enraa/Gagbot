@@ -1,20 +1,60 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getChastity, getVibe, assignVibe, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
+const { getChastity, getVibe, assignVibe, canAccessChastity } = require("./../functions/vibefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { getCorset, assignCorset } = require("./../functions/corsetfunctions.js");
+const { getCorset, assignCorset, getBaseCorset } = require("./../functions/corsetfunctions.js");
 const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { config } = require("../functions/configfunctions.js");
+const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getUserTags } = require("../functions/configfunctions.js");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("corset")
 		.setDescription("Put a corset on someone, shortening their messages")
 		.addUserOption((opt) => opt.setName("user").setDescription("Who to corset?"))
-		.addNumberOption((opt) => opt.setName("intensity").setDescription("How tightly to lace their corset!").setMinValue(1).setMaxValue(10)),
+		.addNumberOption((opt) => opt.setName("intensity").setDescription("How tightly to lace their corset!").setMinValue(1).setMaxValue(10))
+		.addStringOption((opt) => opt.setName("type").setDescription("Which type of corset").setAutocomplete(true)),
+	async autoComplete(interaction) {
+		try {
+			const focusedValue = interaction.options.getFocused();
+			let autocompletes = process.autocompletes.corset;
+			let matches = didYouMean(focusedValue, autocompletes, {
+				matchPath: ["name"],
+				returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+				threshold: 0.2, // Default is 0.4 - this is how much of the word must exist.
+			});
+
+			if (matches.length == 0) {
+				matches = autocompletes;
+			}
+			let tags = getUserTags(interaction.user.id);
+			let newsorted = [];
+			matches.forEach((f) => {
+				let tagged = false;
+				let i = getBaseCorset(f.value);
+				tags.forEach((t) => {
+					if (i.tags && Array.isArray(i.tags) && i.tags.includes(t)) {
+						tagged = true;
+					} else if (i.tags && i.tags[t]) {
+						tagged = true;
+					}
+				});
+				if (!tagged) {
+					newsorted.push(f);
+				} else {
+					newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value });
+				}
+			});
+			interaction.respond(newsorted.slice(0, 25));
+		} catch (err) {
+			console.log(err);
+		}
+	},
 	async execute(interaction) {
 		try {
 			let corsetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
@@ -28,7 +68,9 @@ module.exports = {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			let tightness = interaction.options.getNumber("intensity") ? interaction.options.getNumber("intensity") : 5;
+			const current = getCorset(corsetuser.id);
+			const tightness = interaction.options.getNumber("intensity") ?? current?.tightness ?? 5;
+			const type = interaction.options.getString("type") ?? current?.type ?? "corset_leather";
 			// Build data tree:
 			let data = {
 				textarray: "texts_corset",
@@ -37,14 +79,35 @@ module.exports = {
 					targetuser: corsetuser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
 					c2: tightness, // corset tightness
+					c3: getBaseCorset(current?.type)?.name ?? "Leather Corset", // current corset
+					c4: getBaseCorset(type)?.name, // new corset
 				},
 			};
+			if (data.textdata.c4 == undefined) {
+				interaction.reply({ content: `Something went wrong with your corset selection. Please try again and choose a corset option.`, flags: MessageFlags.Ephemeral });
+				return;
+			}
 			// REFLECT
 			if (corsetuser.id == process.client.user.id) {
 				data.gagreflect = true;
 				data.textdata.interactionuser = process.client.user;
 				data.textdata.targetuser = interaction.user;
 				interaction.reply({ content: `Gagbot recognizes what you're attempting to do. Cheeky.`, flags: MessageFlags.Ephemeral });
+				return;
+			}
+			let blocked = false;
+			if (type) {
+				let tags = getUserTags(corsetuser.id);
+				let i = getBaseCorset(type);
+				tags.forEach((t) => {
+					if (i && i.tags && i.tags.includes(t) && wearableuser != interaction.user) {
+						interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral });
+						blocked = true;
+						return;
+					}
+				});
+			}
+			if (blocked) {
 				return;
 			}
 			if (getHeavy(interaction.user.id)) {
@@ -78,7 +141,7 @@ module.exports = {
 				if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
 					// User tries to modify the corset settings for someone in chastity that they do have the key for
 					data.key = true;
-					const fumbleResult = rollKeyFumble(interaction.user.id, corsetuser.id, 2);
+					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id });
 					if (fumbleResult > 0) {
 						// User fumbles with the key due to their arousal and frustration
 						data.fumble = true;
@@ -88,30 +151,31 @@ module.exports = {
 							if (corsetuser == interaction.user) {
 								// User tries to modify their own corset settings while in chastity
 								data.self = true;
-								if (getCorset(corsetuser.id)) {
+								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
 							} else {
-								if (getCorset(corsetuser.id)) {
+								data.other = true;
+								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
@@ -121,7 +185,7 @@ module.exports = {
 							if (corsetuser == interaction.user) {
 								// User tries to modify their own corset settings while in chastity
 								data.self = true;
-								if (getCorset(corsetuser.id)) {
+								if (current) {
 									// User already has a corset on
 									data.corset = true;
 									interaction.reply(getText(data));
@@ -133,7 +197,7 @@ module.exports = {
 							} else {
 								// User tries to modify another user's vibe settings
 								data.other = true;
-								if (getCorset(corsetuser.id)) {
+								if (current) {
 									// User already has a corset on
 									data.corset = true;
 									interaction.reply(getText(data));
@@ -149,40 +213,44 @@ module.exports = {
 						if (corsetuser == interaction.user) {
 							data.self = true;
 							// User tries to modify their own corset settings while in chastity
-							if (getCorset(corsetuser.id)) {
-								data.corset = true;
+							if (current) {
 								// User already has a corset on
-								if (getCorset(corsetuser.id).tightness < tightness) {
-									// Tightening the corset!
-									data.tighter = true;
+								if (type != current.type) {
+									data.newcorset = true;
 									interaction.reply(getText(data));
-									assignCorset(corsetuser.id, tightness);
+									assignCorset(corsetuser.id, type, tightness);
 								} else {
-									// Loosening the corset!
-									data.looser = true;
-									interaction.reply(getText(data));
-									assignCorset(corsetuser.id, tightness);
+									data.corset = true;
+									if (current.tightness < tightness) {
+										// Tightening the corset!
+										data.tighter = true;
+										interaction.reply(getText(data));
+										assignCorset(corsetuser.id, type, tightness);
+									} else {
+										// Loosening the corset!
+										data.looser = true;
+										interaction.reply(getText(data));
+										assignCorset(corsetuser.id, type, tightness);
+									}
 								}
 							} else {
 								// Putting ON a corset!
 								data.nocorset = true;
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, tightness);
+								assignCorset(corsetuser.id, type, tightness);
 							}
 						} else {
 							// User tries to modify another user's vibe settings
 							data.other = true;
-							if (getCorset(corsetuser.id)) {
-								data.corset = true;
+							if (current) {
 								// User already has a corset on
-								if (getCorset(corsetuser.id).tightness < tightness) {
-									// Tightening the corset!
-									data.tighter = true;
+								if (type != current.type) {
+									data.newcorset = true;
 									// Now lets make sure the wearer wants that.
 									if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
 										// Allowed immediately, lets go
 										interaction.reply(getText(data));
-										assignCorset(corsetuser.id, tightness, interaction.user.id);
+										assignCorset(corsetuser.id, type, tightness, interaction.user.id);
 									} else {
 										// We need to ask first.
 										let datatogeneric = Object.assign({}, data.textdata);
@@ -192,24 +260,53 @@ module.exports = {
 											async (res) => {
 												await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 												await interaction.followUp(getText(data));
-												assignCorset(corsetuser.id, tightness, interaction.user.id);
+												assignCorset(corsetuser.id, type, tightness, interaction.user.id);
 											},
 											async (rej) => {
 												await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
 											},
 										);
 									}
-								} else {
-									// Loosening the corset!
-									data.looser = true;
 									interaction.reply(getText(data));
-									assignCorset(corsetuser.id, tightness);
+									assignCorset(corsetuser.id, type, tightness);
+								} else {
+									data.corset = true;
+									if (current.tightness < tightness) {
+										// Tightening the corset!
+										data.tighter = true;
+										// Now lets make sure the wearer wants that.
+										if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+											// Allowed immediately, lets go
+											interaction.reply(getText(data));
+											assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+										} else {
+											// We need to ask first.
+											let datatogeneric = Object.assign({}, data.textdata);
+											datatogeneric.c1 = "corset";
+											interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
+											let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset", true).then(
+												async (res) => {
+													await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
+													await interaction.followUp(getText(data));
+													assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+												},
+												async (rej) => {
+													await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
+												},
+											);
+										}
+									} else {
+										// Loosening the corset!
+										data.looser = true;
+										interaction.reply(getText(data));
+										assignCorset(corsetuser.id, type, tightness);
+									}
 								}
 							} else {
 								// Putting ON a corset!
 								data.nocorset = true;
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, tightness);
+								assignCorset(corsetuser.id, type, tightness);
 							}
 						}
 					}
@@ -221,7 +318,7 @@ module.exports = {
 					if (corsetuser == interaction.user) {
 						// User tries to modify their own corset settings while in chastity
 						data.self = true;
-						if (getCorset(corsetuser.id)) {
+						if (current) {
 							// User already has a corset on
 							data.corset = true;
 							interaction.reply(getText(data));
@@ -242,39 +339,43 @@ module.exports = {
 				if (corsetuser == interaction.user) {
 					// User tries to add a corset to themselves
 					data.self = true;
-					if (getCorset(corsetuser.id)) {
+					if (current) {
 						// User tries to modify their own corset settings while not in chastity.
-						data.corset = true;
-						if (getCorset(corsetuser.id).tightness < tightness) {
-							// User is tightening the corset
-							data.tighten = true;
+						if (type != current.type) {
+							data.newcorset = true;
 							interaction.reply(getText(data));
-							assignCorset(corsetuser.id, tightness);
+							assignCorset(corsetuser.id, type, tightness);
 						} else {
-							// Loosening the corset
-							data.loosen = true;
-							interaction.reply(getText(data));
-							assignCorset(corsetuser.id, tightness);
+							data.corset = true;
+							if (current.tightness < tightness) {
+								// User is tightening the corset
+								data.tighten = true;
+								interaction.reply(getText(data));
+								assignCorset(corsetuser.id, type, tightness);
+							} else {
+								// Loosening the corset
+								data.loosen = true;
+								interaction.reply(getText(data));
+								assignCorset(corsetuser.id, type, tightness);
+							}
 						}
 					} else {
 						data.nocorset = true;
 						interaction.reply(getText(data));
-						assignCorset(corsetuser.id, tightness);
+						assignCorset(corsetuser.id, type, tightness);
 					}
 				} else {
 					data.other = true;
 					// User tries to modify another user's vibe settings
-					if (getCorset(corsetuser.id)) {
+					if (current) {
 						// User tries to modify their someone else's corset while they're not in chastity
-						data.corset = true;
-						if (getCorset(corsetuser.id).tightness < tightness) {
-							// Tightening
-							data.tighten = true;
+						if (type != current.type) {
+							data.newcorset = true;
 							// Now lets make sure the wearer wants that.
 							if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
 								// Allowed immediately, lets go
 								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, tightness, interaction.user.id);
+								assignCorset(corsetuser.id, type, tightness, interaction.user.id);
 							} else {
 								// We need to ask first.
 								let datatogeneric = Object.assign({}, data.textdata);
@@ -284,7 +385,7 @@ module.exports = {
 									async (res) => {
 										await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 										await interaction.followUp(getText(data));
-										assignCorset(corsetuser.id, tightness, interaction.user.id);
+										assignCorset(corsetuser.id, type, tightness, interaction.user.id);
 									},
 									async (rej) => {
 										await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
@@ -292,39 +393,77 @@ module.exports = {
 								);
 							}
 						} else {
-							// Loosening
-							data.loosen = true;
-							// Now lets make sure the wearer wants that.
-							if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
-								// Allowed immediately, lets go
-								interaction.reply(getText(data));
-								assignCorset(corsetuser.id, tightness, interaction.user.id);
+							data.corset = true;
+							if (current.tightness < tightness) {
+								// Tightening
+								data.tighten = true;
+								// Now lets make sure the wearer wants that.
+								if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+									// Allowed immediately, lets go
+									interaction.reply(getText(data));
+									assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+								} else {
+									// We need to ask first.
+									let datatogeneric = Object.assign({}, data.textdata);
+									datatogeneric.c1 = "corset";
+									interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
+									let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+										async (res) => {
+											await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
+											await interaction.followUp(getText(data));
+											assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+										},
+										async (rej) => {
+											await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
+										},
+									);
+								}
 							} else {
-								// We need to ask first.
-								let datatogeneric = Object.assign({}, data.textdata);
-								datatogeneric.c1 = "corset";
-								interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-								let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
-									async (res) => {
-										await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
-										await interaction.followUp(getText(data));
-										assignCorset(corsetuser.id, tightness, interaction.user.id);
-									},
-									async (rej) => {
-										await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
-									},
-								);
+								// Loosening
+								data.loosen = true;
+								// Now lets make sure the wearer wants that.
+								if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+									// Allowed immediately, lets go
+									interaction.reply(getText(data));
+									assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+								} else {
+									// We need to ask first.
+									let datatogeneric = Object.assign({}, data.textdata);
+									datatogeneric.c1 = "corset";
+									interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
+									let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+										async (res) => {
+											await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
+											await interaction.followUp(getText(data));
+											assignCorset(corsetuser.id, type, tightness, interaction.user.id);
+										},
+										async (rej) => {
+											await interaction.editReply(getTextGeneric("changebind_decline", datatogeneric));
+										},
+									);
+								}
 							}
 						}
 					} else {
 						data.nocorset = true;
 						interaction.reply(getText(data));
-						assignCorset(corsetuser.id, tightness);
+						assignCorset(corsetuser.id, type, tightness);
 					}
 				}
 			}
 		} catch (err) {
 			console.log(err);
 		}
+	},
+	async help(userid, page) {
+		let restrictedtext = getCorset(userid) && getChastity(userid) && !canAccessChastity(userid, userid).access ? `***You cannot change or remove your corset currently***\n` : "";
+		let overviewtext = `## Corset
+### Usage: /corset (user) (tightness)
+### Remove:  /uncorset (user)
+-# Restricted if in a chastity belt without the key
+${restrictedtext}
+Places a tight **Corset** on the user, which limits their speech in various ways, reducing their ability to speak in capital letters until they are eventually only able to speak a few words at a time. **Breath** is consumed with each syllable and regenerates over time, slower at higher **Tightness** levels. When out of breath, the user is unable to speak.`;
+		overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext);
+		return overviewtextdisplay;
 	},
 };

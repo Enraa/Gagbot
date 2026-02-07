@@ -1,6 +1,7 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
 const { getChastity, getArousal } = require("./vibefunctions.js");
+const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 
 const texts_chastity = {
 	chastitybelt: {
@@ -245,7 +246,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Wooden Horse");
 							},
-							text: `TARGET_TAG helps USER_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
+							text: `USER_TAG helps TARGET_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
 						},
 						{
 							only: (t) => {
@@ -354,6 +355,12 @@ const texts_collarequip = {
 							},
 							text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C3! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
 						},
+                        {
+                            only: (t) => {
+                                return t.c3.includes("Hands-off Blouse");
+                            },
+                            text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
+                        },
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -390,8 +397,8 @@ const texts_collarequip = {
 
 const texts_corset = {
 	heavy: {
-		self: { chastity: [`USER_TAG nudges a corset with USER_THEIR knee, but USER_THEIR VAR_C1 prevents USER_THEM from even trying to get the corset around USER_THEIR waist, to say nothing of USER_THEIR chastity belt in the way!`], nochastity: [`USER_TAG looks at a corset, but USER_THEY USER_ISARE is still tightly bound in a VAR_C1 and can't effectively hold the laces!`] },
-		other: { chastity: [`USER_TAG brushes a corset with USER_THEIR chin towards TARGET_TAG but USER_THEY can't put it on TARGET_THEM because bound arms and unyielding steel chastity belts make it hard to manipulate corsets!`], nochastity: [`USER_TAG bumps into a corset with USER_THEIR hip. Sadly, because hips don't have fingers, TARGET_TAG cannot be corseted! If only USER_THEY USER_WERENT in an unyielding VAR_C1, USER_THEY might be able to bind TARGET_THEM`] },
+		self: { chastity: [`USER_TAG nudges a VAR_C4 with USER_THEIR knee, but USER_THEIR VAR_C1 prevents USER_THEM from even trying to get the VAR_C4 around USER_THEIR waist, to say nothing of USER_THEIR chastity belt in the way!`], nochastity: [`USER_TAG looks at a VAR_C4, but USER_THEY USER_ISARE is still tightly bound in a VAR_C1 and can't effectively hold the laces!`] },
+		other: { chastity: [`USER_TAG brushes a VAR_C4 with USER_THEIR chin towards TARGET_TAG but USER_THEY can't put it on TARGET_THEM because bound arms and unyielding steel chastity belts make it hard to manipulate corsets!`], nochastity: [`USER_TAG bumps into a VAR_C4 with USER_THEIR hip. Sadly, because hips don't have fingers, TARGET_TAG cannot be corseted! If only USER_THEY USER_WERENT in an unyielding VAR_C1, USER_THEY might be able to bind TARGET_THEM`] },
 	},
 	noheavy: {
 		chastity: {
@@ -399,40 +406,44 @@ const texts_corset = {
 				fumble: {
 					discard: {
 						self: {
-							corset: { keyholder: [`USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so USER_THEY will remain just as out of breath as before!`], clone: [`USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! The key poofs in smoke as it falls on the floor!`] },
-							nocorset: { keyholder: [`USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! Hopefully USER_THEY can find it soon!`], clone: [`USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! A tiny crack is heard as the cloned key is damaged beyond repair!`] },
+							corset: { keyholder: [`USER_TAG tries to unlock USER_THEIR belt to adjust the VAR_C4 but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so USER_THEY will remain just as out of breath as before!`], clone: [`USER_TAG tries to unlock USER_THEIR belt to adjust the VAR_C4 but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! The key poofs in smoke as it falls on the floor!`] },
+							nocorset: { keyholder: [`USER_TAG tries to unlock USER_THEIR belt to put on a VAR_C4 but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! Hopefully USER_THEY can find it soon!`], clone: [`USER_TAG tries to unlock USER_THEIR belt to put on a VAR_C4 but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! A tiny crack is heard as the cloned key is damaged beyond repair!`] },
 						},
 						other: {
-							corset: { keyholder: [`USER_TAG tries to unlock TARGET_TAG's belt to adjust TARGET_THEIR corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so TARGET_TAG will remain just as out of breath as before!`], clone: [`USER_TAG tries to unlock TARGET_TAG's belt to adjust TARGET_THEIR corset but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! The key vanishes to smoke, dooming TARGET_TAG to remain out of breath.`] },
-							nocorset: { keyholder: [`USER_TAG tries to unlock TARGET_TAG's belt to put a corset on TARGET_THEM, but fumbles with the key so much that it falls on the floor somewhere! Sorry TARGET_TAG!`], clone: [`USER_TAG tries to unlock TARGET_TAG's belt to put a corset on TARGET_THEM, but fumbles with the key so much that it falls on the floor, shattering into a hundred pieces! Sorry TARGET_TAG!`] },
+							corset: { keyholder: [`USER_TAG tries to unlock TARGET_TAG's belt to adjust TARGET_THEIR VAR_C4 but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere so TARGET_TAG will remain just as out of breath as before!`], clone: [`USER_TAG tries to unlock TARGET_TAG's belt to adjust TARGET_THEIR VAR_C4 but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! The key vanishes to smoke, dooming TARGET_TAG to remain out of breath.`] },
+							nocorset: { keyholder: [`USER_TAG tries to unlock TARGET_TAG's belt to put a VAR_C4 on TARGET_THEM, but fumbles with the key so much that it falls on the floor somewhere! Sorry TARGET_TAG!`], clone: [`USER_TAG tries to unlock TARGET_TAG's belt to put a VAR_C4 on TARGET_THEM, but fumbles with the key so much that it falls on the floor, shattering into a hundred pieces! Sorry TARGET_TAG!`] },
 						},
 					},
 					nodiscard: {
-						self: { corset: [`USER_TAG tries to unlock USER_THEIR belt to adjust the corset but fumbles with the key, so USER_THEYLL have to keep taking *short* breaths!`], nocorset: [`USER_TAG tries to unlock USER_THEIR belt to put on a corset but fumbles with the key so TARGET_TAG will remain without one!`] },
-						other: { corset: [`USER_TAG tries to unlock TARGET_TAG's belt to adjust the corset but fumbles with the key so TARGET_THEY will remain just as out of breath as before!`], nocorset: [`USER_TAG tries to unlock TARGET_TAG's belt to put on a corset but fumbles with the key so TARGET_THEY will remain without one!`] },
+						self: { corset: [`USER_TAG tries to unlock USER_THEIR belt to adjust the VAR_C4 but fumbles with the key, so USER_THEYLL have to keep taking *short* breaths!`], nocorset: [`USER_TAG tries to unlock USER_THEIR belt to put on a VAR_C4 but fumbles with the key so TARGET_TAG will remain without one!`] },
+						other: { corset: [`USER_TAG tries to unlock TARGET_TAG's belt to adjust the VAR_C4 but fumbles with the key so TARGET_THEY will remain just as out of breath as before!`], nocorset: [`USER_TAG tries to unlock TARGET_TAG's belt to put on a VAR_C4 but fumbles with the key so TARGET_THEY will remain without one!`] },
 					},
 				},
 				nofumble: {
 					self: {
-						corset: { tighter: [`USER_TAG unlocks USER_THEIR belt, pulling the strings on the corset even tighter! The length of the strings hanging off of the corset is now at VAR_C2! USER_THEY_CAP lockUSER_S USER_THEMSELF back up!`], looser: [`USER_TAG unlocks USER_THEIR belt, carefully loosening the strings on the corset, taking a deep breath as USER_THEY can breathe! The length of the strings hanging off of the corset is now at VAR_C2! USER_THEY_CAP lockUSER_S USER_THEMSELF back up!`] },
-						nocorset: [`USER_TAG unlocks USER_THEIR belt and then puts a corset on USER_THEMSELF, pulling the strings tightly, leaving the length of the strings at VAR_C2! USER_THEY_CAP then lockUSER_S USER_THEMSELF back up!`],
+						corset: { tighter: [`USER_TAG unlocks USER_THEIR belt, pulling the strings on the VAR_C4 even tighter! The length of the strings hanging off of the VAR_C4 is now at VAR_C2! USER_THEY_CAP lockUSER_S USER_THEMSELF back up!`], looser: [`USER_TAG unlocks USER_THEIR belt, carefully loosening the strings on the VAR_C4, taking a deep breath as USER_THEY can breathe! The length of the strings hanging off of the VAR_C4 is now at VAR_C2! USER_THEY_CAP lockUSER_S USER_THEMSELF back up!`] },
+						nocorset: [`USER_TAG unlocks USER_THEIR belt and then puts a VAR_C4 on USER_THEMSELF, pulling the strings tightly, leaving the length of the strings at VAR_C2! USER_THEY_CAP then lockUSER_S USER_THEMSELF back up!`],
+						newcorset: [`USER_TAG unlocks USER_THEIR belt and removes USER_THEIR VAR_C3 and replaces it with a VAR_C4, pulling the strings tightly, leaving the length of the strings at VAR_C2! USER_THEY_CAP then lockUSER_S USER_THEMSELF back up!`]
 					},
 					other: {
-						corset: { tighter: [`USER_TAG unlocks TARGET_TAG's belt, pulling the strings on the corset even tighter! The length of the strings hanging off of the corset is now at VAR_C2! USER_THEY_CAP lockUSER_S TARGET_THEM back up!`], looser: [`USER_TAG unlocks TARGET_TAG's belt, carefully loosening the strings on the corset! The length of the strings hanging off of the corset is now at VAR_C2! USER_THEY_CAP lockUSER_S TARGET_THEM back up!`] },
-						nocorset: [`USER_TAG unlocks TARGET_TAG's belt and then puts a corset on TARGET_THEM, pulling the strings tightly, leaving the length of the strings at VAR_C2! USER_THEY_CAP then lockUSER_S TARGET_THEM back up!`],
+						corset: { tighter: [`USER_TAG unlocks TARGET_TAG's belt, pulling the strings on the VAR_C4 even tighter! The length of the strings hanging off of the VAR_C4 is now at VAR_C2! USER_THEY_CAP lockUSER_S TARGET_THEM back up!`], looser: [`USER_TAG unlocks TARGET_TAG's belt, carefully loosening the strings on the VAR_C4! The length of the strings hanging off of the VAR_C4 is now at VAR_C2! USER_THEY_CAP lockUSER_S TARGET_THEM back up!`] },
+						nocorset: [`USER_TAG unlocks TARGET_TAG's belt and then puts a VAR_C4 on TARGET_THEM, pulling the strings tightly, leaving the length of the strings at VAR_C2! USER_THEY_CAP then lockUSER_S TARGET_THEM back up!`],
+						newcorset: [`USER_TAG unlocks TARGET_TAG's belt and removes TARGET_THEIR VAR_C3 and replaces it with a VAR_C4, pulling the strings tightly, leaving the length of the strings at VAR_C2! USER_THEY_CAP then lockUSER_S TARGET_THEM back up!`],
 					},
 				},
 			},
-			nokey: { self: { corset: [`USER_TAG tugs at USER_THEIR corset, but since USER_THEY can't unlock USER_THEIR chastity belt, USER_THEY will have to tolerate the lightheadedness!`], nocorset: [`USER_TAG dances USER_THEIR fingers on USER_THEIR belt while eying a corset, but USER_THEY won't be able to put it on because USER_THEY can't unlock USER_THEIR chastity belt!`] }, other: [`You do not have the key for TARGET_TAG's chastity belt!`] },
+			nokey: { self: { corset: [`USER_TAG tugs at USER_THEIR VAR_C4, but since USER_THEY can't unlock USER_THEIR chastity belt, USER_THEY will have to tolerate the lightheadedness!`], nocorset: [`USER_TAG dances USER_THEIR fingers on USER_THEIR belt while eying a VAR_C4, but USER_THEY won't be able to put it on because USER_THEY can't unlock USER_THEIR chastity belt!`] }, other: [`You do not have the key for TARGET_TAG's chastity belt!`] },
 		},
 		nochastity: {
 			self: {
-				corset: { tighten: [`USER_TAG grabs the strings on USER_THEIR corset, pulling them even tighter! The length of the strings hanging off of the corset is now at VAR_C2! USER_THEIR_CAP breaths become shallower.`], loosen: [`USER_TAG grabs the strings on USER_THEIR corset, carefully loosening them with a sigh of relief! The length of the strings hanging off of the corset is now at VAR_C2!`] },
-				nocorset: [`USER_TAG wraps a corset around USER_THEIR waist, pulling the strings taut, and then further, leaving the length of the strings at VAR_C2!`],
+				corset: { tighten: [`USER_TAG grabs the strings on USER_THEIR VAR_C4, pulling them even tighter! The length of the strings hanging off of the VAR_C4 is now at VAR_C2! USER_THEIR_CAP breaths become shallower.`], loosen: [`USER_TAG grabs the strings on USER_THEIR VAR_C4, carefully loosening them with a sigh of relief! The length of the strings hanging off of the VAR_C4 is now at VAR_C2!`] },
+				nocorset: [`USER_TAG wraps a VAR_C4 around USER_THEIR waist, pulling the strings taut, and then further, leaving the length of the strings at VAR_C2!`],
+				newcorset: [`USER_TAG removes the VAR_C3 around USER_THEIR waist and replaces it with a VAR_C4, pulling the strings taut, and then further, leaving the length of the strings at VAR_C2!`]
 			},
 			other: {
-				corset: { tighten: [`USER_TAG grabs the strings on TARGET_TAG's corset, bracing with USER_THEIR knee, and pulling them even tighter! The length of the strings hanging off of the corset is now at VAR_C2!`], loosen: [`USER_TAG grabs the strings on TARGET_TAG's corset, tugging on the laces carefully to loosen them a bit! The length of the strings hanging off of the corset is now at VAR_C2!`] },
-				nocorset: [`USER_TAG wraps a corset around TARGET_TAG's waist, pulling the strings taut, and then further, leaving the length of the strings at VAR_C2!`],
+				corset: { tighten: [`USER_TAG grabs the strings on TARGET_TAG's VAR_C4, bracing with USER_THEIR knee, and pulling them even tighter! The length of the strings hanging off of the VAR_C4 is now at VAR_C2!`], loosen: [`USER_TAG grabs the strings on TARGET_TAG's VAR_C4, tugging on the laces carefully to loosen them a bit! The length of the strings hanging off of the VAR_C4 is now at VAR_C2!`] },
+				nocorset: [`USER_TAG wraps a VAR_C4 around TARGET_TAG's waist, pulling the strings taut, and then further, leaving the length of the strings at VAR_C2!`],
+				newcorset: [`USER_TAG removes the VAR_C3 around TARGET_TAG's waist and replaces it with a VAR_C4, pulling the strings taut, and then further, leaving the length of the strings at VAR_C2!`],
 			},
 		},
 	},
@@ -813,6 +824,12 @@ const texts_heavy = {
 			},
 			text: `USER_TAG disturbs a VAR_C2! It snaps open and entangles USER_THEIR arms and legs with its tentacles, dragging USER_THEM inside and slamming shut before sealing with a resounding click!`,
 		},
+        {
+			only: (t) => {
+				return t.c2.includes("Hands-off Blouse");
+			},
+			text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
+		},
 	],
 };
 
@@ -845,6 +862,53 @@ const texts_key = {
 			chastitybra: [`USER_TAG unlocks the little lock on the front of TARGET_TAG's VAR_C1. TARGET_THEIR_CAP chest is free for a brief moment before it is bound once more with a VAR_C2!`],
 		},
 	},
+    discardkey: {
+        self: {
+            keyholder: [
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) < 20;
+                    },
+                    text: `USER_TAG looks one last time at USER_THEIR key to USER_THEIR VAR_C1 and tosses it without a second thought.`,
+                },
+                {
+                    required: (t) => {
+                        return !getHeadwearRestrictions(t.interactionuser.id).canInspect;
+                    },
+                    text: `USER_TAG is unable to see, so USER_THEY toss the key to USER_THEIR VAR_C1 somewhere... Who knows where?`,
+                },
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) > 10;
+                    },
+                    text: `USER_TAG shudders slightly as USER_THEY stareUSER_S at USER_THEIR VAR_C1 key before flinging it off into the void!`,
+                },
+                {
+                    required: (t) => {
+                        return getArousal(t.interactionuser.id) > 20;
+                    },
+                    text: `Desperate to stay helpless and horny, USER_TAG throws USER_THEIR VAR_C1 key off into the distance!`,
+                },
+            ],
+            none: [
+                `USER_TAG tries to throw away USER_THEIR key... but a mysterious entity stops USER_THEM!? (this is a bug, report)`
+            ]
+        },
+        other: {
+            keyholder: [
+                `USER_TAG smirks at TARGET_TAG before tossing TARGET_THEIR VAR_C1 key off into the nether.`,
+                {
+                    required: (t) => {
+                        return !getHeadwearRestrictions(t.targetuser.id).canInspect;
+                    },
+                    text: `USER_TAG taunts TARGET_TAG with the key for a moment, dangling it in front of TARGET_THEIR eyes before flinging it away.`,
+                }
+            ],
+            none: [
+                `USER_TAG tries to throw away TARGET_TAG's key... but a mysterious entity stops USER_THEM!? (this is a bug, report)`
+            ]
+        }
+    }
 };
 
 // This follows an inconsistent flat structure - consider reworking in the future.
@@ -1131,6 +1195,31 @@ const texts_struggle = {
 			],
 		},
 	},
+    chastitybra: {
+        heavy: [
+            `USER_TAG wriggles USER_THEIR chest, but *obviously* USER_THEY USER_ISARE not going to be able to slip off USER_THEIR VAR_C6 while in a VAR_C1.`,
+            `Sighing to USER_THEMSELF, USER_TAG gives up on the hopes of ever fighting the VAR_C4 USER_THEY USER_ISARE wearing.`,
+            `Unfortunately, USER_TAG's breasts will have to remain bound because USER_TAG is stuck in a VAR_C1.`
+        ],
+        noheavy: {
+            // Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
+            nofingers: [
+                `USER_TAG uses USER_THEIR wrists to push USER_THEIR VAR_C6 back and forth on USER_THEIR breasts. It succeeds only in making USER_THEM feel hornier in USER_THEIR chastity!`,
+                `USER_TAG fidgets with USER_THEIR VAR_C6 absentmindedly, but is unable to pull USER_THEIR breasts free from the prison!`,
+                `USER_TAG uses one wrist to squish against the top of USER_THEIR breast in the VAR_C6, but it's still just as inaccessible as before...`
+            ],
+            // In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
+            mitten: [
+                `Thinking only of freedom, if at all, USER_TAG bats at the locking mechanism on USER_THEIR VAR_C6, but cannot do much without fingers.`,
+                `USER_TAG imagines having the key to USER_THEIR VAR_C6. Of course, having mittens might make it hard to use but USER_THEIR imagination ran wild anyway.`
+            ],
+            // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
+            nomitten: [
+                `USER_TAG gently taps USER_THEIR VAR_C6 on USER_THEIR chest, locked on and sealing away USER_THEIR breasts... if only USER_THEY could touch...`,
+                `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
+            ]
+        }
+    },
 	headwear: {
 		heavy: [`USER_TAG rubs USER_THEIR face against the wall, trying to scoot the things on USER_THEIR head off, but can't without arms.`, `USER_TAG tugs against USER_THEIR VAR_C1 so USER_THEY can take off USER_THEIR head gear, but the restraint holds firm!`, `USER_TAG kneels and tries to rub USER_THEIR head gear off on the floor. It looks cute, but the head gear stays on as if nothing happened.`],
 		noheavy: {
@@ -1264,6 +1353,17 @@ const texts_toy = {
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips over towards a VAR_C2, but can't slip it in because USER_THEY USER_HAVE no hands to work with!`
                 ],
+                "Wand": [
+                    `USER_TAG squirms with USER_THEIR VAR_C1, but can't reach the buttons on a VAR_C2 to pleasure USER_THEMSELF.`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off...`,
+                    }
+                ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
                 ]
@@ -1274,6 +1374,17 @@ const texts_toy = {
                 ],
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips over towards a VAR_C2 despite USER_THEIR VAR_C1, but USER_THEIR chastity belt prevents USER_THEM from putting the toy inside anyway.`
+                ],
+                "Wand": [
+                    `USER_TAG squirms with USER_THEIR VAR_C1, but can't get a grip on a VAR_C2 to pleasure USER_THEMSELF. (this is a bug, please report)`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off... (this is a bug, please report)`,
+                    }
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to add it! (This is a bug, report)`
@@ -1288,6 +1399,17 @@ const texts_toy = {
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips over towards a VAR_C2, but can't slip it into TARGET_TAG because USER_THEY USER_HAVE no hands to work with!`
                 ],
+                "Wand": [
+                    `USER_TAG squirms with USER_THEIR VAR_C1, but can't get a grip on a VAR_C2 to pleasure TARGET_TAG!`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG bats around a piece of ice, but can't fanagle it onto TARGET_TAG to cool TARGET_THEM off...`,
+                    }
+                ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
                 ]
@@ -1298,6 +1420,9 @@ const texts_toy = {
                 ],
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips over towards a VAR_C2 despite USER_THEIR VAR_C1, but TARGET_TAG's chastity belt prevents USER_THEM from putting the toy inside anyway.`
+                ],
+                "Wand": [
+                    `USER_TAG squirms with USER_THEIR VAR_C1, but can't get a grip on a VAR_C2 to pleasure TARGET_TAG! (this is a bug, please report!)`
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to TARGET_TAG, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to add it! (This is a bug, report)`
@@ -1346,6 +1471,19 @@ const texts_toy = {
                                 `USER_TAG puts the key in USER_THEIR belt, unlocking it and adjusting the VAR_C2 to VAR_C3 power! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
                             ]
                         },
+                        "Wand": {
+                            nofumble: [
+                                `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY continue to rock USER_THEIR hips while holding it to USER_THEIR crotch!`
+                            ]
+                        },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1372,6 +1510,17 @@ const texts_toy = {
                         "Vibrator": [
                             `USER_TAG tries as USER_THEY might, but is unable to unlock USER_THEIR chastity belt to adjust USER_THEIR VAR_C2.`
                         ],
+                        "Wand": [
+                            `USER_TAG grabs the VAR_C2 but can't change it for some reason... Huh. (This is a bug, report)!`
+                        ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to place some ice but... can't? (this is a bug, please report)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to adjust USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1383,6 +1532,17 @@ const texts_toy = {
                     ],
                     "Vibrator": [
                         `USER_TAG taps a button on the VAR_C2 USER_THEY USER_ISARE wearing! It vibrates at a strength of VAR_C3!`
+                    ],
+                    "Wand": [
+                        `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY continue to rock USER_THEIR hips while holding it to USER_THEIR crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
+                        }
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting USER_THEIR VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -1428,6 +1588,19 @@ const texts_toy = {
                                 `USER_TAG puts the key in USER_THEIR belt, unlocking it and adding a VAR_C2, turned up to VAR_C3! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
                             ]
                         },
+                        "Wand": {
+                            nofumble: [
+                                `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into USER_THEIR crotch!`
+                            ]
+                        },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1454,6 +1627,17 @@ const texts_toy = {
                         "Vibrator": [
                             `USER_TAG tries as USER_THEY might, but is unable to unlock USER_THEIR chastity belt to add a VAR_C2.`
                         ],
+                        "Wand": [
+                            `USER_TAG grabs a VAR_C2 but can't apply it for some reason... Huh. (This is a bug, report)!`
+                        ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG takes a piece of ice to apply to USER_THEMSELF, but can't? (This is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to add a VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1465,6 +1649,17 @@ const texts_toy = {
                     ],
                     "Vibrator": [
                         `USER_TAG grabs a VAR_C2 and inserts it into USER_THEMSELF at VAR_C3!`
+                    ],
+                    "Wand": [
+                        `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into USER_THEIR crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
+                        }
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting on a VAR_C2 at VAR_C3 power! (This is a bug, report!)`
@@ -1512,6 +1707,19 @@ const texts_toy = {
                                 `USER_TAG puts the key in TARGET_TAG's belt, unlocking it and adjusting the VAR_C2 to VAR_C3 power! USER_THEY_CAP then closeUSER_S and lockUSER_S TARGET_THEM back up.`
                             ]
                         },
+                        "Wand": {
+                            nofumble: [
+                                `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY continue holding it against TARGET_TAG's crotch!`
+                            ]
+                        },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1538,6 +1746,17 @@ const texts_toy = {
                         "Vibrator": [
                             `USER_TAG tries as USER_THEY might, but is unable to unlock TARGET_TAG's chastity belt to adjust USER_THEIR VAR_C2.`
                         ],
+                        "Wand": [
+                            `USER_TAG grabs the VAR_C2 on TARGET_TAG but can't change it for some reason... Huh. (This is a bug, report)!`
+                        ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG grabs a new piece of ice to put on TARGET_TAG, but can't because of unforeseen magic. (this is a bug, report)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to adjust TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1549,6 +1768,17 @@ const texts_toy = {
                     ],
                     "Vibrator": [
                         `USER_TAG taps a button on the VAR_C2 TARGET_TAG is wearing! It vibrates at a strength of VAR_C3!`
+                    ],
+                    "Wand": [
+                        `USER_TAG grabs the VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as TARGET_TAG continues to rock TARGET_THEIR hips while holding it to TARGET_THEIR crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
+                        }
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting TARGET_TAG's VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -1594,6 +1824,19 @@ const texts_toy = {
                                 `USER_TAG puts the key in TARGET_TAG's belt, unlocking it and adding a VAR_C2, turned up to VAR_C3! USER_THEY_CAP then closeUSER_S and lockUSER_S TARGET_THEM back up.`
                             ]
                         },
+                        "Wand": {
+                            nofumble: [
+                                `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY feverishly shoveUSER_S it into TARGET_TAG's crotch!`
+                            ]
+                        },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -1620,6 +1863,17 @@ const texts_toy = {
                         "Vibrator": [
                             `USER_TAG tries as USER_THEY might, but is unable to unlock TARGET_TAG's chastity belt to add a VAR_C2.`
                         ],
+                        "Wand": [
+                            `USER_TAG grabs a VAR_C2 but can't apply it to TARGET_TAG for some reason... Huh. (This is a bug, report)!`
+                        ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to place a piece of ice on TARGET_TAG, but can't! (this is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to add a VAR_C2 to TARGET_TAG, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -1631,6 +1885,17 @@ const texts_toy = {
                     ],
                     "Vibrator": [
                         `USER_TAG grabs a VAR_C2 and inserts it into TARGET_TAG! It vibrates at VAR_C3!`
+                    ],
+                    "Wand": [
+                        `USER_TAG grabs a VAR_C2 and clicks a button. It vibrates brilliantly at VAR_C3 as USER_THEY lustfully shoveUSER_S it into TARGET_TAG's crotch!`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
+                        }
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting a VAR_C2 on TARGET_TAG at VAR_C3! (This is a bug, report!)`
@@ -1766,12 +2031,12 @@ const texts_uncollar = {
 const texts_uncorset = {
 	heavy: {
 		self: {
-			corset: { chastity: [`Since USER_THEY USER_DOESNT have arms, USER_TAG wiggles USER_THEIR torso a little bit, trying to slink off USER_THEIR corset, but USER_THEIR chastity belt is in the way.`], nochastity: [`USER_TAG wriggles in USER_THEIR VAR_C1, but without arms, USER_THEY can't easily undo the laces of USER_THEIR corset to take it off!`] },
+			corset: { chastity: [`Since USER_THEY USER_DOESNT have arms, USER_TAG wiggles USER_THEIR torso a little bit, trying to slink off USER_THEIR VAR_C2, but USER_THEIR chastity belt is in the way.`], nochastity: [`USER_TAG wriggles in USER_THEIR VAR_C1, but without arms, USER_THEY can't easily undo the laces of USER_THEIR VAR_C2 to take it off!`] },
 			// Ephemeral
 			nocorset: [`You aren't wearing a corset, but even if you were, you wouldn't be able to take it off!`],
 		},
 		other: {
-			corset: { chastity: [`USER_TAG tugs against USER_THEIR VAR_C1, but USER_THEY can't really get a good grasp of TARGET_TAG's corset strings behind TARGET_THEIR chastity belt!`], nochastity: [`Maybe in another time, USER_TAG might have been able to help TARGET_TAG out of TARGET_THEIR corset, but having no arms makes it hard.`] },
+			corset: { chastity: [`USER_TAG tugs against USER_THEIR VAR_C1, but USER_THEY can't really get a good grasp of TARGET_TAG's VAR_C2 strings behind TARGET_THEIR chastity belt!`], nochastity: [`Maybe in another time, USER_TAG might have been able to help TARGET_TAG out of TARGET_THEIR VAR_C2, but having no arms makes it hard.`] },
 			// Ephemeral
 			nocorset: [`TARGET_TAG isn't wearing a corset, but you wouldn't be able to remove it anyway!`],
 		},
@@ -1783,16 +2048,16 @@ const texts_uncorset = {
 					key: {
 						fumble: {
 							discard: {
-								keyholder: [`USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR corset, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! USER_THEY_CAP will have to remain corseted!`],
-								clone: [`USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR corset, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! A brilliant light coming from the clear floor indicates USER_THEY will have to remain corseted!`],
+								keyholder: [`USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR VAR_C2, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! USER_THEY_CAP will have to remain corseted!`],
+								clone: [`USER_TAG tries to unlock USER_THEIR belt to remove USER_THEIR VAR_C2, but fumbles with the key so much with the key that USER_THEY dropUSER_S it somewhere! A brilliant light coming from the clear floor indicates USER_THEY will have to remain corseted!`],
 							},
-							nodiscard: [`USER_TAG shakily tries to unlock USER_THEIR belt, but the key keeps slipping and not going into the mechanism. USER_THEY will have to leave USER_THEIR corset alone until USER_THEY calm down!`],
+							nodiscard: [`USER_TAG shakily tries to unlock USER_THEIR belt, but the key keeps slipping and not going into the mechanism. USER_THEY will have to leave USER_THEIR VAR_C2 alone until USER_THEY calm down!`],
 						},
-						nofumble: [`USER_TAG unlocks USER_THEIR chastity belt briefly, undoing the laces of the corset USER_THEY USER_ISARE wearing and pulling it off of USER_THEIR waist! USER_THEY_CAP then carefully lockUSER_S USER_THEMSELF back up!`],
+						nofumble: [`USER_TAG unlocks USER_THEIR chastity belt briefly, undoing the laces of the VAR_C2 USER_THEY USER_ISARE wearing and pulling it off of USER_THEIR waist! USER_THEY_CAP then carefully lockUSER_S USER_THEMSELF back up!`],
 					},
-					nokey: [`USER_TAG tugs at USER_THEIR chastity belt to try to remove USER_THEIR corset, but the locking mechanism holds firm!`],
+					nokey: [`USER_TAG tugs at USER_THEIR chastity belt to try to remove USER_THEIR VAR_C2, but the locking mechanism holds firm!`],
 				},
-				nochastity: [`USER_TAG carefully undoes the laces and USER_THEIR corset, unwrapping it from USER_THEIR waist. USER_THEY_CAP breatheUSER_S a *huge* breath of relief!`],
+				nochastity: [`USER_TAG carefully undoes the laces and USER_THEIR VAR_C2, unwrapping it from USER_THEIR waist. USER_THEY_CAP breatheUSER_S a *huge* breath of relief!`],
 			},
 			// Ephemeral
 			nocorset: [`You aren't wearing a corset!`],
@@ -1802,16 +2067,16 @@ const texts_uncorset = {
 				chastity: {
 					key: {
 						fumble: {
-							discard: { keyholder: [`USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR corset but the key slips in USER_THEIR careless horniness. Despite USER_THEIR best efforts, the key seems to have disappeared.`], clone: [`USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR corset but the key slips in USER_THEIR careless horniness, falling on the floor and chipping. The clone is useless now.`] },
-							nodiscard: [`USER_TAG shakily tries to unlock TARGET_TAG's chastity belt to get at TARGET_THEIR corset, but the key keeps slipping. Fortunately, it wasn't lost, but USER_THEY need to calm down first!`],
+							discard: { keyholder: [`USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR VAR_C2 but the key slips in USER_THEIR careless horniness. Despite USER_THEIR best efforts, the key seems to have disappeared.`], clone: [`USER_TAG tries to unlock TARGET_TAG's chastity belt to remove TARGET_THEIR VAR_C2 but the key slips in USER_THEIR careless horniness, falling on the floor and chipping. The clone is useless now.`] },
+							nodiscard: [`USER_TAG shakily tries to unlock TARGET_TAG's chastity belt to get at TARGET_THEIR VAR_C2, but the key keeps slipping. Fortunately, it wasn't lost, but USER_THEY need to calm down first!`],
 						},
-						nofumble: [`USER_TAG unlocks TARGET_TAG's chastity belt, then removes TARGET_THEIR corset! While TARGET_THEY TARGET_ISARE breathing fresh air again, USER_THEY lockUSER_S TARGET_THEM back in TARGET_THEIR chastity belt!`],
+						nofumble: [`USER_TAG unlocks TARGET_TAG's chastity belt, then removes TARGET_THEIR VAR_C2! While TARGET_THEY TARGET_ISARE breathing fresh air again, USER_THEY lockUSER_S TARGET_THEM back in TARGET_THEIR chastity belt!`],
 					},
-					public: [`USER_TAG uses the public access key to unlock TARGET_TAG's chastity belt, removing TARGET_THEIR corset, and then clicking the lock back shut!`],
+					public: [`USER_TAG uses the public access key to unlock TARGET_TAG's chastity belt, removing TARGET_THEIR VAR_C2, and then clicking the lock back shut!`],
 					// Ephemeral
 					nokey: [`You don't have the key for TARGET_TAG's chastity belt!`],
 				},
-				nochastity: [`USER_TAG carefully undoes the laces on TARGET_TAG's beautiful corset, loosening it until it finally falls off of TARGET_THEIR waist!`],
+				nochastity: [`USER_TAG carefully undoes the laces on TARGET_TAG's beautiful VAR_C2, loosening it until it finally falls off of TARGET_THEIR waist!`],
 			},
 			// Ephemeral
 			nocorset: [`TARGET_TAG is not wearing a corset!`],
@@ -1999,7 +2264,7 @@ const texts_unmitten = {
     },
 	// Idk why the structure was like this - Ephemeral
 	otherother: {
-        other: [`USER_TAG is not wearing mittens!`],
+        other: [`TARGET_TAG is not wearing mittens!`],
         self: [`You aren't wearing mittens!`]
     }
 };
@@ -2014,6 +2279,17 @@ const texts_untoy = {
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips to take off USER_THEIR VAR_C2, but can't because USER_THEY USER_HAVE no hands to work with!`
                 ],
+                "Wand": [
+                    `USER_TAG twists USER_THEIR thighs slightly, but can't click the button on USER_THEIR VAR_C2 to turn it off!`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice on USER_THEIR crotch... but can't grip it without hands!`,
+                    }
+                ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to take off USER_THEIR VAR_C2, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
                 ]
@@ -2024,6 +2300,17 @@ const texts_untoy = {
                 ],
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips to remove USER_THEIR VAR_C2 despite USER_THEIR VAR_C1, but USER_THEIR chastity belt prevents USER_THEM from getting to it.`
+                ],
+                "Wand": [
+                    `USER_TAG twists USER_THEIR thighs slightly, but can't click the button on USER_THEIR VAR_C2 to turn it off! (this is a bug, please report)`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
+                    }
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove USER_THEIR VAR_C2 from USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -2038,6 +2325,17 @@ const texts_untoy = {
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips over towards TARGET_TAG to remove USER_THEIR VAR_C2, but USER_THEY USER_HAVE no hands to work with!`
                 ],
+                "Wand": [
+                    `USER_TAG wiggles towards TARGET_TAG, but can't click the button on TARGET_THEIR VAR_C2 to turn it off!`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice on TARGET_TAG's crotch... but can't grip it without hands!`,
+                    }
+                ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove the VAR_C2 on TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
                 ]
@@ -2048,6 +2346,17 @@ const texts_untoy = {
                 ],
                 "Vibrator": [
                     `USER_TAG bucks USER_THEIR hips over towards TARGET_TAG to remove TARGET_THEIR VAR_C2 despite USER_THEIR VAR_C1. TARGET_THEIR_CAP chastity belt prevents USER_THEM from removing the toy anyway, though.`
+                ],
+                "Wand": [
+                    `USER_TAG wiggles towards TARGET_TAG, but can't click the button on TARGET_THEIR VAR_C2 to turn it off! (this is a bug, please report)`
+                ],
+                "Misc": [
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Ice")
+                        },
+                        text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
+                    }
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove a VAR_C2 from TARGET_TAG, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -2096,6 +2405,19 @@ const texts_untoy = {
                                 `USER_TAG puts the key in USER_THEIR belt, unlocking it removing USER_THEIR VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
                             ]
                         },
+                        "Wand": {
+                            nofumble: [
+                                `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                            ]
+                        },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -2122,6 +2444,17 @@ const texts_untoy = {
                         "Vibrator": [
                             `USER_TAG tries as USER_THEY might, but is unable to unlock USER_THEIR chastity belt to remove USER_THEIR VAR_C2.`
                         ],
+                        "Wand": [
+                            `USER_TAG tries to press the button on USER_THEIR VAR_C2, but... can't? (this is a bug, please report)`
+                        ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to remove the ice but can't?! (This is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to remove USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -2133,6 +2466,17 @@ const texts_untoy = {
                     ],
                     "Vibrator": [
                         `USER_TAG gently removes the VAR_C2 from inside USER_THEM and puts it away. `
+                    ],
+                    "Wand": [
+                        `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
+                        }
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from USER_THEM! (This is a bug, report)`
@@ -2183,6 +2527,19 @@ const texts_untoy = {
                                 `USER_TAG puts the key in TARGET_TAG's belt, unlocking it and removing the VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S TARGET_THEM back up.`
                             ]
                         },
+                        "Wand": {
+                            nofumble: [
+                                `USER_TAG presses the button on TARGET_TAG's VAR_C2, turning off the pleasurable vibrations for now...`
+                            ]
+                        },
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
+                            }
+                        ],
                         default: {
                             fumble: {
                                 keyloss: {
@@ -2209,6 +2566,17 @@ const texts_untoy = {
                         "Vibrator": [
                             `USER_TAG tries as USER_THEY might, but is unable to unlock TARGET_TAG's chastity belt to remove USER_THEIR VAR_C2.`
                         ],
+                        "Wand": [
+                            `USER_TAG tries to press the button on TARGET_TAG's VAR_C2, but... can't? (this is a bug, please report)`
+                        ],
+                        "Misc": [
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Ice")
+                                },
+                                text: `USER_TAG tries to remove the ice from TARGET_TAG... but can't access it somehow. (this is a bug, report!)`,
+                            }
+                        ],
                         default: [
                             `USER_TAG tries to remove TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
                         ],
@@ -2220,6 +2588,17 @@ const texts_untoy = {
                     ],
                     "Vibrator": [
                         `USER_TAG gently removes the VAR_C2 from inside TARGET_TAG and puts it away. `
+                    ],
+                    "Wand": [
+                        `USER_TAG presses the button on TARGET_TAG's VAR_C2, turning off the pleasurable vibrations for now...`
+                    ],
+                    "Misc": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Ice")
+                            },
+                            text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
+                        }
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from TARGET_TAG! (This is a bug, report)`
@@ -2991,23 +3370,65 @@ const textarrays = {
 // Get generic text and spit out a pronoun respecting version YAY
 const getTextGeneric = (type, data_in) => {
 	let generics = {
-		unbind: "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
-		unbind_decline: "TARGET_TAG has declined your help with USER_THEIR VAR_C1.",
-		unbind_accept: "TARGET_TAG has accepted your offer to help with TARGET_THEIR VAR_C1!",
-		unbind_timeout: "The request to help TARGET_TAG timed out!",
-		changebind: "TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout).",
-		changebind_decline: "TARGET_TAG has declined allowing you to change TARGET_THEIR bindings.",
-		changebind_accept: "TARGET_TAG has allowed you to change TARGET_THEIR bindings.",
-		clone_accept: "TARGET_TAG has allowed you to make a clone of TARGET_THEIR VAR_C1 key, giving it to VAR_C2!",
-		clone_accept_self: "Cloning your key...",
-		clone_decline: "TARGET_TAG has forbidden you from making a clone of TARGET_THEIR VAR_C1 key for VAR_C2!",
-		give_accept: "TARGET_TAG has allowed you to give TARGET_THEIR VAR_C1 key to VAR_C2!",
-		give_accept_self: "Giving your key...",
-		give_decline: "TARGET_TAG has forbidden you from giving TARGET_THEIR VAR_C1 key to VAR_C2!",
-		revoke_accept: "You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1.",
+		unbind: ["TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout)."],
+		unbind_decline: ["TARGET_TAG has declined your help with USER_THEIR VAR_C1."],
+		unbind_accept: ["TARGET_TAG has accepted your offer to help with TARGET_THEIR VAR_C1!"],
+		unbind_timeout: ["The request to help TARGET_TAG timed out!"],
+		changebind: ["TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be changed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout)."],
+		changebind_decline: ["TARGET_TAG has declined allowing you to change TARGET_THEIR bindings."],
+		changebind_accept: ["TARGET_TAG has allowed you to change TARGET_THEIR bindings."],
+		clone_accept: ["TARGET_TAG has allowed you to make a clone of TARGET_THEIR VAR_C1 key, giving it to VAR_C2!"],
+		clone_accept_self: ["Cloning your key..."],
+		clone_decline: ["TARGET_TAG has forbidden you from making a clone of TARGET_THEIR VAR_C1 key for VAR_C2!"],
+		give_accept: ["TARGET_TAG has allowed you to give TARGET_THEIR VAR_C1 key to VAR_C2!"],
+		give_accept_self: ["Giving your key..."],
+		give_decline: ["TARGET_TAG has forbidden you from giving TARGET_THEIR VAR_C1 key to VAR_C2!"],
+		revoke_accept: ["You have destroyed the key VAR_C2 had to TARGET_TAG's VAR_C1."],
+        find_key_self: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! Lucky find!`,
+            `USER_TAG spots a shiny glint and picks it up. It turns out to be the key to USER_THEIR VAR_C1!`,
+            `USER_TAG steps on something weird and picks it up. Fortunately, it's USER_THEIR VAR_C1 key!`
+        ],
+        find_key_other: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! What will TARGET_THEY have to do to get it back?`,
+            `As USER_TAG is chatting, USER_THEY spotUSER_S a shiny key that seems to match TARGET_TAG's VAR_C1!`
+        ],
+        find_key_self_mitten: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! USER_THEY_CAP attemptUSER_S to pick it up... and just BARELY grasps it.`,
+            `USER_TAG sees a glint that looks a lot like USER_THEIR VAR_C1 key! Despite having no fingers, USER_THEY still somehow manageUSER_S to pick it up.`,
+            `USER_TAG spots USER_THEIR VAR_C1 key! USER_THEY_CAP sighs in relief as USER_THEY just barely pick it up.`
+        ],
+        find_key_other_mitten: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had fingers... But! Despite no fingers, USER_THEY still manageUSER_S to pick it up!`,
+            `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! USER_TAG_CAP bats it around a little bit, but in the end, manages to pick it up using both mittens!`
+        ],
+        find_keyfail_self: [
+            `USER_TAG paws around in the dark, but just barely misses the key to USER_THEIR VAR_C1...`
+        ],
+        find_keyfail_other: [
+            `USER_TAG paws around in the dark, but just barely misses the key to TARGET_TAG's VAR_C1...`
+        ],
+        find_keyfail_self_mitten: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! USER_THEY_CAP attemptUSER_S to pick it up... and fails.`,
+            `USER_TAG sees a glint that looks a lot like USER_THEIR VAR_C1 key! Unhelpfully, USER_THEY bat it because USER_THEY USER_HAVE no fingers.`,
+            `USER_TAG spots USER_THEIR VAR_C1 key! USER_THEY_CAP sighs in frustration as USER_THEY can't pick it up.`
+        ],
+        find_keyfail_other_mitten: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had fingers...`,
+            `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! Not that USER_THEY can pick it up, of course, but it's the thought that counts.`
+        ],
+        find_keyfail_self_heavy: [
+            `USER_TAG finds USER_THEIR key to USER_THEIR VAR_C1! USER_THEY_CAP attemptUSER_S to pick it up, but obviously fails because USER_THEIR arms are tightly bound.`,
+            `USER_TAG sees a glint that looks a lot like USER_THEIR VAR_C1 key! Unhelpfully, USER_THEY bat it because USER_THEY USER_HAVE no arms.`,
+            `USER_TAG spots USER_THEIR VAR_C1 key! USER_THEY_CAP sighs in frustration as USER_THEY can't pick it up.`
+        ],
+        find_keyfail_other_heavy: [
+            `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had arms to pick it up...`,
+            `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! Not that USER_THEY can pick it up, of course, but it's the thought that counts.`
+        ],
 	};
 
-	let chosentext = generics[type];
+	let chosentext = generics[type][Math.floor(generics[type].length * Math.random())];
 	return convertPronounsText(chosentext, data_in);
 };
 

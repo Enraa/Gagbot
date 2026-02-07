@@ -88,6 +88,8 @@ function getRestraintName(keyType, user) {
 	switch (keyType) {
 		case "chastity":
 			return "chastity belt";
+        case "chastity bra":
+			return "chastity bra";
 		case "collar":
 			return "collar";
 	}

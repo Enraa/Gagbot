@@ -1,3 +1,4 @@
+const { messageSendChannel } = require("../../functions/messagefunctions");
 const { setUserVar, getUserVar } = require("../../functions/usercontext");
 
 function msgfunction(userid, data) {
@@ -51,15 +52,28 @@ function msgfunction(userid, data) {
     if (regexpattern.test(data.msgcontent)) {
 		// They were polite, make them horny for 3 minutes.
         // This will be scaled HIGHLY over on the vibe side.
-        setUserVar(userid, "politeSubVibeTime", Date.now() + 180000)
-        setTimeout(() => {
-            // Clear the variable after 3 minutes if it has NOT been triggered again. 
-            if (getUserVar(userid, "politeSubVibeTime") < Date.now()) {
-                setUserVar(userid, "politeSubVibeTime", undefined)
+        // If they have a politesubvibe going and its undefined, then send a message
+        if (getUserVar(userid, "politeSubVibeTime") == undefined) {
+            if (process.recentmessages[userid]) {
+                try {
+                    messageSendChannel(`<@${userid}>'s Polite Vibe turns on as the honorific is spoken!`, process.recentmessages[userid])
+                }
+                catch (err) {
+                    console.log(err);
+                }
             }
-        }, 181000)
+        }
+        setUserVar(userid, "politeSubVibeTime", Date.now() + 180000)
 		return;
 	}
 }
 
+async function functiontick(userID) {
+    if (getUserVar(userID, "politeSubVibeTime") < Date.now()) {
+        console.log(`Ending polite vibe for ${userID}`)
+        setUserVar(userID, "politeSubVibeTime", undefined)
+    }
+}
+
+exports.functiontick = functiontick;
 exports.msgfunction = msgfunction;

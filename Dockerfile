@@ -1,5 +1,7 @@
 FROM node:18-alpine
 
+STOPSIGNAL SIGINT
+
 WORKDIR /usr/src/gagbot
 
 COPY package*.json ./

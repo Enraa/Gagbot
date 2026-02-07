@@ -92,7 +92,7 @@ const setPronouns = (user, pronouns) => {
 // -----------------------------------------------------------------
 const convertPronounsText = (text, data) => {
 	let interactionuser = data.interactionuser;
-	let targetuser = data.targetuser;
+	let targetuser = data.targetuser ?? data.interactionuser; // If we didnt supply a target, just use interaction user for both. 
 
 	let outtext = text;
 

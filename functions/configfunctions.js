@@ -301,6 +301,44 @@ const configoptions = {
 				return getOption(userID, "arousalsystem") == 0;
 			},
 		},
+        arousaldisplay: {
+			name: "Arousal Display in Inspect",
+			desc: "How should arousal be displayed in Inspect?",
+			choices: [
+				{
+					name: "Bar",
+					helptext: "Displays as a bar representing arousal % of orgasm threshold",
+					select_function: (userID) => {
+                        return false;
+					},
+					value: "bar",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Description",
+					helptext: "Displays as a roleplay flavor text",
+					select_function: (userID) => {
+                        return false;
+					},
+					value: "desc",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Numbers",
+					helptext: "Displays exact Arousal and Orgasm Threshold numbers",
+					select_function: (userID) => {
+                        return false;
+					},
+					value: "numbers",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "desc",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
 	},
 	General: {
 		keygiving: {
@@ -385,7 +423,67 @@ const configoptions = {
 				return false;
 			},
 		},
-		removebondage: {
+        canfindkeys: {
+			name: "Find Keys",
+			desc: "Can you discover misplaced keys that others dropped?",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Keys cannot be picked up*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "You may be able to pick up keys",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+		},
+		publicaccess: {
+			name: "Public Access",
+			desc: "Can you put on a free use collar or enable public access timelocks?",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Public Access is disabled*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+					uname: "PublicAccessDisabled",
+				},
+				{
+					name: "Yes",
+					helptext: "**⚠️ You can select public access options on collars and timelocks!**",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Success,
+					uname: "PublicAccess",
+				},
+			],
+			menutype: "choice",
+			default: "disabled",
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        removebondage: {
 			name: "Prompt to Modify Non-Keyed Bondage",
 			desc: "Should you be prompted for others to **/ungag** you, etc? You must have DMs from this server turned on to utilize this option.",
 			choices: [
@@ -435,37 +533,6 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			},
-		},
-		publicaccess: {
-			name: "Public Access",
-			desc: "Can you put on a free use collar or enable public access timelocks?",
-			choices: [
-				{
-					name: "No",
-					helptext: "*Public Access is disabled*",
-					select_function: (userID) => {
-						return false;
-					},
-					value: "disabled",
-					style: ButtonStyle.Danger,
-					uname: "PublicAccessDisabled",
-				},
-				{
-					name: "Yes",
-					helptext: "**⚠️ You can select public access options on collars and timelocks!**",
-					select_function: (userID) => {
-						return false;
-					},
-					value: "enabled",
-					style: ButtonStyle.Success,
-					uname: "PublicAccess",
-				},
-			],
-			menutype: "choice",
-			default: "disabled",
-			disabled: (userID) => {
-				return false;
-			}, // if true, button is greyed out
 		},
 		revokeconsent: {
 			name: "Revoke Consent",
@@ -680,7 +747,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -718,7 +785,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -756,7 +823,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -794,7 +861,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -832,7 +899,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -870,7 +937,7 @@ const configoptions = {
             choices: [
 				{
 					name: "None",
-					helptext: "*Items of this tag will be omitted on you*",
+					helptext: "*Others will not be able to put items of this tag on you*",
 					select_function: (userID) => {
 						return false;
 					},
@@ -1003,6 +1070,54 @@ const configoptions = {
 		"extreme-heavy-costumer_mimic_latex": {
 			name: "Heavy - Costumer Mimic (Latex)",
 			desc: "Changes you into a latex themed outfit. Can include other extreme restraints.",
+			prompttext: `Costumer Mimics can change you into a a random outfit, which may include other extreme restraints such as the Polite Sub gag. The resulting outfit does not adjust to anything worn and cannot be influenced once tossed in.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Costumer Mimics are disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
+        "extreme-heavy-costumer_mimic_chaos": {
+			name: "Heavy - Costumer Mimic (Chaos)",
+			desc: "Changes you into a randomized outfit. Will respect Content settings.",
 			prompttext: `Costumer Mimics can change you into a a random outfit, which may include other extreme restraints such as the Polite Sub gag. The resulting outfit does not adjust to anything worn and cannot be influenced once tossed in.`,
 			choices: [
 				{
@@ -1655,6 +1770,35 @@ const configoptions = {
 				return false;
 			},
 		},
+        "bot-allowkeyfinding": {
+			name: "Allow Keyfinding",
+			desc: "Should the bot allow users to find keys when sending messages?",
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Users will not be able to find keys*",
+					select_function: (userID) => {
+						return false;
+					}, // We will need to have this update commands
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Enabled",
+					helptext: "✔️ Users can find keys",
+					select_function: (userID) => {
+						return false;
+					}, // We will need to have this update commands
+					value: "Enabled",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice_bot",
+			default: "Enabled",
+			disabled: () => {
+				return false;
+			},
+		},
 	},
 };
 
@@ -1810,6 +1954,17 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 					);
 				pagecomponents.push(buttonsection);
 			} else if (configoptions[menuset][k].menutype == "choice_revokeconsent") {
+				let buttonsection = new SectionBuilder()
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`))
+					.setButtonAccessory((button) =>
+						button
+							.setCustomId(`config_pageoptrevoke_${menuset}`)
+							.setLabel(`Revoke Consent`)
+							.setStyle(ButtonStyle.Danger)
+							.setDisabled(process.consented[interaction.user.id] == undefined),
+					);
+				pagecomponents.push(buttonsection);
+			} else if (configoptions[menuset][k].menutype == "choice_") {
 				let buttonsection = new SectionBuilder()
 					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`))
 					.setButtonAccessory((button) =>

@@ -66,10 +66,14 @@ const heavytypes = [
 	{ name: "Pet Cage", value: "pet_cage", denialCoefficient: 4 },
 	{ name: "Chair with Cuffs", value: "chaircuffs", denialCoefficient: 3.5 },
 	{ name: "Resin Coating", value: "resin_coated", denialCoefficient: 4 },
+    { name: "Pillory", value: "pillory", denialCoefficient: 8 },
 
 	// Metal Restraints
 	{ name: "Scavenger's Daughter", value: "scavengersdaughter", tags: ["metal"], denialCoefficient: 4 },
 	{ name: "Yoke", value: "yoke", tags: ["metal"], denialCoefficient: 2 },
+    { name: "Handcuffs", value: "handcuffs", tags: ["metal"], denialCoefficient: 2 },
+    { name: "Handcuffs (Irish-8)", value: "handcuffs_irish8", tags: ["metal"], denialCoefficient: 4 },
+    { name: "Handcuffs (Hinged)", value: "handcuffs_hinged", tags: ["metal"], denialCoefficient: 4 },
 	{ name: "Hardlight Cuffs (loose links)", value: "hardlight_looselink", denialCoefficient: 1.5 },
 	{ name: "Hardlight Cuffs (hogtie)", value: "hardlight_hogtie", denialCoefficient: 3 },
 	{ name: "Hardlight Cuffs (strict)", value: "hardlight_strict", denialCoefficient: 4.5 },
@@ -105,10 +109,12 @@ const heavytypes = [
 	{ name: "Shadow Hands", value: "shadowhands", tags: ["living"], denialCoefficient: 1.5 },
 	{ name: "Entangling Vines", value: "entangling_vines", tags: ["living"], denialCoefficient: 1.5 },
 	//{ name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
+    { name: "Hands-off Blouse", value: "blouse_handsoff", denialCoefficient: 7.5 },
 	{ name: "Bondage Exosuit", value: "exosuit_bondage", tags: ["metal"], denialCoefficient: 5 },
 	{ name: "Sticky Glue", value: "stickyglue_bondage", tags: ["slime"], denialCoefficient: 5 },
 	{ name: "Costumer Mimic", value: "costumer_mimic", denialCoefficient: 5 },
 	{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["latex"], denialCoefficient: 5 },
+    { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", denialCoefficient: 5 },
 
 	// Heavy Restraints with unique name functions
 	{

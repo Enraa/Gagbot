@@ -5,17 +5,17 @@ dotenv.config()
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { assignMitten, garbleMessage, gagtypesset, modifymessage, loadMittenTypes } = require(`./functions/gagfunctions.js`);
+const { assignMitten, garbleMessage, setUpGags, modifymessage, loadMittenTypes } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
 const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
-const { assignCorset } = require('./functions/corsetfunctions.js');
-const { assignMemeImages } = require('./functions/interactivefunctions.js');
-const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames } = require('./functions/timefunctions.js');
+const { assignCorset, setUpCorsets } = require('./functions/corsetfunctions.js');
+const { assignMemeImages, generateListTexts } = require('./functions/interactivefunctions.js');
+const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames, scavengeUsers } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
-const { knownServer, setGlobalCommands, loadWebhooks, getBotOption } = require('./functions/configfunctions.js');
+const { knownServer, setGlobalCommands, loadWebhooks, getBotOption, getOption } = require('./functions/configfunctions.js');
 const { getAllJoinedGuilds } = require('./functions/configfunctions.js');
 const { setUpToys } = require('./functions/toyfunctions.js');
 const { setUpChastity } = require('./functions/chastityfunctions.js');
@@ -121,17 +121,8 @@ catch (err) {
     console.log(err);
 }
 
-try {
-    // add breath values for old corsets, this only needs to run once
-    for (const user in process.corset) {
-        if (!process.corset[user].breath) assignCorset(user, process.corset[user]?.tightness);
-    }
-} catch (err) { 
-    console.log(err);
-}
-
 // Later loaders for autocompletes
-gagtypesset();
+setUpGags();
 loadHeavyTypes(); 
 loadHeadwearTypes();
 loadMittenTypes();
@@ -141,6 +132,54 @@ assignMemeImages();
 
 setUpToys();
 setUpChastity();
+setUpCorsets();
+
+// Build the Overview
+process.helpmodals = {
+    "Overview": (userid, page) => {
+        // This is broken down into two pages on purpose, to ensure its not a HUGE block of info.
+        // We need to handle this appropriately. 
+        let overviewtext = [`## Basic Gagbot Commands Reference:
+### Alter Speech:
+**/gag**, **/ungag**: Gag someone or yourself, garbling speech in various ways.
+**/toy**, **/untoy**: Apply a toy to someone or yourself, causing stuttered speech from arousal.
+**/corset**, **/uncorset**: Apply a tightly laced corset, limiting sentence length in each message.
+### Restrict access to commands above:
+**/mitten**, **/unmitten**: Wear mittens, preventing yourself from changing gags or masks.
+**/chastity**, **/unchastity**: Wear chastity, preventing changes to toys and corsets without the key.
+**/heavy**, **/unheavy**: Wear heavy bondage, preventing access to most commands. `,`### Others:
+**/mask**, **/unmask**: Varying effects, many of these block emotes in speech or inspect. Requires collar access if not on self.
+**/collar**, **/uncollar**: Add or remove a collar, which can be set to allow users to /collarequip you, allowing them to do the commands in the above section. 
+**/collarequip**: Apply a restraint listed in the above section to another person. Requires collar access.
+**/key**: Transfer, clone or revoke cloned keys from a restraint you have the primary key for.
+**/inspect**: Look at what a user is wearing or keys they're holding. 
+**/config**: Modify various settings about you on the bot. 
+**/struggle**: Get a fun little text. Does not have any actual effect on restraint status.
+**/letgo**: Clear arousal, with a different text if at orgasm threshold. 
+**/timelock**: Timelock a keyed restraint.
+**/wear**, **/unwear**, **/outfit**: Adjust clothing, outfits and more!
+**/item**: Protect or unprotect items from being removed with /unwear.
+**/pronouns**: Set your pronouns for the bot's text feedback.`]
+        if (!overviewtext[page]) page = 0;
+        overviewtextdisplay = new discord.TextDisplayBuilder().setContent(overviewtext[page])
+        let optionbuttons = [
+            // Page Down
+            new discord.ButtonBuilder()
+                .setCustomId(`help_Overview_0`)
+                .setLabel("← Prev Page")
+                .setStyle(discord.ButtonStyle.Secondary)
+                .setDisabled(page != 1),
+            // Page Up
+            new discord.ButtonBuilder()
+                .setCustomId(`help_Overview_1`)
+                .setLabel("Next Page →")
+                .setStyle(discord.ButtonStyle.Secondary)
+                .setDisabled(page != 0),
+        ];
+        return [overviewtextdisplay, new discord.ActionRowBuilder().addComponents(...optionbuttons)];
+    }
+}
+
 
 // Grab all the command files from the commands directory
 const commands = new Map();
@@ -159,6 +198,7 @@ for (const file of commandFiles) {
         componentHandlers.set(handler.key, handler);
     });
     if (cmd.autoComplete) autocompletehandlers.set(file, cmd);
+    if (cmd.help) process.helpmodals[file.slice(0,1).toUpperCase() + file.slice(1).replace(".js","")] = cmd.help;
 }
 
 // Grab any context menu interactions
@@ -220,6 +260,13 @@ client.on("clientReady", async () => {
         // Load webhooks
         await loadWebhooks(client);
         //console.log(`Webhook Channels: [${Array.from(process.webhook.keys()).join(", ")}]`)
+
+        generateListTexts();
+
+        scavengeUsers(client);
+        setInterval(() => {
+            scavengeUsers(client);
+        }, 3600000);
     }
     catch (err) {
         console.log(err)
@@ -247,7 +294,9 @@ client.on("messageCreate", async (msg) => {
             channelid = msg.channel.parentId
         }
         if (process.webhook[channelid]) {
-            handleKeyFinding(msg);
+            if ((getBotOption("bot-allowkeyfinding") == "Enabled") && (getOption(msg.author.id, "canfindkeys") == "enabled")) {
+                handleKeyFinding(msg);
+            }
             process.recentmessages[msg.author.id] = msg.channel.id;
             modifymessage(msg, thread ? msg.channelId : null);
         }
@@ -300,6 +349,14 @@ client.on('interactionCreate', async (interaction) => {
             else if (interaction.customId.startsWith("inspect_")) {
                 let configfunc = require(`./commands/inspect.js`)
                 configfunc.interactionresponse(interaction);  
+            }
+            else if (interaction.customId.startsWith("help_")) {
+                let configfunc = require(`./commands/help.js`)
+                configfunc.interactionresponse(interaction); 
+            }
+            else if (interaction.customId.startsWith("key_")) {
+                let configfunc = require(`./commands/key.js`)
+                configfunc.interactionresponse(interaction); 
             }
             const [key, ...args] = interaction.customId.split("-");
             componentHandlers.get(key)?.handle(interaction, ...args);

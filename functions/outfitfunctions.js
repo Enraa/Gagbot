@@ -6,8 +6,8 @@ const { TextDisplayBuilder, MessageFlags, ButtonStyle, ActionRow, SectionBuilder
 const { getWearable, getLockedWearable, getWearableName, getBaseWearable } = require("./wearablefunctions");
 const { getGags, getMitten, getGag, convertGagText, getMittenName } = require("./gagfunctions");
 const { getCollar, canAccessCollar, getCollarName, getCollarTimelock, getCollarPerm, getCollarKeys, getClonedCollarKeysOwned } = require("./collarfunctions");
-const { getCorset } = require("./corsetfunctions");
-const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys } = require("./vibefunctions");
+const { getCorset, getBaseCorset } = require("./corsetfunctions");
+const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys, getArousalDescription, getArousalChangeDescription } = require("./vibefunctions");
 const { getChastityBra } = require("./vibefunctions");
 const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require("./headwearfunctions");
 const { getHeavy, convertheavy } = require("./heavyfunctions");
@@ -27,6 +27,7 @@ const { getClonedChastityKeysOwned } = require("./vibefunctions");
 const { getClonedChastityBraKeysOwned } = require("./vibefunctions");
 const { calcDenialCoefficient } = require("./vibefunctions");
 const { getToys, getBaseToy } = require("./toyfunctions");
+const { getOption } = require("./configfunctions");
 
 function getOutfits(userID) {
 	if (process.outfits == undefined) {
@@ -492,8 +493,13 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getChastity(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
+            let keyholdertext = ``;
+            keyholdertext = `<@${getChastity(userID).keyholder}>`
+            if (getChastityTimelock(userID)) { keyholdertext = `Timelocked` }
+			if (getChastity(userID).keyholder == userID) { keyholdertext = `Self-bound` }
+            if (getChastity(userID)?.fumbled) { keyholdertext = `Keys are missing!` }
 			texts = `${texts}${getChastityName(userID) ?? "Standard Chastity Belt"}\n`;
-			texts = `${texts}Primary Keyholder: ${getChastityTimelock(userID) ? `Timelocked` : getChastity(userID).keyholder == userID ? `Self-bound` : `<@${getChastity(userID).keyholder}>`}`;
+			texts = `${texts}Primary Keyholder: ${keyholdertext}`;
 			texts = `${texts}${
 				getChastity(userID).clonedKeyholders
 					? `, clones held by ${getChastity(userID)
@@ -521,8 +527,13 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getChastityBra(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
+            let keyholdertext = ``;
+            keyholdertext = `<@${getChastityBra(userID).keyholder}>`
+            if (getChastityBraTimelock(userID)) { keyholdertext = `Timelocked` }
+			if (getChastityBra(userID).keyholder == userID) { keyholdertext = `Self-bound` }
+            if (getChastityBra(userID)?.fumbled) { keyholdertext = `Keys are missing!` }
 			texts = `${texts}${getChastityBraName(userID) ?? "Standard Chastity Bra"}\n`;
-			texts = `${texts}Primary Keyholder: ${getChastityBraTimelock(userID) ? `Timelocked` : getChastityBra(userID).keyholder == userID ? `Self-bound` : `<@${getChastityBra(userID).keyholder}>`}`;
+			texts = `${texts}Primary Keyholder: ${keyholdertext}`;
 			texts = `${texts}${
 				getChastityBra(userID).clonedKeyholders
 					? `, clones held by ${getChastityBra(userID)
@@ -550,7 +561,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getCorset(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
-			texts = `${texts}Laced to Length ${getCorset(userID).tightness}`;
+			texts = `${texts}${getBaseCorset(getCorset(userID).type).name} laced to Length ${getCorset(userID).tightness}`;
 		}
 		pagecomponents.push(
 			new SectionBuilder()
@@ -592,8 +603,13 @@ async function generateOutfitModal(userID, menu, page, options) {
 		if (!getCollar(userID)) {
 			texts = `${texts}Not worn`;
 		} else {
-			texts = `${texts}${getCollarName(userID)}\n`;
-			texts = `${texts}Primary Keyholder: ${getCollarTimelock(userID) ? `Timelocked` : getCollar(userID).keyholder == userID ? `Self-bound` : `<@${getCollar(userID).keyholder}>`}`;
+            let keyholdertext = ``;
+            keyholdertext = `<@${getCollar(userID).keyholder}>`
+            if (getCollarTimelock(userID)) { keyholdertext = `Timelocked` }
+			if (getCollar(userID).keyholder == userID) { keyholdertext = `Self-bound` }
+            if (getCollar(userID)?.fumbled) { keyholdertext = `Keys are missing!` }
+            texts = `${texts}${getCollarName(userID)}\n`;
+			texts = `${texts}Primary Keyholder: ${keyholdertext}`;
 			texts = `${texts}${
 				getCollar(userID).clonedKeyholders
 					? `, clones held by ${getCollar(userID)
@@ -731,7 +747,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Corset
         if (getCorset(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
+            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **${getBaseCorset(getCorset(inspectuserID).type).name} laced with strings at length ${getCorset(inspectuserID).tightness}**`
         }
         // Vibe
         if (getToys(inspectuserID).length > 0) {
@@ -761,7 +777,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            else if (chastitykeyholderinfo == "discarded") {
+            else if (getChastity(inspectuserID)?.fumbled) {
                 wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitylockemoji} **Keys are Missing!**`
             }
             else if (getChastityTimelock(inspectuserID)) {
@@ -793,7 +809,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            else if (chastitybrakeyholderinfo == "discarded") {
+            else if (getChastityBra(inspectuserID)?.fumbled) {
                 wearingtext = `${wearingtext}\n-# ‎   ⤷ ${chastitybralockemoji} **Keys are Missing!**`
             }
             else if (getChastityBraTimelock(inspectuserID)) {
@@ -825,7 +841,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            if (collarkeyholderinfo == "discarded") {
+            if (getCollar(inspectuserID)?.fumbled) {
                 wearingtext = `${wearingtext}\n-# ‎   ⤷ ${collarlockemoji} **Keys are Missing!**`
             }
             else if (getCollarTimelock(inspectuserID)) {
@@ -861,10 +877,22 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         clothingtext = `${clothingtext}\n`
 
         let bartext = ``;
-        if (getArousal(inspectuserID) > 2.0) {
-            bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
-            if (calcDenialCoefficient(inspectuserID) > 1) {
-                bartext = `${bartext}\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+        if (getOption(userID, "arousaldisplay") == "bar") {
+            if (getArousal(inspectuserID) > 2.0) {
+                bartext = `\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
+                if (calcDenialCoefficient(inspectuserID) > 1) {
+                    bartext = `${bartext}\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+                }
+            }
+        }
+        if (getOption(userID, "arousaldisplay") == "desc") {
+            arousaltext = getArousalDescription(inspectuserID);
+            arousalchangetext = getArousalChangeDescription(inspectuserID)
+            bartext = `\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
+        }
+        if (getOption(userID, "arousaldisplay") == "numbers") {
+            if (getArousal(inspectuserID) > 2.0) {
+                bartext = `\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${calcDenialCoefficient(inspectuserID) * 10}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
             }
         }
 
@@ -893,7 +921,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Corset
         if (getCorset(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **Laced with strings at length ${getCorset(inspectuserID).tightness}**`
+            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **${getBaseCorset(getCorset(inspectuserID).type).name} laced with strings at length ${getCorset(inspectuserID).tightness}**`
         }
         // Vibe
         if (getToys(inspectuserID).length > 0) {
@@ -924,7 +952,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            else if (chastitykeyholderinfo == "discarded") {
+            else if (getChastity(inspectuserID)?.fumbled) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Keys are Missing!**`
             }
             else if (getChastityTimelock(inspectuserID)) {
@@ -962,7 +990,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            else if (chastitybrakeyholderinfo == "discarded") {
+            else if (getChastityBra(inspectuserID)?.fumbled) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Keys are Missing!**`
             }
             else if (getChastityBraTimelock(inspectuserID)) {
@@ -1000,7 +1028,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            if (collarkeyholderinfo == "discarded") {
+            if (getCollar(inspectuserID)?.fumbled) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Keys are Missing!**`
             }
             else if (getCollarTimelock(inspectuserID)) {

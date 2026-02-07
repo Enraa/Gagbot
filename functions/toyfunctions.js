@@ -131,6 +131,10 @@ function removeToy(user, toytype) {
     if (process.toys[user] == undefined) { process.toys[user] = [] }
     let index = process.toys[user].findIndex((toy) => toy.type == toytype)
     if (index > -1) {
+        let vibe = process.toytypes[toytype];
+        if (vibe && vibe.onUnequip) {
+            vibe.onUnequip({ userID: user });
+        }
         process.toys[user].splice(index, 1);
     }
     if (process.readytosave == undefined) {

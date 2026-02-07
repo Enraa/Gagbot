@@ -5,8 +5,10 @@ let wearabletypes = [
 	// Aesthetic Body Parts
 	{ name: "Ears", value: "ears", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Futuristic Cat", "Dog", "Floppy Dog", "Wolf", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Tail", value: "tail", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Dog", "Wolf", "Bunny", "Sheep", "Demon", "Succubus", "Fox", "Pony", "Lizard", "Dragon", "Lamia"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Eared Headband", value: "earheadband", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Futuristic Cat", "Dog", "Floppy Dog", "Wolf", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Wings", value: "wings", category: "Body Part", colorable: true, uniqueColors: ["Demon", "Angelic", "Imp", "Succubus", "Bat", "Butterfly", "Dragonfly", "Draconic", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Horns", value: "horns", category: "Body Part", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Horned Headband", value: "hornheadband", category: "Body Part", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Womb Tattoo", value: "wombtat", category: "Body Part", colorable: true, uniqueColors: ["Glowing", "Starry", "Shimmering", "Cyber"] },
 	{ name: "Vine Hair", value: "hair_vine", category: "Body Part", colorable: true, uniqueColors: ["Flowery", "Verdant"] },
 	{ name: "Vampire Fangs", value: "fangs_vampire", category: "Body Part" },
@@ -43,6 +45,11 @@ let wearabletypes = [
 	{ name: "Eyeshadow", value: "eyeshadow", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Lipstick", value: "lipstick", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Kissmark", value: "kissmark", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
+    { name: "Eyeliner", value: "eyeliner", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
+    { name: "Foundation", value: "foundation", category: "Head/Hair Accessories", colorable: true},
+    { name: "Cateye Eyeliner", value: "eyeliner_cateye", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
+    { name: "Mascara", value: "mascara", category: "Head/Hair Accessories"},
+    { name: "Blush", value: "makeupblush", category: "Head/Hair Accessories", colorable: true },
 
 	// Bunnygirls
 	{ name: "Playbunny Headband", value: "outfit_playbunny_headwear", category: "Cosplay",  },
@@ -319,13 +326,17 @@ const tagstoadd = [
     { match: `eyeliner`, tag: "makeup" },
     { match: `eyeshadow`, tag: "makeup" },
     { match: `kissmark`, tag: "makeup" },
+    { match: `foundation`, tag: "makeup" },
+    { match: `eyeliner_cateye`, tag: "makeup" },
+    { match: `mascara`, tag: "makeup" },
+    { match: `makeupblush`, tag: "makeup" },
 ]
 
 /**************
  * Discord API Requires an array of objects in form:
  * { name: "Latex Armbinder", value: "armbinder_latex" }
  ********************/
-const loadWearables = () => {
+const loadWearables = async () => {
 	// Copy the array so we dont mutate the original lmao
 	let wearablestoadd = wearabletypes.slice(0);
 	// Iterate over each wearable type, filtering only the ones that are colorable.

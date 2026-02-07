@@ -1,3 +1,4 @@
+const { getBaseChastity } = require("../../functions/chastityfunctions")
 const { getOption } = require("../../functions/configfunctions")
 const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
 const { getChastityBra, addArousal } = require("../../functions/vibefunctions")
@@ -32,18 +33,13 @@ exports.canModify = (data) => { return (!canAccessChastityBra(data.userID, data.
 // Condition that rolls a fumble function, returning it's results
 // 0 = Success, 1 = Fail, no loss, 2 = Fail, loss
 exports.fumble = (data) => {
-    if (getOption(data.userID, "fumbling") == "disabled") { return 0 }
-    let fumble = rollKeyFumble(data.keyholderID, data.userID);
-    if (fumble > 1 && (getOption(data.userID, "keyloss") == "disabled")) {
-        fumble = 1; // force it back to a no key loss
-    }
-    return fumble;
+    return getBaseChastity(getChastityBra(data.userID).chastitytype).fumble(data);
 };
 
 // Discard function if the .fumble causes it
 exports.discard = (data) => {
-    return discardChastityBraKey(data.userID, data.keyholderID);
-}
+    return getBaseChastity(getChastityBra(data.userID).chastitytype).discard(data);
+};
 
 // Action when equipping
 exports.onEquip = (data) => { addArousal(data.userID, data.intensity / 4) };

@@ -313,12 +313,42 @@ function runProcessedEvents() {
     if (process.collar) {
 		Object.keys(process.collar).forEach((userid) => {
 			if (getCollar(userid)) {
-                if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).type]) {
-					process.eventfunctions.collar[getCollar(userid).collartype](userid, data);
+                if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).collartype]) {
+					process.eventfunctions.collar[getCollar(userid).collartype](userid);
 				}
             }
 		});
 	}
+}
+
+// Checks each user ID in process variables against all of the guild member maps
+// If the user does NOT exist in any of them, then remove. 
+async function scavengeUsers(client) {
+    let processvars = ["wearable", "gags", "mitten", "chastity", "chastitybra", "chastitybra", "arousal", "toys", "collar", "heavy", "pronouns", "usercontext", "consented", "corset", "headwear", "outfits"]
+    let allguilds = await client.guilds.fetch();
+    let allguildslist = []; // array of guild member maps
+    for (const guild of allguilds) {
+        let guildfetched = await client.guilds.fetch(guild[0])
+        let guildmembers = await guildfetched.members.fetch()
+        allguildslist.push(guildmembers);
+    }
+    processvars.forEach(async (v) => {
+        if (process[v]) {
+            Object.keys(process[v]).forEach((k) => {
+                let found = false;
+                allguildslist.forEach((g) => {
+                    if (g.get(k)) { found = true }
+                })
+                if (!found) {
+                    // DELETE THIS
+                    console.log(`Key ${k} missing from all guilds, run on ${v}.`)
+                    if (process[v][k]) {
+                        delete process[v][k]
+                    }
+                }
+            })
+        }
+    })
 }
 
 exports.parseTime = parseTime;
@@ -327,6 +357,7 @@ exports.getTimestringForZip = getTimestringForZip;
 exports.backupsAreAnnoying = backupsAreAnnoying;
 exports.saveFiles = saveFiles;
 exports.importFileNames = importFileNames;
+exports.scavengeUsers = scavengeUsers;
 
 exports.processUnlockTimes = processUnlockTimes;
 exports.processTimedEvents = processTimedEvents;

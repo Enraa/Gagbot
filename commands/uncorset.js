@@ -3,11 +3,12 @@ const { getChastity, canAccessChastity } = require("./../functions/vibefunctions
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { getCorset, removeCorset } = require("./../functions/corsetfunctions.js");
+const { getCorset, removeCorset, getBaseCorset } = require("./../functions/corsetfunctions.js");
 const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { config } = require("../functions/configfunctions.js");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -28,6 +29,7 @@ module.exports = {
 					interactionuser: interaction.user,
 					targetuser: corsetuser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
+					c2: getBaseCorset(getCorset(corsetuser.id).type)?.name ?? "Leather Corset", // corset type
 				},
 			};
 
@@ -90,14 +92,14 @@ module.exports = {
 							if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
 								// We own the key for the chastity belt
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, corsetuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype).fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
 									if (config.getKeyLoss(corsetuser.id) && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
-										let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {
@@ -140,14 +142,14 @@ module.exports = {
 							if (canAccessChastity(corsetuser.id, interaction.user.id).access && !canAccessChastity(corsetuser.id, interaction.user.id).public) {
 								// We own the key for the chastity belt and it is NOT sealed.
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, corsetuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype).fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
 									if (config.getKeyLoss(corsetuser.id) && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
-										let discardresult = discardChastityKey(corsetuser.id, interaction.user.id);
+										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {

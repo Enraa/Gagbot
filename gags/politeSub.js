@@ -1,3 +1,5 @@
+const { setUserVar, getUserVar } = require("../functions/usercontext");
+
 const honorifictitles = [
 	// Oh god its hard to type these without caps
 	"miss",
@@ -58,7 +60,11 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 	} else {
 		let silenced = {"isSilenced": false}					// Store a bool in an object to pass by reference.
 		msgTree.callFunc(impoliteSub,true,["rawText","moan"],[silenced])	// Run a function on the tree.
-		if(silenced.isSilenced){msgTreeMods.modified = true;}	// If the function caught anything, the message is modified.
+		if(silenced.isSilenced){
+            msgTreeMods.modified = true
+            setUserVar(msg.member.id, "politeSubSilenceTime", Date.now() + 300000) // 5 mins of no silenced messages to clear
+            setUserVar(msg.member.id, "politeSubSilences", (getUserVar(msg.member.id, "politeSubSilences") ?? 0) + 1)
+        }	// If the function caught anything, the message is modified.
 		return;
 	}
 };

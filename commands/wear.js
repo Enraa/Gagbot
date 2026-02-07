@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getMitten } = require("./../functions/gagfunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
@@ -42,6 +42,9 @@ module.exports = {
                 if (!tagged) {
                     newsorted.push(f);
                 }
+                else {
+                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
+                }
             })
             interaction.respond(newsorted.slice(0,25))
         }
@@ -79,15 +82,20 @@ module.exports = {
 				return;
 			}
 
+            let blocked = false;
             if (wearablechoice) {
                 let tags = getUserTags(wearableuser.id);
                 let i = getBaseWearable(wearablechoice)
                 tags.forEach((t) => {
                     if (i && i.tags && i.tags[t] && (wearableuser != interaction.user)) {
                         interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                        blocked = true;
                         return;
                     }
                 })
+            }
+            if (blocked) {
+                return;
             }
 
 			if (getHeavy(interaction.user.id)) {
@@ -153,4 +161,14 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let overviewtext = `## Wear
+### Usage: /wear (user) (type)
+### Remove:  /unwear (user) (type)
+-# Restricted if in heavy bondage
+
+Applies clothing, makeup or other ornamentation to the user. These items can be protected by the wearer using **/item**. Outfits can be saved using the **/outfit** menu.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

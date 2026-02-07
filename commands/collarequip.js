@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
 const { getCollar, getCollarPerm, canAccessCollar } = require("./../functions/collarfunctions.js");
 const { getChastity, assignChastity, getChastityName, getChastityBraName, } = require("./../functions/vibefunctions.js");
@@ -67,6 +67,9 @@ module.exports = {
                     if (!tagged) {
                         newsorted.push(f);
                     }
+                    else {
+                        newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
+                    }
                 })
                 interaction.respond(newsorted.slice(0,25))
             } else if (subc == "mittens") {
@@ -92,6 +95,9 @@ module.exports = {
                     })
                     if (!tagged) {
                         newsorted.push(f);
+                    }
+                    else {
+                        newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
                     }
                 })
                 interaction.respond(newsorted.slice(0,25))
@@ -119,6 +125,9 @@ module.exports = {
                     })
                     if (!tagged) {
                         newsorted.push(f);
+                    }
+                    else {
+                        newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
                     }
                 })
                 interaction.respond(newsorted.slice(0,25))
@@ -156,6 +165,7 @@ module.exports = {
 			let braorbelt = interaction.options.getString("braorbelt") ?? "chastitybelt";
 
             // Check if the wearer is okay with it. If they aren't, error.
+            let blocked = false;
             if (actiontotake == "heavy") {
                 if (bondagetype) {
                     let tags = getUserTags(collareduser.id);
@@ -163,6 +173,7 @@ module.exports = {
                     tags.forEach((t) => {
                         if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                            blocked = true;
                             return;
                         }
                     })
@@ -175,6 +186,7 @@ module.exports = {
                     tags.forEach((t) => {
                         if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                            blocked = true;
                             return;
                         }
                     })
@@ -187,10 +199,14 @@ module.exports = {
                     tags.forEach((t) => {
                         if (i && i.tags && i.tags.includes(t) && (collareduser != interaction.user)) {
                             interaction.reply({ content: `${collareduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                            blocked = true;
                             return;
                         }
                     })
                 }
+            }
+            if (blocked) {
+                return;
             }
 
 			let bondagetypenotchosen = false;
@@ -257,7 +273,7 @@ module.exports = {
 				        bondagetype = "belt_silver";
                     } else {
                         data.textdata.c3 = "chastity bra";
-				        bondagetype = "bra_chastity";
+				        bondagetype = "bra_silver";
                     }
                 }
 			}
@@ -451,4 +467,14 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        //let restrictedtext = (getCollar(userid) && !canAccessCollar(userid, userid, true).access) ? `***You cannot unlock your collar currently***\n` : ""
+        let overviewtext = `## Collarequip
+### Usage: /collarequip subcommand (user) (type) (keyholder)
+-# Restricted if not holding the user's collar key
+
+Applies **Mittens**, **Chastity** or **Heavy Bondage** to a wearer if their collar's permissions allow them, commands normally restricted to self only. Chastity applied this way is permanent as if the wearer applied the chastity themself, including if you designate a keyholder.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

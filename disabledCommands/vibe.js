@@ -1,5 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getChastity, getVibe, assignVibe, discardChastityKey, canAccessChastity } = require("./../functions/vibefunctions.js");
+const { getChastity, getVibe, assignVibe, canAccessChastity } = require("./../functions/vibefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
 const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
@@ -8,6 +8,7 @@ const path = require("path");
 const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { config, getOption } = require("../functions/configfunctions.js");
+const { getBaseChastity } = require("../functions/chastityfunctions.js");
 
 const vibetypes = [];
 const commandsPath = path.join(__dirname, "..", "vibes");
@@ -155,7 +156,7 @@ module.exports = {
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt and it is NOT timelocked
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, vibeuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(vibeuser.id).chastitytype).fumble({ userID: vibeuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// User fumbles with the key due to their arousal and frustration
 									data.fumble = true;
@@ -165,13 +166,13 @@ module.exports = {
 										if (vibetype) {
 											// specific single vibe
 											data.single = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
 											data.both = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										}
@@ -232,7 +233,7 @@ module.exports = {
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt and it is NOT timelocked
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, vibeuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(vibeuser.id).chastitytype).fumble({ userID: vibeuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// User fumbles with the key due to their arousal and frustration
 									data.fumble = true;
@@ -242,13 +243,13 @@ module.exports = {
 										if (vibetype) {
 											// specific single vibe
 											data.single = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
 											data.both = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										}
@@ -313,7 +314,7 @@ module.exports = {
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, vibeuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(vibeuser.id).chastitytype).fumble({ userID: vibeuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// User fumbles with the key due to their arousal and frustration
 									data.fumble = true;
@@ -323,13 +324,13 @@ module.exports = {
 										if (vibetype) {
 											// specific single vibe
 											data.single = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
 											data.both = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										}
@@ -339,8 +340,6 @@ module.exports = {
 										if (vibetype) {
 											// specific single vibe
 											data.single = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
-											data[discardresult] = true;
 											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
@@ -406,7 +405,7 @@ module.exports = {
 							if (canAccessChastity(vibeuser.id, interaction.user.id).access) {
 								// We have the key to the belt and it is NOT timelocked
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, vibeuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(vibeuser.id).chastitytype).fumble({ userID: vibeuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// User fumbles with the key due to their arousal and frustration
 									data.fumble = true;
@@ -416,13 +415,13 @@ module.exports = {
 										if (vibetype) {
 											// specific single vibe
 											data.single = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
 											data.both = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
+											let discardresult = getBaseChastity(getChastity(vibeuser.id).chastitytype ?? "belt_silver").discard({ userID: vibeuser.id, keyholderID: interaction.user.id })
 											data[discardresult] = true;
 											interaction.reply(getText(data));
 										}
@@ -432,14 +431,10 @@ module.exports = {
 										if (vibetype) {
 											// specific single vibe
 											data.single = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
-											data[discardresult] = true;
 											interaction.reply(getText(data));
 										} else {
 											// removing all vibes
 											data.both = true;
-											let discardresult = discardChastityKey(vibeuser.id, interaction.user.id);
-											data[discardresult] = true;
 											interaction.reply(getText(data));
 										}
 									}

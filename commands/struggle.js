@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { mittentypes, getMittenName, getGag, convertGagText, assignMitten, getMitten, getGagLast } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy } = require("./../functions/heavyfunctions.js");
@@ -7,7 +7,7 @@ const { getConsent, handleConsent } = require("./../functions/interactivefunctio
 const { getText } = require("./../functions/textfunctions.js");
 const { getHeadwear } = require("../functions/headwearfunctions.js");
 const { getCorset } = require("../functions/corsetfunctions.js");
-const { getChastity, getChastityName } = require("../functions/vibefunctions.js");
+const { getChastity, getChastityBra, getChastityName, getChastityBraName } = require("../functions/vibefunctions.js");
 const { getCollar, getCollarName } = require("../functions/collarfunctions.js");
 
 module.exports = {
@@ -23,6 +23,7 @@ module.exports = {
 			let gagbondage = getGagLast(interaction.user.id);
 			let mittenbondage = getMitten(interaction.user.id);
 			let chastitybondage = getChastity(interaction.user.id);
+            let chastitybrabondage = getChastityBra(interaction.user.id)
 			let headbondage = getHeadwear(interaction.user.id);
 			let corsetbondage = getCorset(interaction.user.id);
 			let collarbondage = getCollar(interaction.user.id);
@@ -39,6 +40,9 @@ module.exports = {
 			}
 			if (chastitybondage) {
 				outopts.push({ name: `Chastity${chastitybondage.chastitytype ? `: ${getChastityName(interaction.user.id)}` : ""}`, value: "chastity" });
+			}
+            if (chastitybrabondage) {
+				outopts.push({ name: `Chastity Bra${chastitybrabondage.chastitytype ? `: ${getChastityBraName(interaction.user.id)}` : ""}`, value: "chastitybra" });
 			}
 			if (headbondage.length > 0) {
 				outopts.push({ name: `Head Restraints`, value: "head" });
@@ -71,6 +75,7 @@ module.exports = {
 			let gagbondage = getGagLast(interaction.user.id);
 			let mittenbondage = getMitten(interaction.user.id);
 			let chastitybondage = getChastity(interaction.user.id);
+            let chastitybrabondage = getChastityBra(interaction.user.id)
 			let headbondage = getHeadwear(interaction.user.id);
 			let corsetbondage = getCorset(interaction.user.id);
 			let collarbondage = getCollar(interaction.user.id);
@@ -86,6 +91,7 @@ module.exports = {
 					c3: getMittenName(interaction.user.id) ?? "mittens",
 					c4: getChastityName(interaction.user.id) ?? "chastity belt",
 					c5: getCollarName(interaction.user.id) ?? "collar",
+                    c6: getChastityBraName(interaction.user.id) ?? "chastity bra"
 				},
 			};
 
@@ -178,6 +184,31 @@ module.exports = {
 						interaction.reply(getText(data));
 					}
 				}
+			} else if (chosenopt == "chastitybra" && chastitybrabondage) {
+				data.chastitybra = true;
+				// Chastity is influenced by heavy bondage, inherently.
+				// Added chance for dextrous fingers if not in mittens, like above with gags
+				if (heavybondage) {
+					// Heavy Bondage is disabling.
+					data.heavy = true;
+					interaction.reply(getText(data));
+				} else {
+					// Because the number of responses vary so much, going to use 33% chance for mitten/finger text
+					data.noheavy = true;
+					if (mittenbondage || Math.random() > 0.5) {
+						// Either mittened, or not using fingers or similar
+						data.nofingers = true;
+						interaction.reply(getText(data));
+					} else if (mittenbondage && Math.random() > 0.5) {
+						// Mittened and random chance!
+						data.mitten = true;
+						interaction.reply(getText(data));
+					} else {
+						// No mittens and ABLE TO USE FINGERS!
+						data.nomitten = true;
+						interaction.reply(getText(data));
+					}
+				}
 			} else if (chosenopt == "head" && headbondage.length > 0) {
 				data.headwear = true;
 				// Headwear is influenced by heavy bondage, inherently.
@@ -258,4 +289,12 @@ module.exports = {
 			console.log(err);
 		}
 	},
+    async help(userid, page) {
+        let overviewtext = `## Struggle
+### Usage: /struggle (type)
+
+Struggle with a restraint or nothing at all. This will print out a relevant struggle text (or a joke line if "Nothing"). Note, this does not actually do anything to the restraint you're struggling with.`
+        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        return overviewtextdisplay;
+    }
 };

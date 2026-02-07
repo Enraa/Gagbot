@@ -4,26 +4,27 @@ const https = require("https");
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
 
 const collartypes = [
-	{ name: "Latex Collar", value: "collar_latex" },
-	{ name: "Leather Collar", value: "collar_leather" },
+	{ name: "Latex Collar", value: "collar_latex", tags: ["latex"] },
+	{ name: "Leather Collar", value: "collar_leather", tags: ["leather"] },
 	{ name: "Cyber Doll Collar", value: "collar_cyberdoll" },
 	{ name: "Hardlight Collar", value: "collar_hardlight" },
 	{ name: "Runic Collar", value: "collar_runic" },
 	{ name: "Tall Posture Collar", value: "collar_posture" },
 	{ name: "Ruffled Maid Collar", value: "collar_maid" },
-	{ name: "Nevermere Tracking Collar", value: "collar_nevermere" },
-	{ name: "Steel Collar", value: "collar_steel" },
+	{ name: "Nevermere Tracking Collar", value: "collar_nevermere", tags: ["leather"] },
+	{ name: "Steel Collar", value: "collar_steel", tags: ["metal"] },
 	{ name: "Kitty Collar", value: "collar_kitty" },
 	{ name: "Puppy Collar", value: "collar_puppy" },
 	{ name: "Inari Collar", value: "collar_inari" },
-	{ name: "Livingwood Collar", value: "collar_livingwood" },
+	{ name: "Livingwood Collar", value: "collar_livingwood", tags: ["living"] },
 	{ name: "Sheep Collar", value: "collar_sheep" },
 	{ name: "Potion Collar", value: "collar_potion" },
 	{ name: "Princess Collar", value: "collar_princess" },
 	{ name: "Star-cursed Collar", value: "collar_star" },
 	{ name: "Moonveil Collar", value: "collar_moon" },
-	{ name: "Starmetal Collar", value: "collar_starmetal" },
-    { name: "Maid Training Collar", value: "collar_maidtraining" }
+	{ name: "Starmetal Collar", value: "collar_starmetal", tags: ["metal"] },
+    { name: "Maid Training Collar", value: "collar_maidtraining" },
+    { name: "Struggle Collar", value: "collar_struggle" }
 ];
 
 function loadCollarTypes() {
@@ -101,7 +102,7 @@ const getCollarKeys = (user) => {
 	}
 	let keysheld = [];
 	Object.keys(process.collar).forEach((k) => {
-		if (process.collar[k].keyholder == user) {
+		if ((process.collar[k].keyholder == user) && (!process.collar[k]?.fumbled)) {
 			keysheld.push(k);
 		}
 	});
@@ -154,11 +155,11 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
 	// If unlock is set, only allow access to unlock if the keyholder is the correct one.
 	if (unlock) {
 		// Allow unlocks by a non-self keyholder at all times, assuming its not sealed.
-		if (getCollar(collaruser)?.access != 2 && getCollar(collaruser)?.keyholder == keyholder && keyholder != collaruser) {
+		if (getCollar(collaruser)?.access != 2 && getCollar(collaruser)?.keyholder == keyholder && keyholder != collaruser && !getCollar(collaruser)?.fumbled) {
 			accessval.access = true;
 		}
 		// Allow unlocks by any keyholder if no timelock.
-		if (getCollar(collaruser)?.access == undefined && getCollar(collaruser)?.keyholder == keyholder) {
+		if (getCollar(collaruser)?.access == undefined && getCollar(collaruser)?.keyholder == keyholder && !getCollar(collaruser)?.fumbled) {
 			accessval.access = true;
 		}
 		// Allow unlocks by secondary keyholder if no timelock
@@ -177,11 +178,11 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
 			accessval.public = true;
 		}
 		// Keyholder access if access is unset (no timelocks)
-		if (getCollar(collaruser)?.access == undefined && getCollar(collaruser)?.keyholder == keyholder) {
+		if (getCollar(collaruser)?.access == undefined && getCollar(collaruser)?.keyholder == keyholder && !getCollar(collaruser)?.fumbled) {
 			accessval.access = true;
 		}
 		// Keyholder access if timelock is 1 (keyholder only) but only if not self.
-		if (getCollar(collaruser)?.access == 1 && getCollar(collaruser)?.keyholder == keyholder && collaruser != keyholder) {
+		if (getCollar(collaruser)?.access == 1 && getCollar(collaruser)?.keyholder == keyholder && collaruser != keyholder && !getCollar(collaruser)?.fumbled) {
 			accessval.access = true;
 		}
 
@@ -193,7 +194,7 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
 		accessval.public = true;
 	}
 	// Keyholder access if access is unset (no timelocks)
-	if (getCollar(collaruser)?.access == undefined && getCollar(collaruser)?.keyholder == keyholder) {
+	if (getCollar(collaruser)?.access == undefined && getCollar(collaruser)?.keyholder == keyholder && !getCollar(collaruser)?.fumbled) {
 		accessval.access = true;
 	}
 	// Secondary Keyholder access (cloned key), but only if cloning is NOT true and no timelocks
@@ -202,7 +203,7 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
 		accessval.access = true;
 	}
 	// Keyholder access if timelock is 1 (keyholder only) but only if not self.
-	if (getCollar(collaruser)?.access == 1 && getCollar(collaruser)?.keyholder == keyholder && collaruser != keyholder) {
+	if (getCollar(collaruser)?.access == 1 && getCollar(collaruser)?.keyholder == keyholder && collaruser != keyholder && !getCollar(collaruser)?.fumbled) {
 		accessval.access = true;
 	}
 	// Secondary Keyholder access (cloned key) if access is 1, but only if not self.
