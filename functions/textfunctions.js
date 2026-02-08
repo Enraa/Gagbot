@@ -1,6 +1,6 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
-const { getChastity, getArousal } = require("./vibefunctions.js");
+const { getChastity, getChastityBra, getArousal } = require("./vibefunctions.js");
 const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 
 const texts_chastity = {
@@ -1241,10 +1241,10 @@ const texts_struggle = {
             // Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
             nomitten: [
                 `USER_TAG gently taps USER_THEIR VAR_C6 on USER_THEIR chest, locked on and sealing away USER_THEIR breasts... if only USER_THEY could touch....`,
-                `USER_TAG runs USER_THEIR hands over the VAR_C6 on USER_THEIR chest, whining softly as USER_THEY struggle to get any sensation on USER_THEIR breasts~.`,
+                `USER_TAG runs USER_THEIR hands over the VAR_C6 on USER_THEIR chest, whining softly as USER_THEY struggles to get any sensation on USER_THEIR breasts~.`,
 				{
 					required: (t) => {
-						return !getChastity(t.interactionuser.id).chastitytype.includes("livingwood");
+						return !getChastityBra(t.interactionuser.id).chastitytype.includes("livingwood");
 					},
 					text: `USER_TAG dances USER_THEIR fingers on the smooth exterior trapping USER_THEIR breasts. The unyielding steel denies USER_THEM any reprieve.`
 				}
