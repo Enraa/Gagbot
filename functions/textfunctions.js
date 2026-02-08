@@ -921,16 +921,38 @@ const texts_letgo = {
 		`Like a dam bursting, USER_TAG thrashes out as USER_THEY finally reachUSER_ES the top!`,
 	],
 	chastity: [
-		`USER_TAG tries to get over the edge but is denied by USER_THEIR steel prison!`,
 		`USER_TAG frantically *claws* at USER_THEIR chastity belt, but it offers no sensation!`,
-		`USER_TAG tries to rub the cold steel of USER_THEIR chastity belt, but USER_THEY can't feel anything!`,
+		{
+					required: (t) => {
+						let blacklistTypes = ["Livingwood"]
+						return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
+					},
+					text: `USER_TAG tries to get over the edge but is denied by USER_THEIR steel prison!`,
+		},
+		{
+					required: (t) => {
+						let blacklistTypes = ["Livingwood"]
+						return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
+					},
+					text: `USER_TAG tries to rub the cold steel of USER_THEIR chastity belt, but USER_THEY can't feel anything!`,
+		},
 		`USER_TAG squirms, trying to adjust the belt so USER_THEY can feel ***something***, but USER_THEY just can't get over the edge!`,
 		`USER_TAG holds USER_THEIR breath, feverishly stroking the smooth belt USER_THEY USER_ISARE wearing, but USER_THEY just can't let go!`,
 		`USER_TAG grinds on a near by object, trying to get that last little bit of sensation to let go... but USER_THEY just can't make it!`,
 		`USER_TAG buckles USER_THEIR legs, panting in short breaths as USER_THEY attemptUSER_S to (and failUSER_S miserably) to get release!`,
 		`USER_TAG attempts to get relief, but **good USER_PRAISEOBJECTs** don't get to touch there.`,
+		{
+			required: (t) => {
+				return t.c1.includes("Livingwood");
+			},
+			text: `USER_TAG struggles fruitlessly with USER_THEIR livingwood chastity, aggitating it and causing it to squirm more insistently~.*`,
+		}
 	],
-	heavy: [`USER_TAG shifts USER_THEIR legs to try to reach the peak! Too bad USER_THEIR VAR_C1 makes it hard to touch there!`, `USER_TAG bucks USER_THEIR midsection, trying to climax, but without arms, USER_THEY USER_ISARE not getting anywhere!`, `USER_TAG squirms helplessly in USER_THEIR VAR_C1, trying to let go! USER_THEY needUSER_S some more help from vibrators!`],
+	heavy: [
+		`USER_TAG shifts USER_THEIR legs to try to reach the peak! Too bad USER_THEIR VAR_C1 makes it hard to touch there!`, 
+		`USER_TAG bucks USER_THEIR midsection, trying to climax, but without arms, USER_THEY USER_ISARE not getting anywhere!`, 
+		`USER_TAG squirms helplessly in USER_THEIR VAR_C1, trying to let go! USER_THEY needUSER_S some more help from vibrators!`
+	],
 	free: [`USER_TAG takes a deep breath and calms USER_THEIR nerves, the hot feelings *slowly* going away...`, `USER_TAG takes some ice and holds it to USER_THEIR crotch. The sensation is unpleasant, but effective in clearing USER_THEIR mind!`, `USER_TAG fans USER_THEMSELF and closes USER_THEIR eyes, taking deep breaths.`, `USER_TAG carefully uncorks a frigid potion and chugs it. It tastes foul, but USER_THEY feelUSER_S a little more coherent now!`],
 };
 
@@ -1166,9 +1188,15 @@ const texts_struggle = {
 			// Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
 			nofingers: [
 				`USER_TAG runs USER_THEIR palms on USER_THEIR VAR_C4, but despite USER_THEIR best efforts, the belt remains unyielding on USER_THEIR hips.`,
-				`USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
 				`USER_TAG gropes USER_THEMSELF with USER_THEIR hands, helplessly unable to touch...`,
 				`USER_TAG squirms in USER_THEIR VAR_C4, but no matter how much USER_THEY USER_TRY, USER_THEY just can't feel anything...`,
+				{
+					required: (t) => {
+						let blacklistTypes = ["Livingwood"]
+						return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
+					},
+					text: `USER_TAG wiggles USER_THEIR thighs to make USER_THEIR VAR_C4 sit more comfortably. Steel is so *unforgiving.*`,
+				},
 				{
 					required: (t) => {
 						return getChastity(t.interactionuser.id).timestamp + 7200000 < Date.now();
