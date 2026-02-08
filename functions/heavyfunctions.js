@@ -109,6 +109,7 @@ const heavytypes = [
 	{ name: "Shadow Hands", value: "shadowhands", tags: ["living"], denialCoefficient: 1.5 },
 	{ name: "Entangling Vines", value: "entangling_vines", tags: ["living"], denialCoefficient: 1.5 },
 	//{ name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
+    { name: "Hands-off Blouse", value: "blouse_handsoff", denialCoefficient: 7.5 },
 	{ name: "Bondage Exosuit", value: "exosuit_bondage", tags: ["metal"], denialCoefficient: 5 },
 	{ name: "Sticky Glue", value: "stickyglue_bondage", tags: ["slime"], denialCoefficient: 5 },
 	{ name: "Costumer Mimic", value: "costumer_mimic", denialCoefficient: 5 },

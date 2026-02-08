@@ -102,7 +102,7 @@ const getCollarKeys = (user) => {
 	}
 	let keysheld = [];
 	Object.keys(process.collar).forEach((k) => {
-		if ((process.collar[k].keyholder == user) && (!process.collar[k].fumbled)) {
+		if ((process.collar[k].keyholder == user) && (!process.collar[k]?.fumbled)) {
 			keysheld.push(k);
 		}
 	});

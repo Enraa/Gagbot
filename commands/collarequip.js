@@ -273,7 +273,7 @@ module.exports = {
 				        bondagetype = "belt_silver";
                     } else {
                         data.textdata.c3 = "chastity bra";
-				        bondagetype = "bra_chastity";
+				        bondagetype = "bra_silver";
                     }
                 }
 			}

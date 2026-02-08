@@ -246,7 +246,7 @@ const texts_collarequip = {
 							only: (t) => {
 								return t.c3.includes("Wooden Horse");
 							},
-							text: `TARGET_TAG helps USER_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
+							text: `USER_TAG helps TARGET_TAG climb onto the VAR_C3, securing TARGET_THEIR legs into the cuffs and then reaching over and securing TARGET_THEIR wrists into the front cuffs! Stepping back to enjoy the sight of TARGET_TAG squirming as TARGET_THEIR_CAP weight presses the top edge of the frame into TARGET_THEIR crotch!`,
 						},
 						{
 							only: (t) => {
@@ -355,6 +355,12 @@ const texts_collarequip = {
 							},
 							text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C3! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
 						},
+                        {
+                            only: (t) => {
+                                return t.c3.includes("Hands-off Blouse");
+                            },
+                            text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
+                        },
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -817,6 +823,12 @@ const texts_heavy = {
 				return t.c2.includes("Mimic");
 			},
 			text: `USER_TAG disturbs a VAR_C2! It snaps open and entangles USER_THEIR arms and legs with its tentacles, dragging USER_THEM inside and slamming shut before sealing with a resounding click!`,
+		},
+        {
+			only: (t) => {
+				return t.c2.includes("Hands-off Blouse");
+			},
+			text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
 		},
 	],
 };
@@ -2252,7 +2264,7 @@ const texts_unmitten = {
     },
 	// Idk why the structure was like this - Ephemeral
 	otherother: {
-        other: [`USER_TAG is not wearing mittens!`],
+        other: [`TARGET_TAG is not wearing mittens!`],
         self: [`You aren't wearing mittens!`]
     }
 };
@@ -2578,7 +2590,7 @@ const texts_untoy = {
                         `USER_TAG gently removes the VAR_C2 from inside TARGET_TAG and puts it away. `
                     ],
                     "Wand": [
-                        `USER_TAG presses the button on USER_THEIR VAR_C2, turning off the pleasurable vibrations for now...`
+                        `USER_TAG presses the button on TARGET_TAG's VAR_C2, turning off the pleasurable vibrations for now...`
                     ],
                     "Misc": [
                         {

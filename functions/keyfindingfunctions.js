@@ -109,7 +109,7 @@ async function handleKeyFinding(message) {
         if (process[pv] == undefined) { process[pv] = {}}
         Object.entries(process[pv]).forEach(async (en) => {
             try {
-                if (en[1].fumbled) {
+                if (en[1]?.fumbled) {
                     if (Math.random() < (Math.max(Math.min(message.content.length * 0.0005, 0.2), 0.01))) {
                         // Key was found! Lets make sure the sender AND the user can view the channel.
                         // Implicitly, the sender should be able to lol

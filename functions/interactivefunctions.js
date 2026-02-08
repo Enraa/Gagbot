@@ -1,11 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { SlashCommandBuilder, UserSelectMenuBuilder, MessageFlags, TextInputBuilder, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder, ComponentType } = require("discord.js");
+const { SlashCommandBuilder, UserSelectMenuBuilder, MessageFlags, TextInputBuilder, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder, ComponentType, SectionBuilder } = require("discord.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { collartypes, getCollarKeyholder, canAccessCollar } = require("./collarfunctions.js");
+const { collartypes, getCollarKeyholder, canAccessCollar, getCollar, getCollarTimelock, getCollarName } = require("./collarfunctions.js");
 const { getOption } = require("./../functions/configfunctions.js");
-const { getChastityKeyholder } = require("./../functions/vibefunctions.js");
+const { getChastityKeyholder, getChastity, getChastityTimelock } = require("./../functions/vibefunctions.js");
 const { getHeavyBinder, convertheavy, heavytypes } = require("./../functions/heavyfunctions.js");
 const { getGagBinder, getMittenBinder, mittentypes, gagtypes } = require("./../functions/gagfunctions.js");
 const { getCorsetBinder } = require("./../functions/corsetfunctions.js");
@@ -13,6 +13,10 @@ const { getHeadwearBinder, headweartypes } = require("./../functions/headwearfun
 const { configoptions } = require("./configfunctions.js");
 const { canAccessChastity } = require("./vibefunctions.js");
 const { wearabletypes } = require("./wearablefunctions.js");
+const { getChastityName } = require("./vibefunctions.js");
+const { getChastityBra } = require("./vibefunctions.js");
+const { getChastityBraTimelock } = require("./vibefunctions.js");
+const { getChastityBraName } = require("./vibefunctions.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
@@ -847,6 +851,203 @@ function generateListTexts() {
     process.listtexts = restraints;
 }
 
+// Generates a message box with buttons to give keys for a user to a target, and listing all valid keys along with current cloned keyholders.
+async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) {
+    let wearerid = weareridin ?? userid;
+    let targetid = targetidin ?? userid;
+    let keybit = keybitin ?? "0000"; // first character is give/clone, second, third and fourth are chastity, chastity bra and collar.
+    let giveclone = keybit.charAt(0) == "0" ? "give" : "clone"
+    let giveclonecap = `${giveclone.slice(0,1).toUpperCase()}${giveclone.slice(1)}`
+
+    // Reset any keybits we became ineligible for
+    if ((getChastity(wearerid)?.keyholder != userid) || (getChastity(wearerid)?.clonedKeyholders && getChastity(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastity(wearerid)?.fumbled)) {
+        keybit = `${keybit.slice(0,1)}0${keybit.slice(2)}`
+    }
+    if ((getChastityBra(wearerid)?.keyholder != userid) || (getChastityBra(wearerid)?.clonedKeyholders && getChastityBra(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid)?.fumbled)) {
+        keybit = `${keybit.slice(0,2)}0${keybit.slice(3)}`
+    }
+    if ((getCollar(wearerid)?.keyholder != userid) || (getCollar(wearerid)?.clonedKeyholders && getCollar(wearerid)?.clonedKeyholders.includes(targetid)) || (getCollar(wearerid)?.fumbled)) {
+        keybit = `${keybit.slice(0,3)}0`
+    }
+
+    // Generate the wearer selector
+    let pagecomponents = [new TextDisplayBuilder().setContent(`**Wearer to ${giveclone} keys for...**`)]
+    pagecomponents.push(new ActionRowBuilder().addComponents(new UserSelectMenuBuilder()
+        .setCustomId(`key_select_wearerid_${wearerid}_${targetid}_0000`)
+        .setMaxValues(1)
+        .setDefaultUsers(wearerid)
+        .setPlaceholder("Select a wearer...")
+    ))
+
+    // Give or Clone selector
+    let giveclonebuttons = [
+		// Overview
+		new ButtonBuilder()
+			.setCustomId(`key_mode_give_${wearerid}_${targetid}_${keybit}`)
+			.setLabel("Give")
+			.setStyle(giveclone == "give" ? ButtonStyle.Primary : ButtonStyle.Secondary)
+			.setDisabled(giveclone == "give"),
+		// Restraints
+		new ButtonBuilder()
+			.setCustomId(`key_mode_clone_${wearerid}_${targetid}_${keybit}`)
+			.setLabel("Clone")
+			.setStyle(giveclone == "clone" ? ButtonStyle.Primary : ButtonStyle.Secondary)
+			.setDisabled(giveclone == "clone"),
+	];
+	pagecomponents.push(new ActionRowBuilder().addComponents(...giveclonebuttons));
+    
+    // Restraint components!
+    let restraintcomponents = [];
+    if (getChastity(wearerid)) {
+        let keyholdertext = ``;
+        keyholdertext = `<@${getChastity(wearerid).keyholder}>`
+        if (getChastityTimelock(wearerid)) { keyholdertext = `Timelocked` }
+        if (getChastity(wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
+        if (getChastity(wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
+        let clonetext = (getChastity(wearerid).clonedKeyholders && getChastity(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastity(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
+        let notholding = (!(getChastity(wearerid).keyholder == userid) || getChastity(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
+        let blocked = false;
+        if ((getChastity(wearerid).keyholder != userid) || (getChastity(wearerid).clonedKeyholders && getChastity(wearerid).clonedKeyholders.includes(targetid)) || (getChastity(wearerid).fumbled)) {
+            blocked = true;
+        }
+        let buttonsection = new SectionBuilder()
+            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.chastity} Chastity - ${getChastityName(wearerid, getChastity(wearerid).chastitytype) ?? "Standard Chastity Belt"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
+            .setButtonAccessory((button) =>
+                button
+                    .setCustomId(`key_key_chastity_${wearerid}_${targetid}_${keybitin}`)
+                    .setLabel(`${keybit.charAt(1) == "0" ? "Do not " : ""}${giveclonecap}`)
+                    .setStyle(keybit.charAt(1) == "0" ? ButtonStyle.Danger : ButtonStyle.Success)
+                    .setDisabled(blocked),
+            );
+        restraintcomponents.push(buttonsection)
+    }
+    if (getChastityBra(wearerid)) {
+        let keyholdertext = ``;
+        keyholdertext = `<@${getChastityBra(wearerid).keyholder}>`
+        if (getChastityBraTimelock(wearerid)) { keyholdertext = `Timelocked` }
+        if (getChastityBra(wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
+        if (getChastityBra(wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
+        let clonetext = (getChastityBra(wearerid).clonedKeyholders && getChastityBra(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastityBra(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
+        let notholding = (!(getChastityBra(wearerid).keyholder == userid) || getChastityBra(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
+        let blocked = false;
+        if ((getChastityBra(wearerid).keyholder != userid) || (getChastityBra(wearerid).clonedKeyholders && getChastityBra(wearerid).clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid).fumbled)) {
+            blocked = true;
+        }
+        let buttonsection = new SectionBuilder()
+            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.chastitybra} Chastity Bra - ${getChastityBraName(wearerid, getChastityBra(wearerid).chastitytype) ?? "Standard Chastity Bra"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
+            .setButtonAccessory((button) =>
+                button
+                    .setCustomId(`key_key_chastitybra_${wearerid}_${targetid}_${keybitin}`)
+                    .setLabel(`${keybit.charAt(2) == "0" ? "Do not " : ""}${giveclonecap}`)
+                    .setStyle(keybit.charAt(2) == "0" ? ButtonStyle.Danger : ButtonStyle.Success)
+                    .setDisabled(blocked),
+            );
+        restraintcomponents.push(buttonsection)
+    }
+    if (getCollar(wearerid)) {
+        let keyholdertext = ``;
+        keyholdertext = `<@${getCollar(wearerid).keyholder}>`
+        if (getCollarTimelock(wearerid)) { keyholdertext = `Timelocked` }
+        if (getCollar(wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
+        if (getCollar(wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
+        let clonetext = (getCollar(wearerid).clonedKeyholders && getCollar(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getCollar(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
+        let notholding = (!(getCollar(wearerid).keyholder == userid) || getCollar(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
+        let blocked = false;
+        if ((getCollar(wearerid).keyholder != userid) || (getCollar(wearerid).clonedKeyholders && getCollar(wearerid).clonedKeyholders.includes(targetid)) || (getCollar(wearerid).fumbled)) {
+            blocked = true;
+        }
+        let buttonsection = new SectionBuilder()
+            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.collar} Collar - ${getCollarName(wearerid, getCollar(wearerid).chastitytype) ?? "Leather Collar"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
+            .setButtonAccessory((button) =>
+                button
+                    .setCustomId(`key_key_collar_${wearerid}_${targetid}_${keybitin}`)
+                    .setLabel(`${keybit.charAt(3) == "0" ? "Do not " : ""}${giveclonecap}`)
+                    .setStyle(keybit.charAt(3) == "0" ? ButtonStyle.Danger : ButtonStyle.Success)
+                    .setDisabled(blocked),
+            );
+        restraintcomponents.push(buttonsection)
+    }
+
+    // If they're unrestrained (for some reason), give the interactor a helpful message saying so.
+    if (restraintcomponents.length == 0) {
+        restraintcomponents.push(new TextDisplayBuilder().setContent(`‎\n***<@${wearerid}> is not wearing any keyed restraints...***\n‎`))
+    }
+    pagecomponents.push(...restraintcomponents)
+
+    // Target selector. 
+    pagecomponents.push(new TextDisplayBuilder().setContent(`**Target to ${giveclone} keys to...**`))
+    pagecomponents.push(new ActionRowBuilder().addComponents(new UserSelectMenuBuilder()
+        .setCustomId(`key_select_targetid_${wearerid}_${targetid}_${keybit}`)
+        .setMaxValues(1)
+        .setDefaultUsers(targetid)
+        .setPlaceholder("Select a target...")
+    ))
+
+    // Confirmation text
+    if (keybit.slice(1).search(1) > -1) {
+        let outtext = ``;
+        let outend = ``;
+        let usertext = (wearerid == userid) ? `your` : `<@${wearerid}>'s`
+        if (keybit.charAt(0) == "0") {
+            // Give
+            outtext = `Giving keys for ${usertext} `
+            outend = ` to <@${targetid}>. \n⚠️ *You will lose access to these restraints and cloned keys will be destroyed.*`
+        }
+        else {
+            // Clone
+            outtext = `Cloning keys for <@${wearerid}>'s `
+            outend = ` and giving them to <@${targetid}>.`
+        }
+        if (keybit.charAt(1) == "1") {
+            outtext = `${outtext}${process.emojis.chastity}**chastity belt**, `
+        }
+        if (keybit.charAt(2) == "1") {
+            outtext = `${outtext}${process.emojis.chastitybra}**chastity bra**, `
+        }
+        if (keybit.charAt(3) == "1") {
+            outtext = `${outtext}${process.emojis.collar}**collar**, `
+        }
+        outtext = `${outtext.slice(0, -2)}${outend}`
+        
+        pagecomponents.push(new TextDisplayBuilder().setContent(outtext))
+    }
+
+    // Determine if we can give the keys. The rules are, if it's SELF or if they auto accepted, it should say give/clone
+    // otherwise, it should say request. 
+    let allowedtext = `Request to ${giveclonecap} Keys`
+    if (((getOption(wearerid, "keygiving") == "auto") && (keybit.charAt(0) == "0")) ||
+        ((getOption(wearerid, "keycloning") == "auto") && (keybit.charAt(0) == "1"))) {
+        allowedtext = `${giveclonecap} ${getPronouns(wearerid, "possessiveDeterminer")} Keys`
+    }
+    if ((userid == wearerid) || (wearerid == targetid)) {
+        // This is us, we are probably okay with what we're about to do. 
+        allowedtext = `${giveclonecap} Your Keys`
+    }
+
+    // Determine if the wearer blocked keygiving. If they did, no.
+    let allowedbool = false;
+    if (((getOption(wearerid, "keygiving") == "disabled") && (keybit.charAt(0) == "0")) ||
+        ((getOption(wearerid, "keycloning") == "disabled") && (keybit.charAt(0) == "1"))) {
+        allowedbool = true;
+    }
+    if ((keybit.slice(1).search(1) == -1)) {
+        allowedbool = true;
+    }
+    
+    // Confirm Button
+    let confirmbutton = [
+		// Overview
+		new ButtonBuilder()
+			.setCustomId(`key_confirm_forreal_${wearerid}_${targetid}_${keybit}`)
+			.setLabel(allowedtext)
+			.setStyle(!allowedbool ? ButtonStyle.Success : ButtonStyle.Secondary)
+			.setDisabled(allowedbool),
+	];
+	pagecomponents.push(new ActionRowBuilder().addComponents(...confirmbutton));
+
+    return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
+}
+
 exports.consentMessage = consentMessage;
 exports.getConsent = getConsent;
 exports.handleConsent = handleConsent;
@@ -861,6 +1062,8 @@ exports.checkBondageRemoval = checkBondageRemoval;
 exports.handleExtremeRestraint = handleExtremeRestraint;
 
 exports.generateHelpModal = generateHelpModal;
+
+exports.generateKeyGivingModal = generateKeyGivingModal;
 
 exports.assignMemeImages = assignMemeImages;
 

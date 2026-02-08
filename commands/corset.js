@@ -19,42 +19,43 @@ module.exports = {
 		.addUserOption((opt) => opt.setName("user").setDescription("Who to corset?"))
 		.addNumberOption((opt) => opt.setName("intensity").setDescription("How tightly to lace their corset!").setMinValue(1).setMaxValue(10))
 		.addStringOption((opt) => opt.setName("type").setDescription("Which type of corset").setAutocomplete(true)),
-    async autoComplete(interaction) {
+	async autoComplete(interaction) {
 		try {
-            const focusedValue = interaction.options.getFocused();
-            let autocompletes = process.autocompletes.corset;
-            let matches = didYouMean(focusedValue, autocompletes, {
-                matchPath: ['name'], 
-                returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
-                threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
-            })
-            
-            if (matches.length == 0) {
-                matches = autocompletes;
-            }
-            let tags = getUserTags(interaction.user.id);
-            let newsorted = [];
-            matches.forEach((f) => {
-                let tagged = false;
-                let i = getBaseCorset(f.value)
-                tags.forEach((t) => {
-                    if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
-                    else if (i.tags && (i.tags[t])) { tagged = true }
-                })
-                if (!tagged) {
-                    newsorted.push(f);
-                }
-                else {
-                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
-                }
-            })
-            interaction.respond(newsorted.slice(0,25))
-        }
-        catch (err) {
-            console.log(err);
-        }
+			const focusedValue = interaction.options.getFocused();
+			let autocompletes = process.autocompletes.corset;
+			let matches = didYouMean(focusedValue, autocompletes, {
+				matchPath: ["name"],
+				returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+				threshold: 0.2, // Default is 0.4 - this is how much of the word must exist.
+			});
+
+			if (matches.length == 0) {
+				matches = autocompletes;
+			}
+			let tags = getUserTags(interaction.user.id);
+			let newsorted = [];
+			matches.forEach((f) => {
+				let tagged = false;
+				let i = getBaseCorset(f.value);
+				tags.forEach((t) => {
+					if (i.tags && Array.isArray(i.tags) && i.tags.includes(t)) {
+						tagged = true;
+					} else if (i.tags && i.tags[t]) {
+						tagged = true;
+					}
+				});
+				if (!tagged) {
+					newsorted.push(f);
+				} else {
+					newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value });
+				}
+			});
+			interaction.respond(newsorted.slice(0, 25));
+		} catch (err) {
+			console.log(err);
+		}
 	},
-    async execute(interaction) {
+	async execute(interaction) {
 		try {
 			let corsetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
@@ -78,14 +79,14 @@ module.exports = {
 					targetuser: corsetuser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
 					c2: tightness, // corset tightness
-					c3: current?.name ?? "Leather Corset", // current corset
+					c3: getBaseCorset(current?.type)?.name ?? "Leather Corset", // current corset
 					c4: getBaseCorset(type)?.name, // new corset
 				},
 			};
-            if (data.textdata.c4 == undefined) {
-                interaction.reply({ content: `Something went wrong with your corset selection. Please try again and choose a corset option.`, flags: MessageFlags.Ephemeral });
+			if (data.textdata.c4 == undefined) {
+				interaction.reply({ content: `Something went wrong with your corset selection. Please try again and choose a corset option.`, flags: MessageFlags.Ephemeral });
 				return;
-            }
+			}
 			// REFLECT
 			if (corsetuser.id == process.client.user.id) {
 				data.gagreflect = true;
@@ -94,21 +95,21 @@ module.exports = {
 				interaction.reply({ content: `Gagbot recognizes what you're attempting to do. Cheeky.`, flags: MessageFlags.Ephemeral });
 				return;
 			}
-            let blocked = false;
-            if (type) {
-                let tags = getUserTags(corsetuser.id);
-                let i = getBaseCorset(type)
-                tags.forEach((t) => {
-                    if (i && i.tags && i.tags.includes(t) && (wearableuser != interaction.user)) {
-                        interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
-                        blocked = true;
-                        return;
-                    }
-                })
-            }
-            if (blocked) {
-                return;
-            }
+			let blocked = false;
+			if (type) {
+				let tags = getUserTags(corsetuser.id);
+				let i = getBaseCorset(type);
+				tags.forEach((t) => {
+					if (i && i.tags && i.tags.includes(t) && wearableuser != interaction.user) {
+						interaction.reply({ content: `${wearableuser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral });
+						blocked = true;
+						return;
+					}
+				});
+			}
+			if (blocked) {
+				return;
+			}
 			if (getHeavy(interaction.user.id)) {
 				// In heavy bondage, fail
 				data.heavy = true;
@@ -140,7 +141,7 @@ module.exports = {
 				if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
 					// User tries to modify the corset settings for someone in chastity that they do have the key for
 					data.key = true;
-					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
+					const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").fumble({ userID: corsetuser.id, keyholderID: interaction.user.id });
 					if (fumbleResult > 0) {
 						// User fumbles with the key due to their arousal and frustration
 						data.fumble = true;
@@ -153,28 +154,28 @@ module.exports = {
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
 							} else {
-                                data.other = true;
+								data.other = true;
 								if (current) {
 									// User already has a corset on
 									data.corset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								} else {
 									// Putting ON a corset!
 									data.nocorset = true;
-									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
+									let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id });
 									data[discardresult] = true;
 									interaction.reply(getText(data));
 								}
@@ -454,15 +455,15 @@ module.exports = {
 			console.log(err);
 		}
 	},
-    async help(userid, page) {
-        let restrictedtext = (getCorset(userid) && getChastity(userid) && !canAccessChastity(userid, userid).access) ? `***You cannot change or remove your corset currently***\n` : ""
-        let overviewtext = `## Corset
+	async help(userid, page) {
+		let restrictedtext = getCorset(userid) && getChastity(userid) && !canAccessChastity(userid, userid).access ? `***You cannot change or remove your corset currently***\n` : "";
+		let overviewtext = `## Corset
 ### Usage: /corset (user) (tightness)
 ### Remove:  /uncorset (user)
 -# Restricted if in a chastity belt without the key
 ${restrictedtext}
-Places a tight **Corset** on the user, which limits their speech in various ways, reducing their ability to speak in capital letters until they are eventually only able to speak a few words at a time. **Breath** is consumed with each syllable and regenerates over time, slower at higher **Tightness** levels. When out of breath, the user is unable to speak.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
-        return overviewtextdisplay;
-    }
+Places a tight **Corset** on the user, which limits their speech in various ways, reducing their ability to speak in capital letters until they are eventually only able to speak a few words at a time. **Breath** is consumed with each syllable and regenerates over time, slower at higher **Tightness** levels. When out of breath, the user is unable to speak.`;
+		overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext);
+		return overviewtextdisplay;
+	},
 };

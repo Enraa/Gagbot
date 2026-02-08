@@ -21,6 +21,8 @@ const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getUserTags } = require("../functions/configfunctions.js");
 const { getBaseChastity } = require("../functions/chastityfunctions.js");
 const { discardKey } = require("../functions/keyfindingfunctions.js");
+const { modalexecute } = require("./config.js");
+const { generateKeyGivingModal } = require("../functions/interactivefunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -55,6 +57,11 @@ module.exports = {
 				.addUserOption((opt) => opt.setName("wearer").setDescription("Whose restraint to give key for?"))
 				.addStringOption((opt) => opt.setName("restraint").setDescription("Which restraint of theirs to give key for?").setAutocomplete(true))
 				.addStringOption((opt) => opt.setName("restrainttype").setDescription("What new restraint to put on them?").setAutocomplete(true)),
+		)
+        .addSubcommand((subcommand) =>
+			subcommand
+				.setName("menu")
+				.setDescription("Open key giving and cloning menu")
 		)
         /*.addSubcommand((subcommand) =>
             subcommand
@@ -230,9 +237,9 @@ module.exports = {
 			} else if (subcommand == "discardkey") {
                 // We need to know if we're holding the primary keys to throw them away. 
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id) && !getCollar(chosenuserid).fumbled && !canAccessCollar(chosenuserid, interaction.user.id, true).public
-                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id) && !getChastity(chosenuserid).fumbled && !canAccessChastity(chosenuserid, interaction.user.id, true).public
-                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id) && !getChastityBra(chosenuserid).fumbled && !canAccessChastityBra(chosenuserid, interaction.user.id, true).public
+                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id) && !getCollar(chosenuserid)?.fumbled && !canAccessCollar(chosenuserid, interaction.user.id, true).public
+                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id) && !getChastity(chosenuserid)?.fumbled && !canAccessChastity(chosenuserid, interaction.user.id, true).public
+                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id) && !getChastityBra(chosenuserid)?.fumbled && !canAccessChastityBra(chosenuserid, interaction.user.id, true).public
 
                 let choices = [];
                 if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
@@ -809,16 +816,16 @@ module.exports = {
                 let discardedhelp = "collar";
                 let permitted = false;
 				if (restrainttype == "collar") {
-					if (getCollar(wearer.id) && getCollar(wearer.id).keyholder == interaction.user.id && !getCollar(wearer.id).fumbled) {
+					if (getCollar(wearer.id) && getCollar(wearer.id).keyholder == interaction.user.id && !getCollar(wearer.id)?.fumbled) {
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybelt") {
-					if (getChastity(wearer.id) && getChastity(wearer.id).keyholder == interaction.user.id && !getChastity(wearer.id).fumbled) {
+					if (getChastity(wearer.id) && getChastity(wearer.id).keyholder == interaction.user.id && !getChastity(wearer.id)?.fumbled) {
                         discardedhelp = "chastity belt"
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybra") {
-					if (getChastityBra(wearer.id) && getChastityBra(wearer.id).keyholder == interaction.user.id && !getChastityBra(wearer.id).fumbled) {
+					if (getChastityBra(wearer.id) && getChastityBra(wearer.id).keyholder == interaction.user.id && !getChastityBra(wearer.id)?.fumbled) {
                         discardedhelp = "chastity bra"
 						permitted = true;
 					}
@@ -849,8 +856,277 @@ module.exports = {
                 data[discardedkey] = true;
                 interaction.reply(getText(data));
             }
+            else if (subcommand == "menu") {
+                interaction.reply(await generateKeyGivingModal(interaction.user.id, undefined, undefined, "0000"))
+            }
 		} catch (err) {
 			console.log(err);
 		}
 	},
+    async interactionresponse(interaction) {
+        console.log(interaction)
+        try {
+            let optionparts = interaction.customId.split("_");
+            if (optionparts[1] == "mode") {
+                let newkeybit = optionparts[5]
+                if (optionparts[2] == "clone") { 
+                    newkeybit = `1${newkeybit.slice(1)}` 
+                }
+                else { 
+                    newkeybit = `0${newkeybit.slice(1)}` 
+                }
+                await interaction.update(await generateKeyGivingModal(interaction.user.id, optionparts[3], optionparts[4], newkeybit));
+			}
+            else if (optionparts[1] == "key") {
+                let newkeybit = optionparts[5]
+                if (optionparts[2] == "chastity") {
+                    if (newkeybit.charAt(1) == "0") { 
+                        newkeybit = `${newkeybit.slice(0,1)}1${newkeybit.slice(2)}` 
+                    }
+                    else { 
+                        newkeybit = `${newkeybit.slice(0,1)}0${newkeybit.slice(2)}` 
+                    }
+                }
+                if (optionparts[2] == "chastitybra") {
+                    if (newkeybit.charAt(2) == "0") { 
+                        newkeybit = `${newkeybit.slice(0,2)}1${newkeybit.slice(3)}` 
+                    }
+                    else { 
+                        newkeybit = `${newkeybit.slice(0,2)}0${newkeybit.slice(3)}` 
+                    }
+                }
+                if (optionparts[2] == "collar") {
+                    if (newkeybit.charAt(3) == "0") { 
+                        newkeybit = `${newkeybit.slice(0,3)}1}` 
+                    }
+                    else { 
+                        newkeybit = `${newkeybit.slice(0,3)}0}` 
+                    }
+                }
+                await interaction.update(await generateKeyGivingModal(interaction.user.id, optionparts[3], optionparts[4], newkeybit));
+            }
+            else if (optionparts[1] == "select") {
+                let newkeybit = optionparts[5]
+                if (optionparts[2] == "wearerid") {
+                    let newwearer = optionparts[3]
+                    if (interaction.values) {
+                        newwearer = interaction.values[0]
+                    }
+                    await interaction.update(await generateKeyGivingModal(interaction.user.id, newwearer, optionparts[4], optionparts[5]));
+                }
+                if (optionparts[2] == "targetid") {
+                    let newtarget = optionparts[4]
+                    if (interaction.values) {
+                        newtarget = interaction.values[0]
+                    }
+                    await interaction.update(await generateKeyGivingModal(interaction.user.id, optionparts[3], newtarget, optionparts[5]));
+                }
+            }
+            else if (optionparts[1] == "confirm") {
+                let wearerid = optionparts[3];
+                let targetid = optionparts[4];
+                let keybit = optionparts[5];
+
+                // Now we validate the request was GOOD and GENUINE
+                let validrestraints = [];
+
+                // Check each restraint individually. We need to verify we have primary key on it, and if a cloning, we need to ensure the target does not already have a clone
+                // Chastity
+                if ((keybit.charAt(1) == "1") && (getChastity(wearerid)?.keyholder == interaction.user.id) && (!getChastity(wearerid)?.fumbled)) {
+                    if (keybit.charAt(0) == "1") {
+                        if (!(getChastity(wearerid)?.clonedKeyholders && getChastity(wearerid)?.clonedKeyholders.includes(targetid))) {
+                            validrestraints.push("chastity");
+                        }
+                    }
+                    else {
+                        validrestraints.push("chastity");
+                    }
+                }
+                // Chastity Bra
+                if ((keybit.charAt(2) == "1") && (getChastityBra(wearerid)?.keyholder == interaction.user.id) && (!getChastityBra(wearerid)?.fumbled)) {
+                    if (keybit.charAt(0) == "1") {
+                        if (!(getChastityBra(wearerid)?.clonedKeyholders && getChastityBra(wearerid)?.clonedKeyholders.includes(targetid))) {
+                            validrestraints.push("chastitybra");
+                        }
+                    }
+                    else {
+                        validrestraints.push("chastitybra");
+                    }
+                }
+                // Collar
+                if ((keybit.charAt(3) == "1") && (getCollar(wearerid)?.keyholder == interaction.user.id) && (!getCollar(wearerid)?.fumbled)) {
+                    if (keybit.charAt(0) == "1") {
+                        if (!(getCollar(wearerid)?.clonedKeyholders && getCollar(wearerid)?.clonedKeyholders.includes(targetid))) {
+                            validrestraints.push("collar");
+                        }
+                    }
+                    else {
+                        validrestraints.push("collar");
+                    }
+                }
+
+                if (validrestraints.length <= 0) {
+                    // They somehow selected stuff but cannot actually DO any of these requests. Tell them.
+                    await interaction.reply({ content: `You have chosen options which cannot be executed. Please try again.`})
+                    return;
+                }
+
+                // Determine if we can shortcut the requesting process. 
+                let giveauto = false;
+                if (((getOption(wearerid, "keygiving") == "auto") && (keybit.charAt(0) == "0")) ||
+                    ((getOption(wearerid, "keycloning") == "auto") && (keybit.charAt(0) == "1"))) {
+                    giveauto = true;
+                }
+                if ((interaction.user.id == wearerid) || (wearerid == targetid)) {
+                    // This is us, we are probably okay with what we're about to do. 
+                    // Or the wearer is the target, they're probably okay with having
+                    // their keys again. Maybe. They might be bondage sluts, who knows.
+                    // Regardless, no consent issues here. 
+                    giveauto = true;
+                }
+
+                // Make restraints text
+                let restraintstext = ``;
+                if ((keybit.charAt(1) == "1") && validrestraints.includes("chastity")) {
+                    restraintstext = `${restraintstext}${process.emojis.chastity}**chastity belt**, `
+                }
+                if ((keybit.charAt(2) == "1") && validrestraints.includes("chastitybra")) {
+                    restraintstext = `${restraintstext}${process.emojis.chastitybra}**chastity bra**, `
+                }
+                if ((keybit.charAt(3) == "1") && validrestraints.includes("collar")) {
+                    restraintstext = `${restraintstext}${process.emojis.collar}**collar**, `
+                }
+                restraintstext = restraintstext.slice(0,-2)
+
+                await interaction.reply({ content: `${(keybit.charAt(0) == "0") ? "Giving" : "Cloning"} keys...`, flags: MessageFlags.Ephemeral })
+
+                // Set up a collector for the response by sending a DM to the wearer. 
+                if (!giveauto) {
+                    let outtext = ``;
+                    let outend = ``;
+                    if (keybit.charAt(0) == "0") {
+                        // Give
+                        outtext = `<@${interaction.user.id}> would like to give the keys for your `
+                        outend = ` to <@${targetid}>. \n*${getPronouns(interaction.user.id, "subject", true)} will no longer have access to your restraint*\n\n**Accept** or **Deny** this request below:`
+                    }
+                    else {
+                        // Clone
+                        outtext = `<@${interaction.user.id}> would like to clone the keys for your `
+                        outend = ` and give the clones to <@${targetid}>.\n\n**Accept** or **Deny** this request below:`
+                    }
+                    outtext = `${outtext}${restraintstext}${outend}`
+
+                    let confirmdenybuttons = [
+                        new ButtonBuilder()
+                            .setCustomId(`deny`)
+                            .setLabel("Deny")
+                            .setStyle(ButtonStyle.Success),
+                        new ButtonBuilder()
+                            .setCustomId(`confirm`)
+                            .setLabel("Accept")
+                            .setStyle(ButtonStyle.Success)
+                    ];
+                    let targetuser = await interaction.guild.members.fetch(targetid)
+                    let pagecomponents = [new TextDisplayBuilder().setContent(outtext), new ActionRowBuilder().addComponents(...confirmdenybuttons)]
+                    let dmchannel = await targetuser.createDM();
+                    try {
+                        await dmchannel.send({ components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] }).then((mess) => {
+                            const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 });
+                            collector.on("collect", async (i) => {
+                                if (i.customId == "confirm") {
+                                    await mess.delete().then(() => {
+                                        i.reply(`Confirmed - <@${targetid}> will receive keys to your restraints!`);
+                                    });
+                                    let wearertext = (wearerid == interaction.user.id) ? `your` : `<@${wearerid}>'s`
+                                    let desttext = (targetid == wearerid) ? `${getPronouns(wearerid, "object")}` : `<@${targetid}>`
+                                    // Do stuff!
+                                    // Chastity
+                                    if ((keybit.charAt(1) == "1") && validrestraints.includes("chastity")) {
+                                        if (keybit.charAt(0) == "0") { // Give
+                                            transferChastityKey(wearerid, targetid);
+                                        }
+                                        else {
+                                            cloneChastityKey(wearerid, targetid);
+                                        }
+                                    }
+                                    if ((keybit.charAt(2) == "1") && validrestraints.includes("chastitybra")) {
+                                        if (keybit.charAt(0) == "0") { // Give
+                                            transferChastityBraKey(wearerid, targetid);
+                                        }
+                                        else {
+                                            cloneChastityBraKey(wearerid, targetid);
+                                        }
+                                    }
+                                    if ((keybit.charAt(3) == "1") && validrestraints.includes("collar")) {
+                                        if (keybit.charAt(0) == "0") { // Give
+                                            transferCollarKey(wearerid, targetid);
+                                        }
+                                        else {
+                                            cloneCollarKey(wearerid, targetid);
+                                        }
+                                    }
+                                    interaction.editReply(`${(keybit.charAt(0) == "0") ? `Transferred ` : `Cloned `}keys for ${wearertext} ${restraintstext} to ${desttext}.`)
+                                    return;
+                                } else {
+                                    await mess.delete().then(() => {
+                                        i.reply(`Rejected - <@${targetid}> will NOT receive keys to your restraints!`);
+                                        return;
+                                    });
+                                }
+                            });
+
+                            collector.on("end", async (collected) => {
+                                // timed out
+                                if (collected.length == 0) {
+                                    await mess.delete().then(() => {
+                                        i.reply(`Timed Out - <@${targetid}> will NOT receive keys to your restraints!`);
+                                        return;
+                                    });
+                                }
+                            });
+                        })
+                    }
+                    catch (err) {
+                        interaction.editReply(`Failed to send a DM to the wearer either because they've blocked the bot or are not accepting DMs from this server. Keys were not transferred or cloned.`)
+                        return;
+                    }
+                }
+                else {
+                    let wearertext = (wearerid == interaction.user.id) ? `your` : `<@${wearerid}>'s`
+                    let desttext = (targetid == wearerid) ? `${getPronouns(wearerid, "object")}` : `<@${targetid}>`
+                    // Do stuff!
+                    // Chastity
+                    if ((keybit.charAt(1) == "1") && validrestraints.includes("chastity")) {
+                        if (keybit.charAt(0) == "0") { // Give
+                            transferChastityKey(wearerid, targetid);
+                        }
+                        else {
+                            cloneChastityKey(wearerid, targetid);
+                        }
+                    }
+                    if ((keybit.charAt(2) == "1") && validrestraints.includes("chastitybra")) {
+                        if (keybit.charAt(0) == "0") { // Give
+                            transferChastityBraKey(wearerid, targetid);
+                        }
+                        else {
+                            cloneChastityBraKey(wearerid, targetid);
+                        }
+                    }
+                    if ((keybit.charAt(3) == "1") && validrestraints.includes("collar")) {
+                        if (keybit.charAt(0) == "0") { // Give
+                            transferCollarKey(wearerid, targetid);
+                        }
+                        else {
+                            cloneCollarKey(wearerid, targetid);
+                        }
+                    }
+                    interaction.editReply(`${(keybit.charAt(0) == "0") ? `Transferred ` : `Cloned `}keys for ${wearertext} ${restraintstext} to ${desttext}.`)
+                    return;
+                }
+            }
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
 };

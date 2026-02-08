@@ -92,7 +92,7 @@ module.exports = {
 							if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
 								// We own the key for the chastity belt
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, corsetuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype).fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
@@ -142,7 +142,7 @@ module.exports = {
 							if (canAccessChastity(corsetuser.id, interaction.user.id).access && !canAccessChastity(corsetuser.id, interaction.user.id).public) {
 								// We own the key for the chastity belt and it is NOT sealed.
 								data.key = true;
-								const fumbleResult = rollKeyFumble(interaction.user.id, corsetuser.id, 2);
+								const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype).fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;

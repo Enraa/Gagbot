@@ -383,7 +383,7 @@ const getChastityKeys = (user) => {
 	}
 	let keysheld = [];
 	Object.keys(process.chastity).forEach((k) => {
-		if ((process.chastity[k].keyholder == user) && (!process.chastity[k].fumbled)) {
+		if ((process.chastity[k].keyholder == user) && (!process.chastity[k]?.fumbled)) {
 			keysheld.push(k);
 		}
 	});
@@ -413,7 +413,7 @@ const getChastityBraKeys = (user) => {
 	}
 	let keysheld = [];
 	Object.keys(process.chastitybra).forEach((k) => {
-		if ((process.chastitybra[k].keyholder == user) && (!process.chastity[k].fumbled)) {
+		if ((process.chastitybra[k].keyholder == user) && (!process.chastity[k]?.fumbled)) {
 			keysheld.push(k);
 		}
 	});
