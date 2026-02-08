@@ -1,6 +1,23 @@
+const fs = require("fs");
+const path = require("path");
+const https = require("https");
 const { getCollar } = require("./collarfunctions")
 const { getChastityBra } = require("./vibefunctions")
 const { getChastity } = require("./vibefunctions")
+
+// Load the game files! 
+function loadGames() {
+    const gametypes = {};
+    const gamePath = path.join(__dirname, "..", "games");
+    const gameFiles = fs.readdirSync(gamePath).filter((file) => file.endsWith(".js"));
+    for (const file of gameFiles) {
+        const game = require(path.join(gamePath, file));
+        if (game) {
+            gametypes[file.replace(".js", "")] = game;
+        }
+    }
+    process.gametypes = gametypes;
+}
 
 // Applies an escrow on a user's restraint, preventing it from being transferred
 // or removed until the game state has been concluded.
@@ -61,4 +78,27 @@ function rewardEscrow(winner, loser, gameid) {
         // Remove the escrow over the winner's restraints
         removeEscrow(winner, gameid);
     }
+}
+
+// Creates a game object. Note that this does not start it until the .started param is added to the object,
+// which will be handled when prompting everyone that is invited to the game. 
+function createGame(players, gametype, escrows, options) {
+    let randomid = crypto.randomUUID(); // Generates a unique 32-bit UUID.
+    let playerarr = (Array.isArray(players)) ? players : [players];
+    process.games[randomid] = {
+        players: playerarr,
+        gametype: gametype,
+        escrows: escrows,
+        accepted: [playerarr[0]], // The first player is always the one who initiated it. 
+        options: options
+    }
+}
+
+// Generate the modal which handles game selection
+function generateGameSelectionModal(userid, gametype, escrows, options = null, otherplayers = []) {
+
+    // Game picker here
+
+
+    // Other players
 }
