@@ -2528,6 +2528,9 @@ async function createWebhook(interaction, channel) {
 		if (!botwebhook) {
 			botwebhook = await channel.createWebhook({ name: "Gagbot Webhook (Bot)", reason: "Auto-generated Webhook for Bot Emoji" });
 		}
+        // If the personal created webhook doesn't exist, assign the webhook the same id
+        // This will look weird, but it won't crash. 
+        if (!webhook) { webhook = botwebhook }
 		if (process.webhook == undefined) {
 			process.webhook = {};
 		}
