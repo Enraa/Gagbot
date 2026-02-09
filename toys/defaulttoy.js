@@ -43,7 +43,7 @@ function Toy() {
     // Calculation for effective arousal change
     // Note, this should be used for checks more focused around the vibe - it will be
     // further multiplied by the chastity's checks for this, if applicable. 
-    this.calcVibeEffect = function (data) { return 0 }
+    this.calcVibeEffect = (data) => { return 0 }
 
     // Name for the toy
     this.toyname = "Default Toy"
