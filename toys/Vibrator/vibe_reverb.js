@@ -1,25 +1,27 @@
 const { getUserVar, setUserVar } = require("../../functions/usercontext")
 
-// This vibrator will only function if getUserVar(userID, "soundVibeEndTime") has any value
+// This vibrator will only function if getUserVar(userID, "reverbEndTime") has any value
 exports.vibescale = (data) => { 
-    console.log(`${data.userID}`)
-    return Math.max(0, Math.min(getUserVar(data.userID, "soundVibeIntensity")/10, 2));
+    //console.log(`${data.userID}`)
+    //console.log(`${getUserVar(data.userID, "reverbVibeIntensity")/10}`);
+    return Math.max(0, Math.min(getUserVar(data.userID, "reverbVibeIntensity")/10, 2));
 } // Ranging between 0 and 2
 
 exports.calcVibeEffect = (data) => { 
-    return (getUserVar(data.userID, "soundVibeEndTime") ? data.intensity * this.vibescale() : 0)
+    //console.log(`${data.userID}`)
+    return (getUserVar(data.userID, "reverbEndTime") ? data.intensity * this.vibescale(data) : 0)
 }
 
 exports.onUnequip = (data) => {
-    setUserVar(data.userID, "soundVibeEndTime", undefined);
-    setUserVar(data.userID, "soundVibeDecayTime", undefined);
-    setUserVar(data.userID, "soundVibeIntensity", 0);
+    setUserVar(data.userID, "reverbEndTime", undefined);
+    setUserVar(data.userID, "reverbDecayTime", undefined);
+    setUserVar(data.userID, "reverbVibeIntensity", 0);
 }
 
 exports.onEquip = (data) => {
-    setUserVar(data.userID, "soundVibeEndTime", undefined);
-    setUserVar(data.userID, "soundVibeDecayTime", undefined);
-    setUserVar(data.userID, "soundVibeIntensity", 0);
+    setUserVar(data.userID, "reverbEndTime", undefined);
+    setUserVar(data.userID, "reverbDecayTime", undefined);
+    setUserVar(data.userID, "reverbVibeIntensity", 0);
 }
 
 exports.toyname = "Reverb Vibe"
