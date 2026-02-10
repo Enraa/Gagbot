@@ -321,10 +321,12 @@ function punishDoll(userID, amount) {
 	}
 }
 
-const modifymessage = async (msg, threadId) => {
+const modifymessage = async (msg, threadId, messageonly) => {
 	try {
-		console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
-
+        if (!messageonly) {
+            console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
+        }
+		
 		// TODO - remove this var
 		let outtext = ``											// Message to send.
 		let msgTree = new MessageAST(msg.content);					// Build AST from message
@@ -358,6 +360,11 @@ const modifymessage = async (msg, threadId) => {
 
         // Iterate through any speech events in process.msgfunctions
         runMessageEvents({ msg: msg, msgcontent: msg.content, outtext: outtext })
+
+        // If we only wanted to edit the message, just return it at this point and do NOT proceed. 
+        if (messageonly) { 
+            return outtext;
+        }
 
 		// Finally, send it if we modified the message.
 		if (msgTreeMods.modified) {

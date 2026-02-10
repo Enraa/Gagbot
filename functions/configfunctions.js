@@ -2388,8 +2388,6 @@ async function setCommands(interaction, serverID) {
 		delete commands["item.js"];
 	}
 
-	console.log(Object.keys(commands));
-
 	let commandsforrest = [];
 	Object.keys(commands).forEach((k) => {
 		commandsforrest.push(commands[k].data.toJSON());
@@ -2415,7 +2413,7 @@ async function setCommands(interaction, serverID) {
 	});
 
     const messagecontextcommands = {};
-	const messagecontextcommandsPath = path.join(__dirname, "..", "contextcommands", "user");
+	const messagecontextcommandsPath = path.join(__dirname, "..", "contextcommands", "message");
 	const messagecontextcommandFiles = fs.readdirSync(messagecontextcommandsPath).filter((file) => file.endsWith(".js"));
 
 	// Grab the SlashCommandBuilder#toJSON() output of each command's data for deployment
@@ -2430,6 +2428,8 @@ async function setCommands(interaction, serverID) {
     Object.keys(messagecontextcommands).forEach((k) => {
 		commandsforrest.push(messagecontextcommands[k].data.toJSON());
 	});
+
+    console.log(Object.values(commandsforrest.map((c) => c.name)));
 
 	// Set up the REST route to overwrite the commands list for that server with our new one.
 	try {

@@ -36,29 +36,34 @@ const loadEmoji = async (client) => {
 };
 
 const messageSend = async (msg, str, avatarURL, username, threadId, botemoji, isreply) => {
-	let webhookClient;
-	let channel_id = threadId ? msg.channel.parentId : msg.channel.id;
-	// New webhook method - human emoji
-	if (process.webhook[channel_id]) {
-		if (process.webhook[channel_id].human && botemoji) {
-			webhookClient = process.webhook[channel_id].bot;
-		} else if (process.webhook[channel_id].human && !botemoji) {
-			webhookClient = process.webhook[channel_id].human;
-		} else {
-			webhookClient = process.webhook[channel_id];
-		}
-		webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, allowedMentions: { parse: [] } }).then((webmess) => {
-			if (isreply) {
-                console.log(isreply);
-                webhookClient.editMessage(webmess, { content: `${webmess.content}​`, allowedMentions: { parse: ["users"] } }).then(() => {
+    try {
+        let webhookClient;
+        let channel_id = threadId ? msg.channel.parentId : msg.channel.id;
+        // New webhook method - human emoji
+        if (process.webhook[channel_id]) {
+            if (process.webhook[channel_id].human && botemoji) {
+                webhookClient = process.webhook[channel_id].bot;
+            } else if (process.webhook[channel_id].human && !botemoji) {
+                webhookClient = process.webhook[channel_id].human;
+            } else {
+                webhookClient = process.webhook[channel_id];
+            }
+            webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, allowedMentions: { parse: [] } }).then((webmess) => {
+                if (isreply) {
+                    console.log(isreply);
+                    webhookClient.editMessage(webmess, { content: `${webmess.content}​`, allowedMentions: { parse: ["users"] } }).then(() => {
+                        return true;
+                    })
+                }
+                else {
                     return true;
-                })
-            }
-            else {
-                return true;
-            }
-		});
-	}
+                }
+            });
+        }
+    }
+	catch (err) {
+        console.log(err);
+    }
 	// Legacy Webhook method
 	/*else {
         webhookClient = new WebhookClient({ 
@@ -69,33 +74,38 @@ const messageSend = async (msg, str, avatarURL, username, threadId, botemoji, is
 };
 
 const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, botemoji, isreply) => {
-	let webhookClient;
-	let channel_id = threadId ? msg.channel.parentId : msg.channel.id;
-	// New webhook method
-	if (process.webhook[channel_id]) {
-		if (process.webhook[channel_id].human && botemoji) {
-			webhookClient = process.webhook[channel_id].bot;
-		} else if (process.webhook[channel_id].human && !botemoji) {
-			webhookClient = process.webhook[channel_id].human;
-		} else {
-			webhookClient = process.webhook[channel_id];
-		}
-		let attachments = [];
-		attachs.forEach((f) => {
-			attachments.push(new AttachmentBuilder(`./downloaded/${f.name}`, { name: f.name, spoiler: f.spoiler }));
-		});
+    try {
+        let webhookClient;
+        let channel_id = threadId ? msg.channel.parentId : msg.channel.id;
+        // New webhook method
+        if (process.webhook[channel_id]) {
+            if (process.webhook[channel_id].human && botemoji) {
+                webhookClient = process.webhook[channel_id].bot;
+            } else if (process.webhook[channel_id].human && !botemoji) {
+                webhookClient = process.webhook[channel_id].human;
+            } else {
+                webhookClient = process.webhook[channel_id];
+            }
+            let attachments = [];
+            attachs.forEach((f) => {
+                attachments.push(new AttachmentBuilder(`./downloaded/${f.name}`, { name: f.name, spoiler: f.spoiler }));
+            });
 
-		webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, files: attachments, allowedMentions: { parse: [] } }).then((webmess) => {
-			if (isreply) {
-                webhookClient.editMessage(webmess, { content: `${webmess.content}​`, files: attachments, allowedMentions: { parse: ["users"] } }).then(() => {
+            webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, files: attachments, allowedMentions: { parse: [] } }).then((webmess) => {
+                if (isreply) {
+                    webhookClient.editMessage(webmess, { content: `${webmess.content}​`, files: attachments, allowedMentions: { parse: ["users"] } }).then(() => {
+                        return true;
+                    })
+                }
+                else {
                     return true;
-                })
-            }
-            else {
-                return true;
-            }
-		});
-	}
+                }
+            });
+        }
+    }
+	catch (err) {
+        console.log(err);
+    }
 	// Legacy Webhook method
 	/*else {
         webhookClient = new WebhookClient({ 

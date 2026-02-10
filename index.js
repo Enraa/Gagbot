@@ -221,6 +221,7 @@ for (const file of messagecontextcommandsFiles) {
     if ((cmd.execute) && (cmd.data)) {
         messagecontextcommands.set(cmd.data.name, cmd);
     }
+    if (cmd.modalexecute) modalHandlers.set(file, cmd);
 }
 
 var gagged = {}
@@ -327,6 +328,9 @@ client.on('interactionCreate', async (interaction) => {
             // We can't pass custom data through the modal except via the ID, so separate out the first part
             // as IDs will come in like collar_12451251253 - we want the collar part to query the command. 
             let interactioncommand = interaction.customId.split("_")[0]
+            if (interactioncommand == "webhookedit") {
+                interactioncommand = "Edit Message"
+            }
             console.log(interactioncommand);
             modalHandlers.get(`${interactioncommand}.js`)?.modalexecute(interaction);
             return;
