@@ -1056,7 +1056,7 @@ async function generateEditMessageModal(messagecontent, messageid, channelid, hu
         .setCustomId(`textedit`)
         .setStyle(TextInputStyle.Paragraph)
         .setValue(messagecontent)
-        .setPlaceholder(messagecontent)
+        //.setPlaceholder(messagecontent)
         .setMaxLength(2000)
 
     let textentrylabel = new LabelBuilder()
