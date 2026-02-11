@@ -15,6 +15,7 @@ const { getUserVar, setUserVar } = require("./usercontext.js");
 const { getToys } = require("./toyfunctions.js");
 const { logConsole } = require("./logfunctions.js");
 const { getBaseChastity } = require("./chastityfunctions.js");
+const { getHeadwear } = require("./headwearfunctions.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -1357,7 +1358,9 @@ function updateArousalValues() {
             // I want to pull away from using VIBE_SCALING here, may need to change this later. 
             let minvibegain = traits.minVibe ? (traits.minVibe * VIBE_SCALING) : -9999
             let maxvibegain = traits.maxVibe ? (traits.maxVibe * VIBE_SCALING) : 9999
-			const vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
+			let vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
+            // If the wearer is wearing Gasmask aphrodisiac, amplify the gain by 2x.
+            if (getHeadwear(user).includes("gasmask_hornygas")) { vibearousalchange = vibearousalchange * 2 }
 			const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, vibearousalchange, traits.decayCoefficient * UNBELTED_DECAY);
 			// set the values to the new ones
 			arousal.timestamp = now;
