@@ -1048,6 +1048,27 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
     return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
 }
 
+async function generateEditMessageModal(messagecontent, messageid, channelid, human) {
+    let modal = new ModalBuilder().setCustomId(`webhookedit_${messageid}_${channelid}_${human ? "h" : "b"}`).setTitle(`Edit Message`)
+
+    let outLabel = `Edit your message below:`
+    let textentry = new TextInputBuilder()
+        .setCustomId(`textedit`)
+        .setStyle(TextInputStyle.Paragraph)
+        .setValue(messagecontent)
+        //.setPlaceholder(messagecontent)
+        .setMaxLength(2000)
+
+    let textentrylabel = new LabelBuilder()
+        .setLabel(outLabel)
+        .setDescription("The message will be garbled again according to your current restrictions.")
+        .setTextInputComponent(textentry)
+    
+    modal.addLabelComponents(textentrylabel)
+
+    return modal;
+}
+
 exports.consentMessage = consentMessage;
 exports.getConsent = getConsent;
 exports.handleConsent = handleConsent;
@@ -1064,6 +1085,8 @@ exports.handleExtremeRestraint = handleExtremeRestraint;
 exports.generateHelpModal = generateHelpModal;
 
 exports.generateKeyGivingModal = generateKeyGivingModal;
+
+exports.generateEditMessageModal = generateEditMessageModal;
 
 exports.assignMemeImages = assignMemeImages;
 
