@@ -7,7 +7,7 @@ exports.vibescale = (data) => {
     return Math.max(0, Math.min(getUserVar(data.userID, "reverbVibeIntensity")/10, 2));
 } // Ranging between 0 and 2
 
-exports.calcVibeEffect = (data) => { 
+exports.calcVibeEffect = function(data) { 
     //console.log(`${data.userID}`)
     return (getUserVar(data.userID, "reverbEndTime") ? data.intensity * this.vibescale(data) : 0)
 }
