@@ -62,7 +62,7 @@ async function functiontick(userID) {
 function volumetest(message) {
     // Split into lines
     arrayOfLines = message.match(newline);
-    console.log(`ARRAY OF LINES: ${arrayOfLines}\n`);
+    //console.log(`ARRAY OF LINES: ${arrayOfLines}\n`);
 
     intensityMod = 0;
     // Discard OOC Lines
