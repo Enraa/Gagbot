@@ -165,7 +165,7 @@ module.exports = {
 				} else if (sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 25).length == 0 && focusedValue.length > 0) {
 					sorted = [{ name: "No Eligible Keys To Revoke...", value: "nothing" }];
 				}
-				await interaction.respond(sorted);
+				await interaction.respond(sorted.slice(0, 25));
 			} else if (subcommand == "swapitem") {
 				// Note, we only need to know if we can ***unlock*** a restraint to swap it.
 				if (interaction.options.get("restraint")?.focused) {
