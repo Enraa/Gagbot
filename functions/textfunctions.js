@@ -6,11 +6,31 @@ const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 const texts_chastity = {
 	chastitybelt: {
 		heavy: {
-			chastity: [`USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`, `USER_TAG wiggles a bit, trying to adjust USER_THEIR VAR_C2, but USER_THEIR VAR_C1 makes it hard to reach...`],
+			chastity: [
+				`USER_TAG squirms in USER_THEIR VAR_C1, trying to adjust USER_THEIR VAR_C2, but it's futile!`, 
+				`USER_TAG wiggles a bit, trying to adjust USER_THEIR VAR_C2, but USER_THEIR VAR_C1 makes it hard to reach...`
+			],
 			nochastity: [`USER_TAG squirms in USER_THEIR VAR_C1, trying to put on a VAR_C2, but can't!`, `USER_TAG shifts USER_THEIR hips, wanting to put USER_THEMSELF in chastity because USER_THEY USER_ISARE a good USER_PRAISEOBJECT, but USER_THEIR VAR_C1 said no.`, `USER_TAG bumps into a VAR_C2, wanting so desperately to put it on USER_THEIR hips, but USER_THEIR VAR_C1 gives USER_THEM no arms with which to work with.`],
 		},
 		noheavy: {
-			chastity: { key_other: [`You are already locked in a chastity belt and TARGET_TAG has the key!`], key_self: [`You are already locked in a chastity belt and you're holding the key!`] },
+			chastity: { 
+				key_other: [`You are already locked in a chastity belt and TARGET_TAG has the key!`,
+					{
+						only: (t) => {
+							return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+						},
+						text: `You are already wearing a chastity seal with access keyed to TARGET_TAG!`,
+					},
+				], 
+				key_self: [`You are already locked in a chastity belt and you're holding the key!`,
+					{
+						only: (t) => {
+							return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+						},
+						text: `You are already wearing a chastity seal keyed to you!`,
+					},
+				] 
+			},
 			nochastity: {
 				namedchastity: {
 					key_other: [
@@ -29,6 +49,12 @@ const texts_chastity = {
 							},
 							text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`,
 						},
+						{
+							only: (t) => {
+								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							},
+							text: `USER_TAG presses a VAR_C2 against USER_THEIR skin, feeling it activate and key itself to TARGET_TAG!`,
+						},
 					],
 					key_self: [
 						`USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
@@ -45,6 +71,12 @@ const texts_chastity = {
 								return getArousal(t.interactionuser.id) > 20;
 							},
 							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
+						},
+						{
+							only: (t) => {
+								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							},
+							text: `USER_TAG presses a VAR_C2 against USER_THEIR skin, feeling it activate and seal USER_THEM away until USER_THEY choose to remove it!`,
 						},
 					],
 				},
@@ -65,6 +97,12 @@ const texts_chastity = {
 							},
 							text: `USER_TAG feverishly slips a VAR_C2 onto USER_THEIR waist before USER_THEY can regret it! USER_THEY_CAP hands TARGET_TAG the key to keep USER_THEM safe from touching USER_THEMSELF!`,
 						},
+						{
+							only: (t) => {
+								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							},
+							text: `USER_TAG presses a VAR_C2 against USER_THEIR skin, feeling it activate and key itself to TARGET_TAG!`,
+						},
 					],
 					key_self: [
 						`USER_TAG puts a VAR_C2 on and clicks a tiny lock on it before stashing the key for safekeeping!`,
@@ -81,6 +119,12 @@ const texts_chastity = {
 								return getArousal(t.interactionuser.id) > 20;
 							},
 							text: `In a vain attempt to be a good USER_PRAISEOBJECT, USER_TAG locks USER_THEMSELF up with a VAR_C2. Though, USER_THEY USER_ISARE still holding the key.`,
+						},
+						{
+							only: (t) => {
+								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							},
+							text: `USER_TAG presses a VAR_C2 against USER_THEIR skin, feeling it activate and seal USER_THEM away until USER_THEY choose to remove it!`,
 						},
 					],
 				},
@@ -2608,12 +2652,12 @@ const texts_untoy = {
                         ],
                         "Vibrator": [
                             `USER_TAG tries as USER_THEY might, but is unable to unlock USER_THEIR chastity belt to remove USER_THEIR VAR_C2.`,
-						{
-							only: (t) => {
-								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							{
+								only: (t) => {
+									return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								},
+								text: `USER_TAG tries as USER_THEY might, but is unable to breach the protections of USER_THEIR seal to remove USER_THEIR VAR_C2.`,
 							},
-							text: `USER_TAG tries as USER_THEY might, but is unable to breach the protections of USER_THEIR seal to remove USER_THEIR VAR_C2.`,
-						},
                         ],
                         "Wand": [
                             `USER_TAG tries to press the button on USER_THEIR VAR_C2, but... can't? (this is a bug, please report)`
@@ -2789,7 +2833,26 @@ const texts_untoy = {
 const texts_unvibe = {
 	heavy: {
 		self: {
-			chastity: { single: [`USER_TAG tries to knock USER_THEIR VAR_C2 off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity belt of course!`], both: [`USER_TAG tries to knock USER_THEIR vibrators off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity belt of course!`] },
+			chastity: { 
+				single: [
+					`USER_TAG tries to knock USER_THEIR VAR_C2 off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity belt of course!`,
+							{
+								only: (t) => {
+									return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								},
+								text: `USER_TAG tries to knock USER_THEIR VAR_C2 off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity seal of course!`,
+							},
+				], 
+				both: [
+					`USER_TAG tries to knock USER_THEIR vibrators off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity belt of course!`,
+							{
+								only: (t) => {
+									return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+								},
+								text: `USER_TAG tries to knock USER_THEIR vibrators off with USER_THEIR thighs, but USER_THEY can't because USER_THEIR arms are useless from USER_THEIR VAR_C1. Well, and USER_THEIR chastity seal of course!`,
+							},
+				] 
+			},
 			nochastity: { single: [`USER_TAG thrashes USER_THEIR thighs to try to knock out USER_THEIR VAR_C2, however it stays pretty secure in USER_THEIR body!`], both: [`USER_TAG thrashes USER_THEIR thighs to try to knock out USER_THEIR VAR_C2, however it stays pretty secure in USER_THEIR body!`] },
 		},
 		other: {
@@ -2812,7 +2875,15 @@ const texts_unvibe = {
 						nofumble: { single: [`USER_TAG puts the key in USER_THEIR belt, unlocking it and removing the tormenting VAR_C2 before closing it and locking USER_THEMSELF back up.`], both: [`USER_TAG puts the key in USER_THEIR belt, unlocking it and removing the tormenting vibrators before closing it and locking USER_THEMSELF back up.`] },
 					},
 					// No public access to self belt
-					nokey: [`USER_TAG claws feverishly at USER_THEIR belt, the agonizing vibrators offering USER_THEM no reprieve from their sweet sensation!`],
+					nokey: [
+						`USER_TAG claws feverishly at USER_THEIR belt, the agonizing vibrators offering USER_THEM no reprieve from their sweet sensation!`,
+						{
+							only: (t) => {
+								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							},
+							text: `USER_TAG claws feverishly at USER_THEIR seal but fail to bypass it, the agonizing vibrators offering USER_THEM no reprieve from their sweet sensation!`,
+						},
+					],
 				},
 				nochastity: { single: [`USER_TAG carefully removes USER_THEIR VAR_C2 and turns it off. Freedom from the torment!`], both: [`USER_TAG carefully removes USER_THEIR vibrator and turns them off. Freedom from the torment!`] },
 			},
@@ -3070,10 +3141,25 @@ const texts_vibe = {
 							discard: { single: { keyholder: [`USER_TAG tries to put the key in USER_THEIR belt to change the settings on the VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`], clone: [`USER_TAG tries to put the key in USER_THEIR belt to change the settings on the VAR_C2, but the key slips and falls on the floor. The pieces are scattered about.`] } },
 							nodiscard: { single: [`USER_TAG tries to put the key in USER_THEIR belt to adjust the VAR_C2, but the key slips! Thankfully, USER_THEY didn't lose it!`] },
 						},
-						nofumble: { single: [`USER_TAG puts the key in USER_THEIR belt, unlocking it and adjusting the VAR_C2 to VAR_C3 power! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`] },
+						nofumble: { single: [`USER_TAG puts the key in USER_THEIR belt, unlocking it and adjusting the VAR_C2 to VAR_C3 power! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG disables the magic in USER_THEIR seal, removing it before adding a VAR_C2 set to VAR_C3! USER_THEY_CAP then replaceUSER_S and reactivateUSER_S the seal.`,
+								},
+							] 
+						},
 					},
 					// No public access to self belt
-					nokey: [`USER_TAG prods at USER_THEIR belt, trying to open it to play with a vibe, but the belt is locked tightly!`],
+					nokey: [`USER_TAG prods at USER_THEIR belt, trying to open it to play with a vibe, but the belt is locked tightly!`,
+						{
+							only: (t) => {
+								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							},
+							text: `USER_TAG tries to slip past USER_THEIR seal to play with a vibe, but the seal's magics deny USER_THEM access!`,
+						},
+					],
 				},
 				nochastity: { single: [`USER_TAG adjusts USER_THEIR VAR_C2 and sets it to VAR_C3! The toy buzzes gently!`] },
 			},
@@ -3084,10 +3170,25 @@ const texts_vibe = {
 							discard: { single: { keyholder: [`USER_TAG tries to put the key in USER_THEIR belt to add a VAR_C2, but the key slips and falls somewhere. It's nowhere to be seen.`], clone: [`USER_TAG tries to put the key in USER_THEIR belt to add a VAR_C2, but the key slips and vanishes. There's a loud crack as it lands on the floor.`] } },
 							nodiscard: { single: [`USER_TAG tries to put the key in USER_THEIR belt to add a VAR_C2, but the key slips! Thankfully, USER_THEY didn't lose it!`] },
 						},
-						nofumble: { single: [`USER_TAG puts the key in USER_THEIR belt, unlocking it before adding a VAR_C2 set to VAR_C3! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`] },
+						nofumble: { single: [`USER_TAG puts the key in USER_THEIR belt, unlocking it before adding a VAR_C2 set to VAR_C3! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG disables the magic in USER_THEIR seal, removing it before adding a VAR_C2 set to VAR_C3! USER_THEY_CAP then replaceUSER_S and reactivateUSER_S the seal.`,
+								},
+							] 
+						},
 					},
 					// No public access to self belt
-					nokey: [`USER_TAG prods at USER_THEIR belt, trying to open it to play with a vibe, but the belt is locked tightly!`],
+					nokey: [`USER_TAG prods at USER_THEIR belt, trying to open it to play with a vibe, but the belt is locked tightly!`,
+						{
+							only: (t) => {
+								return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+							},
+							text: `USER_TAG tries to slip past USER_THEIR seal to play with a vibe, but the seal's magics deny USER_THEM access!`,
+						},
+					],
 				},
 				nochastity: { single: [`USER_TAG carefully inserts a VAR_C2 set to VAR_C3! The toy buzzes gently!`] },
 			},
@@ -3340,7 +3441,14 @@ const texts_timelock = {
 	timelockengage: {
 		everyoneaccess: {
 			self: {
-				chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock's magic wards away USER_THEIR hands but others may be able to do things to USER_THEM...`],
+				chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock's magic wards away USER_THEIR hands but others may be able to do things to USER_THEM...`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away USER_THEIR hands but others may still be able to do things to USER_THEM...`,
+								},
+							],
 				chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock's magic wards away USER_THEIR hands but others may be able to do things to USER_THEM...`],
 				collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock's magic wards away USER_THEIR hands but others may be able to do things to USER_THEM...`],
 			},
@@ -3356,14 +3464,54 @@ const texts_timelock = {
 			},
 		},
 		keyholderaccess: {
-			self: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
+			self: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
+								},
+							], 
+					chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
 			khother: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "VAR_C1" on it as it begins to count down...`], chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock reads "VAR_C1" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock reads "VAR_C1" on it as it begins to count down...`] },
-			other: { chastitybelt: [`USER_TAG puts a timelock on TARGET_TAG's chastity belt, locking it firmly! The timelock reads "TARGET_TAG" on it as it begins to count down...`], chastitybra: [`USER_TAG puts a timelock on TARGET_TAG's chastity bra, locking it firmly! The timelock reads "TARGET_TAG" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on TARGET_TAG's collar, locking it firmly! The timelock reads "TARGET_TAG" on it as it begins to count down...`] },
+			other: { chastitybelt: [`USER_TAG puts a timelock on TARGET_TAG's chastity belt, locking it firmly! The timelock reads "TARGET_TAG" on it as it begins to count down...`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away all but TARGET_TAG's hands until the changes fade away...`,
+								},
+							], 
+					chastitybra: [`USER_TAG puts a timelock on TARGET_TAG's chastity bra, locking it firmly! The timelock reads "TARGET_TAG" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on TARGET_TAG's collar, locking it firmly! The timelock reads "TARGET_TAG" on it as it begins to count down...`] },
 		},
 		noaccess: {
-			self: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
-			khother: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
-			other: { chastitybelt: [`USER_TAG puts a timelock on TARGET_TAG's chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], chastitybra: [`USER_TAG puts a timelock on TARGET_TAG's chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on TARGET_TAG's collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
+			self: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
+								},
+							], 
+					chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
+			khother: { chastitybelt: [`USER_TAG puts a timelock on USER_THEIR chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
+								},
+							], 
+					chastitybra: [`USER_TAG puts a timelock on USER_THEIR chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on USER_THEIR collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
+			other: { chastitybelt: [`USER_TAG puts a timelock on TARGET_TAG's chastity belt, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`,
+								{
+									only: (t) => {
+										return getChastity(t.interactionuser.id)?.chastitytype.includes("seal");
+									},
+									text: `USER_TAG tweaks the magics of USER_THEIR chastity seal, locking it in time! The magic now wards away everyone's hands until the changes fade away...`,
+								},
+							], 
+					chastitybra: [`USER_TAG puts a timelock on TARGET_TAG's chastity bra, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`], collar: [`USER_TAG puts a timelock on TARGET_TAG's collar, locking it firmly! The timelock reads "No Access" on it as it begins to count down...`] },
 		},
 	},
 };
@@ -3486,7 +3634,26 @@ const texts_eventfunctions = {
 			applyingOutfit: {
 				wearable: { add: [`The Costumer Mimic pulls out a VAR_C1 from its internal storage and begins to dress USER_TAG in it!`, `The Costumer Mimic produces a VAR_C1 from within itself and slips it onto USER_TAG!`, `The Costumer Mimic's tentacles fish out a VAR_C1 from its storage and begins to dress USER_TAG in it!`] },
 				mitten: { replace: [`The Costumer Mimic removes the VAR_C1 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The Costumer Mimic grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C1 on USER_THEM and secures them tightly.`] },
-				chastitybelt: { replace: [`The Costumer Mimic rips off the VAR_C1 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`], add: [`The Costumer Mimic locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`] },
+				chastitybelt: { 
+					replace: [
+						`The Costumer Mimic rips off the VAR_C1 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The Costumer Mimic rips off the VAR_C1 that USER_TAG is wearing, storing it away before applying a VAR_C2 in its place.`,
+						},
+					], 
+					add: [
+						`The Costumer Mimic locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The Costumer Mimic presses a VAR_C2 onto USER_TAG, activating it and sealing away USER_THEIR chastity.`,
+						},
+					] 
+				},
 				chastitybra: { replace: [`The Costumer Mimic picks the locking mechanism on USER_TAG's VAR_C1, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`], add: [`The Costumer Mimic wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`] },
 				collar: { replace: [`The Costumer Mimic forces USER_TAG to lean forward as it removes USER_THEIR VAR_C1, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the Costumer Mimic moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
 				headwear: { add: [`The Costumer Mimic produces a VAR_C1 from within itself and secures it onto USER_TAG's head.`] },
