@@ -165,7 +165,7 @@ module.exports = {
 				} else if (sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 25).length == 0 && focusedValue.length > 0) {
 					sorted = [{ name: "No Eligible Keys To Revoke...", value: "nothing" }];
 				}
-				await interaction.respond(sorted);
+				await interaction.respond(sorted.slice(0, 25));
 			} else if (subcommand == "swapitem") {
 				// Note, we only need to know if we can ***unlock*** a restraint to swap it.
 				if (interaction.options.get("restraint")?.focused) {
@@ -575,17 +575,17 @@ module.exports = {
 				// Check if the interaction user has access to give the key for the target restraint.
 				let cangive = false;
 				let chosenrestraintreadable;
-				if (restraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true)) {
+				if (restraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (restraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true)) {
+				if (restraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (restraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true)) {
+				if (restraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;

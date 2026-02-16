@@ -1028,7 +1028,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            if (getCollar(inspectuserID)?.fumbled) {
+            else if (getCollar(inspectuserID)?.fumbled) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Keys are Missing!**`
             }
             else if (getCollarTimelock(inspectuserID)) {

@@ -656,14 +656,54 @@ const texts_headwear = {
 			self: {
 				// Ephemeral
 				worn: [`You are already wearing a VAR_C2!`],
-				noworn: [`USER_TAG places a VAR_C2 on USER_THEIR lovely head, securing the straps on snugly!`],
+				noworn: [
+                    `USER_TAG places a VAR_C2 on USER_THEIR lovely head, securing the straps on snugly!`,
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Aphrodisiacs");
+                        },
+                        text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEY_CAP feelUSER_S USER_THEIR heart race as USER_THEIR nostrils are bombarded with a sensual, sweet smell that makes it nearly impossible to think about anything besides horny thoughts...`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c2 == "Gasmask";
+                        },
+                        text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEIR_CAP breathing starts to hiss through the filter as USER_THEY look through glass lenses. `,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c2 == "Gasmask (Linked)";
+                        },
+                        text: `USER_TAG places a Gasmask over USER_THEIR face. USER_THEIR_CAP breathing starts to hiss through the tube as USER_THEY decideUSER_S who to give it to...`,
+                    }
+                ],
 			},
 			other: {
 				collar: {
 					maskperm: {
 						// Ephemeral
 						worn: [`You are already wearing a VAR_C2!`],
-						noworn: [`USER_TAG grabs a VAR_C2 and places it gently on TARGET_TAG's head, securing the straps so it doesn't fall off.`],
+						noworn: [
+                            `USER_TAG grabs a VAR_C2 and places it gently on TARGET_TAG's head, securing the straps so it doesn't fall off.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("Aphrodisiacs");
+                                },
+                                text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP eyes roll backward as the aphrodisiacs assault TARGET_THEIR senses, rendering TARGET_THEM unable to think clearly!`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2 == "Gasmask";
+                                },
+                                text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP breathing starts to hiss through the filter as TARGET_THEY look through glass lenses. `,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2 == "Gasmask (Linked)";
+                                },
+                                text: `USER_TAG places a Gasmask over TARGET_TAG's face. TARGET_THEIR_CAP breathing starts to hiss through the tube as USER_THEY decideUSER_S who to hand it to...`,
+                            }
+                        ],
 					},
 					nomaskperm: [
 						// Ephemeral

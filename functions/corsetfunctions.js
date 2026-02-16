@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const nlp = require("compromise");
 const nlpSpeech = require("compromise-speech");
+const { getHeadwear } = require("./headwearfunctions");
 nlp.extend(nlpSpeech);
 
 const TRAITS = ["name", "maxBreath", "minBreath", "breathRecovery", "gaspCoefficient", "gaspLimit", "silenceLimit", "minWords", "afterUsingBreath"];
@@ -317,6 +318,15 @@ function calcBreath(user) {
             }
         })
 	}
+    let userheadwear = getHeadwear(user);
+    if (userheadwear.includes("gasmask") || userheadwear.includes("gasmasklinked") || userheadwear.includes("gasmask_hornygas") || userheadwear.includes("gasmask_truthgas")) {
+        // It is harder to breathe in a gasmask or share air
+        recoveryCoefficient = recoveryCoefficient * 0.7 
+    }
+    if (userheadwear.includes("gasmask_rebreather")) {
+        // It is harder to breathe same air again...
+        recoveryCoefficient = recoveryCoefficient * 0.4
+    }
 	const newBreath = corset.breath + basecorset.getBreathRecovery({ tightness: corset.tightness }) * ((now - corset.timestamp) / 1000) * recoveryCoefficient;
 	if (newBreath > basecorset.getMaxBreath({ tightness: corset.tightness })) corset.breath = basecorset.getMaxBreath({ tightness: corset.tightness });
 	else corset.breath = newBreath;

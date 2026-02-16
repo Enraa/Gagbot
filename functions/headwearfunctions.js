@@ -50,6 +50,13 @@ const headweartypes = [
     { name: "Dollmaker's Visor", value: "dollmaker_visor", blockemote: true }, // Doll Visor removes emotes only.
 	{ name: "VR Headset", value: "vr_visor", blockinspect: true },
 
+    // Gasmasks
+    { name: "Gasmask", value: "gasmask", tags: ["latex"] },
+    { name: "Gasmask (Rebreather)", value: "gasmask_rebreather", tags: ["latex"] },
+    { name: "Gasmask (Aphrodisiacs)", value: "gasmask_hornygas", tags: ["latex"] },
+    { name: "Gasmask (Truth Gas)", value: "gasmask_truthgas", tags: ["latex"] },
+    { name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] },
+
 	// Misc
 	{ name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
 ];
