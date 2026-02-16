@@ -108,6 +108,7 @@ let wearabletypes = [
 	{ name: "Leash", value: "leash", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic"] },
 	{ name: "Nipple Clamps", value: "nippleclamps", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic", "Crystal"] },
 	{ name: "Wingbinders", value: "wingbinders", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
+	{ name: "Tail Bindings", value: "tail_bind", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
 
 	// Cosplay, Swimwear and Outfits
 	{ name: "Labcoat", value: "labcoat", category: "Cosplay" },
