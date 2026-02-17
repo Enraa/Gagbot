@@ -331,6 +331,17 @@ client.on('interactionCreate', async (interaction) => {
             if (interactioncommand == "webhookedit") {
                 interactioncommand = "Edit Message"
             }
+            else if (interactioncommand == "modalevent") {
+                if (process.modalexecutefunctions) {
+                    let filecommand = interaction.customId.split("_")[1]
+                    Object.keys(process.modalexecutefunctions).forEach((k) => {
+                        if (process.modalexecutefunctions[k][filecommand]) {
+                            process.modalexecutefunctions[k][filecommand](interaction)
+                            return;
+                        }
+                    })
+                }
+            }
             console.log(interactioncommand);
             modalHandlers.get(`${interactioncommand}.js`)?.modalexecute(interaction);
             return;

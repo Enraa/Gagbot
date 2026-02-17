@@ -170,7 +170,13 @@ module.exports = {
 						} else {
 							// Not wearing it!
 							data.noworn = true;
-							interaction.reply(getText(data));
+							if (process.modalfunctions?.headwear && process.modalfunctions.headwear[headwearchoice]) {
+                                await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
+                                interaction.followUp(getText(data));
+                            }
+                            else {
+                                interaction.reply(getText(data));
+                            }
 							assignHeadwear(headwearuser.id, headwearchoice);
 						}
 					} else {
@@ -178,7 +184,7 @@ module.exports = {
 						data.other = true;
 						if (getCollar(headwearuser.id)) {
 							data.collar = true;
-							if (getCollarPerm(headwearuser.id, "mask") && canAccessCollar(headwearuser.id, interaction.user.id)) {
+							if (getCollarPerm(headwearuser.id, "mask") && canAccessCollar(headwearuser.id, interaction.user.id).access) {
 								data.maskperm = true;
 								if (getHeadwear(headwearuser.id).includes(headwearchoice)) {
 									// Wearing the headgear already, Ephemeral
@@ -187,7 +193,13 @@ module.exports = {
 								} else {
 									// Not wearing it!
 									data.noworn = true;
-									interaction.reply(getText(data));
+                                    if (process.modalfunctions?.headwear && process.modalfunctions.headwear[headwearchoice]) {
+                                        await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
+                                        interaction.followUp(getText(data));
+                                    }
+                                    else {
+                                        interaction.reply(getText(data));
+                                    }
 									assignHeadwear(headwearuser.id, headwearchoice);
 								}
 							} else {

@@ -10,6 +10,7 @@ const { getHeavy } = require("./heavyfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
 const { getToys } = require("./toyfunctions.js");
 const { getCollar } = require("./collarfunctions.js");
+const { updateSharedBreath } = require("./vibefunctions.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
@@ -200,10 +201,14 @@ const saveFiles = () => {
 function importFileNames() {
 	process.eventfunctions = {};
     process.msgfunctions = {};
+    process.modalfunctions = {};
+    process.modalexecutefunctions = {};
 	let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
 	eventfunctionsfolders.forEach((f) => {
 		process.eventfunctions[f] = {};
         process.msgfunctions[f] = {};
+        process.modalfunctions[f] = {};
+        process.modalexecutefunctions[f] = {};
 		let eventfunctionsfiles = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions", f));
 		eventfunctionsfiles.forEach((file) => {
 			let functionfile = require(path.resolve(__dirname, "..", "eventfunctions", f, file));
@@ -213,12 +218,19 @@ function importFileNames() {
             if (typeof functionfile.msgfunction === "function") {
                 process.msgfunctions[f][file.replace(".js", "")] = functionfile.msgfunction;
             }
+            if (typeof functionfile.modal === "function") {
+                process.modalfunctions[f][file.replace(".js", "")] = functionfile.modal;
+            }
+            if (typeof functionfile.modalexecute === "function") {
+                process.modalexecutefunctions[f][file.replace(".js", "")] = functionfile.modalexecute;
+            }
 		});
 	});
 }
 
 function processTimedEvents() {
 	updateArousalValues();
+    updateSharedBreath();
 	processUnlockTimes(process.client);
 	runProcessedEvents();
 }
