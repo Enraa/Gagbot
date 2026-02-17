@@ -24,12 +24,12 @@ exports.onFailedOrgasm = (data) => {
     setUserVar(data.userID, "livingwood_vibe", Math.min((this.minVibe(data) + 1), 20));
 }
 exports.onEquip = (data) => {
-    if (getUserVar(data.userID, "livingwood_vibe") == {}) setUserVar(data.userID, "livingwood_vibe", 0);
-    if (getUserVar(data.userID, "livingwood_chastity") == {}) setUserVar(data.userID, "livingwood_chastity", Date.now());
+    if (!getUserVar(data.userID, "livingwood_vibe") || getUserVar(data.userID, "livingwood_vibe") == {}) setUserVar(data.userID, "livingwood_vibe", 0);
+    if (!getUserVar(data.userID, "livingwood_chastity") || getUserVar(data.userID, "livingwood_chastity") == {}) setUserVar(data.userID, "livingwood_chastity", Date.now());
 }
 exports.onUnequip = (data) => {
     // Check if user is wearing a Livingwood Belt otherwise Null Out Vars
-    if (!getChastity(data.userID)?.chastitytype == "belt_livingwood") {
+    if (getChastity(data.userID)?.chastitytype != "belt_livingwood") {
         setUserVar(data.userID, "livingwood_vibe", {});
         setUserVar(data.userID, "livingwood_chastity", {});
     }
