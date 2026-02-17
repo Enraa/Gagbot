@@ -119,7 +119,7 @@ const getGag = (userID, gagbyname) => {
 		process.gags = {};
 	}
 	if (process.gags[userID] == undefined) {
-		process.gags[userID] = [];
+		return undefined;
 	}
 	if (gagbyname) {
 		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
@@ -142,7 +142,7 @@ const getGagLast = (userID) => {
 		process.gags = {};
 	}
 	if (process.gags[userID] == undefined) {
-		process.gags[userID] = [];
+		return undefined;
 	}
 
 	if (process.gags[userID].length > 0) {
