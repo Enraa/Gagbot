@@ -51,7 +51,7 @@ const messageSend = async (msg, str, avatarURL, username, threadId, botemoji, is
             webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, allowedMentions: { parse: [] } }).then((webmess) => {
                 if (isreply) {
                     console.log(isreply);
-                    webhookClient.editMessage(webmess, { content: `${webmess.content}​`, allowedMentions: { parse: ["users"] } }).then(() => {
+                    webhookClient.editMessage(webmess, { content: `${webmess.content.slice(0,1998)} ​`, allowedMentions: { parse: ["users"] } }).then(() => {
                         return true;
                     })
                 }
@@ -93,7 +93,7 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
 
             webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, files: attachments, allowedMentions: { parse: [] } }).then((webmess) => {
                 if (isreply) {
-                    webhookClient.editMessage(webmess, { content: `${webmess.content}​`, files: attachments, allowedMentions: { parse: ["users"] } }).then(() => {
+                    webhookClient.editMessage(webmess, { content: `${webmess.content.slice(0,1998)} ​`, files: attachments, allowedMentions: { parse: ["users"] } }).then(() => {
                         return true;
                     })
                 }

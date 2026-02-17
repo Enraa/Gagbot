@@ -54,7 +54,7 @@ const headweartypes = [
     { name: "Gasmask", value: "gasmask", tags: ["latex"] },
     { name: "Gasmask (Rebreather)", value: "gasmask_rebreather", tags: ["latex"] },
     { name: "Gasmask (Aphrodisiacs)", value: "gasmask_hornygas", tags: ["latex"] },
-    { name: "Gasmask (Truth Gas)", value: "gasmask_truthgas", tags: ["latex"] },
+    //{ name: "Gasmask (Truth Gas)", value: "gasmask_truthgas", tags: ["latex"] },
     { name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] },
 
 	// Misc
@@ -293,6 +293,155 @@ const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) =
 	}
 };
 
+const truthgasopposites = (text, parent, msgModified) => {
+    // Vibe coded this array, but it looks right! 
+    let opposites = [
+        ["yeah", "nope"],
+        ["yep", "nah"],
+        ["absolutely", "absolutely not"],
+        ["definitely", "definitely not"],
+        ["certainly", "certainly not"],
+        ["of course", "of course not"],
+        ["sure", "not sure"],
+        ["agreed", "disagreed"],
+        ["agree", "disagree"],
+        ["incorrect", "correct"],
+        ["right", "wrong"],
+        ["true", "false"],
+        ["ok", "not ok"],
+        ["okay", "not okay"],
+        ["fine", "not fine"],
+        ["acceptable", "unacceptable"],
+        ["approved", "not approved"],
+        ["allowed", "not allowed"],
+
+        ["can't", "can"],
+        ["can not", "can"],
+
+        ["won't", "will"],
+        ["will not", "will"],
+
+        ["wouldn't", "would"],
+        ["would not", "would"],
+
+        ["shouldn't", "should"],
+        ["should not", "should"],
+
+        ["couldn't", "could"],
+        ["could not", "could"],
+
+        ["don't", "do"],
+        ["do not", "do"],
+
+        ["doesn't", "does"],
+        ["does not", "does"],
+
+        ["didn't", "did"],
+        ["did not", "did"],
+
+        ["isn't", "is"],
+        ["is not", "is"],
+
+        ["aren't", "are"],
+        ["are not", "are"],
+
+        ["wasn't", "was"],
+        ["was not", "was"],
+
+        ["weren't", "were"],
+        ["were not", "were"],
+
+        ["haven't", "have"],
+        ["have not", "have"],
+
+        ["hasn't", "has"],
+        ["has not", "has"],
+
+        ["hadn't", "had"],
+        ["had not", "had"],
+
+        ["am not", "am"],
+        ["ain't", "am"],
+
+        ["impossible", "possible"],
+        ["improbable", "probable"],
+        ["invalid", "valid"],
+        ["unconfirmed", "confirmed"],
+        ["accepted", "rejected"],
+        ["support", "oppose"],
+        ["not", ""],
+        ["yes", "no"],
+    ];
+
+
+    let outtext = ``
+
+    let wordpartscombined = [];
+    let wordparts = text.split(" ");
+    // combine any "not" with their preceding word
+    for (let i = 0; i < wordparts.length; i++) {
+        // Final word, just add it if so 
+        if ((i + 1) != wordparts.length) {
+            /*if (wordparts[i+1] == "not") {
+                wordpartscombined.push(`${wordparts[i]} ${wordparts[i+1]}`)
+                i++;
+            }
+            else {*/
+                wordpartscombined.push(wordparts[i]);
+            /*}*/
+        }
+        else {
+            wordpartscombined.push(wordparts[i])
+        }
+    }
+    let nextspace = " ";
+
+    wordpartscombined.forEach((w) => {
+        if (Math.random() > 0.4) {
+            let matched = false;
+            opposites.forEach((test) => {
+                if (!matched) {
+                    if (w.search(new RegExp(test[0], "i")) > -1) {
+                        outtext = `${outtext}${nextspace}${w.replace(test[0], test[1])}`
+                        nextspace = " "
+                        matched = true;
+                        msgModified.modified = true;
+                    }
+                    else if ((test[1].length > 0) && (w.search(new RegExp(test[1], "i")) > -1)) {
+                        if ((test[1].length == 0)) {
+                            outtext = `${outtext.slice(0,-1)}`
+                            nextspace = "";
+                        }
+                        else {
+                            outtext = `${outtext}${nextspace}${w.replace(test[1], test[0])}`
+                            nextspace = " "
+                        }
+                        matched = true;
+                        msgModified.modified = true;
+                    }
+                }
+            })
+            if (!matched) {
+                outtext = `${outtext}${nextspace}${w}`
+                nextspace = " "
+            }
+        }
+        else {
+            outtext = `${outtext}${nextspace}${w}`
+            nextspace = " "
+        }
+    })
+
+    return outtext.slice(1) // Cut the leading space
+}
+// Changes words and negates them
+const processHeadwearTruthgas = (userID, msgTree, msgModified) => {
+	// Do nothing if no headwear blocks.
+	if (!getHeadwear(userID).includes("gasmask_truthgas")) { return }
+
+    msgTree.callFunc(truthgasopposites, true, undefined, [msgModified])
+};
+
 exports.headweartypes = headweartypes;
 exports.loadHeadwearTypes = loadHeadwearTypes;
 exports.assignHeadwear = assignHeadwear;
@@ -309,3 +458,5 @@ exports.addLockedHeadgear = addLockedHeadgear;
 exports.getLockedHeadgear = getLockedHeadgear;
 exports.removeLockedHeadgear = removeLockedHeadgear;
 exports.DOLLVISORS = DOLLVISORS;
+
+exports.processHeadwearTruthgas = processHeadwearTruthgas;
