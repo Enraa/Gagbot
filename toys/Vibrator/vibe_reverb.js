@@ -4,7 +4,7 @@ const { getUserVar, setUserVar } = require("../../functions/usercontext")
 exports.vibescale = (data) => { 
     //console.log(`${data.userID}`)
     //console.log(`${getUserVar(data.userID, "reverbVibeIntensity")/10}`);
-    return Math.max(0, Math.min(getUserVar(data.userID, "reverbVibeIntensity")/10, 2));
+    return (isNaN(Math.max(0, Math.min(getUserVar(data.userID, "reverbVibeIntensity")/10, 2))) ? 0 : Math.max(0, Math.min(getUserVar(data.userID, "reverbVibeIntensity")/10, 2)));
 } // Ranging between 0 and 2
 
 exports.calcVibeEffect = function(data) { 
