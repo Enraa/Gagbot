@@ -3,7 +3,7 @@ let fs = require("fs");
 let path = require("path");
 let admZip = require("adm-zip");
 const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar } = require(`./timelockfunctions.js`);
-const { updateArousalValues } = require("./vibefunctions.js");
+const { updateArousalValues, getChastity, getChastityBra } = require("./vibefunctions.js");
 const { getGags, getMitten } = require("./gagfunctions.js");
 const { getHeadwear } = require("./headwearfunctions.js");
 const { getHeavy } = require("./heavyfunctions.js");
@@ -297,6 +297,27 @@ function runProcessedEvents() {
 			if (getHeavy(userid)) {
 				if (process.eventfunctions.heavy && process.eventfunctions.heavy[getHeavy(userid).typeval]) {
 					process.eventfunctions.heavy[getHeavy(userid).typeval](userid);
+				}
+			}
+		});
+	}
+    // Chastity Belts
+	if (process.chastity) {
+		Object.keys(process.chastity).forEach((userid) => {
+            console.log(process.eventfunctions.chastity)
+			if (getChastity(userid)) {
+				if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(userid).chastitytype]) {
+					process.eventfunctions.chastity[getChastity(userid).chastitytype](userid);
+				}
+			}
+		});
+	}
+    // Chastity Bras
+	if (process.chastitybra) {
+		Object.keys(process.chastitybra).forEach((userid) => {
+			if (getChastityBra(userid)) {
+				if (process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype]) {
+					process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype](userid);
 				}
 			}
 		});
