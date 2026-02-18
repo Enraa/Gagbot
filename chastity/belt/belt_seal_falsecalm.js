@@ -24,27 +24,6 @@ exports.onUnequip = (data) => {
     setUserVar(data.userID, "stasis_timer", undefined);
 }
 
-exports.afterArousalChange = (data) => {
-    if(Date.now() > (getUserVar(data.userID, "stasis_timer") + 60000)){
-        // Add one quarter of the highest vibe intensity as arousal to the base value, or reduce it by 1 with a floor of 0 if no vibe present~
-        let vibeIntensity = 0;
-        if(getToys(data.userID).length > 0)
-        {
-            vibeIntensity = getToys(data.userID).reduce((a,b)=>a.intensity>b.intensity?a:b).intensity ?? 0;
-        }
-
-        if(vibeIntensity > 0)
-        {            
-            setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") + (vibeIntensity / 4));
-        }
-        else 
-        {
-            setUserVar(data.userID, "base_arousal", Math.max(getUserVar(data.userID, "base_arousal") - 1, 0));
-        }
-        setUserVar(data.userID, "stasis_timer", Date.now())
-    }
-}
-
 // Tags
 exports.tags = ["seal"]
 // Name

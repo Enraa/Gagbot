@@ -1,5 +1,4 @@
 const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getToys, getBaseToy } = require("../../functions/toyfunctions");
 const { clearArousal, getArousal, addArousal } = require("../../functions/vibefunctions")
 
 // Seal of Cyclical Time
@@ -20,15 +19,6 @@ exports.onUnequip = (data) => {
     addArousal(data.userID, getUserVar(data.userID, "base_arousal"));
     setUserVar(data.userID, "base_arousal", undefined);
     setUserVar(data.userID, "stasis_timer", undefined);
-}
-
-exports.afterArousalChange = (data) => {
-    if(Date.now() > (getUserVar(data.userID, "stasis_timer") + 180000)){
-        // Reset Wearer to initial state every 3 mins~        
-        setUserVar(data.userID, "stasis_timer", Date.now())
-        clearArousal(data.userID);
-        addArousal(data.userID, getUserVar(data.userID, "base_arousal"));
-    }
 }
 
 // Tags
