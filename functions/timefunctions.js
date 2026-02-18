@@ -304,7 +304,6 @@ function runProcessedEvents() {
     // Chastity Belts
 	if (process.chastity) {
 		Object.keys(process.chastity).forEach((userid) => {
-            console.log(process.eventfunctions.chastity)
 			if (getChastity(userid)) {
 				if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(userid).chastitytype]) {
 					process.eventfunctions.chastity[getChastity(userid).chastitytype](userid);
