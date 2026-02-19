@@ -154,18 +154,21 @@ module.exports = {
 					return { name: `${interaction.guild.members.cache.get(k.split("_")[1])?.displayName}'s key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s collar`.slice(0, 100), value: `${k}_collar` };
 				});
 
-				console.log(ownedclonedchastitykeys);
-				console.log(ownedclonedcollarkeys);
-				console.log(clonedchastitykeys);
-				console.log(clonedcollarkeys);
-
 				let sorted = [...clonedchastitykeys, ...clonedchastitybrakeys, ...clonedcollarkeys, ...ownedclonedchastitykeys, ...ownedclonedchastitybrakeys, ...ownedclonedcollarkeys];
 				if (sorted.length == 0) {
 					sorted = [{ name: "No Eligible Keys To Revoke...", value: "nothing" }];
-				} else if (sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 25).length == 0 && focusedValue.length > 0) {
-					sorted = [{ name: "No Eligible Keys To Revoke...", value: "nothing" }];
 				}
-				await interaction.respond(sorted.slice(0, 25));
+
+                let matches = didYouMean(focusedValue, sorted, {
+                    matchPath: ['name'], 
+                    returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                    threshold: 0.1, // Default is 0.4 - this is how much of the entry must exist
+                })
+                console.log(matches)
+                if (matches.length == 0) {
+                    matches = sorted;
+                }
+				await interaction.respond(matches.slice(0, 25));
 			} else if (subcommand == "swapitem") {
 				// Note, we only need to know if we can ***unlock*** a restraint to swap it.
 				if (interaction.options.get("restraint")?.focused) {

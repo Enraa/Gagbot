@@ -115,6 +115,10 @@ const heavytypes = [
 	{ name: "Costumer Mimic", value: "costumer_mimic", denialCoefficient: 5 },
 	{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["latex"], denialCoefficient: 5 },
     { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", denialCoefficient: 5 },
+    { name: "Capture Sphere", value: "capture_sphere", denialCoefficient: 3 },
+    { name: "Great Sphere", value: "capture_sphere_great", denialCoefficient: 5 },
+    { name: "Ultra Sphere", value: "capture_sphere_ultra", denialCoefficient: 7 },
+    { name: "Master Sphere", value: "capture_sphere_master", denialCoefficient: 9 },
 
 	// Heavy Restraints with unique name functions
 	{
@@ -203,6 +207,9 @@ const removeHeavy = (user) => {
 	if (process.heavy == undefined) {
 		process.heavy = {};
 	}
+    if (process.heavy[user] && process.heavy[user].typeval && process.onremovefunctions && process.onremovefunctions.heavy && process.onremovefunctions.heavy[process.heavy[user].typeval]) {
+        process.onremovefunctions.heavy[process.heavy[user].typeval](user);
+    }
 	delete process.heavy[user];
 	if (process.readytosave == undefined) {
 		process.readytosave = {};

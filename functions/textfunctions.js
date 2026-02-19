@@ -405,6 +405,12 @@ const texts_collarequip = {
                             },
                             text: `USER_TAG helps TARGET_TAG into a VAR_C3, pulling the arm sleeves and integrated mittens over TARGET_THEIR arms and hands! Once buttoned up, USER_THEY grabUSER_S the straps on TARGET_THEIR mittens and pulls them behind TARGET_THEM into a reverse prayer, threading the mitten straps through TARGET_THEIR neck cuff on the blouse, and then tying them into a neat bow.`,
                         },
+                        {
+                            only: (t) => {
+                                return t.c3.includes("Sphere");
+                            },
+                            text: `USER_TAG throws a VAR_C3 at TARGET_TAG! It clunks off of TARGET_THEIR body before activating and pulling TARGET_THEM inside!`,
+                        },
 					],
 					notallowed: [`TARGET_TAG's collar does not allow you to put TARGET_THEM in heavy bondage!`],
 				},
@@ -914,6 +920,12 @@ const texts_heavy = {
 			},
 			text: `USER_TAG puts a VAR_C2 on, slipping USER_THEIR arms into the arms and placing USER_THEIR hands into the integrated mittens. Using a magical spell, USER_THEY threadUSER_S USER_THEIR hand mitten straps through the neck cuff and ties them into a neat bow in front!`,
 		},
+        {
+			only: (t) => {
+				return t.c2.includes("Sphere");
+			},
+			text: `USER_TAG tosses a VAR_C2 in the air and lets it hit USER_THEIR head, activating its capture function and sealing USER_THEM inside!`,
+		},
 	],
 };
 
@@ -1217,6 +1229,12 @@ const texts_struggle = {
 				return t.c1.endsWith("'s Lap");
 			},
 			text: `USER_TAG wiggles a little bit in VAR_C1, but a stern look quickly keeps USER_THEM in check.`,
+		},
+        {
+			only: (t) => {
+				return t.c1.endsWith("Sphere");
+			},
+			text: `USER_TAG squirms in USER_THEIR VAR_C1, enough to cause it to shake a bit on the outside! It's such a tiny digitized space USER_THEY USER_ISARE trapped in...`,
 		},
 	],
 	gag: {
@@ -2451,6 +2469,12 @@ const texts_unheavy = {
 				},
 				text: `USER_TAG helps TARGET_TAG off of the warm lap TARGET_THEY TARGET_WERE laying on!`,
 			},
+            {
+				only: (t) => {
+					return t.c2.includes("Sphere");
+				},
+				text: `USER_TAG throws the VAR_C2 and out comes the captured TARGET_TAG!`,
+			},
 		],
 		noheavyequipped: { self: [`You aren't in any kind of heavy bondage!`], other: [`TARGET_TAG is not in any kind of heavy bondage!`] },
 	},
@@ -3672,6 +3696,24 @@ const texts_eventfunctions = {
 				], 
 				none: [`The Costumer Mimic finishes dressing USER_TAG and reluctantly spits USER_THEM out, fully dressed in its chosen costume.`] },
 		},
+        capturesphere: {
+            wigglefail0: [
+                `*USER_TAG breaks free...*\nOh no! USER_THEY_CAP broke free!`
+            ],
+            wigglefail1: [
+                `*USER_TAG breaks free...*\nAww! USER_THEY_CAP appeared to be caught!`
+            ],
+            wigglefail2: [
+                `*USER_TAG breaks free...*\nAargh! Almost had it!`,
+                `*USER_TAG breaks free...*\nShoot! It was so close, too!`
+            ],
+            capturesuccess_other: [
+                `Gotcha! USER_TAG was caught!`
+            ],
+            capturesuccess_self: [
+                `Gotcha! USER_TAG... captured USER_THEMSELF!`
+            ]
+        }
 	},
 };
 
