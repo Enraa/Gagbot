@@ -94,7 +94,7 @@ let functiontick = async (userID) => {
     let userobject = await process.client.users.fetch(userID); // The person that's been captured!
     let targetobject = await process.client.users.fetch(getHeavy(userID).origbinder ?? userID); // The cruel person who threw the pokeball!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID]) || getUserVar(userID, "catureSphereCaptured")) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID]) || getUserVar(userID, "captureSphereCaptured")) {
         return;
     }
     // Build data tree:
