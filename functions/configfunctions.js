@@ -423,7 +423,8 @@ const configoptions = {
 				return false;
 			},
 		},
-        canfindkeys: {
+        // Removing canfindkeys for now as it is currently not used
+        /*canfindkeys: {
 			name: "Find Keys",
 			desc: "Can you discover misplaced keys that others dropped?",
 			choices: [
@@ -451,7 +452,38 @@ const configoptions = {
 			disabled: (userID) => {
 				return false;
 			}, // if true, button is greyed out
-		},
+		},*/
+        majorrestraint: {
+            name: "Major Restraints from Others",
+            desc: "Can others offer to put chastity, mittens, heavy bondage or masks on you? You must accept the prompt for it to be permitted unless that user has collar key access for you. You must have DMs from this server turned on to utilize this option.",
+            choices: [
+                {
+					name: "No",
+					helptext: "*Non-collar Keyholder major bondage will be rejected automatically*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+					uname: "MajorRestraintDisabled",
+				},
+				{
+					name: "Yes",
+					helptext: "Others can offer to bind you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Success,
+					uname: "MajorRestraint",
+				},
+            ],
+            menutype: "choice",
+            default: "enabled",
+            disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+        },
 		publicaccess: {
 			name: "Public Access",
 			desc: "Can you put on a free use collar or enable public access timelocks?",
