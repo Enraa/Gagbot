@@ -811,10 +811,10 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 async function handleMajorRestraint(user, target, type, restraint) {
 	return new Promise(async (res, rej) => {
 		let hasOption = getOption(target.id, `majorrestraint`);
-		if (canAccessCollar(user.id, target.id).access) {
+		if (canAccessCollar(target.id, user.id).access) {
             let bondagetype = type;
             if (type == "chastitybra") { bondagetype = "chastity" }
-            if (getCollar(user.id)[bondagetype]) {
+            if (getCollar(target.id) && getCollar(target.id)[bondagetype]) {
                 // User is able to access the collar of the user *and* it has the permission. 
                 res(true);
 			    return;
