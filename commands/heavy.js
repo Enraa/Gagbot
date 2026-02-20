@@ -98,6 +98,7 @@ module.exports = {
                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                 if (interaction.user.id != targetuser.id) {
                     // Someone else!
+                    data.other = true;
                     await handleMajorRestraint(interaction.user, targetuser, "heavy", heavychoice).then(async () => {
                         await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
                             async (success) => {
@@ -135,6 +136,7 @@ module.exports = {
                     })
                 }
                 else {
+                    data.self = true;
                     await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
                         async (success) => {
                             await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
