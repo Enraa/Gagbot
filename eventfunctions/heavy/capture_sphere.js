@@ -18,7 +18,7 @@ const { getArousal } = require("../../functions/vibefunctions")
 function calculatecapture(userid, ballbonusnum = 1.0) {
     // The user's "health" will be based off of 50 arousal.
     let maxhealth = 50
-    let currhealth = Math.min(getArousal(userid), 49.5) // Always clamp to 0.5 hp left - false swipe range if you will. 
+    let currhealth = Math.max(50 - getArousal(userid), 0.5) // Always clamp to 0.5 hp left - false swipe range if you will. 
     let darkgrass = 1 // Not used, but formula has this, so we'll add it
 
     // Catch rate will be a base of 150, minus 10 for each held key, down to 3 (the catch rate for Articuno!)
@@ -27,6 +27,7 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
     console.log(`${userid} Catchrate: ${Math.max(150 - (heldkeysnum.length * 10), 3)}`)
     let catchrate = Math.max(150 - (heldkeysnum.length * 10), 3)
     let ballbonus = ballbonusnum;
+    console.log(`Ball Bonus Multiplier: ${ballbonus}`)
 
     // Bonus if the target is bound!
     let statusbonus = 1;
@@ -36,15 +37,18 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
     else if (getGag(userid) || getChastity(userid) || getChastityBra(userid) || getCollar(userid)) {
         statusbonus = 1.5;
     }
+    console.log(`Status Multiplier: ${statusbonus}`)
 
     // Set array for catches
     let catches = [];
 
     // Calculate hp part first.
     let hpnum = ((3 * maxhealth) - (2 * currhealth)) / (3 * maxhealth)
+    console.log(`HP Multiplier: ${hpnum}`)
 
     // Now the rest of the catchrate
     let modifiedcatchrate = hpnum * 4096 * darkgrass * catchrate * ballbonus * statusbonus;
+    console.log(`Modified Catch Rate: ${modifiedcatchrate}`);
 
     // If the modifiedcatchrate is higher than 1044480, then we can just return set of 3 trues, as this is guaranteed catch
     if (modifiedcatchrate >= 1044480) { 
@@ -55,12 +59,13 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
     // Otherwise, we need to calculate shakes. We'll do 3 shakes. 
     else {
         let brokenfree = false;
-        let shake_b = Math.floor(65536 / Math.sqrt(Math.sqrt(16711680 / modifiedcatchrate))); // fourth root
-        console.log(`Chance to capture: ${(Math.floor(Math.pow((65535 - shake_b) / 65535, 3)* 100))}%`)
+        let shake_b = Math.floor(65536 * Math.pow((modifiedcatchrate / 1044480), 1 / 4)); // fourth root
+        console.log(shake_b);
+        console.log(`Chance to capture: ${Math.floor(Math.pow(shake_b / 65535, 3) * 100)}%`)
         for (let i = 0; i < 3; i++) {
             // Random number
             let randomnum = Math.floor(Math.random() * 65535)
-            if ((randomnum >= shake_b) && !brokenfree) {
+            if ((randomnum < shake_b) && !brokenfree) {
                 catches.push(true)
             }
             else {
@@ -68,6 +73,7 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
                 brokenfree = true;
             }
         }
+        console.log(`Result: ${catches[0]}, ${catches[1]}, ${catches[2]}`)
     }
 
     return catches;
