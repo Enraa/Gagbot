@@ -123,7 +123,7 @@ const getGag = (userID, gagbyname) => {
 	}
 	if (gagbyname) {
 		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
-		return foundgag?.gagtype;
+		return foundgag;
 	} else if (process.gags[userID].length > 0) {
 		return process.gags[userID][0].gagtype;
 	}
@@ -440,7 +440,7 @@ function textGarbleCorset(msg, msgTree, msgModified, threadId) {
 	return;
 }
 
-function textGarbleGag(msg, msgTree, msgTreeMods) {
+async function textGarbleGag(msg, msgTree, msgTreeMods) {
 	// Gags now
 	if (process.gags == undefined) {
 		process.gags = {};
@@ -460,7 +460,7 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 					}
                 }
                 if(process.gagtypes[gag.gagtype].garbleText){
-					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5, msg.author.id])		// Run garble on all IC segments.
+					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5, msg])		// Run garble on all IC segments.
 					msgTreeMods.modified = true;
 				}
                 if (process.gagtypes[gag.gagtype].messageend) {												// Run messageEnd
