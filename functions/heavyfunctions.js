@@ -63,7 +63,7 @@ const heavytypes = [
 	{ name: "Giant Pile of Plushies", value: "plushie_pile", denialCoefficient: 1.5 },
 	{ name: "Bed Restraints", value: "bedrestraints", denialCoefficient: 6 },
 	{ name: "Massage Table Binding", value: "massage_table_binding", denialCoefficient: 2 },
-	{ name: "Pet Cage", value: "pet_cage", denialCoefficient: 4 },
+	{ name: "Pet Cage", value: "pet_cage", tags: ["pet"], denialCoefficient: 4 },
 	{ name: "Chair with Cuffs", value: "chaircuffs", denialCoefficient: 3.5 },
 	{ name: "Resin Coating", value: "resin_coated", denialCoefficient: 4 },
     { name: "Pillory", value: "pillory", denialCoefficient: 8 },

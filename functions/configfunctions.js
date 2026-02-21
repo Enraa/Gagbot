@@ -1077,6 +1077,44 @@ const configoptions = {
 				return false;
 			},
         },
+        "wearabletags-pet": {
+            name: "Pet",
+            desc: "Restraints treating you like a pet",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
     },
 	Extreme: {
 		"extreme-heavy-doll_processing": {
