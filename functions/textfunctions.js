@@ -2,6 +2,7 @@ const { convertPronounsText } = require("./pronounfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
 const { getChastity, getChastityBra, getArousal } = require("./vibefunctions.js");
 const { getHeadwearRestrictions } = require("./headwearfunctions.js");
+const { getUserTags } = require("./configfunctions.js");
 
 const texts_chastity = {
 	chastitybelt: {
@@ -1587,7 +1588,17 @@ const texts_struggle = {
 		heavy: [`USER_TAG clumsily tries to use a nearby table to push USER_THEIR VAR_C5 off. It's difficult to do so without arms.`, `USER_TAG crinks USER_THEIR neck a bit to adjust USER_THEIR VAR_C5, but it doesn't really help since USER_THEIR VAR_C1 is sealing USER_THEIR arms away.`],
 		noheavy: {
 			// Using open hand, wrists, etc. 50% chance to use with mittens, 50% chance to use with free hands
-			nofingers: [`USER_TAG prods at USER_THEIR collar. Such a good pet. Yes. That is USER_THEM! 💜`, `USER_TAG twists USER_THEIR head, trying to get some kind of grip on USER_THEIR VAR_C5 to pull it off, but... no dice.`, `Using USER_THEIR wrists, USER_TAG tries to fidget with USER_THEIR VAR_C5. USER_THEIR_CAP elbows projected out looks adorable, almost pet-like!`],
+			nofingers: [{
+                required: (t) => {
+                    return !getUserTags(t.interactionuser.id).includes("pet");
+                },
+                text: `USER_TAG prods at USER_THEIR collar. Such a good pet. Yes. That is USER_THEM! 💜` },
+                `USER_TAG twists USER_THEIR head, trying to get some kind of grip on USER_THEIR VAR_C5 to pull it off, but... no dice.`, 
+                {
+                required: (t) => {
+                    return !getUserTags(t.interactionuser.id).includes("pet");
+                },
+                text: `Using USER_THEIR wrists, USER_TAG tries to fidget with USER_THEIR VAR_C5. USER_THEIR_CAP elbows projected out looks adorable, almost pet-like!`}],
 			// In mittens, so definitely no fingers. 50% chance to use with mittens, 0% chance with free hands
 			mitten: [`USER_TAG bats the lock hanging on USER_THEIR VAR_C5, but mittens make it hard to use keys anyway. USER_THEY_CAP probably don't have them. Right?`, `USER_TAG paws at USER_THEIR VAR_C5, but the collar's straps are unyielding, just like USER_THEIR mittens.`, `USER_TAG runs the back of USER_THEIR hand over USER_THEIR VAR_C5. The collar's lock doesn't really care though.`],
 			// Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
@@ -1659,7 +1670,11 @@ const texts_struggle = {
 		`All this talk about servitude and the moans from the dungeon's denizens makes it impossible for USER_TAG to focus...`,
 		`USER_TAG wants to lay in someone's lap. Or maybe have someone lay in USER_THEIR lap. Maybe both.`,
 		`USER_TAG wants to pet a cute kitty. Or a cute doggo. Maybe lots of cute kitties and doggos!`,
-		`USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY_CAP blushUSER_ES a little at the thought~`,
+		{
+        required: (t) => {
+            return !getUserTags(t.interactionuser.id).includes("pet");
+        },
+        text: `USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY_CAP blushUSER_ES a little at the thought~`},
 		`USER_TAG prepares for battle with a sword and flourishes it. USER_THEY_CAP USER_ISARE going to hunt the legendary sHE!`,
 		`USER_TAG sits and looks around patiently because USER_THEY USER_ISARE a **good USER_PRAISEOBJECT!**`,
 		// 2 hours in chastity
