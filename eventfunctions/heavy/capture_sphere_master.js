@@ -1,6 +1,7 @@
 const { removeHeavy, getHeavy } = require("../../functions/heavyfunctions")
 const { messageSendChannel } = require("../../functions/messagefunctions")
 const { getText } = require("../../functions/textfunctions")
+const { getUserVar, setUserVar } = require("../../functions/usercontext.js")
 const { getArousal } = require("../../functions/vibefunctions")
 const { calculatecapture } = require("./capture_sphere.js") // reuse the calculation!
 
@@ -9,8 +10,8 @@ let functiontick = async (userID) => {
     if (process.userevents[userID] == undefined) { process.userevents[userID] = {} }
     if (process.userevents[userID].capturesphere == undefined) { 
         process.userevents[userID].capturesphere = { 
-            capture: calculatecapture(userID, 1000), // Master ball is guaranteed to succeed
-            ballname: "Great Sphere",
+            capture: calculatecapture(userID, 600.0), // Guaranteed to catch without fail!
+            ballname: "Master Sphere",
             captureprogress: -1,
             nextupdate: Date.now() + 2000
         } 
@@ -26,16 +27,11 @@ let functiontick = async (userID) => {
     }
     else { return };
 
-    // If we dont know where the user is, lets just wait. 
-    if (!(process.recentmessages && process.recentmessages[userID])) {
-        return;
-    }
-
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person that's been captured!
     let targetobject = await process.client.users.fetch(getHeavy(userID).origbinder ?? userID); // The cruel person who threw the pokeball!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID])) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID]) || getUserVar(userID, "captureSphereCaptured")) {
         return;
     }
     // Build data tree:
@@ -65,7 +61,6 @@ let functiontick = async (userID) => {
                 data[`wigglefail${process.userevents[userID].capturesphere.captureprogress}`] = true
                 messageSendChannel(getText(data), process.recentmessages[userID])
                 removeHeavy(userID);
-                delete process.userevents[userID].capturesphere;
                 return;
             }
         }
@@ -103,13 +98,23 @@ let functiontick = async (userID) => {
                 data.wigglefail2 = true;
                 messageSendChannel(getText(data), process.recentmessages[userID]);
                 removeHeavy(userID);
-                delete process.userevents[userID].capturesphere;
                 return;
             }
         }
         process.userevents[userID].capturesphere.captureprogress++
         return;
     }
+    else if (process.userevents[userID].capturesphere.captureprogress == 4) {
+        setUserVar(userID, "captureSphereCaptured", true)
+    }
+}
+
+// Called when the item is removed. Only implemented for heavy bondage presently.
+// This should be used to clear any lingering data from above. 
+let functiononremove = async (userID) => {
+    setUserVar(userID, "captureSphereCaptured", undefined)
+    delete process.userevents[userID].capturesphere;
 }
 
 exports.functiontick = functiontick;
+exports.functiononremove = functiononremove;

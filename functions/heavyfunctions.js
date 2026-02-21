@@ -92,7 +92,7 @@ const heavytypes = [
 	//{ name: "Slime Coating", value: "encasement_slime", tags: ["slime"], denialCoefficient: 2 },               Names Needed?
 	//{ name: "Solidified Rubber Coating", value: "encasement_slime", tags: ["slime"], denialCoefficient: 3 },
 	{ name: "Crystalline Pillar", value: "encasement_crystal", denialCoefficient: 4 },
-	{ name: "Latex Sphere", value: "sphere_latex", tags: ["latex"], denialCoefficient: 3.5 },
+	{ name: "Latex Ball", value: "sphere_latex", tags: ["latex"], denialCoefficient: 3.5 },
 	{ name: "Latex Sleepsack", value: "sleepsack_latex", tags: ["latex"], denialCoefficient: 4 },
 	{ name: "Duffel Bag", value: "duffel_bag", denialCoefficient: 2 },
 	{ name: "Shadow Latex Ballsuit", value: "shadow_latex_ball", tags: ["latex"], denialCoefficient: 4 },
@@ -207,6 +207,9 @@ const removeHeavy = (user) => {
 	if (process.heavy == undefined) {
 		process.heavy = {};
 	}
+    if (process.heavy[user] && process.heavy[user].typeval && process.onremovefunctions && process.onremovefunctions.heavy && process.onremovefunctions.heavy[process.heavy[user].typeval]) {
+        process.onremovefunctions.heavy[process.heavy[user].typeval](user);
+    }
 	delete process.heavy[user];
 	if (process.readytosave == undefined) {
 		process.readytosave = {};

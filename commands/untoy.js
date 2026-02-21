@@ -47,11 +47,12 @@ module.exports = {
             let toyuser = interaction.options.getUser("user") ?? interaction.user;
             let toyintensity = interaction.options.getNumber("intensity") ?? 5;
             let toytype = interaction.options.getString("type");
-            if ((toytype == undefined) && (getToys(toyuser)) && (getToys(toyuser)[0] != undefined)) {
+            if ((toytype == undefined) && (getToys(toyuser.id)) && (getToys(toyuser.id).length > 0)) {
                 toytype = getToys(toyuser.id)[0]?.type
             }
             if (toytype == undefined) {
-                toytype = "vibe_bullet"
+                interaction.reply({ content: `${toyuser} is not wearing any toys!`, flags: MessageFlags.Ephemeral })
+                return;
             }
             let toybase = getBaseToy(toytype);
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT

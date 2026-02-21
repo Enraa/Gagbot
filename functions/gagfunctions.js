@@ -478,12 +478,13 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
         let isreply = false;
 		if (msg.type == "19") {
 			const replied = await msg.fetchReference();
-			const replyauthorobject = await replied.guild.members.search({ query: replied.author.displayName, limit: 1 });
+            let displayname = replied.member ? replied.member.displayName : replied.author.displayName
+			const replyauthorobject = await replied.guild.members.search({ query: displayname, limit: 1 });
 			const first = replyauthorobject.first();
 			if (first) {
 				outtext = `<@${first.id}> ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
 			} else {
-				outtext = `${replied.author.displayName} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
+				outtext = `${displayname} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
 			}
             isreply = first?.id;
 		}

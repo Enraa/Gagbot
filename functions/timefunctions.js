@@ -203,12 +203,14 @@ function importFileNames() {
     process.msgfunctions = {};
     process.modalfunctions = {};
     process.modalexecutefunctions = {};
+    process.onremovefunctions = {};
 	let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
 	eventfunctionsfolders.forEach((f) => {
 		process.eventfunctions[f] = {};
         process.msgfunctions[f] = {};
         process.modalfunctions[f] = {};
         process.modalexecutefunctions[f] = {};
+        process.onremovefunctions[f] = {};
 		let eventfunctionsfiles = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions", f));
 		eventfunctionsfiles.forEach((file) => {
 			let functionfile = require(path.resolve(__dirname, "..", "eventfunctions", f, file));
@@ -223,6 +225,9 @@ function importFileNames() {
             }
             if (typeof functionfile.modalexecute === "function") {
                 process.modalexecutefunctions[f][file.replace(".js", "")] = functionfile.modalexecute;
+            }
+            if (typeof functionfile.functiononremove === "function") {
+                process.onremovefunctions[f][file.replace(".js","")] = functionfile.functiononremove;
             }
 		});
 	});

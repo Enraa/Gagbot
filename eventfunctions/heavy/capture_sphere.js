@@ -1,6 +1,15 @@
+const { getClonedCollarKeysOwned, getCollarKeys, getCollar } = require("../../functions/collarfunctions")
+const { getCorset } = require("../../functions/corsetfunctions")
+const { getGag, getMitten } = require("../../functions/gagfunctions")
+const { getHeadwearRestrictions } = require("../../functions/headwearfunctions")
 const { removeHeavy, getHeavy } = require("../../functions/heavyfunctions")
 const { messageSendChannel } = require("../../functions/messagefunctions")
 const { getText } = require("../../functions/textfunctions")
+const { setUserVar, getUserVar } = require("../../functions/usercontext")
+const { getClonedChastityKeysOwned, getChastityKeys, getChastity } = require("../../functions/vibefunctions")
+const { getChastityBra } = require("../../functions/vibefunctions")
+const { getChastityBraKeys } = require("../../functions/vibefunctions")
+const { getClonedChastityBraKeysOwned } = require("../../functions/vibefunctions")
 const { getArousal } = require("../../functions/vibefunctions")
 
 // Inputs a capture strength and params, outputs an array of 3 values depending on catch. 
@@ -11,8 +20,21 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
     let maxhealth = 50
     let currhealth = Math.min(getArousal(userid), 49.5) // Always clamp to 0.5 hp left - false swipe range if you will. 
     let darkgrass = 1 // Not used, but formula has this, so we'll add it
-    let catchrate = 130 + (Math.floor(Math.random() * 125)) // catch rate between 130-255. Higher = more likely. Random chance
+
+    // Catch rate will be a base of 150, minus 10 for each held key, down to 3 (the catch rate for Articuno!)
+    let heldkeysnum = [...getClonedChastityBraKeysOwned(userid), ...getClonedChastityKeysOwned(userid), ...getClonedCollarKeysOwned(userid),
+                    ...getChastityKeys(userid), ...getChastityBraKeys(userid), ...getCollarKeys(userid)].length
+    let catchrate = Math.max(150 - (heldkeysnum * 10), 3)
     let ballbonus = ballbonusnum;
+
+    // Bonus if the target is bound!
+    let statusbonus = 1;
+    if (getMitten(userid) || !getHeadwearRestrictions(userid).canInspect || getCorset(userid)) {
+        statusbonus = 2.5;
+    }
+    else if (getGag(userid) || getChastity(userid) || getChastityBra(userid) || getCollar(userid)) {
+        statusbonus = 1.5;
+    }
 
     // Set array for catches
     let catches = [];
@@ -21,7 +43,7 @@ function calculatecapture(userid, ballbonusnum = 1.0) {
     let hpnum = ((3 * maxhealth) - (2 * currhealth)) / (3 * maxhealth)
 
     // Now the rest of the catchrate
-    let modifiedcatchrate = hpnum * 4096 * darkgrass * catchrate * ballbonus;
+    let modifiedcatchrate = hpnum * 4096 * darkgrass * catchrate * ballbonus * statusbonus;
 
     // If the modifiedcatchrate is higher than 1044480, then we can just return set of 3 trues, as this is guaranteed catch
     if (modifiedcatchrate >= 1044480) { return [true, true, true] }
@@ -68,16 +90,11 @@ let functiontick = async (userID) => {
     }
     else { return };
 
-    // If we dont know where the user is, lets just wait. 
-    if (!(process.recentmessages && process.recentmessages[userID])) {
-        return;
-    }
-
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person that's been captured!
     let targetobject = await process.client.users.fetch(getHeavy(userID).origbinder ?? userID); // The cruel person who threw the pokeball!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID])) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID]) || getUserVar(userID, "captureSphereCaptured")) {
         return;
     }
     // Build data tree:
@@ -107,7 +124,6 @@ let functiontick = async (userID) => {
                 data[`wigglefail${process.userevents[userID].capturesphere.captureprogress}`] = true
                 messageSendChannel(getText(data), process.recentmessages[userID])
                 removeHeavy(userID);
-                delete process.userevents[userID].capturesphere;
                 return;
             }
         }
@@ -145,14 +161,24 @@ let functiontick = async (userID) => {
                 data.wigglefail2 = true;
                 messageSendChannel(getText(data), process.recentmessages[userID]);
                 removeHeavy(userID);
-                delete process.userevents[userID].capturesphere;
                 return;
             }
         }
         process.userevents[userID].capturesphere.captureprogress++
         return;
     }
+    else if (process.userevents[userID].capturesphere.captureprogress == 4) {
+        setUserVar(userID, "captureSphereCaptured", true)
+    }
+}
+
+// Called when the item is removed. Only implemented for heavy bondage presently.
+// This should be used to clear any lingering data from above. 
+let functiononremove = async (userID) => {
+    setUserVar(userID, "captureSphereCaptured", undefined)
+    delete process.userevents[userID].capturesphere;
 }
 
 exports.calculatecapture = calculatecapture;
 exports.functiontick = functiontick;
+exports.functiononremove = functiononremove;

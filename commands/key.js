@@ -154,18 +154,21 @@ module.exports = {
 					return { name: `${interaction.guild.members.cache.get(k.split("_")[1])?.displayName}'s key to ${interaction.guild.members.cache.get(k.split("_")[0])?.displayName}'s collar`.slice(0, 100), value: `${k}_collar` };
 				});
 
-				console.log(ownedclonedchastitykeys);
-				console.log(ownedclonedcollarkeys);
-				console.log(clonedchastitykeys);
-				console.log(clonedcollarkeys);
-
 				let sorted = [...clonedchastitykeys, ...clonedchastitybrakeys, ...clonedcollarkeys, ...ownedclonedchastitykeys, ...ownedclonedchastitybrakeys, ...ownedclonedcollarkeys];
 				if (sorted.length == 0) {
 					sorted = [{ name: "No Eligible Keys To Revoke...", value: "nothing" }];
-				} else if (sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 25).length == 0 && focusedValue.length > 0) {
-					sorted = [{ name: "No Eligible Keys To Revoke...", value: "nothing" }];
 				}
-				await interaction.respond(sorted.slice(0, 25));
+
+                let matches = didYouMean(focusedValue, sorted, {
+                    matchPath: ['name'], 
+                    returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
+                    threshold: 0.1, // Default is 0.4 - this is how much of the entry must exist
+                })
+                console.log(matches)
+                if (matches.length == 0) {
+                    matches = sorted;
+                }
+				await interaction.respond(matches.slice(0, 25));
 			} else if (subcommand == "swapitem") {
 				// Note, we only need to know if we can ***unlock*** a restraint to swap it.
 				if (interaction.options.get("restraint")?.focused) {
@@ -441,11 +444,10 @@ module.exports = {
 				let wearer = await interaction.guild.members.fetch(cloneresponse.split("_")[0]);
 				let typeofrestraint = cloneresponse.split("_")[2];
 
-				/*console.log(typeofrestraint)
-                if (typeofrestraint == "chastitybelt") {
-                    console.log(getChastity(wearer.id));
-                    console.log(canAccessChastity(wearer.id, interaction.user.id, undefined, true).access)
-                }*/
+                console.log(clonedkeyholder.id)
+                console.log(interaction.user.id)
+                console.log(wearer.id)
+                console.log(cloneresponse)
 
 				// Check if the interaction user has access to clone the target restraint.
 				let canrevoke = false;
@@ -468,22 +470,22 @@ module.exports = {
 					choiceemoji = `${process.emojis.chastitybra}`;
 				}
 				// Allow cloned key to be revoked if the cloned keyholder is the interaction user.
-				if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id).access && clonedkeyholder == interaction.user) {
+				if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id).access && clonedkeyholder == interaction.user) {
+				if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id).access && clonedkeyholder == interaction.user) {
+				if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;
 				}
-				if (clonedkeyholder == interaction.user) {
+				if (clonedkeyholder.id == interaction.user.id) {
 					isclone = true;
 				}
 				if (!canrevoke) {

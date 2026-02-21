@@ -2,7 +2,7 @@ const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("disco
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy } = require("./../functions/heavyfunctions.js");
 const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
+const { getConsent, handleConsent, handleExtremeRestraint, handleMajorRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
 const { getUserTags } = require("../functions/configfunctions.js");
@@ -16,7 +16,8 @@ module.exports = {
 				.setName("type")
 				.setDescription("What flavor of helpless restraint to wear...")
 				.setAutocomplete(true),
-		),
+		)
+        .addUserOption((opt) => opt.setName("user").setDescription("Who to bind in heavy bondage...")),
 	async autoComplete(interaction) {
         try {
             const focusedValue = interaction.options.getFocused();
@@ -54,23 +55,15 @@ module.exports = {
 	},
 	async execute(interaction) {
 		try {
+            let targetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			// List all heavy restraints if set.
-			if (interaction.options.getBoolean("list_all_restraints")) {
-				let restraints = heavytypes
-					.map((h) => {
-						return h.name;
-					})
-					.sort();
-				let outtext = "## Full list of Heavy Restraints:\n\n";
-				for (let i = 0; i < restraints.length; i++) {
-					outtext = `${outtext}${restraints[i]}\n`;
-				}
-				await interaction.reply({ content: `${outtext}`, flags: MessageFlags.Ephemeral });
+            // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
+			if (!getConsent(targetuser.id)?.mainconsent) {
+				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
@@ -79,9 +72,10 @@ module.exports = {
 				textarray: "texts_heavy",
 				textdata: {
 					interactionuser: interaction.user,
-					targetuser: interaction.user,
+					targetuser: targetuser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
 					c2: convertheavy(heavychoice), // New heavy bondage
+                    c3: convertheavy(heavychoice) // Compatibility with original collarequiptexts
 				},
 			};
 
@@ -101,27 +95,69 @@ module.exports = {
 				interaction.reply(getText(data));
 			} else {
 				data.noheavy = true;
-				await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-				await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
-					async (success) => {
-						await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
-						await interaction.followUp(getText(data));
-						assignHeavy(interaction.user.id, heavychoice, interaction.user.id);
-					},
-					async (reject) => {
-						let nomessage = `You rejected the ${convertheavy(heavychoice)}.`;
-						if (reject == "Disabled") {
-							nomessage = `${convertheavy(heavychoice)} is currently disabled in your Extreme options - **/config**`;
-						}
-						if (reject == "Error") {
-							nomessage = `Something went wrong - Submit a bug report!`;
-						}
-						if (reject == "NoDM") {
-							nomessage = `Something went wrong sending a DM to you, or you have DMs from this server disabled. Cannot obtain consent for this restraint.`;
-						}
-						await interaction.followUp(nomessage);
-					},
-				);
+                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                if (interaction.user.id != targetuser.id) {
+                    // Someone else!
+                    data.other = true;
+                    await handleMajorRestraint(interaction.user, targetuser, "heavy", heavychoice).then(async () => {
+                        await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
+                            async (success) => {
+                                await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
+                                await interaction.followUp(getText(data));
+                                assignHeavy(targetuser.id, heavychoice, interaction.user.id);
+                            },
+                            async (reject) => {
+                                let nomessage = `${targetuser} rejected the ${convertheavy(heavychoice)}.`;
+                                if (reject == "Disabled") {
+                                    nomessage = `${convertheavy(heavychoice)} is currently disabled in ${targetuser}'s Extreme options.`;
+                                }
+                                if (reject == "Error") {
+                                    nomessage = `Something went wrong - Submit a bug report!`;
+                                }
+                                if (reject == "NoDM") {
+                                    nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                }
+                                await interaction.followUp({ content: nomessage });
+                            },
+                        );
+                    },
+                    async (reject) => {
+                        let nomessage = `${targetuser} rejected the ${convertheavy(heavychoice)}.`;
+                        if (reject == "Disabled") {
+                            nomessage = `${targetuser} has disabled being bound in major restraints without a collar.`;
+                        }
+                        if (reject == "Error") {
+                            nomessage = `Something went wrong - Submit a bug report!`;
+                        }
+                        if (reject == "NoDM") {
+                            nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                        }
+                        await interaction.followUp({ content: nomessage });
+                    })
+                }
+                else {
+                    data.self = true;
+                    await handleExtremeRestraint(interaction.user, interaction.user, "heavy", heavychoice).then(
+                        async (success) => {
+                            await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
+                            await interaction.followUp(getText(data));
+                            assignHeavy(interaction.user.id, heavychoice, interaction.user.id);
+                        },
+                        async (reject) => {
+                            let nomessage = `You rejected the ${convertheavy(heavychoice)}.`;
+                            if (reject == "Disabled") {
+                                nomessage = `${convertheavy(heavychoice)} is currently disabled in your Extreme options - **/config**`;
+                            }
+                            if (reject == "Error") {
+                                nomessage = `Something went wrong - Submit a bug report!`;
+                            }
+                            if (reject == "NoDM") {
+                                nomessage = `Something went wrong sending a DM to you, or you have DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                            }
+                            await interaction.followUp(nomessage);
+                        },
+                    );
+                }
 			}
 		} catch (err) {
 			console.log(err);
