@@ -30,6 +30,15 @@ module.exports = {
                             }
 
                             let founduserid;
+                            // Check for engraved pet tag
+                            let engravedpettags = getAllSelectedOption("engravedcollarname")
+                            Object.keys(engravedpettags).forEach((k) => {
+                                // If the visor matches, then we found our doll!
+                                if (message.author.username.startsWith(engravedpettags[k])) {
+                                    founduserid = k
+                                }
+                            })
+                            // Check for Doll Visor
                             let dollvisorids = getAllSelectedOption("dollvisorname")
                             Object.keys(dollvisorids).forEach((k) => {
                                 // If the visor matches, then we found our doll!
@@ -37,7 +46,7 @@ module.exports = {
                                     founduserid = k
                                 }
                             })
-                            // They're probably not visored, so lets search and see if we can find
+                            // They're probably not a custom name
                             // them in the guild list. We'll allow for top 5 results to try to allow for some grace in confidence here. 
                             if (!founduserid) {
                                 let membername = await message.guild.members.search({ query: message.author.username, limit: 3 });
