@@ -888,14 +888,14 @@ async function handleMajorRestraint(user, target, type, restraint) {
                 .setCustomId("cooldown15")
                 .setLabel("Block Requests for 15m")
                 .setStyle(ButtonStyle.Danger),
-            new ButtonBuilder()
+            /*new ButtonBuilder()
                 .setCustomId("cooldown60")
                 .setLabel("Block Requests for 1h")
                 .setStyle(ButtonStyle.Danger),
             new ButtonBuilder()
                 .setCustomId("cooldown1440")
                 .setLabel("Block Requests for 24h")
-                .setStyle(ButtonStyle.Danger)
+                .setStyle(ButtonStyle.Danger)*/
         ]
 
         try {
@@ -965,14 +965,14 @@ async function handleMajorRestraint(user, target, type, restraint) {
                             .setCustomId("cooldown15")
                             .setLabel("Block Requests for 15m")
                             .setStyle(ButtonStyle.Danger),
-                        new ButtonBuilder()
+                        /*new ButtonBuilder()
                             .setCustomId("cooldown60")
                             .setLabel("Block Requests for 1h")
                             .setStyle(ButtonStyle.Danger),
                         new ButtonBuilder()
                             .setCustomId("cooldown1440")
                             .setLabel("Block Requests for 24h")
-                            .setStyle(ButtonStyle.Danger)
+                            .setStyle(ButtonStyle.Danger)*/
                     ]
 
                     mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })

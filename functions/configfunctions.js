@@ -611,6 +611,9 @@ const configoptions = {
 			placeholder: (userID) => {
 				return `DOLL-${userID.slice(-4)}`;
 			},
+            textvaluedisplay: (val) => {
+                return val;
+            },
 			menutype: "choice_textentry",
 			default: (userID) => {
 				return `DOLL-${userID.slice(-4)}`;
@@ -768,6 +771,39 @@ const configoptions = {
 			menutype: "choice",
 			default: 3,
 			disabled: (userID) => {
+				return false;
+			},
+		},
+        dollpunishwords: {
+			name: "Doll Protocol Forbidden Words",
+			desc: "Punish for additional words",
+			descmodal: "What words to punish for? Please provide a comma separated response (case insensitive):",
+			choices: [
+				{
+					name: "Set Forbidden Words",
+					helptext: "Forbidden words set to: ",
+					helptextnone: "*No forbidden words*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `person,/h+u+m+a+n+/`;
+			},
+			placeholder: (userID) => {
+				return `person,/h+u+m+a+n+/,grin`;
+			},
+            textvaluedisplay: (val) => {
+                return val.join(", ")
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
 				return false;
 			},
 		},
@@ -1991,12 +2027,12 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     )
                 pagecomponents.push(buttonsection)
             }*/
-				let helpertext = `${configoptions[menuset][k].choices[0].helptext}${getOption(interaction.user.id, k)}`;
+				let helpertext = `${configoptions[menuset][k].choices[0].helptext}${configoptions[menuset][k].textvaluedisplay(getOption(interaction.user.id, k))}`;
 				if (getOption(interaction.user.id, k) == undefined) {
 					helpertext = `${configoptions[menuset][k].choices[0].helptextnone}`;
 				}
 				let buttonsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices[0].helptext}${getOption(interaction.user.id, k)}`))
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${helpertext}`))
 					.setButtonAccessory((button) =>
 						button
 							.setCustomId(`config_tentrypageopt_${menuset}_${k}`)
