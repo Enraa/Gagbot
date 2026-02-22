@@ -1640,20 +1640,20 @@ const texts_struggle = {
 		`USER_TAG twirls USER_THEIR hair absentmindedly. Someone should tie USER_THEM up with more bondage, tehe!~`,
 		{
 			required: (t) => {
-				return !(process.gags && process.gags[t.interactionuser.id]);
+				return !(process.gags && process.gags[t.interactionuser.id] && Math.random() > 0.75);
 			},
 			text: `USER_TAG clears USER_THEIR throat and then begins to speak: The FitnessGram Pacer Test is a multistage aerobic capacity test that progressively gets more difficult as it continues. The 20 meter pacer test will begin in 30 seconds. Line up at the start. The running speed starts slowly but gets faster each minute after you hear this signal bodeboop. A single lap should be completed every time you hear this sound. ding Remember to run in a straight line and run as long as possible. The second time you fail to complete a lap before the sound, your test is over. The test will begin on the word start. On your mark. Get ready!… Start.`,
 		},
 		`USER_TAG's mind is fantasizing about the cute characters in that last anime USER_THEY watched. Everyone should ask USER_THEM about it!`,
 		{
 			required: (t) => {
-				return !(process.gags && process.gags[t.interactionuser.id]);
+				return !(process.gags && process.gags[t.interactionuser.id] && Math.random() > 0.75);
 			},
 			text: `USER_TAG's voice echoes through the halls as USER_THEY monologueUSER_S: ***Tell me, for whom do you fight...***`,
 		},
 		{
 			required: (t) => {
-				return !(process.gags && process.gags[t.interactionuser.id]);
+				return !(process.gags && process.gags[t.interactionuser.id] && Math.random() > 0.75);
 			},
 			text: `USER_TAG pauses for a second, then begins to speak in a sultry tone: Hello Ladies~. Look at your outfit, now back to me, now back to your outfit, now back to me. Sadly, your outfit can't be mine~. But if you jumped into a Mimic instead of using the /wear command, it could look close to mine! Look down, back up, where are you? In my RP Thread! What's in your hand, back at me. I have it, it's the keys to your Collar and Belt! Look again, the keys are now vibes! Look down again, Back up. Where are you? Strapped in Display Stand! Now Cum for me~. Anything is possible when you dress using a Mimic and not by yourself! I'm on a (wooden) horse!`,
 		},
