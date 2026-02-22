@@ -797,7 +797,7 @@ const configoptions = {
 				return `person,/h+u+m+a+n+/,grin`;
 			},
             textvaluedisplay: (val) => {
-                return val.join(", ")
+                return (val ? val.join(", ") : "**None Set**")
             },
 			menutype: "choice_textentry",
 			default: (userID) => {
