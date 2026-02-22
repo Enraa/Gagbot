@@ -35,7 +35,7 @@ module.exports = {
                             console.log(engravedpettags)
                             Object.keys(engravedpettags).forEach((k) => {
                                 // If the visor matches, then we found our doll!
-                                if (message.author.username.startsWith(engravedpettags[k])) {
+                                if (message.author.username.startsWith(engravedpettags[k]) && (engravedpettags[k].length > 0)) {
                                     console.log(`Matched ${k}`);
                                     founduserid = k
                                 }
@@ -44,7 +44,7 @@ module.exports = {
                             let dollvisorids = getAllSelectedOption("dollvisorname")
                             Object.keys(dollvisorids).forEach((k) => {
                                 // If the visor matches, then we found our doll!
-                                if (message.author.username.startsWith(dollvisorids[k])) {
+                                if (message.author.username.startsWith(dollvisorids[k]) && (dollvisorids[k].length > 0)) {
                                     founduserid = k
                                 }
                             })
