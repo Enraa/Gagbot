@@ -176,10 +176,18 @@ const deleteGag = (userID, specificgag) => {
 	}
 	// Remove all gags if none is specified.
 	if (!specificgag && process.gags[userID]) {
+        process.gags[userID].forEach((g) => {
+            if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
+                process.gagtypes[g.gagtype].onUnlock(userID);
+            }
+        })
 		delete process.gags[userID];
 	} else if (process.gags[userID]) {
 		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
 		if (loc > -1) {
+            if (process.gagtypes[process.gags[userID][loc].gagtype] && process.gagtypes[process.gags[userID][loc].gagtype].onUnlock) {
+                process.gagtypes[process.gags[userID][loc].gagtype].onUnlock(userID);
+            }
 			process.gags[userID].splice(loc, 1);
 		}
 		if (process.gags[userID].length == 0) {
