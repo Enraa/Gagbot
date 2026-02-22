@@ -826,6 +826,11 @@ async function handleMajorRestraint(user, target, type, restraint) {
 			return;
 		} // NOPE
 
+        if (process.recentlypromptedmajor && process.recentlypromptedmajor[target.id] && process.recentlypromptedmajor[target.id] > Date.now()) {
+            rej("Cooldown")
+            return;
+        }
+
 		let restraintfullname = ``;
         let prettytype = ``;
         let emoji = ``;
@@ -878,7 +883,20 @@ async function handleMajorRestraint(user, target, type, restraint) {
                 .setCustomId("acceptButton")
                 .setLabel("Allow (Wait...)")
                 .setStyle(ButtonStyle.Success)
-                .setDisabled(true)]
+                .setDisabled(true),
+            new ButtonBuilder()
+                .setCustomId("cooldown15")
+                .setLabel("Block Requests for 15m")
+                .setStyle(ButtonStyle.Danger),
+            new ButtonBuilder()
+                .setCustomId("cooldown60")
+                .setLabel("Block Requests for 1h")
+                .setStyle(ButtonStyle.Danger),
+            new ButtonBuilder()
+                .setCustomId("cooldown1440")
+                .setLabel("Block Requests for 24h")
+                .setStyle(ButtonStyle.Danger)
+        ]
 
         try {
             let dmchannel = await target.createDM();
@@ -890,6 +908,24 @@ async function handleMajorRestraint(user, target, type, restraint) {
 
                     collector.on("collect", async (i) => {
                         console.log(i);
+                        if (i.customId == "cooldown15") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 900000
+                        }
+                        if (i.customId == "cooldown60") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 3600000
+                        }
+                        if (i.customId == "cooldown1440") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 86400000
+                        }
                         if (i.customId == "acceptButton") {
                             await mess.delete().then(() => {
                                 i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`);
@@ -924,7 +960,19 @@ async function handleMajorRestraint(user, target, type, restraint) {
                         new ButtonBuilder()
                             .setCustomId("acceptButton")
                             .setLabel("Allow")
-                            .setStyle(ButtonStyle.Success)
+                            .setStyle(ButtonStyle.Success),
+                        new ButtonBuilder()
+                            .setCustomId("cooldown15")
+                            .setLabel("Block Requests for 15m")
+                            .setStyle(ButtonStyle.Danger),
+                        new ButtonBuilder()
+                            .setCustomId("cooldown60")
+                            .setLabel("Block Requests for 1h")
+                            .setStyle(ButtonStyle.Danger),
+                        new ButtonBuilder()
+                            .setCustomId("cooldown1440")
+                            .setLabel("Block Requests for 24h")
+                            .setStyle(ButtonStyle.Danger)
                     ]
 
                     mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })

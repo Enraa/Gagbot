@@ -143,6 +143,9 @@ module.exports = {
                         if (reject == "NoDM") {
                             nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                         }
+                        if (reject == "Cooldown") {
+                            nomessage = `${targetuser} has blocked major bondage restraints for now. Please try again in the future.`;
+                        }
                         await interaction.followUp({ content: nomessage });
                     })
                 }
