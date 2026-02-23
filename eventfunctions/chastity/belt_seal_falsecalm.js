@@ -10,7 +10,7 @@ let functiontick = async function(userid) {
     {            
         // Calc Impact of Toys and increment Base_Arousal
         getToys(userid).forEach(toy => {
-            setUserVar(userid, "base_arousal", getUserVar(userid, "base_arousal") + (getBaseToy(toy.type).calcVibeEffect(toy) * tickMod))
+            setUserVar(userid, "base_arousal", getUserVar(userid, "base_arousal") + (getBaseToy(toy.type).calcVibeEffect({ userID: userid, intensity: toy.intensity }) * tickMod))
         });
     }
     else 
