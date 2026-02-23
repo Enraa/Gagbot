@@ -106,6 +106,14 @@ module.exports = {
 				interaction.reply(getText(data));
 			} else {
 				data.noheavy = true;
+                // REFLECT
+                if (targetuser.id == process.client.user.id) {
+                    data.reflect = true;
+                    data.textdata.interactionuser = process.client.user;
+                    data.textdata.targetuser = interaction.user;
+                    interactionuser = process.client.user;
+                    targetuser = interaction.user;
+                }
                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                 if (interaction.user.id != targetuser.id) {
                     // Someone else!

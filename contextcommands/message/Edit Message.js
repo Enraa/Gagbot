@@ -32,7 +32,6 @@ module.exports = {
                             let founduserid;
                             // Check for engraved pet tag
                             let engravedpettags = getAllSelectedOption("engravedcollarname")
-                            console.log(engravedpettags)
                             Object.keys(engravedpettags).forEach((k) => {
                                 // If the visor matches, then we found our doll!
                                 if (message.author.username.startsWith(engravedpettags[k]) && (engravedpettags[k].length > 0)) {

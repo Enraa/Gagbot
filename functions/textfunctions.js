@@ -1089,7 +1089,14 @@ const texts_heavy = {
                 },
                 text: `USER_TAG throws a VAR_C3 at TARGET_TAG! It clunks off of TARGET_THEIR body before activating and pulling TARGET_THEM inside!`,
             },
-        ]
+        ],
+        reflect: {
+            other: [
+                `TARGET_TAG tries to put USER_TAG in a VAR_C3. Unfortunately for TARGET_THEM, it is far faster and instead turns the tables to put it on TARGET_THEM!`,
+                `The USER_TAG stares at TARGET_TAG, almost audibly sighing to itself as it sees the VAR_C3. It places it swiftly on the brat.`,
+                `USER_TAG grins widely as TARGET_TAG throws a VAR_C3 at it, before picking it up with several mechanical arms `
+            ]
+        }
     }
 };
 
