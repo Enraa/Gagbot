@@ -13,7 +13,9 @@ const configoptions = {
 					name: "Off",
 					helptext: "*Arousal disabled*",
 					select_function: (userID) => {
-						delete process.vibe[userID];
+                        if (process.vibe && process.vibe[userID]) {
+                            delete process.vibe[userID];
+                        }
 					},
 					value: 0,
 					style: ButtonStyle.Danger,

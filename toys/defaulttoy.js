@@ -45,6 +45,8 @@ function Toy() {
     // further multiplied by the chastity's checks for this, if applicable. 
     this.calcVibeEffect = (data) => { return 0 }
 
+    this.isArousing = (data) => { return true };
+
     // Name for the toy
     this.toyname = "Default Toy"
 

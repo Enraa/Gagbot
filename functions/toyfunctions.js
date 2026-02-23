@@ -57,7 +57,7 @@ function canRemoveToy(userID, placerID, toy) {
 
 // Idk what to name this honestly.
 function userBlockArousingToy(user, toy) {
-    if (toy && (getOption(user, "arousalsystem") == "disabled") && (process.toytypes[toy].vibescale() > 0)) {
+    if (toy && (getOption(user, "arousalsystem") == 0) && (process.toytypes[toy].isArousing())) {
         return true; // Do not add a toy that can increase arousal, thats bad. 
     }
     else {
@@ -68,7 +68,7 @@ function userBlockArousingToy(user, toy) {
 function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbinder) {
     let vibe = process.toytypes[toytype];
     if (!vibe) { return "NoToy" }
-    if ((getOption(user, "arousalsystem") == "disabled") && (vibe.vibescale() > 0)) {
+    if ((getOption(user, "arousalsystem") == 0) && (vibe.isArousing())) {
         return "NoArousal"; // Do not add a toy that can increase arousal, thats bad. 
     }
     if (process.toys == undefined) { process.toys = {} }
