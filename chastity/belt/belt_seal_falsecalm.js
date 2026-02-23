@@ -14,14 +14,12 @@ exports.maxArousal = (data) => { return 0 }
 exports.onEquip = (data) => {
     // Configure base arousal value
     if (!getUserVar(data.userID, "base_arousal") || getUserVar(data.userID, "base_arousal") == undefined) setUserVar(data.userID, "base_arousal", getArousal(data.userID) ?? 0);
-    if (!getUserVar(data.userID, "stasis_timer") || getUserVar(data.userID, "stasis_timer") == undefined) setUserVar(data.userID, "stasis_timer", Date.now());
 }
 
 exports.onUnequip = (data) => {
     //  Add All Stored Arousal at once
     addArousal(data.userID, getUserVar(data.userID, "base_arousal"));
     setUserVar(data.userID, "base_arousal", undefined);
-    setUserVar(data.userID, "stasis_timer", undefined);
 }
 
 // Tags
