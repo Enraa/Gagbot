@@ -4,8 +4,9 @@ const path = require("path");
 const { getToys } = require("./toyfunctions");
 const { getWearable } = require("./wearablefunctions");
 const { getHeavy } = require("./heavyfunctions");
-const { getHeadwear } = require("./headwearfunctions");
+const { getHeadwear, DOLLVISORS } = require("./headwearfunctions");
 const { getCollar } = require("./collarfunctions");
+const { getOption } = require("./configfunctions");
 
 // Load all .png files into the bot as emoji, then assign them to process.emojis.
 // This can be used to allow the bot's emojis to function elsewhere.
@@ -260,6 +261,58 @@ function runMessageEvents(data) {
 	}
 }
 
+// Retrieves any alternate user name for a given user.
+function getAlternateName(user) {
+    let outname = user.displayName // We're putting a member object in here
+    // Handle pet collar name
+    if (getCollar(user.id)?.collartype == "collarengraved") {
+        if (getOption(user.id, "engravedcollarname") && getOption(user.id, "engravedcollarname").length > 0) {
+            outname = getOption(user.id, "engravedcollarname");
+        }
+    }
+
+    // Handle Doll Visor name
+    if (getHeadwear(user.id).find((headwear) => DOLLVISORS.includes(headwear))) {
+        let dollIDOverride = getOption(user.id, "dollvisorname");
+        let dollmaker = getHeadwear(user.id).find((headwear) => headwear === "dollmaker_visor");
+        // If dollIDOverride is not specified or the override is exactly a string of numbers...
+        // Force Dollmaker's Visor wearers to get this generation function
+        if (!dollIDOverride || (Number.isFinite(dollIDOverride) && dollIDOverride.length < 6) || dollmaker) {
+            if (!dollIDOverride.search(new RegExp(/\\D/, "g"))) {
+                // If the DollIDOverride is only a string of numbers 
+                outname = `DOLL-${dollIDout}`;
+            }
+            else {
+                outname = `DOLL-${user.id.slice(-4)}`
+            }
+        }
+        else {
+            outname = dollIDOverride;
+        }
+    }
+
+    // Finally, if the outname is EXACTLY the same as the displayName we recieved, 
+    // or the user's display name can be found in the modified name return it
+    if ((user.displayName.toLowerCase() == outname.toLowerCase()) || 
+        (outname.toLowerCase().includes(user.displayName.toLowerCase()))) { return outname }
+
+    // Otherwise, we need to append the user's display name as we can
+    let additionalpart = ``;
+    // If the length of the replacement name is less than 25, we can add some of the username...
+    if (outname.length < 25) {
+        let additionallength = 32 - outname.length; // max length of name
+        if (additionallength - 3 > user.displayName.length) {
+            additionalpart = ` (${user.displayName})`;
+        } else {
+            // Get the length of their name, minus 6 for additional characters to fit into ...
+            let reducedname = user.displayName.slice(0, Math.min(additionallength - 6, user.displayName.length));
+            additionalpart = ` (${reducedname}...)`;
+        }
+    }
+
+    return `${outname}${additionalpart}`.slice(0,32)
+}
+
 exports.splitMessage = splitMessage;
 
 exports.messageSend = messageSend;
@@ -272,3 +325,5 @@ exports.splitMessage = splitMessage;
 exports.messageSendChannel = messageSendChannel;
 
 exports.runMessageEvents = runMessageEvents;
+
+exports.getAlternateName = getAlternateName;

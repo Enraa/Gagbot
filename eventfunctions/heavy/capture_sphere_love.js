@@ -1,17 +1,34 @@
+const { getCollar, getClonedCollarKey } = require("../../functions/collarfunctions.js")
 const { removeHeavy, getHeavy } = require("../../functions/heavyfunctions")
 const { messageSendChannel } = require("../../functions/messagefunctions")
 const { getText } = require("../../functions/textfunctions")
 const { getUserVar, setUserVar } = require("../../functions/usercontext.js")
-const { getArousal } = require("../../functions/vibefunctions")
+const { getArousal, getChastity } = require("../../functions/vibefunctions")
+const { getClonedChastityBraKey } = require("../../functions/vibefunctions.js")
+const { getClonedChastityKey } = require("../../functions/vibefunctions.js")
+const { getChastityBra } = require("../../functions/vibefunctions.js")
 const { calculatecapture } = require("./capture_sphere.js") // reuse the calculation!
 
 let functiontick = async (userID) => {
     if (process.userevents == undefined) { process.userevents = {} }
     if (process.userevents[userID] == undefined) { process.userevents[userID] = {} }
     if (process.userevents[userID].capturesphere == undefined) { 
+        let capturerate = 1.0;
+        let origbinder = getHeavy(userID)?.origbinder ?? 0;
+        // If the person who bound this person has a key to the target, do the original
+        // love sphere effect. Not doing gender shenanigans. Too gay for that.
+        // Only apply this if they did NOT capture themselves with it lol 
+        if (origbinder != userID) {
+            if (getChastity(userID)?.keyholder == origbinder) { capturerate = 8.0 }
+            if (getChastityBra(userID)?.keyholder == origbinder) { capturerate = 8.0 }
+            if (getCollar(userID)?.keyholder == origbinder) { capturerate = 8.0 }
+            if (getClonedChastityKey(userID).includes(origbinder)) { capturerate = 8.0 }
+            if (getClonedChastityBraKey(userID).includes(origbinder)) { capturerate = 8.0 }
+            if (getClonedCollarKey(userID).includes(origbinder)) { capturerate = 8.0 }
+        }
         process.userevents[userID].capturesphere = { 
-            capture: calculatecapture(userID, 1.5), 
-            ballname: "Great Sphere",
+            capture: calculatecapture(userID, capturerate), 
+            ballname: "Love Sphere",
             captureprogress: -1,
             nextupdate: Date.now() + 2000
         } 

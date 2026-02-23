@@ -30,14 +30,25 @@ module.exports = {
                             }
 
                             let founduserid;
-                            let dollvisorids = getAllSelectedOption("dollvisorname")
-                            Object.keys(dollvisorids).forEach((k) => {
+                            // Check for engraved pet tag
+                            let engravedpettags = getAllSelectedOption("engravedcollarname")
+                            console.log(engravedpettags)
+                            Object.keys(engravedpettags).forEach((k) => {
                                 // If the visor matches, then we found our doll!
-                                if (message.author.username.startsWith(dollvisorids[k])) {
+                                if (message.author.username.startsWith(engravedpettags[k]) && (engravedpettags[k].length > 0)) {
+                                    console.log(`Matched ${k}`);
                                     founduserid = k
                                 }
                             })
-                            // They're probably not visored, so lets search and see if we can find
+                            // Check for Doll Visor
+                            let dollvisorids = getAllSelectedOption("dollvisorname")
+                            Object.keys(dollvisorids).forEach((k) => {
+                                // If the visor matches, then we found our doll!
+                                if (message.author.username.startsWith(dollvisorids[k]) && (dollvisorids[k].length > 0)) {
+                                    founduserid = k
+                                }
+                            })
+                            // They're probably not a custom name
                             // them in the guild list. We'll allow for top 5 results to try to allow for some grace in confidence here. 
                             if (!founduserid) {
                                 let membername = await message.guild.members.search({ query: message.author.username, limit: 3 });

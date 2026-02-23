@@ -30,7 +30,6 @@ exports.modal = async (interaction, userid) => {
 }
 
 exports.modalexecute = async (interaction) => {
-    console.log(interaction);
     interaction.deferUpdate();
     let interactionuser = interaction.member.id;
     let weareruser = interaction.customId.split("_")[3]

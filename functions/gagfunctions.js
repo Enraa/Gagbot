@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, runMessageEvents } = require(`./../functions/messagefunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName } = require(`./../functions/messagefunctions.js`);
 const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
 const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
 const { getVibeEquivalent } = require("./vibefunctions.js");
@@ -123,7 +123,7 @@ const getGag = (userID, gagbyname) => {
 	}
 	if (gagbyname) {
 		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
-		return foundgag?.gagtype;
+		return foundgag;
 	} else if (process.gags[userID].length > 0) {
 		return process.gags[userID][0].gagtype;
 	}
@@ -176,10 +176,18 @@ const deleteGag = (userID, specificgag) => {
 	}
 	// Remove all gags if none is specified.
 	if (!specificgag && process.gags[userID]) {
+        process.gags[userID].forEach((g) => {
+            if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
+                process.gagtypes[g.gagtype].onUnlock(userID);
+            }
+        })
 		delete process.gags[userID];
 	} else if (process.gags[userID]) {
 		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
 		if (loc > -1) {
+            if (process.gagtypes[process.gags[userID][loc].gagtype] && process.gagtypes[process.gags[userID][loc].gagtype].onUnlock) {
+                process.gagtypes[process.gags[userID][loc].gagtype].onUnlock(userID);
+            }
 			process.gags[userID].splice(loc, 1);
 		}
 		if (process.gags[userID].length == 0) {
@@ -367,11 +375,17 @@ const modifymessage = async (msg, threadId, messageonly) => {
             return outtext;
         }
 
+        // Get the user's current display name based on worn restraints
+        let userdisplayName = getAlternateName(msg.member);
+        if (userdisplayName != msg.member.displayName) {
+            msgTreeMods.modified = true;
+        }
+
 		// Finally, send it if we modified the message.
 		if (msgTreeMods.modified) {
             // If the message content is *exactly* the same as the input, return
-            if (msg.content === outtext) { return }
-			await sendTheMessage(msg, outtext, dollIDDisplay, threadId, dollProtocol, msgTreeMods.emojiModified );
+            if ((msg.content === outtext) && (userdisplayName == msg.member.displayName)) { return }
+			await sendTheMessage(msg, outtext, userdisplayName, threadId, dollProtocol, msgTreeMods.emojiModified );
 		}
 	} catch (err) {
 		console.log(err);
@@ -440,7 +454,7 @@ function textGarbleCorset(msg, msgTree, msgModified, threadId) {
 	return;
 }
 
-function textGarbleGag(msg, msgTree, msgTreeMods) {
+async function textGarbleGag(msg, msgTree, msgTreeMods) {
 	// Gags now
 	if (process.gags == undefined) {
 		process.gags = {};
@@ -460,7 +474,7 @@ function textGarbleGag(msg, msgTree, msgTreeMods) {
 					}
                 }
                 if(process.gagtypes[gag.gagtype].garbleText){
-					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5])		// Run garble on all IC segments.
+					msgTree.callFunc(process.gagtypes[gag.gagtype].garbleText,true,"rawText",[gag.intensity ?? 5, msg])		// Run garble on all IC segments.
 					msgTreeMods.modified = true;
 				}
                 if (process.gagtypes[gag.gagtype].messageend) {												// Run messageEnd
@@ -478,12 +492,13 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
         let isreply = false;
 		if (msg.type == "19") {
 			const replied = await msg.fetchReference();
-			const replyauthorobject = await replied.guild.members.search({ query: replied.author.displayName, limit: 1 });
+            let displayname = replied.member ? replied.member.displayName : replied.author.displayName
+			const replyauthorobject = await replied.guild.members.search({ query: displayname, limit: 1 });
 			const first = replyauthorobject.first();
 			if (first) {
 				outtext = `<@${first.id}> ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
 			} else {
-				outtext = `${replied.author.displayName} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
+				outtext = `${displayname} ⟶ https://discord.com/channels/${replied.guildId}/${replied.channelId}/${replied.id}\n${outtext}`;
 			}
             isreply = first?.id;
 		}

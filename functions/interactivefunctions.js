@@ -7,9 +7,9 @@ const { collartypes, getCollarKeyholder, canAccessCollar, getCollar, getCollarTi
 const { getOption } = require("./../functions/configfunctions.js");
 const { getChastityKeyholder, getChastity, getChastityTimelock } = require("./../functions/vibefunctions.js");
 const { getHeavyBinder, convertheavy, heavytypes } = require("./../functions/heavyfunctions.js");
-const { getGagBinder, getMittenBinder, mittentypes, gagtypes } = require("./../functions/gagfunctions.js");
+const { getGagBinder, getMittenBinder, mittentypes, gagtypes, getMittenName } = require("./../functions/gagfunctions.js");
 const { getCorsetBinder } = require("./../functions/corsetfunctions.js");
-const { getHeadwearBinder, headweartypes } = require("./../functions/headwearfunctions.js");
+const { getHeadwearBinder, headweartypes, getHeadwearName } = require("./../functions/headwearfunctions.js");
 const { configoptions } = require("./configfunctions.js");
 const { canAccessChastity } = require("./vibefunctions.js");
 const { wearabletypes } = require("./wearablefunctions.js");
@@ -17,6 +17,7 @@ const { getChastityName } = require("./vibefunctions.js");
 const { getChastityBra } = require("./vibefunctions.js");
 const { getChastityBraTimelock } = require("./vibefunctions.js");
 const { getChastityBraName } = require("./vibefunctions.js");
+const { getBaseChastity } = require("./chastityfunctions.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
@@ -804,6 +805,190 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 	});
 }
 
+// Prompts the target to put on a restraint such as a chastity belt or armbinder. 
+// Will never be available for collars.
+// Will ALWAYS nag the user unless they're collared for that respective restraint.
+async function handleMajorRestraint(user, target, type, restraint) {
+	return new Promise(async (res, rej) => {
+		let hasOption = getOption(target.id, `majorrestraint`);
+		if (canAccessCollar(target.id, user.id).access) {
+            let bondagetype = type;
+            if (type == "chastitybra") { bondagetype = "chastity" }
+            if (getCollar(target.id) && getCollar(target.id)[bondagetype]) {
+                // User is able to access the collar of the user *and* it has the permission. 
+                res(true);
+			    return;
+            }
+		} 
+
+		if (hasOption == "disabled") {
+			rej("Disabled");
+			return;
+		} // NOPE
+
+        if (process.recentlypromptedmajor && process.recentlypromptedmajor[target.id] && process.recentlypromptedmajor[target.id] > Date.now()) {
+            rej("Cooldown")
+            return;
+        }
+
+		let restraintfullname = ``;
+        let prettytype = ``;
+        let emoji = ``;
+        let limitationstext = ``;
+		switch (type) {
+			case "heavy":
+				restraintfullname = convertheavy(restraint);
+                prettytype = "Heavy Bondage"
+                emoji = `${process.emojis.armbinder}`;
+                limitationstext = `This will prevent you from using most commands in the bot, including **/unheavy** to free yourself!`
+				break;
+			case "chastity":
+				restraintfullname = getBaseChastity(restraint)?.name;
+                prettytype = "Chastity Belt"
+                emoji = `${process.emojis.chastity}`;
+                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${target} until it is unlocked by ${getPronouns(target.id, "object")}!`
+				break;
+            case "chastitybra":
+				restraintfullname = getBaseChastity(restraint)?.name;
+                prettytype = "Chastity Bra"
+                emoji = `${process.emojis.chastitybra}`;
+                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${target} until it is unlocked by ${getPronouns(target.id, "object")}!`
+				break;
+            case "mitten":
+                restraintfullname = getMittenName(undefined, restraint);
+                prettytype = "Mittens"
+                emoji = `${process.emojis.mitten}`;
+                limitationstext = `This will prevent you from adding or removing gags with **/gag** or masks with **/mask** until someone else unmittens you!`
+                break;
+            case "mask":
+                restraintfullname = getHeadwearName(undefined, restraint);
+                prettytype = "Mask"
+                emoji = `👤`;
+                limitationstext = `This may have a major effect on your speech or emoji, as well as blinding you in **/inspect**!`
+                break;
+			default:
+				console.log(`Could not find a restraint by that type.`);
+				rej("Error");
+				break;
+		}
+
+		// We need to ASK
+		let prompttext = `## ${user} would like to place a ${emoji}**${prettytype}** restraint on you: **${restraintfullname}**\n\n${limitationstext}\n\nDo you wish to allow this action?`;
+		let buttons = [
+            new ButtonBuilder()
+                .setCustomId("denyButton")
+                .setLabel("Deny")
+                .setStyle(ButtonStyle.Danger), 
+            new ButtonBuilder()
+                .setCustomId("acceptButton")
+                .setLabel("Allow (Wait...)")
+                .setStyle(ButtonStyle.Success)
+                .setDisabled(true),
+            new ButtonBuilder()
+                .setCustomId("cooldown15")
+                .setLabel("Block Requests for 15m")
+                .setStyle(ButtonStyle.Danger),
+            /*new ButtonBuilder()
+                .setCustomId("cooldown60")
+                .setLabel("Block Requests for 1h")
+                .setStyle(ButtonStyle.Danger),
+            new ButtonBuilder()
+                .setCustomId("cooldown1440")
+                .setLabel("Block Requests for 24h")
+                .setStyle(ButtonStyle.Danger)*/
+        ]
+
+        try {
+            let dmchannel = await target.createDM();
+            await dmchannel
+                .send({ content: `${prompttext}\n-# You must wait 15 seconds for this button to activate...`, components: [new ActionRowBuilder().addComponents(...buttons)] })
+                .then(async (mess) => {
+                    // Create a collector for up to 5 minutes
+                    const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 300_000, max: 1 });
+
+                    collector.on("collect", async (i) => {
+                        console.log(i);
+                        if (i.customId == "cooldown15") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 900000
+                        }
+                        if (i.customId == "cooldown60") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 3600000
+                        }
+                        if (i.customId == "cooldown1440") {
+                            if (process.recentlypromptedmajor == undefined) {
+                                process.recentlypromptedmajor = {}
+                            }
+                            process.recentlypromptedmajor[target.id] = Date.now() + 86400000
+                        }
+                        if (i.customId == "acceptButton") {
+                            await mess.delete().then(() => {
+                                i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`);
+                            });
+                            res(true);
+                        } else {
+                            await mess.delete().then(() => {
+                                i.reply(`Rejected - ${restraintfullname} will NOT be equipped on you.`);
+                            });
+                            rej(true);
+                        }
+                    });
+
+                    collector.on("end", async (collected) => {
+                        // timed out
+                        if (collected.length == 0) {
+                            await mess.delete().then(() => {
+                                i.reply(`Timed out - ${restraintfullname} will NOT be equipped on you.`);
+                            });
+                            rej(true);
+                        }
+                    });
+
+                    // Wait 15 seconds before editing the message with the new components
+                    await new Promise(resolve => setTimeout(resolve, 15000));
+
+                    let editedbuttons = [
+                        new ButtonBuilder()
+                            .setCustomId("denyButton")
+                            .setLabel("Deny")
+                            .setStyle(ButtonStyle.Danger), 
+                        new ButtonBuilder()
+                            .setCustomId("acceptButton")
+                            .setLabel("Allow")
+                            .setStyle(ButtonStyle.Success),
+                        new ButtonBuilder()
+                            .setCustomId("cooldown15")
+                            .setLabel("Block Requests for 15m")
+                            .setStyle(ButtonStyle.Danger),
+                        /*new ButtonBuilder()
+                            .setCustomId("cooldown60")
+                            .setLabel("Block Requests for 1h")
+                            .setStyle(ButtonStyle.Danger),
+                        new ButtonBuilder()
+                            .setCustomId("cooldown1440")
+                            .setLabel("Block Requests for 24h")
+                            .setStyle(ButtonStyle.Danger)*/
+                    ]
+
+                    mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })
+                })
+                .catch((err) => {
+                    console.log(`Error sending message to major bind ${user}.`);
+                    rej("NoDM");
+                });
+        }
+        catch (err) {
+            console.log(err);
+            rej("NoDM")
+        }
+	});
+}
+
 async function generateHelpModal(userid, section, page) {
     let pagecomponents = [];
     // This should only ever exist but lol
@@ -1081,6 +1266,8 @@ exports.timelockBuildConfirm = timelockBuildConfirm;
 exports.handleBondageRemoval = handleBondageRemoval;
 exports.checkBondageRemoval = checkBondageRemoval;
 exports.handleExtremeRestraint = handleExtremeRestraint;
+
+exports.handleMajorRestraint = handleMajorRestraint;
 
 exports.generateHelpModal = generateHelpModal;
 

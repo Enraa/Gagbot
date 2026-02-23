@@ -423,7 +423,8 @@ const configoptions = {
 				return false;
 			},
 		},
-        canfindkeys: {
+        // Removing canfindkeys for now as it is currently not used
+        /*canfindkeys: {
 			name: "Find Keys",
 			desc: "Can you discover misplaced keys that others dropped?",
 			choices: [
@@ -451,7 +452,38 @@ const configoptions = {
 			disabled: (userID) => {
 				return false;
 			}, // if true, button is greyed out
-		},
+		},*/
+        majorrestraint: {
+            name: "Major Restraints from Others",
+            desc: "Can others offer to put chastity, mittens, heavy bondage or masks on you? You must accept the prompt for it to be permitted unless that user has collar key access for you. You must have DMs from this server turned on to utilize this option.",
+            choices: [
+                {
+					name: "No",
+					helptext: "*Non-collar Keyholder major bondage will be rejected automatically*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+					uname: "MajorRestraintDisabled",
+				},
+				{
+					name: "Yes",
+					helptext: "Others can offer to bind you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Success,
+					uname: "MajorRestraint",
+				},
+            ],
+            menutype: "choice",
+            default: "enabled",
+            disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+        },
 		publicaccess: {
 			name: "Public Access",
 			desc: "Can you put on a free use collar or enable public access timelocks?",
@@ -579,6 +611,9 @@ const configoptions = {
 			placeholder: (userID) => {
 				return `DOLL-${userID.slice(-4)}`;
 			},
+            textvaluedisplay: (val) => {
+                return val;
+            },
 			menutype: "choice_textentry",
 			default: (userID) => {
 				return `DOLL-${userID.slice(-4)}`;
@@ -736,6 +771,72 @@ const configoptions = {
 			menutype: "choice",
 			default: 3,
 			disabled: (userID) => {
+				return false;
+			},
+		},
+        dollpunishwords: {
+			name: "Doll Protocol Forbidden Words",
+			desc: "Punish for additional words",
+			descmodal: "What words to punish for? Please provide a comma separated response (case insensitive):",
+			choices: [
+				{
+					name: "Set Forbidden Words",
+					helptext: "Forbidden words set to: ",
+					helptextnone: "*No forbidden words*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `person,/h+u+m+a+n+/`;
+			},
+			placeholder: (userID) => {
+				return `person,/h+u+m+a+n+/,grin`;
+			},
+            textvaluedisplay: (val) => {
+                return (val ? val.join(", ") : "**None Set**")
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        engravedcollarname: {
+			name: "Engraved Collar Name",
+			desc: "Name while wearing engraved collar",
+			descmodal: "What should your name be while collared with the Engraved Collar?",
+			choices: [
+				{
+					name: "Set Name",
+					helptext: "Engraved Collar Name set to: ",
+					helptextnone: "*No Engraved Collar Name*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `Your name...`;
+			},
+			placeholder: (userID) => {
+				return `Your name...`;
+			},
+            textvaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
 				return false;
 			},
 		},
@@ -934,6 +1035,120 @@ const configoptions = {
         "wearabletags-makeup": {
             name: "Makeup",
             desc: "Cosmetics applied to the face",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-confined": {
+            name: "Confined",
+            desc: "Being placed into cramped and limited movement spaces",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-dimensional": {
+            name: "Dimensional",
+            desc: "Being digitized, portalled, or otherwise relocating body or parts to another dimension",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-pet": {
+            name: "Pet",
+            desc: "Restraints treating you like a pet",
             choices: [
 				{
 					name: "None",
@@ -1845,12 +2060,12 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
                     )
                 pagecomponents.push(buttonsection)
             }*/
-				let helpertext = `${configoptions[menuset][k].choices[0].helptext}${getOption(interaction.user.id, k)}`;
+				let helpertext = `${configoptions[menuset][k].choices[0].helptext}${configoptions[menuset][k].textvaluedisplay(getOption(interaction.user.id, k))}`;
 				if (getOption(interaction.user.id, k) == undefined) {
 					helpertext = `${configoptions[menuset][k].choices[0].helptextnone}`;
 				}
 				let buttonsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices[0].helptext}${getOption(interaction.user.id, k)}`))
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${helpertext}`))
 					.setButtonAccessory((button) =>
 						button
 							.setCustomId(`config_tentrypageopt_${menuset}_${k}`)

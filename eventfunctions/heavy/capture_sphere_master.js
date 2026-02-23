@@ -10,7 +10,7 @@ let functiontick = async (userID) => {
     if (process.userevents[userID] == undefined) { process.userevents[userID] = {} }
     if (process.userevents[userID].capturesphere == undefined) { 
         process.userevents[userID].capturesphere = { 
-            capture: calculatecapture(userID, 600.0), // Guaranteed to catch without fail!
+            capture: calculatecapture(userID, 10000.0), // Guaranteed to catch without fail!
             ballname: "Master Sphere",
             captureprogress: -1,
             nextupdate: Date.now() + 2000

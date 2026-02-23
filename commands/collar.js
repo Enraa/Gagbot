@@ -99,6 +99,9 @@ module.exports = {
 				return;
 			}
 
+            if (process.recentinteractions == undefined) { process.recentinteractions = {} }
+            process.recentinteractions[interaction.user.id] = interaction;
+
 			if (collarkeyholder && collarkeyholder.id != undefined) {
 				//interaction.deferReply();
 				await interaction.showModal(collarPermModal(interaction, collarkeyholder, freeuse, collarselected));
@@ -120,6 +123,9 @@ module.exports = {
 			let choice_mask = interaction.fields.getStringSelectValues("mask") == "mask_yes" ? true : false;
 			// lol consistency with naming scheme is hard
 			let choice_collartype = interaction.customId.split("_")[3].length > 0 ? `${interaction.customId.split("_")[3]}_${interaction.customId.split("_")[4]}` : undefined;
+            if (choice_collartype.endsWith("_undefined")) { // This is an ugly workaround
+                choice_collartype = choice_collartype.replace("_undefined", "");
+            }
 
 			// Build data tree:
 			let data = {
@@ -155,7 +161,14 @@ module.exports = {
 						if (choice_collartype) {
 							// Custom named collar declared
 							data.namedcollar = true;
-							interaction.reply(getText(data));
+							/* Okay WHY Discord. Cannot have chaining followup modals. Limited user experience. :< 
+                            if (process.modalfunctions?.collar && process.modalfunctions.collar[choice_collartype]) {
+                                await interaction.reply(getText(data));
+                                await process.recentinteractions[interaction.user.id].showModal(await process.modalfunctions.collar[choice_collartype](interaction, interaction.user.id))
+                            }
+                            else {*/
+                                interaction.reply(getText(data));
+                            //}
 							assignCollar(interaction.user.id, collarkeyholder, { mitten: choice_mitten, chastity: choice_chastity, heavy: choice_heavy, mask: choice_mask }, true, choice_collartype);
 						} else {
 							data.nonamedcollar = true;

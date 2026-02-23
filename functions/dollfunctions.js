@@ -243,9 +243,19 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     { regex: new RegExp(`\\b(?:\\w|\\d)*(${msg.author.username ?? "USERNAME"})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "USERNAME" }, // username, if it exists
                     { regex: new RegExp(`\\b(?:\\w|\\d)*(${msg.member.displayName ?? "MEMBERNAME"})(?:\\w|\\d)*\\b`, `gi`), value: 2, type: "redact", string: "MEMBERNAME" }, // GUILD MEMBER display name, if it exists
                 ]
+                // If the Doll has configured forbidden words, add those to the array. 
+                if (getOption(msg.author.id, "dollpunishwords")) {
+                    console.log(getOption(msg.author.id, "dollpunishwords"))
+                    getOption(msg.author.id, "dollpunishwords").forEach((r) => {
+                        // Each of these is a regexp already, so adding them is easy!
+                        uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${r})(?:\\w|\\d)*\\b`, "gi"), value: 2, type: "redact", string: r } )
+                    })
+                }
+                console.log(uniquedollprotocol)
 
 				// Loop on protocols
 				if (dollProtocol) {
+                    let loopcount = 0 // Only try up to 1000 loops
 					DOLLPROTOCOL.forEach((r) => {
 						//let replaceProtocol = Array.from(dollMessageParts[i].text.matchAll(r.regex)).map((a) => a[0])
 						let replaceProtocol = dollMessageParts[i].text.match(r.regex);
@@ -253,14 +263,15 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 							dollProtocolVioType = dollProtocolVioType ? (PROTOCOLVIOLATIONPRIOS[r.type] > PROTOCOLVIOLATIONPRIOS[dollProtocolVioType] ? r.type : dollProtocolVioType) : r.type;
 
 							// Stuff an ENQ character before each match.
-							while (dollMessageParts[i].text.match(r.regex)) {
+							while (dollMessageParts[i].text.match(r.regex) && loopcount < 1000) {
 								if (dollProtocolLevel != "warning") {
 									dollProtocolViolations++;
 								} else {
 									warnmodified = true;
 								}
 								dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex, r.type == "redact" ? `[1;40;30m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`);
-							}
+                                loopcount++;
+                            }
 						}
 					});
                     uniquedollprotocol.forEach((r) => {
@@ -269,14 +280,16 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                             dollProtocolVioType = dollProtocolVioType ? (PROTOCOLVIOLATIONPRIOS[r.type] > PROTOCOLVIOLATIONPRIOS[dollProtocolVioType] ? r.type : dollProtocolVioType) : r.type;
 
                             // Stuff an ENQ character before each match.
-							while (dollMessageParts[i].text.match(r.regex)) {
+							while (dollMessageParts[i].text.match(r.regex) && loopcount < 1000) {
 								if (dollProtocolLevel != "warning") {
 									dollProtocolViolations++;
 								} else {
 									warnmodified = true;
 								}
 								dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex, r.type == "redact" ? `[1;41;3m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`);
-							}
+                                console.log(dollMessageParts[i].text)
+                                loopcount++;
+                            }
                         }
                     })
 				}

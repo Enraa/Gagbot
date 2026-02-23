@@ -444,11 +444,10 @@ module.exports = {
 				let wearer = await interaction.guild.members.fetch(cloneresponse.split("_")[0]);
 				let typeofrestraint = cloneresponse.split("_")[2];
 
-				/*console.log(typeofrestraint)
-                if (typeofrestraint == "chastitybelt") {
-                    console.log(getChastity(wearer.id));
-                    console.log(canAccessChastity(wearer.id, interaction.user.id, undefined, true).access)
-                }*/
+                console.log(clonedkeyholder.id)
+                console.log(interaction.user.id)
+                console.log(wearer.id)
+                console.log(cloneresponse)
 
 				// Check if the interaction user has access to clone the target restraint.
 				let canrevoke = false;
@@ -471,22 +470,22 @@ module.exports = {
 					choiceemoji = `${process.emojis.chastitybra}`;
 				}
 				// Allow cloned key to be revoked if the cloned keyholder is the interaction user.
-				if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id).access && clonedkeyholder == interaction.user) {
+				if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id).access && clonedkeyholder == interaction.user) {
+				if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id).access && clonedkeyholder == interaction.user) {
+				if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;
 				}
-				if (clonedkeyholder == interaction.user) {
+				if (clonedkeyholder.id == interaction.user.id) {
 					isclone = true;
 				}
 				if (!canrevoke) {

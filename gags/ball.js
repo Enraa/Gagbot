@@ -81,6 +81,10 @@ const garbleText = (text, parent, intensity) => {
 	return output;
 };
 
+/*exports.onUnlock = (userID) => {
+    console.log(`UNLOCKING BALL GAG FOR ${userID} - HOORAY`)
+}*/
+
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Ball Gag";

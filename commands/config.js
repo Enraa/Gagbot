@@ -236,5 +236,38 @@ module.exports = {
 				delete process.recentinteraction[interaction.user.id];
 			}
 		}
+        if (optionparts[3] == "dollpunishwords") {
+            let punishwordsseparated = choiceinput.split(",")
+            let punishmentarr = [];
+            punishwordsseparated.forEach((w) => {
+                punishmentarr.push(w)
+                /*if (w.startsWith("/") && w.endsWith("/")) {
+                    // This is a regexp, truncate these slashes and use i 
+                    punishmentarr.push(new RegExp(w.slice(1,-1), "i"))
+                }
+                else {
+                    // This is a string, no cutting necessary
+                    punishmentarr.push(new RegExp(w, "i"))
+                }*/
+            })
+            setOption(interaction.user.id, optionparts[3], punishmentarr);
+            await interaction.reply({ content: `Updated your punishment words to the following:\n- ${punishwordsseparated.join("\n- ")}`, flags: MessageFlags.Ephemeral });
+			if (process.recentinteraction) {
+				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], 1));
+				}
+				delete process.recentinteraction[interaction.user.id];
+			}
+        }
+        if (optionparts[3] == "engravedcollarname") {
+			setOption(interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
+			await interaction.reply({ content: `Updated your Engraved Collar tag to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral });
+			if (process.recentinteraction) {
+				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], 1));
+				}
+				delete process.recentinteraction[interaction.user.id];
+			}
+		}
 	},
 };
