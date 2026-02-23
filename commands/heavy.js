@@ -115,7 +115,7 @@ module.exports = {
                     targetuser = interaction.user;
                 }
                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                if (interaction.user.id != targetuser.id) {
+                if ((interaction.user.id != targetuser.id) || data.textdata.interactionuser == process.client.user) {
                     // Someone else!
                     data.other = true;
                     await handleMajorRestraint(interaction.user, targetuser, "heavy", heavychoice).then(async () => {

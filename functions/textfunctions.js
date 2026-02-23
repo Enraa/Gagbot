@@ -1094,7 +1094,8 @@ const texts_heavy = {
             other: [
                 `TARGET_TAG tries to put USER_TAG in a VAR_C3. Unfortunately for TARGET_THEM, it is far faster and instead turns the tables to put it on TARGET_THEM!`,
                 `The USER_TAG stares at TARGET_TAG, almost audibly sighing to itself as it sees the VAR_C3. It places it swiftly on the brat.`,
-                `USER_TAG grins widely as TARGET_TAG throws a VAR_C3 at it, before picking it up with several mechanical arms `
+                `USER_TAG grins widely as TARGET_TAG throws a VAR_C3 at it, before picking it up with several mechanical arms and forcing TARGET_THEM into it.`,
+                `A giggle is heard from the USER_TAG's vocal servos as it grabs the VAR_C3 out of TARGET_TAG's hands and forces TARGET_THEM into it!`
             ]
         }
     }
