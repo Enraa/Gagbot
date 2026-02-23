@@ -28,7 +28,7 @@ module.exports = {
                         // them in the guild list. 
                         if (!founduserid) {
                             let membername = await message.guild.members.search({ query: message.author.username, limit: 1 });
-                            if (membername) {
+                            if (membername && membername.first() && membername.first().user) {
                                 founduserid = membername.first().user.id
                             }
                         }
