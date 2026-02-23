@@ -765,12 +765,12 @@ module.exports = {
 					} else if (restrainttype == "chastitybelt") {
 						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastity(wearer.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
+						if(!swapChastity(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
 						interaction.reply(getText(data));
 					} else if (restrainttype == "chastitybra") {
 						data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastityBra(wearer.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
+						if(!swapChastityBra(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
 						interaction.reply(getText(data));
 					}
 				} else {
@@ -789,7 +789,7 @@ module.exports = {
 					} else if (restrainttype == "chastitybelt") {
 						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastity(wearer.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; } // I'm gonna leave this like this for now. Maybe once we have belts that can fail to unlock we can improve this.
+						if(!swapChastity(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; } // I'm gonna leave this like this for now. Maybe once we have belts that can fail to unlock we can improve this.
 						if (process.readytosave == undefined) {
 							process.readytosave = {};
 						}
@@ -798,7 +798,7 @@ module.exports = {
 					} else if (restrainttype == "chastitybra") {
 						data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastityBra(wearer.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
+						if(!swapChastityBra(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
 						if (process.readytosave == undefined) {
 							process.readytosave = {};
 						}

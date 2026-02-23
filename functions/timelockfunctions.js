@@ -41,7 +41,7 @@ function unlockTimelockChastity(client, wearer, skipWrite = false) {
 	chastity.unlockTime = null;
 	chastity.access = null;
 	sendTimelockChastityUnlockMessage(client, wearer, chastity.keyholder);
-	if (!chastity.keyholder) removeChastity(wearer);
+	if (!chastity.keyholder) removeChastity(wearer, undefined, true);
 	else if (!skipWrite) {
 		if (process.readytosave == undefined) {
 			process.readytosave = {};

@@ -100,7 +100,7 @@ module.exports = {
 									// We didnt lose the keys
 									data.nofumble = true;
 									interaction.reply(getText(data));
-									removeChastity(chastitywearer.id);
+									removeChastity(chastitywearer.id, interaction.user.id);
 								}
 							} else {
 								// We don't have the keys
@@ -139,7 +139,7 @@ module.exports = {
 									// did not fumble!
 									data.nofumble = true;
 									interaction.reply(getText(data));
-									removeChastity(chastitywearer.id);
+									removeChastity(chastitywearer.id, interaction.user.id);
 								}
 							} else {
 								// We don't have their chastity key
@@ -214,7 +214,7 @@ module.exports = {
 									// We didnt lose the keys
 									data.nofumble = true;
 									interaction.reply(getText(data));
-									removeChastityBra(chastitywearer.id);
+									removeChastityBra(chastitywearer.id, interaction.user.id);
 								}
 							} else {
 								// We don't have the keys
@@ -233,7 +233,7 @@ module.exports = {
 							// They are in chastity
 							data.chastity = true;
 							if (getBaseChastity(getChastity(chastitywearer.id).chastitytype ?? "bra_silver").canUnequip({ userID: chastitywearer.id, keyholderID: interaction.user.id })) {
-								// We have their chastity key
+								// We have their chastity key or otherwise have access
 								data.key = true;
 								const fumbleResult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").fumble({ userID: chastitywearer.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
@@ -253,7 +253,7 @@ module.exports = {
 									// did not fumble!
 									data.nofumble = true;
 									interaction.reply(getText(data));
-									removeChastityBra(chastitywearer.id);
+									removeChastityBra(chastitywearer.id, interaction.user.id);
 								}
 							} else {
 								// We don't have their chastity key
