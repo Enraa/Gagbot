@@ -32,10 +32,14 @@ const pronounsMap = new Map([
 
 /********************************************
  * getPronoun()
- * Get a user's pronoun of the necessary form.
+ * Get a userID's pronoun of the necessary form.
  *
- * If no form specified, give the object containing all.  Useful to reduce calls?
- *  > To create "she/her", you need subject/object
+ * If no form specified, give the object containing all.
+ * - subject: "they",
+ * - object: "them",
+ * - possessive: "theirs",
+ * - possessiveDeterminer: "their",
+ * - reflexive: "themself"
  *******************************************/
 const getPronouns = (user, form, capitalize = false) => {
 	if (process.pronouns == undefined) {
