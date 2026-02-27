@@ -301,7 +301,7 @@ let wearabletypes = [
 	{ name: "Fluffy Scarf", value: "scarf_fluffy", colorable: true, category: "Misc" },
 	{ name: "Cozy Blanket", value: "blanket_cozy", colorable: true, category: "Misc" },
 	{ name: "Silk Scarf", value: "scarf_silk", colorable: true, category: "Misc" },
-	{ name: "Necklace", value: "necklace", colorable: true, category: "Misc", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Vampire", "Angel Wings"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Necklace", value: "necklace", colorable: true, category: "Misc", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Gothic", "Vampire", "Angel Wings", "Keychain"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Bowtie", value: "bowtie", colorable: true, category: "Misc" },
 	{ name: "Tie", value: "tie", colorable: true, category: "Misc" },
 	{ name: "Hoshi no Tama", value: "tama", category: "Misc" },
