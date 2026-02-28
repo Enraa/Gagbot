@@ -2815,6 +2815,9 @@ const texts_untoy = {
                 "Wand": [
                     `USER_TAG twists USER_THEIR thighs slightly, but can't click the button on USER_THEIR VAR_C2 to turn it off!`
                 ],
+                "Plug": [
+                    `USER_TAG flexes USER_THEIR hip muscles to squeeze out of the VAR_C2... but it's still quite secure inside USER_THEM!`
+                ],
                 "Misc": [
                     {
                         only: (t) => {
@@ -2843,6 +2846,9 @@ const texts_untoy = {
                 "Wand": [
                     `USER_TAG twists USER_THEIR thighs slightly, but can't click the button on USER_THEIR VAR_C2 to turn it off! (this is a bug, please report)`
                 ],
+                "Plug": [
+                    `USER_TAG flexes USER_THEIR hip muscles to squeeze out of the VAR_C2 since USER_THEY can't reach it through USER_THEIR chastity belt!`
+                ],
                 "Misc": [
                     {
                         only: (t) => {
@@ -2867,6 +2873,9 @@ const texts_untoy = {
                 "Wand": [
                     `USER_TAG wiggles towards TARGET_TAG, but can't click the button on TARGET_THEIR VAR_C2 to turn it off!`
                 ],
+                "Plug": [
+                    `USER_TAG tries to reach toward TARGET_TAG to help USER_THEM with taking USER_THEIR VAR_C2 out, with the sense of encouragement since USER_THEY USER_HAVE no fingers with which to grip it!`
+                ],
                 "Misc": [
                     {
                         only: (t) => {
@@ -2888,6 +2897,9 @@ const texts_untoy = {
                 ],
                 "Wand": [
                     `USER_TAG wiggles towards TARGET_TAG, but can't click the button on TARGET_THEIR VAR_C2 to turn it off! (this is a bug, please report)`
+                ],
+                "Plug": [
+                    `USER_TAG tries to reach toward TARGET_TAG to help USER_THEM with taking USER_THEIR VAR_C2 out! Both a chastity belt and arm bondage stand in the way, though which is causing more of a hindrance remains to be seen.`
                 ],
                 "Misc": [
                     {
