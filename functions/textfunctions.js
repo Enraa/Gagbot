@@ -4178,6 +4178,18 @@ const getTextGeneric = (type, data_in) => {
             `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had arms to pick it up...`,
             `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! Not that USER_THEY can pick it up, of course, but it's the thought that counts.`
         ],
+        given_key: [
+            `USER_TAG is confused when it is given keys for TARGET_TAG. It makes a note to return them... eventually.`
+        ],
+        return_key_collar: [
+            `USER_TAG returns the keys for TARGET_TAG's collar after a while. `
+        ],
+        return_key_chastity: [
+            `USER_TAG grants TARGET_TAG TARGET_THEIR chastity once more as it gives TARGET_THEM TARGET_THEIR keys.`
+        ],
+        return_key_chastitybra: [
+            `USER_TAG gives TARGET_TAG TARGET_THEIR keys back for TARGET_THEIR breasts. Best not to lose them again!`
+        ]
 	};
 
 	let chosentext = generics[type][Math.floor(generics[type].length * Math.random())];

@@ -19,7 +19,7 @@ async function functiontick(userID) {
             // Get Intensity and push decremented version
             let oldIntensity = getGag(userID, "chocolate").intensity
             assignGag(userID, "chocolate", oldIntensity - 1)
-            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(userID, "reflexive")} Chocolate Gag a little bit!`, process.recentmessages[userID])
+            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(userID, "possessiveDeterminer")} Chocolate Gag a little bit!`, process.recentmessages[userID])
         }
         else {
             // Clear Gag and Dissolve Timer

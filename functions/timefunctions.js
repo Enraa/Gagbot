@@ -2,7 +2,7 @@
 let fs = require("fs");
 let path = require("path");
 let admZip = require("adm-zip");
-const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar } = require(`./timelockfunctions.js`);
+const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar, gagbotHeldKeyTime, checkGagbotKeys } = require(`./timelockfunctions.js`);
 const { updateArousalValues, getChastity, getChastityBra } = require("./vibefunctions.js");
 const { getGags, getMitten } = require("./gagfunctions.js");
 const { getHeadwear } = require("./headwearfunctions.js");
@@ -238,6 +238,7 @@ function processTimedEvents() {
     updateSharedBreath();
 	processUnlockTimes(process.client);
 	runProcessedEvents();
+    checkGagbotKeys();
 }
 
 function processUnlockTimes(client) {
