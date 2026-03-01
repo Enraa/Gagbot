@@ -536,7 +536,7 @@ const texts_gag = {
             ], 
             nogag: [
                 `USER_TAG flops over a table to pick up a VAR_C3 and take it over to TARGET_TAG and put it on TARGET_THEM, but USER_THEY lackUSER_S arms and fingers to work with the straps!`,
-                `USER_TAG cutely squirms over a VAR_C3, trying USER_THEIR very best to put it on TARGET_TAG. No fingers makes the task quite impossible, though.`
+                `USER_TAG cutely squirms over a VAR_C3, trying USER_THEIR very best to put it on TARGET_TAG. No fingers makes the task quite impossible, though.`,
                 `USER_TAG wants to take away TARGET_TAG's words with a VAR_C3. The jury is out on whether there'll be any success here since USER_THEY USER_ISARE quite bound...`
             ] 
         },
@@ -556,7 +556,7 @@ const texts_gag = {
             }, 
             self: [
                 `USER_TAG uses both of USER_THEIR mittens to pick up a VAR_C3, but can't secure the straps behind USER_THEIR head anyway.`,
-                `USER_TAG carefully uses one mitten to scoop a VAR_C3 up and put it on USER_THEIR head... but can't secure the straps, so it just falls out. `
+                `USER_TAG carefully uses one mitten to scoop a VAR_C3 up and put it on USER_THEIR head... but can't secure the straps, so it just falls out.`
             ] 
         },
 		nomitten: {
