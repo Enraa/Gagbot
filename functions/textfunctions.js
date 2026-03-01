@@ -3,6 +3,7 @@ const { getWearable } = require("./wearablefunctions.js");
 const { getChastity, getChastityBra, getArousal } = require("./vibefunctions.js");
 const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 const { getUserTags } = require("./configfunctions.js");
+const { getHeavy } = require("./heavyfunctions.js");
 
 const texts_chastity = {
 	chastitybelt: {
@@ -516,16 +517,55 @@ const texts_dollprotocol = {
 
 const texts_gag = {
 	heavy: {
-		self: { gag: [`USER_TAG looks at a VAR_C3, attempting to spit out USER_THEIR VAR_C4 and change it, but the straps hold firm! Maybe if USER_THEY had fingers USER_THEY could change USER_THEIR gag!`], nogag: [`USER_TAG squirms a bit, but USER_THEIR arms are trapped! Someone should help USER_THEM with putting a VAR_C3 on!`] },
-		other: { gag: [`USER_TAG uses USER_THEIR toes to pick up a VAR_C3 by the straps and put it on TARGET_TAG, but without arms, USER_THEY can't undo TARGET_THEIR VAR_C4 to switch it out!`], nogag: [`USER_TAG flops over a table to pick up a VAR_C3 and take it over to TARGET_TAG and put it on TARGET_THEM, but USER_THEY lackUSER_S arms and fingers to work with the straps!`] },
+		self: { 
+            gag: [
+                `USER_TAG looks at a VAR_C3, attempting to put it on over USER_THEIR gag! Maybe if USER_THEY had fingers USER_THEY could add it!`,
+                `USER_TAG squirms in USER_THEIR VAR_C2, but alas, it does not allow USER_THEM to have arms to add a VAR_C3...`,
+                `Drool covers USER_TAG's gags, but they must remain in place because USER_THEY USER_HAVE no arms. Maybe someone should help USER_THEM with a VAR_C3!`
+            ], 
+            nogag: [
+                `USER_TAG squirms a bit, but USER_THEIR arms are trapped! Someone should help USER_THEM with putting a VAR_C3 on!`,
+                `USER_TAG rolls over a VAR_C3, but can't get a good grip on it to put it on without hands...`,
+                `USER_TAG tries USER_THEIR best to poke a VAR_C3, silently pleading to others to put it on USER_THEM!`
+            ] 
+        },
+		other: { 
+            gag: [
+                `USER_TAG uses USER_THEIR toes to pick up a VAR_C3 by the straps and put it on TARGET_TAG, but without arms, USER_THEY can't undo TARGET_THEIR VAR_C4 to switch it out!`,
+                `USER_TAG bats a VAR_C3 over towards TARGET_TAG to put it on TARGET_THEM, but USER_THEY USER_HAVE no arms with which to pick it up and secure it in TARGET_THEIR mouth!`
+            ], 
+            nogag: [
+                `USER_TAG flops over a table to pick up a VAR_C3 and take it over to TARGET_TAG and put it on TARGET_THEM, but USER_THEY lackUSER_S arms and fingers to work with the straps!`,
+                `USER_TAG cutely squirms over a VAR_C3, trying USER_THEIR very best to put it on TARGET_TAG. No fingers makes the task quite impossible, though.`
+                `USER_TAG wants to take away TARGET_TAG's words with a VAR_C3. The jury is out on whether there'll be any success here since USER_THEY USER_ISARE quite bound...`
+            ] 
+        },
 	},
 	noheavy: {
-		mitten: { other: { gag: [`USER_TAG attempts to change TARGET_TAG's gag from the VAR_C4, but fumbles at holding the VAR_C3 in USER_THEIR mittens!`], nogag: [`USER_TAG attempts to gag TARGET_TAG, but fumbles at holding the VAR_C3 in USER_THEIR mittens!`] }, self: [`USER_TAG uses both of USER_THEIR mittens to pick up a VAR_C3, but can't secure the straps behind USER_THEIR head anyway.`] },
+		mitten: { 
+            other: { 
+                gag: [
+                    `USER_TAG attempts to pick up a VAR_C3 to further gag TARGET_TAG, but drops it because of USER_THEIR mittens!`,
+                    `USER_TAG vainly paws at a VAR_C3 while eying TARGET_TAG, but without fingers, USER_THEY can't pick it up anyway.`
+                ], 
+                nogag: [
+                    `USER_TAG attempts to gag TARGET_TAG, but fumbles at holding the VAR_C3 in USER_THEIR mittens!`,
+                    `Despite USER_THEIR mittens, USER_TAG manages to pick up a VAR_C3 and moves towards TARGET_TAG. Sadly, the straps require a bit more finesse. USER_THEY_CAP lookUSER_S down dejectedly as USER_THEY realizeUSER_S this.`,
+                    `USER_TAG throws a VAR_C3 at TARGET_TAG. It's about the best USER_THEY can do because of USER_THEIR mittens...`
+                ] 
+            }, 
+            self: [
+                `USER_TAG uses both of USER_THEIR mittens to pick up a VAR_C3, but can't secure the straps behind USER_THEIR head anyway.`,
+                `USER_TAG carefully uses one mitten to scoop a VAR_C3 up and put it on USER_THEIR head... but can't secure the straps, so it just falls out. `
+            ] 
+        },
 		nomitten: {
 			self: {
 				gag: {
 					changetightness: [
 						`USER_TAG adjusts USER_THEIR VAR_C3, undoing the straps before pulling them VAR_C2 around USER_THEIR head again.`,
+                        `USER_TAG flexes USER_THEIR jaw holding the VAR_C3 in place, carefully adjusting the straps VAR_C2 around USER_THEIR head. It sits more comfortably now!`,
+                        `USER_TAG undoes the straps on USER_THEIR VAR_C3, holding the gag carefully between USER_THEIR teeth as USER_THEY adjust it and pull the straps VAR_C2 around USER_THEIR head.`,
 						{
 							only: (t) => {
 								return t.c2.includes("loosely") && t.c3.includes("Tape");
@@ -610,6 +650,8 @@ const texts_gag = {
 				nogag: {
 					gentle: [
 						`USER_TAG uses a finger to gently pry open TARGET_TAG's lips before inserting a VAR_C3 between TARGET_THEIR teeth, secured VAR_C2 behind TARGET_THEIR head. A muted meep follows soon after from TARGET_THEM!`,
+                        `USER_TAG uses a fingernail to gently tickle TARGET_TAG's chin before carefully inserting a VAR_C3 between TARGET_THEIR teeth, pulling the straps VAR_C2 behind TARGET_THEIR head.`,
+                        `USER_TAG uses USER_THEIR thumb and gently rubs TARGET_TAG's cheek before pushing the VAR_C3 into TARGET_THEIR mouth. The straps are then slowly pulled VAR_C2 behind TARGET_THEIR head.`,
 						{
 							only: (t) => {
 								return t.c2.includes("loosely") && t.c3.includes("Tape");
@@ -626,6 +668,7 @@ const texts_gag = {
 					forceful: [
 						`USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY goTARGET_ES to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`,
 						`USER_TAG holds up a VAR_C3, pressing it against TARGET_TAG's lips with ever increasing force until they part, taking away TARGET_THEIR ability to speak coherently! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled under TARGET_THEIR hair!`,
+                        `USER_TAG takes a VAR_C3 and pries TARGET_TAG's lips apart to put it into TARGET_THEIR mouth. TARGET_THEY_CAP barely has time to react as the straps are pulled VAR_C2 behind TARGET_THEIR head!`,
 						{
 							only: (t) => {
 								return t.c2.includes("loosely") && t.c3.includes("Tape");
@@ -641,6 +684,8 @@ const texts_gag = {
 					],
 					requesting: [
 						`USER_TAG taps TARGET_TAG's lips, silently suggesting to say "ahh" before pushing a VAR_C3 VAR_C2 between TARGET_THEIR lips!`,
+                        `USER_TAG wraps an arm around TARGET_TAG, with a finger brushing the back of TARGET_THEIR cheek as a VAR_C3 is proffered to TARGET_THEM. USER_THEY_CAP waitUSER_S for TARGET_THEM to bite it before pulling the straps VAR_C2 behind TARGET_THEIR head.`,
+                        `USER_TAG holds up a VAR_C3, grinning as TARGET_TAG eyes it with a hint of desire as TARGET_THEY openTARGET_S TARGET_THEIR mouth and bites it! USER_THEY_CAP then pulls the straps VAR_C2 behind TARGET_THEIR head and buckles them!`,
 						{
 							only: (t) => {
 								return t.c2.includes("loosely") && t.c3.includes("Tape");
@@ -1679,10 +1724,11 @@ const texts_struggle = {
 		`USER_TAG wants to lay in someone's lap. Or maybe have someone lay in USER_THEIR lap. Maybe both.`,
 		`USER_TAG wants to pet a cute kitty. Or a cute doggo. Maybe lots of cute kitties and doggos!`,
 		{
-        required: (t) => {
-            return !getUserTags(t.interactionuser.id).includes("pet");
+            required: (t) => {
+                return !getUserTags(t.interactionuser.id).includes("pet");
+            },
+            text: `USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY_CAP blushUSER_ES a little at the thought~`
         },
-        text: `USER_TAG wonders what it would be like to be a pet kitty. Or a pet doggo. USER_THEY_CAP blushUSER_ES a little at the thought~`},
 		`USER_TAG prepares for battle with a sword and flourishes it. USER_THEY_CAP USER_ISARE going to hunt the legendary sHE!`,
 		`USER_TAG sits and looks around patiently because USER_THEY USER_ISARE a **good USER_PRAISEOBJECT!**`,
 		// 2 hours in chastity
@@ -1698,6 +1744,44 @@ const texts_struggle = {
 				return !isNaN(getChastity(t.interactionuser.id)?.timestamp) && getChastity(t.interactionuser.id)?.timestamp + 86400000 < Date.now();
 			},
 			text: `USER_TAG barely remembers what it's like to not be in chastity...`,
+		},
+        `USER_TAG takes a deep breath before doing USER_THEIR ultimate technique:\n\n*Wiggle!*`,
+        `USER_TAG imagines what it would be like to sit down with a nice, warm soup and sip on it on a cloudy day and watch the rain out USER_THEIR window.`,
+        `USER_TAG wants to pet a bunny! They're so cute and fluffy!`,
+        `USER_TAG could probably go for a cup of tea. What kind will USER_THEY choose? Black, green, *herbal?* Only USER_THEY know!`,
+        `USER_TAG smiles as USER_THEY imagineUSER_S what it's like to be wrapped up and helpless to escape. Someone should help USER_THEM experience that!`,
+        `USER_TAG smiles as USER_THEY imagineUSER_S what it's like to make someone helpless. Someone should offer themselves up to USER_THEM!`,
+        `USER_TAG ponders the questions of life, the universe and everything. It is taking USER_THEM quite a long time to come up with the answer...`,
+        `USER_TAG pulls out an artificial evoker and yells, "Persona!" before a ghostly image of USER_THEIR favorite persona materializes in front of USER_THEM!`,
+        `Spinning around with a dramatic flourish, USER_TAG puts a hand to USER_THEIR face and yells "Persona!" as a ghostly image of a persona appears in front of USER_THEM!`,
+        {
+			required: (t) => {
+				return (!getHeavy(t.interactionuser.id)) || (getHeavy(t.interactionuser.id) && !getHeavy(t.interactionuser.id).type.includes("rmbinder"))
+			},
+			text: `USER_TAG pokes an armbinder, imagining what it would be like to have USER_THEIR arms pulled so tightly behind USER_THEM with it...`,
+		},
+        `USER_TAG wiggles a bit as USER_THEY prepareUSER_S to go on a grand, epic adventure! USER_THEIR_CAP backpack just needs to be packed...`,
+        `USER_TAG wants to sit and watch anime with someone, cuddling under a nice warm blanket! What will they watch?`,
+        `USER_TAG fusses with items on USER_THEMSELF, trying to straighten them out so they sit more comfortably on USER_THEM.`,
+        `USER_TAG stares at the Abyss. The Abyss blinks and says "Hello!"`,
+        `USER_TAG stares at the Abyss. The Abyss stares back. Who will break their staring first? It's a contest of the century!`,
+        `USER_TAG idly considers the logistics that would be involved in having a big mansion full of everyone here enjoying their kinky selves.`,
+        `USER_TAG prods a toy lying around. Obviously, such toys should be put somewhere safe and warm, as USER_THEY knowUSER_S. Where will the toy be moved to?`,
+        `USER_TAG pats the Abyss. The Abyss blushes before patting USER_THEM back! Who knew the Abyss had arms?`,
+        `USER_TAG wonders about the implications on if a tree falls in a forest with nobody around to hear it, would it make a sound?`,
+        {
+            required: (t) => {
+                return !getUserTags(t.interactionuser.id).includes("latex");
+            },
+            text: `USER_TAG considers what it would be like to live on a planet full of latex and bondage. There's a certain story out there about that fantasy...`
+        },
+        `USER_TAG hums to USER_THEMSELF as USER_THEY consider the characters in the last book USER_THEY were reading. They were so cool!`,
+        `USER_TAG wants to be the very best! Like no one ever was! To catch them is USER_THEIR great quest - to train them is USER_THEIR call!`,
+        {
+			required: (t) => {
+				return !(process.gags && process.gags[t.interactionuser.id]);
+			},
+			text: `USER_TAG produces a deck of cards and pulls one out with a dramatic flourish, holding it up while shouting, "It's time to d-d-d-d-d-duel!`,
 		},
 	],
 };
