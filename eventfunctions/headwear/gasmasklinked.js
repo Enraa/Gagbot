@@ -40,7 +40,7 @@ exports.modalexecute = async (interaction) => {
             messageSendChannel(`<@${interaction.user.id}> holds onto ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask tube for now...`, interaction.channelId)
         }
         else {
-            messageSendChannel(`<@${interaction.user.id}> gives <@${weareruser}>'s gasmask tube to ${getPronouns(interaction.user.id, "object")} for now...`, interaction.channelId)
+            messageSendChannel(`<@${interaction.user.id}> gives <@${weareruser}>'s gasmask tube to ${getPronouns(weareruser, "object")} for now...`, interaction.channelId)
         }
     }
     else {

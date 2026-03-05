@@ -207,7 +207,7 @@ module.exports = {
                                     async (reject) => {
                                         let nomessage = `${targetuser} rejected the ${getHeadwearName(headwearuser.id, headwearchoice)}.`;
                                         if (reject == "Disabled") {
-                                            nomessage = `${convertheavy(heavychoice)} is currently disabled in ${targetuser}'s Extreme options.`;
+                                            nomessage = `${getHeadwearName(headwearuser.id, headwearchoice)} is currently disabled in ${targetuser}'s Extreme options.`;
                                         }
                                         if (reject == "Error") {
                                             nomessage = `Something went wrong - Submit a bug report!`;

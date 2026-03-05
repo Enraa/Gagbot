@@ -11,13 +11,13 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("heavy")
 		.setDescription(`Put heavy bondage on, preventing the use of any command`)
+        .addUserOption((opt) => opt.setName("user").setDescription("Who to bind in heavy bondage..."))
 		.addStringOption((opt) =>
 			opt
 				.setName("type")
 				.setDescription("What flavor of helpless restraint to wear...")
 				.setAutocomplete(true),
-		)
-        .addUserOption((opt) => opt.setName("user").setDescription("Who to bind in heavy bondage...")),
+		),
 	async autoComplete(interaction) {
         try {
             const focusedValue = interaction.options.getFocused();
