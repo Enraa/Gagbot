@@ -753,6 +753,9 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 			case "gag":
 				restraintfullname = process.gagtypes.find((f) => f.value == restraint)?.name;
 				break;
+            case "mask":
+				restraintfullname = process.headtypes.find((f) => f.value == restraint)?.name;
+				break;
 			default:
 				console.log(`Could not find a restraint by that type.`);
 				rej("Error");
