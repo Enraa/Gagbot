@@ -194,18 +194,14 @@ module.exports = {
                             if (!canmodal) {
                                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                             }
+                            else {
+                                await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
+                            }
                             await handleMajorRestraint(interaction.user, targetuser, "mask", headwearchoice).then(async () => {
                                 await handleExtremeRestraint(interaction.user, targetuser, "mask", headwearchoice).then(
                                     async (success) => {
-                                        if (!canmodal) {
-                                            await interaction.followUp({ content: `Equipping ${getHeadwearName(headwearuser.id, headwearchoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
-                                            await interaction.followUp(getText(data));
-                                        }
-                                        else {
-                                            await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
-                                            await interaction.followUp({ content: `Equipping ${getHeadwearName(headwearuser.id, headwearchoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
-                                            await interaction.followUp(getText(data));
-                                        }
+                                        await interaction.followUp({ content: `Equipping ${getHeadwearName(headwearuser.id, headwearchoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
+                                        await interaction.followUp(getText(data));
                                         assignHeadwear(headwearuser.id, headwearchoice);
                                     },
                                     async (reject) => {

@@ -57,7 +57,7 @@ const headweartypes = [
     { name: "Gasmask (Rebreather)", value: "gasmask_rebreather", tags: ["latex"] },
     { name: "Gasmask (Aphrodisiacs)", value: "gasmask_hornygas", tags: ["latex"] },
     //{ name: "Gasmask (Truth Gas)", value: "gasmask_truthgas", tags: ["latex"] },
-    { name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] },
+    //{ name: "Gasmask (Linked)", value: "gasmasklinked", tags: ["latex"] }, // Need to fix link modals to work with public masking.
 
 	// Misc
 	{ name: "Painted Goggles", value: "painted_goggles", blockinspect: true },
