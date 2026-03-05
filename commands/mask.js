@@ -190,16 +190,21 @@ module.exports = {
                         }
                         else {
                             data.noworn = true;
+                            let canmodal = (process.modalfunctions?.headwear && process.modalfunctions.headwear[headwearchoice]);
+                            if (!canmodal) {
+                                await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                            }
                             await handleMajorRestraint(interaction.user, targetuser, "mask", headwearchoice).then(async () => {
                                 await handleExtremeRestraint(interaction.user, targetuser, "mask", headwearchoice).then(
                                     async (success) => {
-                                        await interaction.followUp({ content: `Equipping ${getHeadwearName(headwearuser.id, headwearchoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
-                                        if (process.modalfunctions?.headwear && process.modalfunctions.headwear[headwearchoice]) {
-                                            await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
-                                            interaction.followUp(getText(data));
+                                        if (!canmodal) {
+                                            await interaction.followUp({ content: `Equipping ${getHeadwearName(headwearuser.id, headwearchoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
+                                            await interaction.followUp(getText(data));
                                         }
                                         else {
-                                            interaction.reply(getText(data));
+                                            await interaction.showModal(await process.modalfunctions.headwear[headwearchoice](interaction, headwearuser.id))
+                                            await interaction.followUp({ content: `Equipping ${getHeadwearName(headwearuser.id, headwearchoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
+                                            await interaction.followUp(getText(data));
                                         }
                                         assignHeadwear(headwearuser.id, headwearchoice);
                                     },
