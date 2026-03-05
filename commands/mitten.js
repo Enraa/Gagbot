@@ -69,7 +69,7 @@ module.exports = {
 				textarray: "texts_mitten",
 				textdata: {
 					interactionuser: interaction.user,
-					targetuser: interaction.user,
+					targetuser: targetuser,
 					c1: getHeavy(interaction.user.id)?.type, // heavy bondage type
 					c2: getMittenName(interaction.user.id, chosenmittens) ?? "Standard Mittens",
 				},
@@ -134,7 +134,7 @@ module.exports = {
                                 }
                                 await interaction.followUp({ content: `Equipping ${data.textdata.c2}`, withResponse: true, flags: MessageFlags.Ephemeral });
                                 await interaction.followUp(getText(data));
-                                assignMitten(interaction.user.id, chosenmittens);
+                                assignMitten(targetuser.id, chosenmittens);
                             },
                             async (reject) => {
                                 let nomessage = `${targetuser} rejected the ${data.textdata.c2}.`;
