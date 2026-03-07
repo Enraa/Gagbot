@@ -9,16 +9,20 @@ const heavytypes = [
 	{ name: "Leather Armbinder", value: "armbinder_leather", tags: ["leather"], denialCoefficient: 2, heavytags: ["arms"] },
 	{ name: "High-Security Armbinder", value: "armbinder_secure", denialCoefficient: 3.5, heavytags: ["arms"] },
 	{ name: "Shadow Latex Armbinder", value: "armbinder_shadowlatex", tags: ["latex"], denialCoefficient: 3, heavytags: ["arms"] },
+    { name: "Starry Latex Armbinder", value: "armbinder_starrylatex", tags: ["latex"], denialCoefficient: 3, heavytags: ["arms"] },
 	{ name: "Crystal Armbinder", value: "armbinder_crystal", denialCoefficient: 3, heavytags: ["arms"] },
 	{ name: "Black Hole Armbinder", value: "armbinder_blackhole", denialCoefficient: 3.5, heavytags: ["arms"] },
 	{ name: "Wolfbinder", value: "armbinder_wolf", denialCoefficient: 3, heavytags: ["arms"] },
 	{ name: "Wolf Queenbinder", value: "armbinder_wolfqueen", tags: ["leather"], denialCoefficient: 3, heavytags: ["arms"] },
+    { name: "Rigid Arm Splints", value: "splints_arm", denialCoefficient: 10, heavytags: ["arms"] },
 
 	// Boxbinders
 	{ name: "Latex Boxbinder", value: "boxbinder_latex", tags: ["latex"], denialCoefficient: 2, heavytags: ["arms"] },
 	{ name: "Leather Boxbinder", value: "boxbinder_leather", tags: ["leather"], denialCoefficient: 2.5, heavytags: ["arms"] },
 	{ name: "High-Security Boxbinder", value: "boxbinder_hisec", denialCoefficient: 3.5, heavytags: ["arms"] },
 	{ name: "Experimental Boxtie Binder", value: "boxbinder_experimental", denialCoefficient: 3.5, heavytags: ["arms"] },
+    { name: "Shadow Latex Boxbinder", value: "boxbinder_shadowlatex", tags: ["latex"], denialCoefficient: 2, heavytags: ["arms"] },
+    { name: "Starry Latex Boxbinder", value: "boxbinder_starrylatex", tags: ["latex"], denialCoefficient: 2, heavytags: ["arms"] },
 	{ name: "Black Hole Boxbinder", value: "boxbinder_blackhole", denialCoefficient: 2, heavytags: ["arms"] },
 	{ name: "Dragon Queen Straps", value: "boxbinder_dragon", tags: ["leather"], denialCoefficient: 2.5, heavytags: ["arms"] },
 
@@ -28,11 +32,27 @@ const heavytypes = [
 	{ name: "Maid Punishment Straitjacket", value: "straitjacket_maidpunishment", denialCoefficient: 4.5, heavytags: ["arms"] },
 	{ name: "Doll Straitjacket", value: "straitjacket_doll", denialCoefficient: 3.5, heavytags: ["arms"] },
 	{ name: "Latex Straitjacket", value: "straitjacket_latex", tags: ["latex"], denialCoefficient: 4, heavytags: ["arms"] },
+    { name: "Leather Straitjacket", value: "straitjacket_leather", tags: ["leather"], denialCoefficient: 4, heavytags: ["arms"] },
 	{ name: "Shadow Latex Straitjacket", value: "straitjacket_shadowlatex", tags: ["latex"], denialCoefficient: 4, heavytags: ["arms"] },
+    { name: "Starry Latex Straitjacket", value: "straitjacket_starrylatex", tags: ["latex"], denialCoefficient: 4, heavytags: ["arms"] },
 	{ name: "Asylum Straitjacket", value: "straitjacket_asylum", denialCoefficient: 5, heavytags: ["arms"] },
 	{ name: "Black Hole Straitjacket", value: "straitjacket_blackhole", denialCoefficient: 4.5, heavytags: ["arms"] },
 
-    { name: "Latex Legbinder", value: "legbinder_latex", denialCoefficient: 3, heavytags: ["legs"] },
+    // Legbinders
+    { name: "Comfy Legbinder", value: "legbinder_comfy", denialCoefficient: 2, heavytags: ["legs"] },
+	{ name: "Maid Legbinder", value: "legbinder_maid", denialCoefficient: 2, heavytags: ["legs"] },
+	{ name: "Maid Punishment Legbinder", value: "legbinder_maidpunishment", denialCoefficient: 2, heavytags: ["legs"] },
+	{ name: "Doll Legbinder", value: "legbinder_doll", denialCoefficient: 2, heavytags: ["legs"] },
+	{ name: "Latex Legbinder", value: "legbinder_latex", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
+    { name: "Leather Legbinder", value: "legbinder_leather", tags: ["leather"], denialCoefficient: 3, heavytags: ["legs"] },
+	{ name: "Shadow Latex Legbinder", value: "legbinder_shadowlatex", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
+    { name: "Starry Latex Legbinder", value: "legbinder_starrylatex", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
+	{ name: "Asylum Legbinder", value: "legbinder_asylum", denialCoefficient: 3.5, heavytags: ["legs"] },
+	{ name: "Black Hole Legbinder", value: "legbinder_blackhole", denialCoefficient: 3, heavytags: ["legs"] },
+    { name: "Latex Mermaid Tail", value: "legbinder_latexmermaidtail", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
+    { name: "Starry Latex Mermaid Tail", value: "legbinder_starrylatexmermaidtail", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
+    { name: "Shadow Latex Mermaid Tail", value: "legbinder_shadowlatexmermaidtail", tags: ["latex"], denialCoefficient: 3, heavytags: ["legs"] },
+    { name: "Rigid Leg Splints", value: "splints_leg", denialCoefficient: 3, heavytags: ["legs"] },
 
 	// Petsuits
 	{ name: "Piddlefours", value: "petsuit_piddlefours", tags: ["pet", "leather"], denialCoefficient: 2, heavytags: ["arms", "legs"] },
@@ -51,7 +71,6 @@ const heavytypes = [
 	{ name: "Stocks", value: "stocks", denialCoefficient: 4, heavytags: ["arms"] },
 	{ name: "One Bar Prison", value: "one_bar_prison", tags: ["metal"], denialCoefficient: 1.5, heavytags: ["legs"] },
 	{ name: "Latex Encasement Stand", value: "encasementstand_latex", tags: ["latex"], denialCoefficient: 4, heavytags: ["arms", "legs"] },
-	{ name: "Sarcophagus", value: "sarco_mummy", tags: ["confined"], denialCoefficient: 3, heavytags: ["container"] },
 	{ name: "Wooden Horse", value: "wooden_horse", denialCoefficient: 3, heavytags: ["arms", "legs"] },
 	{ name: "X-Frame", value: "x_frame", denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Dancer's Pole", value: "pole_dancer", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
@@ -65,7 +84,6 @@ const heavytypes = [
 	{ name: "Giant Pile of Plushies", value: "plushie_pile", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
 	{ name: "Bed Restraints", value: "bedrestraints", denialCoefficient: 6, heavytags: ["arms", "legs"] },
 	{ name: "Massage Table Binding", value: "massage_table_binding", denialCoefficient: 2, heavytags: ["arms", "legs"] },
-	{ name: "Pet Cage", value: "pet_cage", tags: ["pet"], denialCoefficient: 4, heavytags: ["container"] },
 	{ name: "Chair with Cuffs", value: "chaircuffs", denialCoefficient: 3.5, heavytags: ["arms", "legs"] },
 	{ name: "Resin Coating", value: "resin_coated", denialCoefficient: 4, heavytags: ["arms", "legs"] },
     { name: "Pillory", value: "pillory", denialCoefficient: 8, heavytags: ["arms"] },
@@ -83,10 +101,11 @@ const heavytypes = [
 	// Rope Restraints
 	{ name: "Hogtie", value: "rope_hogtie", denialCoefficient: 3, heavytags: ["arms", "legs"] },
 	{ name: "Shrimp Tie", value: "rope_shrimp", denialCoefficient: 3, heavytags: ["arms", "legs"] },
-	{ name: "Frogtie", value: "rope_frogtie", denialCoefficient: 2.5, heavytags: ["arms", "legs"] },
+	{ name: "Frogtie", value: "rope_frogtie", denialCoefficient: 2.5, heavytags: ["legs"] },
 	{ name: "Rope Boxtie", value: "rope_boxtie", denialCoefficient: 2, heavytags: ["arms"] },
 	{ name: "Ribbons", value: "ribbons", denialCoefficient: 1.5, heavytags: ["arms"] },
 	{ name: "Suspended Frogtie", value: "rope_suspension_frog", denialCoefficient: 3, heavytags: ["arms", "legs"] },
+    { name: "Rope Legtie", value: "rope_legtie", denialCoefficient: 1.5, heavytags: ["legs"] },
 
 	//Encasement and Wrappings
 	{ name: "Bandage Wrappings", value: "bandage_wrap", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
@@ -122,6 +141,12 @@ const heavytypes = [
     { name: "Great Sphere", value: "capture_sphere_great", tags: ["confined", "dimensional"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Ultra Sphere", value: "capture_sphere_ultra", tags: ["confined", "dimensional"], denialCoefficient: 7, heavytags: ["arms", "legs"] },
     { name: "Master Sphere", value: "capture_sphere_master", tags: ["confined", "dimensional"], denialCoefficient: 9, heavytags: ["arms", "legs"] },
+
+    // Containers
+    { name: "Pet Cage", value: "pet_cage", tags: ["pet"], denialCoefficient: 4, heavytags: ["container"] },
+    { name: "Sarcophagus", value: "sarco_mummy", tags: ["confined"], denialCoefficient: 3, heavytags: ["container"] },
+    { name: "Asylum Room", value: "asylum_room", tags: ["confined"], denialCoefficient: 2, heavytags: ["container"] },
+    { name: "Under-bed Cage", value: "underbed_cage", tags: ["confined"], denialCoefficient: 4, heavytags: ["container"] },
 
 	// Heavy Restraints with unique name functions
 	{
