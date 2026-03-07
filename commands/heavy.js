@@ -119,7 +119,8 @@ module.exports = {
                 let canwear = true;
                 let blocker;
                 let blockertype;
-                getHeavyList(targetuser).map((h) => getBaseHeavy(h.type)).forEach((h) => {
+                console.log(getHeavyList(targetuser.id).map((h) => getBaseHeavy(h.type)))
+                getHeavyList(targetuser.id).map((h) => getBaseHeavy(h.type)).forEach((h) => {
                     h.heavytags.forEach((t) => {
                         if (getBaseHeavy(heavychoice).heavytags.includes(t)) {
                             canwear = false
@@ -176,7 +177,8 @@ module.exports = {
                     else {
                         data.nocanwear = true
                         data[blockertype] = true
-                        data.textdata.c4 = h.name
+                        data.textdata.c4 = blocker.name
+                        await interaction.followUp(`Attempting to equip a ${convertheavy(heavychoice)}...`)
                         await interaction.followUp(getText(data));
                     }
                 }
@@ -208,7 +210,8 @@ module.exports = {
                     else {
                         data.nocanwear = true
                         data[blockertype] = true
-                        data.textdata.c4 = h.name
+                        data.textdata.c4 = blocker.name
+                        await interaction.followUp(`Attempting to equip a ${convertheavy(heavychoice)}...`)
                         await interaction.followUp(getText(data));
                     }
                 }

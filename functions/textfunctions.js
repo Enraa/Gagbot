@@ -966,13 +966,13 @@ const texts_heavy = {
             ],
             nocanwear: {
                 arms: [
-                    `USER_TAG tries to put their arms in a VAR_C4 somehow, but USER_THEIR VAR_C3 is in the way!`
+                    `USER_TAG tries to put their arms in a VAR_C3 somehow, but USER_THEIR VAR_C4 is in the way!`
                 ],
                 legs: [
-                    `USER_TAG tries to further restrain USER_THEIR legs with a VAR_C4, but that's quite unnecessary because of USER_THEIR VAR_C3.`
+                    `USER_TAG tries to further restrain USER_THEIR legs with a VAR_C3, but that's quite unnecessary because of USER_THEIR VAR_C4.`
                 ],
                 container: [
-                    `USER_TAG tries to step into a VAR_C4, but since USER_THEY USER_ISARE already in a VAR_C3, USER_THEY would need some kind of spacial magic!`
+                    `USER_TAG tries to step into a VAR_C3, but since USER_THEY USER_ISARE already in a VAR_C4, USER_THEY would need some kind of spacial magic!`
                 ]
             }
         },
@@ -1140,13 +1140,13 @@ const texts_heavy = {
             ],
             nocanwear: {
                 arms: [
-                    `USER_TAG tries to put TARGET_TAG's arms into a VAR_C4, however TARGET_THEIR arms are already quite helplessly bound in a VAR_C2.`
+                    `USER_TAG tries to put TARGET_TAG's arms into a VAR_C3, however TARGET_THEIR arms are already quite helplessly bound in a VAR_C4.`
                 ],
                 legs: [
-                    `USER_TAG tries to immobilize TARGET_TAG's legs using a VAR_C4, but TARGET_THEY TARGET_ISARE already unable to reach everyone because of TARGET_THEIR VAR_C2.`
+                    `USER_TAG tries to immobilize TARGET_TAG's legs using a VAR_C3, but TARGET_THEY TARGET_ISARE already unable to reach everyone because of TARGET_THEIR VAR_C4.`
                 ],
                 container: [
-                    `USER_TAG tries to toss TARGET_TAG into a VAR_C4, but TARGET_THEY are already trapped in a VAR_C3!`
+                    `USER_TAG tries to toss TARGET_TAG into a VAR_C3, but TARGET_THEY are already trapped in a VAR_C4!`
                 ]
             }
         },
@@ -1160,13 +1160,13 @@ const texts_heavy = {
                 ],
                 nocanwear: {
                     arms: [
-                        `TARGET_TAG scoots against a VAR_C4, but since USER_THEY USER_ISARE wearing a VAR_C3, the USER_TAG simply laughs at the useless response.`
+                        `TARGET_TAG scoots against a VAR_C3, but since USER_THEY USER_ISARE wearing a VAR_C4, the USER_TAG simply laughs at the useless response.`
                     ],
                     legs: [
-                        `TARGET_TAG tries USER_THEIR very best to bind the USER_TAG's legs with a VAR_C4. Since it cannot put it on TARGET_THEM, it quietly discards the restraint.`
+                        `TARGET_TAG tries USER_THEIR very best to bind the USER_TAG's legs with a VAR_C3. Since it cannot put it on TARGET_THEM due to TARGET_THEIR VAR_C4, it quietly discards the restraint.`
                     ],
                     container: [
-                        `TARGET_TAG tries to throw USER_TAG into a VAR_C4 using dimensional space magic but the spell fizzles. It cannot retaliate because it does not know such space magic.`
+                        `TARGET_TAG tries to throw USER_TAG into a VAR_C3 using dimensional space magic but the spell fizzles. It cannot retaliate because it does not know such space magic.`
                     ]
                 }
             }

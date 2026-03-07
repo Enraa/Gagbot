@@ -932,6 +932,8 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         // Heavy Bondage
         if (getHeavy(inspectuserID)) {
             wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
+            let heavyrestrictions = getHeavyRestrictions(inspectuserID);
+            wearingtext = `${wearingtext}\n-# ‎   ⤷ ⛓️ Restrictions - **Arms: ${heavyrestrictions.touchself ? "✅" : "⛔"}, Legs: ${heavyrestrictions.touchothers ? "✅" : "⛔"}, Container: ${!heavyrestrictions.touchlist ? "✅" : "⛔"}**`
         }
 
         let keyedrestraints = `## Keyed Restraints:`

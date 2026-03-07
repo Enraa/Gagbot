@@ -32,6 +32,8 @@ const heavytypes = [
 	{ name: "Asylum Straitjacket", value: "straitjacket_asylum", denialCoefficient: 5, heavytags: ["arms"] },
 	{ name: "Black Hole Straitjacket", value: "straitjacket_blackhole", denialCoefficient: 4.5, heavytags: ["arms"] },
 
+    { name: "Latex Legbinder", value: "legbinder_latex", denialCoefficient: 3, heavytags: ["legs"] },
+
 	// Petsuits
 	{ name: "Piddlefours", value: "petsuit_piddlefours", tags: ["pet", "leather"], denialCoefficient: 2, heavytags: ["arms", "legs"] },
 	{ name: "Leather Petsuit", value: "petsuit_leather", tags: ["pet", "leather"], denialCoefficient: 2.5, heavytags: ["arms", "legs"] },
