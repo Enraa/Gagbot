@@ -42,7 +42,7 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			let heavyuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
-            let heavytype = interaction.options.getString("type") ?? getHeavy(interaction.user.id)?.type;
+            let heavytype = interaction.options.getString("type") ?? getHeavy(heavyuser.id)?.type;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
