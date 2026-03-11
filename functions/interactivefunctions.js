@@ -746,7 +746,7 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 				restraintfullname = convertheavy(restraint);
 				break;
 			case "gag":
-				restraintfullname = process.gagtypes.find((f) => f.value == restraint)?.name;
+				restraintfullname = process.autocompletes.gag.find((f) => f.value == restraint)?.name;
 				break;
             case "mask":
 				restraintfullname = process.headtypes.find((f) => f.value == restraint)?.name;
