@@ -40,9 +40,15 @@ const garbleText = (text, parent, intensity, msg) => {
             catch (err) { }
             matches.groups('subject').replaceWith(`${start ? "T" : "t"}his ${replacementstring}`);
             matches.forEach((m) => {
-                console.log(m.verbs().json());
-                console.log(m.verbs().conjugate())
-                console.log(m.verbs().toPresentTense())
+                let conjugations = m.verbs().conjugate();
+                if (m.verbs().json()[0].verb.root == conjugations[0].Infinitive) {
+                    console.log(m.verbs().toPresentTense())
+                }
+                else {
+                    console.log(m.verbs().json());
+                    console.log(m.verbs().conjugate())
+                    console.log(`Skipping changing because it is not infinitive.`)
+                }
             })
 
             outtext = doc.text()
