@@ -6,7 +6,7 @@ const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar,
 const { updateArousalValues, getChastity, getChastityBra } = require("./vibefunctions.js");
 const { getGags, getMitten } = require("./gagfunctions.js");
 const { getHeadwear } = require("./headwearfunctions.js");
-const { getHeavy } = require("./heavyfunctions.js");
+const { getHeavy, getHeavyList } = require("./heavyfunctions.js");
 const { getWearable } = require("./wearablefunctions.js");
 const { getToys } = require("./toyfunctions.js");
 const { getCollar } = require("./collarfunctions.js");
@@ -300,10 +300,12 @@ function runProcessedEvents() {
 	// Heavy Bondage
 	if (process.heavy) {
 		Object.keys(process.heavy).forEach((userid) => {
-			if (getHeavy(userid)) {
-				if (process.eventfunctions.heavy && process.eventfunctions.heavy[getHeavy(userid).typeval]) {
-					process.eventfunctions.heavy[getHeavy(userid).typeval](userid);
-				}
+			if (getHeavyList(userid).length > 0) {
+                getHeavyList(userid).forEach((h) => {
+                    if (process.eventfunctions.heavy && process.eventfunctions.heavy[h.type]) {
+                        process.eventfunctions.heavy[h.type](userid);
+                    }
+                })
 			}
 		});
 	}

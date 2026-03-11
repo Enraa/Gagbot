@@ -761,6 +761,10 @@ module.exports = {
 						data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
 						data.textdata.c2 = newrestraintname;
 						getCollar(wearer.id).collartype = newrestraint;
+                        if (process.readytosave == undefined) {
+							process.readytosave = {};
+						}
+						process.readytosave.collar = true;
 						interaction.reply(getText(data));
 					} else if (restrainttype == "chastitybelt") {
 						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
