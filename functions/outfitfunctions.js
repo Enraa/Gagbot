@@ -1218,11 +1218,11 @@ async function getDisplayTexts(userID, inspectuserID) {
         })
     })
     if (lappeople.length > 0) {
-        bartext = `${bartext}\n\n🫂 Users in Lap: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
+        bartext = `${bartext}\n\n🫂 **Users in Lap**: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
     }
 
 
-    return bartext.slice(2); // Cut the first linebreak for better look
+    return bartext; // Cut the first linebreak for better look
 }
 
 exports.generateOutfitModal = generateOutfitModal;
