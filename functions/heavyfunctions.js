@@ -77,7 +77,6 @@ const heavytypes = [
 	{ name: "Latex Vacbed", value: "vacbed_latex", tags: ["latex"], denialCoefficient: 3.5, heavytags: ["arms", "legs"] },
 	{ name: "Latex Vaccube", value: "vaccube_latex", tags: ["latex"], denialCoefficient: 4.5, heavytags: ["arms", "legs"] },
 	{ name: "Doll Processing Facility", value: "doll_processing", denialCoefficient: 5, heavytags: ["arms", "legs"] },
-	{ name: "Doll Storage Unit", value: "doll_storage", tags: ["confined"], denialCoefficient: 3.5, heavytags: ["arms", "legs"] },
 	{ name: "Weighted Blanket", value: "blanket_weighted", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
 	{ name: "Pile of Cats", value: "catpile", denialCoefficient: 99, heavytags: ["arms", "legs"] }, // Are you ***really*** going to disturb the kitties to let go?
 	{ name: "Giant Pile of Plushies", value: "plushie_pile", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
@@ -105,6 +104,7 @@ const heavytypes = [
 	{ name: "Ribbons", value: "ribbons", denialCoefficient: 1.5, heavytags: ["arms"] },
 	{ name: "Suspended Frogtie", value: "rope_suspension_frog", denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Rope Legtie", value: "rope_legtie", denialCoefficient: 1.5, heavytags: ["legs"] },
+    { name: "Overhead Column Tie", value: "rope_overheadcolumn", denialCoefficient: 5, heavytags: ["arms"] },
 
 	//Encasement and Wrappings
 	{ name: "Bandage Wrappings", value: "bandage_wrap", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
@@ -147,6 +147,7 @@ const heavytypes = [
     { name: "Asylum Room", value: "asylum_room", tags: ["confined"], denialCoefficient: 2, heavytags: ["container"] },
     { name: "Under-bed Cage", value: "underbed_cage", tags: ["confined"], denialCoefficient: 4, heavytags: ["container"] },
     { name: "Leashing Post", value: "leashing_post", denialCoefficient: 2.5, heavytags: ["container"] },
+    { name: "Doll Storage Unit", value: "doll_storage", tags: ["confined"], denialCoefficient: 3.5, heavytags: ["container"] },
 
 	// Heavy Restraints with unique name functions
 	{
