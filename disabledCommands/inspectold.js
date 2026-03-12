@@ -49,7 +49,7 @@ module.exports = {
 			// Headwear parts!
 			console.log(getHeadwear(inspectuser.id));
 			if (getHeadwear(inspectuser.id).length > 0) {
-				let headout = `👤 Headwear: **`;
+				let headout = `${process.emojis.gasmask} Headwear: **`;
 				let lockedheads = getLockedHeadgear(inspectuser.id);
 				getHeadwear(inspectuser.id).forEach((h) => {
 					if (getHeadwearName(inspectuser.id, h) == undefined) {
@@ -65,7 +65,7 @@ module.exports = {
 				headout = `${headout}**`;
 				inspectparts.push(headout);
 			} else {
-				inspectparts.push(`👤 Headwear: Not currently worn.`);
+				inspectparts.push(`${process.emojis.gasmask} Headwear: Not currently worn.`);
 			}
 			// Mitten status
 			// You can easily feel if you're wearing mittens, so no restrictions

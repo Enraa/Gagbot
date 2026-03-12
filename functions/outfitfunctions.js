@@ -271,7 +271,7 @@ async function generateOutfitModal(userID, menu, page, options) {
 					}
 					if (k == "headwear") {
 						let emoji = getHeavy(userID) || getMitten(userID) ? "⚠️" : "✅";
-						textdisplay = `${textdisplay}👤 Headwear: ${emoji}, `;
+						textdisplay = `${textdisplay}${process.emojis.gasmask} Headwear: ${emoji}, `;
 					}
 					if (k == "collar") {
 						let emoji = getHeavy(userID) || (!canAccessCollar(userID, userID, true).access && canAccessCollar(userID, userID, true).hascollar) ? "⚠️" : "✅";
@@ -739,7 +739,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
-            wearingtext = `${wearingtext}\n👤 Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
         }
         // Mittens
         if (getMitten(inspectuserID)) {
@@ -896,7 +896,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
         }
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
-            wearingtext = `${wearingtext}\n👤 Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
         }
         // Mittens
         if (getMitten(inspectuserID)) {
@@ -1186,7 +1186,8 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
  ************/
 async function getDisplayTexts(userID, inspectuserID) {
     let bartext = ``;
-    // Arousal Display
+
+    // ******************** Arousal Display
     if (getArousal(inspectuserID) > 2.0) {
         if (getOption(userID, "arousaldisplay") == "bar") {
             bartext = `\n\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
@@ -1203,7 +1204,9 @@ async function getDisplayTexts(userID, inspectuserID) {
             bartext = `\n\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${calcDenialCoefficient(inspectuserID) * 10}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
         }
     }
-    // People in lap
+    // ****************** 
+
+    // ****************** People in lap
     let lappeople = [];
     // Attempt to get the current guild member object for the user. This might have unintended consequences
     // however I'd have to retool the main function to narrow down to one guild. Too much work currently. 
@@ -1220,7 +1223,13 @@ async function getDisplayTexts(userID, inspectuserID) {
     if (lappeople.length > 0) {
         bartext = `${bartext}\n\n🫂 Subs in Lap: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
     }
+    // ****************** 
 
+    // ****************** Shared Gasmask
+    if (process.headwear && process.headwear[inspectuserID] && process.headwear[inspectuserID].sharedbreathhose) {
+        bartext = `${bartext}\n\n${process.emojis.gasmask} Sharing Breath with: <@${process.headwear[inspectuserID].sharedbreathhose}>`
+    } 
+    // ****************** 
 
     return bartext.slice(1); // Cut the first linebreak for better look
 }

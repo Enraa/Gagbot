@@ -861,7 +861,7 @@ async function handleMajorRestraint(user, target, type, restraint) {
             case "mask":
                 restraintfullname = getHeadwearName(undefined, restraint);
                 prettytype = "Mask"
-                emoji = `👤`;
+                emoji = `${process.emojis.gasmask}`;
                 limitationstext = `This may have a major effect on your speech or emoji, as well as blinding you in **/inspect**!`
                 break;
 			default:
