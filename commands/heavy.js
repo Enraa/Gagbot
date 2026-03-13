@@ -148,7 +148,7 @@ module.exports = {
                                 async (success) => {
                                     await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
                                     await interaction.followUp(getText(data));
-                                    assignHeavy(targetuser.id, heavychoice, interaction.user.id);
+                                    assignHeavy(targetuser.id, heavychoice, interaction.user.id, data.textdata.c3);
                                 },
                                 async (reject) => {
                                     let nomessage = `${targetuser} rejected the ${convertheavy(heavychoice)}.`;
@@ -201,7 +201,7 @@ module.exports = {
                             async (success) => {
                                 await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
                                 await interaction.followUp(getText(data));
-                                assignHeavy(interaction.user.id, heavychoice, interaction.user.id);
+                                assignHeavy(interaction.user.id, heavychoice, interaction.user.id, data.textdata.c3);
                             },
                             async (reject) => {
                                 let nomessage = `You rejected the ${convertheavy(heavychoice)}.`;
