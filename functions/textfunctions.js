@@ -1119,12 +1119,6 @@ const texts_heavy = {
                     },
                     {
                         only: (t) => {
-                            return t.c3.endsWith("'s Lap");
-                        },
-                        text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.`,
-                    },
-                    {
-                        only: (t) => {
                             return t.c3.includes("Mimic");
                         },
                         text: `With a cheeky grin, USER_TAG tosses TARGET_TAG towards a resting VAR_C3! It snaps open and drags TARGET_THEM inside with its tentacles before slamming shut and sealing with a resounding click!`,
@@ -1160,6 +1154,12 @@ const texts_heavy = {
                             return t.c3.includes("Leashing Post");
                         },
                         text: `USER_TAG leads TARGET_TAG over to the VAR_C3, forcing TARGET_THEM to kneel down before leashing TARGET_THEM securely to the VAR_C3!`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c3.endsWith("'s Lap");
+                        },
+                        text: `USER_TAG pulls TARGET_TAG into USER_THEIR lap, holding TARGET_THEM gently but firmly.`,
                     },
                 ]
             },
