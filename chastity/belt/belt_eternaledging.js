@@ -10,5 +10,7 @@ exports.denialCoefficient = (data) => {
     return Math.max(outnum, 1.0)
 }
 
+exports.growthCoefficient = (data) => { return 1.0 } // 100% higher than usual for belts!
+
 // Name
 exports.name = "Chastity Belt of Eternal Edging"
