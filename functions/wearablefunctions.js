@@ -43,6 +43,8 @@ let wearabletypes = [
 	{ name: "Domino Mask", value: "mask_domino", category: "Head/Hair Accessories" },
 	{ name: "Rogue Mask", value: "roguemask", category: "Head/Hair Accessories", colorable: true },
 	{ name: "Leather Rogue Mask", value: "roguemask_leather", category: "Head/Hair Accessories", colorable: true },
+    { name: "Headphones", value: "headphones", category: "Head/Hair Accessories", colorable: true },
+    { name: "Noise-Cancelling Headphones", value: "headphones_noisecancelling", category: "Head/Hair Accessories", colorable: true },
 	{ name: "Eyeshadow", value: "eyeshadow", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glittery", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Lipstick", value: "lipstick", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
 	{ name: "Kissmark", value: "kissmark", category: "Head/Hair Accessories", colorable: true, uniqueColors: ["Glossy", "Metallic Silver", "Metallic Gold"] },
