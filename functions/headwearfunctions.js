@@ -2,6 +2,7 @@ const { MessageAST } = require(`./../functions/message_ast.js`);
 
 const fs = require("fs");
 const path = require("path");
+const { forcedtextemoji } = require("../headwear/doll_visor.js");
 
 /* // This can probably be retired - leaving here for reference
 const headweartypes = [
@@ -217,7 +218,7 @@ const getHeadwearName = (userID, headnname) => {
 // Plz simplify.
 const getHeadwearBlocks = (headnname) => {
 	if (headnname) {
-		return getBaseHeadwear[headnname]
+		return getBaseHeadwear(headnname)
 	} else {
 		return undefined;
 	}
@@ -227,7 +228,7 @@ const getHeadwearBlocks = (headnname) => {
 // blocks a given function.
 // { canEmote: true, canInspect: true }
 const getHeadwearRestrictions = (userID) => {
-	let allowedperms = { canEmote: true, canInspect: true };
+	let allowedperms = { canEmote: true, canInspect: true, forcedtextemoji: false };
 	let wornheadwear = getHeadwear(userID);
 	for (let i = 0; i < wornheadwear.length; i++) {
 		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockemote) {
@@ -235,6 +236,9 @@ const getHeadwearRestrictions = (userID) => {
 		}
 		if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockinspect) {
 			allowedperms.canInspect = false;
+		}
+        if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).forcedtextemoji) {
+			allowedperms.forcedtextemoji = true;
 		}
 	}
 
@@ -264,7 +268,7 @@ const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) =
 	let replaceemote = "";
 	let wornheadwear = getHeadwear(userID);
 	let isDoll = getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))
-	if(!isDoll){		// Doll Visors overwrite all other emoji replacements due to codeblock formatting.
+	if(!isDoll){		// Doll Visors overwrite all other emoji replacements due to codeblock formatting
 		for (let i = 0; i < wornheadwear.length; i++) {
 			if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
 				if (getHeadwearBlocks(wornheadwear[i]).replaceemote.startsWith("EMOJI_")) {

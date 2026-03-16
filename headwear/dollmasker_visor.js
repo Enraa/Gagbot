@@ -5,3 +5,4 @@ exports.name = "Dollmaker's Visor";
 exports.tags = [];
 
 exports.blockemote = true // Emotes only! 
+exports.forcedtextemoji = true;

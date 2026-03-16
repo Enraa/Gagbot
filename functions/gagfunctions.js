@@ -329,11 +329,56 @@ function punishDoll(userID, amount) {
 	}
 }
 
+const messageReplaceEmojiWithText = async (msg) => {
+    if (!getHeadwearRestrictions(msg.author.id).forcedtextemoji) {return msg.content;}
+
+    let text = msg.content;
+
+    const emojiMap = {
+        "🙂": { text: ":)", emoji: "🙂", name: "slight_smile" },
+        "😄": { text: ":D", emoji: "😄", name: "smile" },
+        "😆": { text: "x-)", emoji: "😆", name: "laughing" },
+        "😅": { text: ",:)", emoji: "😅", name: "sweat_smile" },
+        "😂": { text: ":'D", emoji: "😂", name: "joy" },
+        "🥲": { text: ":')", emoji: "🥲", name: "smiling_face_with_tear" },
+        "😊": { text: ':" )'.replace(" ", ""), emoji: "😊", name: "blush" },
+        "😇": { text: "o:)", emoji: "😇", name: "innocent" },
+        "😉": { text: ";)", emoji: "😉", name: "wink" },
+        "😘": { text: ":*", emoji: "😘", name: "kissing" },
+        "😛": { text: ":P", emoji: "😛", name: "stuck_out_tongue" },
+        "😎": { text: "8-)", emoji: "😎", name: "sunglasses" },
+        "😒": { text: ":s", emoji: "😒", name: "unamused" },
+        "😕": { text: ":-\\", emoji: "😕", name: "confused" },
+        "😢": { text: ":'(", emoji: "😢", name: "cry" },
+        "😭": { text: ":,'(", emoji: "😭", name: "sob" },
+        "😠": { text: ">:(", emoji: "😠", name: "angry" },
+        "😡": { text: ":@", emoji: "😡", name: "rage" },
+        "😓": { text: ",:(", emoji: "😓", name: "sweat" },
+        "😐": { text: ":|", emoji: "😐", name: "neutral_face" },
+        "🙁": { text: ":(", emoji: "🙁", name: "frowning" },
+        "😮": { text: ":o", emoji: "😮", name: "open_mouth" },
+        "😈": { text: "]:)", emoji: "😈", name: "smiling_imp" },
+        "👿": { text: "]:(", emoji: "👿", name: "imp" },
+        "❤️": { text: "<3", emoji: "❤️", name: "heart" },
+        "💔": { text: "</3", emoji: "💔", name: "broken_heart" }
+    };
+
+    Object.keys(emojiMap).forEach((k) => {
+        console.log(`replacing for ${k}`)
+        text = text.replaceAll(k, emojiMap[k].text)
+    })
+    
+    return text;
+}
+
 const modifymessage = async (msg, threadId, messageonly) => {
 	try {
         if (!messageonly) {
             console.log(`${msg.channel.guild.name} - ${msg.member.displayName}: ${msg.content}`);
         }
+        let text = await messageReplaceEmojiWithText(msg);
+        msg.content = text;
+        console.log(msg.content);
 		
 		// TODO - remove this var
 		let outtext = ``											// Message to send.

@@ -196,7 +196,6 @@ module.exports = {
                                     await interaction.followUp({ content: nomessage });
                                 },
                             )
-							assignHeadwear(headwearuser.id, headwearchoice);
 						}
 					} else {
 						// Them

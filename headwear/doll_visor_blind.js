@@ -6,3 +6,4 @@ exports.tags = [];
 
 exports.blockemote = true // Emotes only! 
 exports.blockinspect = true
+exports.forcedtextemoji = true;
