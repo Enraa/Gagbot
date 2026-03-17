@@ -10,7 +10,7 @@ exports.extraconfig = async (interaction, userid) => {
     let userdescription = new TextDisplayBuilder().setContent(`Choose who to share ${(interaction.user.id == userid) ? "your" : `<@${userid}>'s`} breath with: `);
 
     let userbit = new UserSelectMenuBuilder()
-        .setCustomId(`extraconfig_gasmasklinked_${interaction.user.id}`)
+        .setCustomId(`extraconfig_gasmasklinked_${userid}`)
         .setPlaceholder(`Select user...`)
         .setMinValues(0)
         .setMaxValues(1);
