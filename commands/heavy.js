@@ -134,6 +134,7 @@ module.exports = {
                         }
                     })
                 })
+                canwear = true; // I'll regret this I'm sure
                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                 if ((interaction.user.id != targetuser.id) || (data.textdata.interactionuser == process.client.user)) {
                     // Someone else!
