@@ -64,6 +64,9 @@ async function sendTimelockChastityUnlockMessage(client, wearer, keyholder) {
 			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, process.chastity[wearer].webhookchannel);
 		}
 	}
+    else {
+        console.log(`No webhook channel found for ${wearer}.`)
+    }
 }
 
 // returns whether the locking was successful
@@ -123,6 +126,9 @@ async function sendTimelockChastityBraUnlockMessage(client, wearer, keyholder) {
 			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.chastitybra[wearer]?.webhookchannel);
 		}
 	}
+    else {
+        console.log(`No webhook channel found for ${wearer}.`)
+    }
 }
 
 // returns whether the locking was successful
@@ -182,6 +188,9 @@ async function sendTimelockCollarUnlockMessage(client, wearer, keyholder) {
 			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.collar[wearer]?.webhookchannel);
 		}
 	}
+    else {
+        console.log(`No webhook channel found for ${wearer}.`)
+    }
 }
 
 function checkGagbotKeys() {
