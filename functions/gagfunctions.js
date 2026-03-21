@@ -365,7 +365,6 @@ const messageReplaceEmojiWithText = async (msg) => {
     };
 
     Object.keys(emojiMap).forEach((k) => {
-        console.log(`replacing for ${k}`)
         text = text.replaceAll(k, emojiMap[k].text)
     })
     

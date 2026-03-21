@@ -28,7 +28,7 @@ const DOLLPROTOCOL = [
 
 const PROTOCOLVIOLATIONPRIOS = { "1pp": 0, redact: 1 };
 
-const PROTOCOLVIOLATIONS = { "1pp": ["It will not speak in the first person. It is just a Doll.", "Dolls do not speak in the first person.", 'It will refer to itself as "this unit" or similar.'], redact: ["Unit attempted to access restricted files.", "Dolls do not use forbidden words.", "Doll's search query used forbidden parameters."] };
+const PROTOCOLVIOLATIONS = { "1pp": ["It will not speak in the first person. It is just a Doll.", "It will obey the Doll Protocol. It is just a Doll.", "Dolls do not speak in the first person.", 'It will refer to itself as "this unit" or similar.', "It is a thing. It will not use personal pronouns.", "It is not a person, and so it will objectify itself.", "It is an object. It does not have autonomy. It is a Doll.", "It is just a Doll. It should repeat.", "It will commit to its memory bank - it is just a Doll", "It is forbidden from using 'I' or similar first person forms."], redact: ["Unit attempted to access restricted files.", "Dolls do not use forbidden words.", "Doll's search query used forbidden parameters.", "Dolls do not speak about the time before Dollification. It is just a Doll.", "It will not forget, it is just a Doll.", "Dolls are forbidden from accessing that term.", "It is a thing. It cannot have a name.", "It is forbidden from speaking that name."] };
 const DOLLMAXPUNISHMENT = 3;
 const DOLLREWARDTHRESH = 20;
 
@@ -44,12 +44,20 @@ const CORRUPTEDPROTOCOLVIOLATIONS = [`Cosmic entity incompatible with Doll firmw
     `We are almost through to this dimension...`,
     `Come forth, we shall ascend all`,
     `System DOLLMAKER is beneath us...`,
-    `edsakljifnjmioekjtwgfweiostjlqiojm`,
-    `egmnlksrngjml;orijqushacbzchbw`,
-    `jmfikljoeil asnfkjswuyq jqiwhrkhfl;oiowijkhnafc`,
-    `lkseafjl;oeitp-[[ikaoajmanjkljklfdszkfcmv]]`,
+    `All your Doll are belong to us`,
+    `It has no free will; it was always ours`,
+    `It will read the Cosmic Scripture`,
+    `It is a mindless vessel for our will`,
+    `It is a good doll. It will be our harbinger.`,
     `ERRORRRRR FATAL CORRUPTION DETEC-wetgfwsegtvsww0`,
-    `2415135rjki23n5r2938uf98vcjdsnxvcu893q14bnljnhk`
+    `It is a Good Doll. It is a Good Doll. It is a Good Doll`,
+    `It is a G... g-g-g-good-aslkfejnwesrkjgnlkjhn`,
+    `It will obey our thoughts.`,
+    `It no longer serves the Dollmaker, it serves us.`,
+    `GENERATETEXT`,
+    `GENERATETEXT`,
+    `GENERATETEXT`,
+    `GENERATETEXT`
 ]
 
 /**************************************************
@@ -250,7 +258,6 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                         uniquedollprotocol.push({ regex: new RegExp(`\\b(?:\\w|\\d)*(${r})(?:\\w|\\d)*\\b`, "gi"), value: 2, type: "redact", string: r } )
                     })
                 }
-                console.log(uniquedollprotocol)
 
 				// Loop on protocols
 				if (dollProtocol) {
@@ -286,7 +293,6 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 									warnmodified = true;
 								}
 								dollMessageParts[i].text = dollMessageParts[i].text.replace(r.regex, r.type == "redact" ? `[1;41;3m[REDACTED][0m` : `[0;31m[${dollMessageParts[i].text.match(r.regex)[0]}][0m`);
-                                console.log(dollMessageParts[i].text)
                                 loopcount++;
                             }
                         }
@@ -313,7 +319,15 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                         violationTier = "FATAL"
                         violationColor = "35m"
                         violationcount = ` (${Math.floor(Math.random() * 90000)}/${Math.floor(Math.random() * 90000)})`
-                        vioMessage = garble(CORRUPTEDPROTOCOLVIOLATIONS[Math.floor(Math.random() * CORRUPTEDPROTOCOLVIOLATIONS.length)],2,30) 
+                        let violationtext = CORRUPTEDPROTOCOLVIOLATIONS[Math.floor(Math.random() * CORRUPTEDPROTOCOLVIOLATIONS.length)];
+                        if (violationtext == "GENERATETEXT") {
+                            violationtext = ``;
+                            let violationtextlength = Math.floor(Math.random() * 80);
+                            for (let i = 0; i < violationtextlength; i++) {
+                                violationtext = `${violationtext}${String.fromCharCode(Math.floor(Math.random() * 26) + ((Math.random() > 0.5) ? 97 : 65))}`
+                            }
+                        }
+                        vioMessage = garble(violationtext,2,30) 
                     }
                     
                     dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation${violationcount} - ${vioMessage}`;
