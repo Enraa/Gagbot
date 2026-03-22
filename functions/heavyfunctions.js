@@ -426,7 +426,7 @@ const getHeavyRestrictions = (user) => {
             if (getBaseHeavy(heavy.type).heavytags.includes("arms")) {
                 returnobject.heavytags.push("arms");
                 returnobject.touchself = false;
-                //returnobject.touchothers = false;
+                returnobject.touchothers = false;
             }
             if (getBaseHeavy(heavy.type).heavytags.includes("legs")) {
                 returnobject.heavytags.push("legs");
