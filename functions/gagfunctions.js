@@ -537,15 +537,18 @@ async function processPregarbleGags(msg, msgTree, msgTreeMods) {
 		process.gags = {};
 	}
     if (process.gags[msg.author.id] && process.gags[msg.author.id].length > 0) {
+        let origcontent = msg.content;
         // Go over each gag and if there's a gag file loaded for it, run the messagebegin, garbletext and messageend functions if they exist.
 		process.gags[msg.author.id].forEach(async (gag) => {
             if (process.gagtypes && process.gagtypes[gag.gagtype]) {
                 if (process.gagtypes[gag.gagtype].pregarble) {
                     await msgTree.callFunc(process.gagtypes[gag.gagtype].pregarble,true,"rawText",[gag.intensity ?? 5, msg])		// Run garble on all IC segments.
-                    msgTreeMods.modified = true;
                 }
             }
         })
+        if (msg.content != origcontent) {
+            msgTreeMods.modified = true;
+        }
     }
 }
 
