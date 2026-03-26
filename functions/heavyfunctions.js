@@ -114,7 +114,6 @@ const heavytypes = [
 	{ name: "Crystalline Pillar", value: "encasement_crystal", denialCoefficient: 4, heavytags: ["arms", "legs"] },
 	{ name: "Latex Ball", value: "sphere_latex", tags: ["latex"], denialCoefficient: 3.5, heavytags: ["arms", "legs"] },
 	{ name: "Latex Sleepsack", value: "sleepsack_latex", tags: ["latex"], denialCoefficient: 4, heavytags: ["arms", "legs"] },
-	{ name: "Duffel Bag", value: "duffel_bag", denialCoefficient: 2, heavytags: ["arms", "legs"] },
 	{ name: "Shadow Latex Ballsuit", value: "shadow_latex_ball", tags: ["latex"], denialCoefficient: 4, heavytags: ["arms", "legs"] },
 	{ name: "Magic Mirror", value: "encasement_mirror", tags: ["confined", "dimensional"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 
@@ -153,6 +152,11 @@ const heavytypes = [
     { name: "Glass Jar", value: "glass_jar", tags: ["confined"], denialCoefficient: 4.5, heavytags: ["container"] },
     { name: "Ballpit", value: "ballpit", denialCoefficient: 1.2, heavytags: ["container"] },
     { name: "Under the Desk", value: "underdesk", tags: ["confined"], denialCoefficient: 1.5, heavytags: ["container"] },
+    { name: "Doll Case", value: "case_doll", tags: ["confined"], denialCoefficient: 4, heavytags: ["container","arms", "legs"] },
+    { name: "Delivery Crate", value: "crate_delivery", tags: ["confined"], denialCoefficient: 4, heavytags: ["container","arms", "legs"] },
+    { name: "Dolly", value: "dolly", tags: ["confined"], denialCoefficient: 3, heavytags: ["container","arms", "legs"] },
+    { name: "Pet Carrier", value: "carrier", tags: ["pet", "confined"], denialCoefficient: 4, heavytags: ["container"] },
+	{ name: "Duffel Bag", value: "duffel_bag", denialCoefficient: 2, heavytags: ["container","arms", "legs"] },
 
 	// Heavy Restraints with unique name functions
 	{
