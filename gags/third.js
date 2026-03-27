@@ -3,26 +3,26 @@ const { getPronouns } = require("../functions/pronounfunctions");
 const nlp = require("compromise");
 
 const selfreplacements = [
-    { regex: "i am", replace: `this SUBJECT is`}, // "I am"
-    { regex: "i have", replace: `this SUBJECT has` }, // "I am"
-    { regex: "i'd", replace: `this SUBJECT'd` }, // "I'd"
-    { regex: "i'?ve", replace: `this SUBJECT has` }, // "I've"
-    { regex: "i'?ll", replace: `this SUBJECT'll` }, // "I've"
-    { regex: "i'?m", replace: `this SUBJECT is` }, // "I'm"
-    { regex: "i", replace: `this SUBJECT` }, // "I"
-    { regex: "me", replace: `this SUBJECT`}, // "me"
-    { regex: "myself", replace: `this SUBJECT's self`}, // "myself"
-    { regex: "my", replace: `this SUBJECT's`}, // "my"
-    { regex: "gimmie", replace: `give this SUBJECT`}, // "me"
+    { regex: "i am", replace: `SUBJECT is`}, // "I am"
+    { regex: "i have", replace: `SUBJECT has` }, // "I am"
+    { regex: "i'd", replace: `SUBJECT'd` }, // "I'd"
+    { regex: "i'?ve", replace: `SUBJECT has` }, // "I've"
+    { regex: "i'?ll", replace: `SUBJECT'll` }, // "I've"
+    { regex: "i'?m", replace: `SUBJECT is` }, // "I'm"
+    { regex: "i", replace: `SUBJECT` }, // "I"
+    { regex: "me", replace: `SUBJECT`}, // "me"
+    { regex: "myself", replace: `SUBJECT's self`}, // "myself"
+    { regex: "my", replace: `SUBJECT's`}, // "my"
+    { regex: "gimmie", replace: `give SUBJECT`}, // "me"
 ];
 
 // This is called after parsing the message tree, just after the emoji. 
 const pregarble = (text, parent, intensity, msg) => {
     let outtext = text;
 
-    let replacementstring = "toy";
-    if (getPronouns(msg.author.id, "subject") == "he") { replacementstring = "boy" }
-    if (getPronouns(msg.author.id, "subject") == "she") { replacementstring = "girl" }
+    let replacementstring = "this toy";
+    if (getPronouns(msg.author.id, "subject") == "he") { replacementstring = "this boy" }
+    if (getPronouns(msg.author.id, "subject") == "she") { replacementstring = "this girl" }
     if (getOption(msg.author.id, "deferentialgagsubject").length > 0) { replacementstring = getOption(msg.author.id, "deferentialgagsubject") }
 
     // Set up sentence array. 
