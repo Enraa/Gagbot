@@ -296,9 +296,15 @@ const texts_collarequip = {
 						},
 						{
 							only: (t) => {
+								return t.c3.includes("Living Latex");
+							},
+							text: `USER_TAG bumps TARGET_TAG into a latex puddle, watching as it spreads over TARGET_THEIR feet and begins to climb up TARGET_THEIR legs. Before long everything below TARGET_THEIR neck is covered in a layer of latex!`,
+						},
+						{
+							only: (t) => {
 								return t.c3.includes("Latex Encasement");
 							},
-							text: `USER_TAG guides TARGET_TAG into a latex puddle, watching as it spreads over TARGET_THEIR feet and begins to climb up TARGET_THEIR legs. Before long everything below TARGET_THEIR neck is covered in a layer of latex!`,
+							text: `USER_TAG pushes TARGET_TAG onto a Latex Sealing Platform, giggling as it begins to encase TARGET_THEM in latex from the neck down. Before long TARGET_TAG can do nothing but helplessly squirm in TARGET_THEIR latex encasement!`,
 						},
 						{
 							only: (t) => {
