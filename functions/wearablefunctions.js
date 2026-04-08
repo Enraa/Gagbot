@@ -216,6 +216,7 @@ let wearabletypes = [
 	{ name: "Crotchless Panties", value: "panties_crotchless", colorable: true, category: "Undergarments" },
 	{ name: "Lingerie", value: "lingerie", colorable: true, category: "Undergarments" },
 	{ name: "Royal Icing Lingerie", value: "lingerie_royalicing", colorable: false, category: "Undergarments" },
+	{ name: "Dangerous Beast Lingerie", value: "lingerie_dangerbeast", colorable: false, category: "Undergarments" },
 	{ name: "Nightie", value: "nightie", colorable: true, category: "Undergarments" },
 	{ name: "Sheer Nightie", value: "nightie_sheer", colorable: true, category: "Undergarments" },
 	{ name: "Lacy Nightie", value: "nightie_lacy", colorable: true, category: "Undergarments" },
