@@ -73,7 +73,6 @@ const heavytypes = [
 	{ name: "Latex Encasement Stand", value: "encasementstand_latex", tags: ["latex"], denialCoefficient: 4, heavytags: ["arms", "legs"] },
 	{ name: "Wooden Horse", value: "wooden_horse", denialCoefficient: 3, heavytags: ["arms", "legs"] },
 	{ name: "X-Frame", value: "x_frame", denialCoefficient: 5, heavytags: ["arms", "legs"] },
-	{ name: "Dancer's Pole", value: "pole_dancer", denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
 	{ name: "Latex Vacbed", value: "vacbed_latex", tags: ["latex"], denialCoefficient: 3.5, heavytags: ["arms", "legs"] },
 	{ name: "Latex Vaccube", value: "vaccube_latex", tags: ["latex"], denialCoefficient: 4.5, heavytags: ["arms", "legs"] },
 	{ name: "Doll Processing Facility", value: "doll_processing", denialCoefficient: 5, heavytags: ["arms", "legs"] },
@@ -101,9 +100,13 @@ const heavytypes = [
 	{ name: "Shrimp Tie", value: "rope_shrimp", denialCoefficient: 3, heavytags: ["arms", "legs"] },
 	{ name: "Frogtie", value: "rope_frogtie", denialCoefficient: 2.5, heavytags: ["legs"] },
 	{ name: "Rope Boxtie", value: "rope_boxtie", denialCoefficient: 2, heavytags: ["arms"] },
+	{ name: "Rope Armbinder", value: "rope_armbinder", denialCoefficient: 2, heavytags: ["arms"] },
+	{ name: "Reverse Prayer Tie", value: "rope_reversepray", denialCoefficient: 3.5, heavytags: ["arms"] },
+	{ name: "Strappado", value: "rope_strappado", denialCoefficient: 5, heavytags: ["arms"] },
 	{ name: "Ribbons", value: "ribbons", denialCoefficient: 1.5, heavytags: ["arms"] },
 	{ name: "Suspended Frogtie", value: "rope_suspension_frog", denialCoefficient: 3, heavytags: ["arms", "legs"] },
-    { name: "Rope Legtie", value: "rope_legtie", denialCoefficient: 1.5, heavytags: ["legs"] },
+    { name: "Rope Legtie", value: "rope_legtie", denialCoefficient: 2, heavytags: ["legs"] },
+    { name: "Rope Hobble", value: "rope_hobble", denialCoefficient: 1.5, heavytags: ["legs"] },
     { name: "Overhead Column Tie", value: "rope_overheadcolumn", denialCoefficient: 5, heavytags: ["arms"] },
 
 	//Encasement and Wrappings
@@ -149,10 +152,12 @@ const heavytypes = [
     { name: "Leashing Post", value: "leashing_post", denialCoefficient: 2.5, heavytags: ["container"] },
     { name: "Doll Storage Unit", value: "doll_storage", tags: ["confined"], denialCoefficient: 3.5, heavytags: ["container"] },
     { name: "Glass Display Case", value: "glass_display_case", tags: ["confined"], denialCoefficient: 3.5, heavytags: ["container"] },
+    { name: "Mermaid Tank", value: "mermaid_tank", tags: ["confined"], denialCoefficient: 3.5, heavytags: ["container"] },
     { name: "Mannequin Display", value: "mannequin_display", denialCoefficient: 7.5, heavytags: ["container"] },
     { name: "Glass Jar", value: "glass_jar", tags: ["confined"], denialCoefficient: 4.5, heavytags: ["container"] },
     { name: "Ballpit", value: "ballpit", denialCoefficient: 1.2, heavytags: ["container"] },
     { name: "Under the Desk", value: "underdesk", tags: ["confined"], denialCoefficient: 1.5, heavytags: ["container"] },
+	{ name: "Dancer's Pole", value: "pole_dancer", denialCoefficient: 1.5, heavytags: ["container"] },
 
 	// Heavy Restraints with unique name functions
 	{
