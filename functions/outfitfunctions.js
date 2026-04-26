@@ -691,12 +691,13 @@ function outfitEntryModal(interaction, slot) {
 
 async function inspectModal(userID, inspectuserIDin, menu, page) {
     let inspectuserID = inspectuserIDin ?? userID;
+    let profilelink = (getOption(inspectuserID, "profilelink") && getOption(inspectuserID, "profilelink").length > 0) ? ` - [Profile](${getOption(inspectuserID, "profilelink")})` : ``
     let userselector = new UserSelectMenuBuilder()
         .setCustomId(`inspect_overview_newuser_1`)
         .setMaxValues(1)
         .setDefaultUsers(inspectuserID)
         .setPlaceholder("Select a user to display...")
-    let pagecomponents = [new ActionRowBuilder().addComponents(userselector), new TextDisplayBuilder().setContent(`## Inspecting - <@${inspectuserID}>\n-# (${getPronounsSet(inspectuserID)})`)];
+    let pagecomponents = [new ActionRowBuilder().addComponents(userselector), new TextDisplayBuilder().setContent(`## Inspecting - <@${inspectuserID}>\n-# (${getPronounsSet(inspectuserID)})${profilelink}`)];
 	let tabbuttons = [
 		// Overview
 		new ButtonBuilder()
