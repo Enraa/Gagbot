@@ -1177,12 +1177,22 @@ const texts_heavy = {
         },
         reflect: {
             other: {
-                canwear: [
-                    `TARGET_TAG tries to put USER_TAG in a VAR_C3. Unfortunately for TARGET_THEM, it is far faster and instead turns the tables to put it on TARGET_THEM!`,
-                    `The USER_TAG stares at TARGET_TAG, almost audibly sighing to itself as it sees the VAR_C3. It places it swiftly on the brat.`,
-                    `USER_TAG grins widely as TARGET_TAG throws a VAR_C3 at it, before picking it up with several mechanical arms and forcing TARGET_THEM into it.`,
-                    `A giggle is heard from the USER_TAG's vocal servos as it grabs the VAR_C3 out of TARGET_TAG's hands and forces TARGET_THEM into it!`
-                ],
+                canwear: {
+                    arms: [
+                        `TARGET_TAG tries to put USER_TAG in a VAR_C3. Unfortunately for TARGET_THEM, it is far faster and instead turns the tables to put it on TARGET_THEM!`,
+                        `The USER_TAG stares at TARGET_TAG, almost audibly sighing to itself as it sees the VAR_C3. It places it swiftly on the brat.`,
+                        `USER_TAG grins widely as TARGET_TAG throws a VAR_C3 at it, before picking it up with several mechanical arms and forcing TARGET_THEM into it.`,
+                        `A giggle is heard from the USER_TAG's vocal servos as it grabs the VAR_C3 out of TARGET_TAG's hands and forces TARGET_THEM into it!`
+                    ],
+                    legs: [
+                        `TARGET_TAG tries to catch USER_TAG and place a VAR_C3 over its legs, however robotic strength is a bit overpowering, and so the bot places it on TARGET_THEM instead.`,
+                        `USER_TAG grabs TARGET_TAG as TARGET_THEY pull out a VAR_C3 and immediately sets to work wrapping it on TARGET_THEIR legs. TARGET_THEIR_CAP movements are extremely restricted now!`
+                    ],
+                    container: [
+                        `TARGET_TAG tries to push USER_TAG into a VAR_C3, but fails as the drone's propulsion quickly shifts itself at the last moment as TARGET_THEY fallTARGET_S into it instead!`,
+                        `USER_TAG stares at the VAR_C3 in confusion as TARGET_TAG tries to push it in. Registering TARGET_THEIR true intent, it shoves TARGET_THEM into it instead.`
+                    ]
+                },
                 nocanwear: {
                     arms: [
                         `TARGET_TAG scoots against a VAR_C3, but since USER_THEY USER_ISARE wearing a VAR_C4, the USER_TAG simply laughs at the useless response.`

@@ -120,6 +120,10 @@ module.exports = {
                     interactionuser = process.client.user;
                     targetuser = interaction.user;
                 }
+                if (getBaseHeavy(heavychoice) && getBaseHeavy(heavychoice).namefunction) {
+                    data = await getBaseHeavy(heavychoice).namefunction(interaction, data);
+                }
+                data.reflect = true;
                 // This disaster of a function lol
                 let canwear = true;
                 let blocker;
