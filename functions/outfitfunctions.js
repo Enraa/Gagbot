@@ -157,7 +157,14 @@ function restoreOutfit(userID, storedobject) {
 		if (k == "heavy") {
 			getHeavy(userID);
 			if (!getHeavy(userID)) {
-				process.heavy[userID] = storedobject.heavy;
+                if (!Array.isArray(storedobject.heavy)) {
+                    console.log("Loading a heavy that is not an array")
+                    console.log(storedobject.heavy)
+                    process.heavy[userID] = [storedobject.heavy];
+                }
+                else {
+                    process.heavy[userID] = storedobject.heavy;
+                }
 				if (process.readytosave == undefined) {
 					process.readytosave = {};
 				}
@@ -1214,12 +1221,18 @@ async function getDisplayTexts(userID, inspectuserID) {
     let inspectusername = (process.client.guilds.cache.map(guild => guild.members.cache.get(inspectuserID)).find(m => m !== undefined))?.displayName;
     Object.keys(process.heavy).forEach((k) => {
         let lapped = false;
-        process.heavy[k].forEach((h) => {
-            // If its a lap and starts with the inspect user's name, then it's OURS
-            if ((h.type === "dominants_lap") && (h.displayname.startsWith(inspectusername ?? "undefined"))) {
-                lappeople.push(k)
-            }
-        })
+        if (!Array.isArray(process.heavy[k])) {
+            console.log("Not an array")
+            console.log(process.heavy[k])
+        }
+        else {
+            process.heavy[k].forEach((h) => {
+                // If its a lap and starts with the inspect user's name, then it's OURS
+                if ((h.type === "dominants_lap") && (h.displayname.startsWith(inspectusername ?? "undefined"))) {
+                    lappeople.push(k)
+                }
+            })
+        }
     })
     if (lappeople.length > 0) {
         bartext = `${bartext}\n\n🫂 Subs in Lap: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
