@@ -255,7 +255,7 @@ const remindPronouns = async (user) => {
     if (process.recentlyremindedpronouns == undefined) {
         process.recentlyremindedpronouns = {}
     }
-    if (!process.recentlyremindedpronouns[user]) {
+    if (!process.recentlyremindedpronouns[user] && (user != process.client.user.id)) {
         try {
             process.recentlyremindedpronouns[user] = true
             setTimeout(() => {

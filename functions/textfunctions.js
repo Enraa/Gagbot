@@ -1889,6 +1889,113 @@ const texts_struggle = {
 	],
 };
 
+const texts_touch = {
+    headpat: {
+        self: {
+            hit: {
+                crit: {
+                    // This is the only thing that can occur on hit
+                    noboundmiss: [
+                        `USER_TAG raises USER_THEIR hand to give USER_THEMSELF a headpat! It hits in JUST the perfect spot and gives USER_THEM the critical satisfaction!`,
+                        `As if guided by an unseen hand, USER_TAG places USER_THEIR hand on USER_THEIR head at just the perfect angle for the *perfect* headpat!`,
+                        `USER_TAG gasps as USER_THEY manage to deliver the best headpat ever to USER_THEMSELF! Not too firm, not too soft, it's just right!`,
+                        `A faint chime can be heard as USER_TAG places USER_THEIR hand on USER_THEIR head! It landed just in the right spot, providing a hefty amount of happiness!`
+                    ]
+                },
+                nocrit: {
+                    // This is the only thing that can occur on hit
+                    noboundmiss: [
+                        `USER_TAG grins as USER_THEY placeUSER_S USER_THEIR hand on USER_THEIR head! USER_THEY_CAP USER_ISARE content!`,
+                        `USER_TAG giggles as USER_THEY runUSER_S USER_THEIR fingers up to USER_THEIR head, spreading them ever so slightly over the top of USER_THEIR head!`,
+                        `USER_TAG nods as USER_THEY placeUSER_S USER_THEIR hand on USER_THEIR head. It's not quite the same as someone else doing it to USER_THEM though.`,
+                        `Leaning forward slightly, USER_TAG places USER_THEIR hand on USER_THEIR head, taking in the moment.`,
+                        `USER_TAG places both hands on USER_THEIR head, rubbing them slightly over the top of it, ruffling USER_THEIR hair!`
+                    ]
+                }
+            },
+            nohit: {
+                nocrit: {
+                    "arms": [
+                        `USER_TAG tries to manipulate USER_THEIR arms to give USER_THEMSELF a well deserved headpat, but despite USER_THEIR greatest effort, USER_THEIR bondage holds USER_THEM firmly in place.`,
+                        `USER_TAG sighs and looks around the room, pleading someone to pat USER_THEIR head! USER_THEY_CAP definitely deserveUSER_S it!`,
+                        `Not for lack of trying, USER_TAG squirms in USER_THEIR bondage to try to give USER_THEMSELF a pat on the head. Unfortunately, USER_THEY will need some assistance from someone.`,
+                        `The cruel bondage binding USER_THEIR arms prevents USER_TAG from giving USER_THEMSELF a pat on the head. How saddening. Someone should cheer USER_THEM up!`,
+                    ],
+                    // These should never occur on self, but I'll add a couple for my demo!
+                    "legs": [
+                        `USER_TAG attempts to give USER_THEMSELF a pat on the head, but somehow USER_THEIR legs have failed USER_THEM! (This is a bug, report!)`
+                    ],
+                    // These should never occur on self, but I'll add a couple for my demo!
+                    "container": [
+                        `USER_TAG attempts to give USER_THEMSELF a pat on the head, but USER_THEY USER_ISARE in some kind of container preventing that! (This is a bug, report!)`
+                    ],
+                    // These should never occur on self, but I'll add a couple for my demo!
+                    "blind": [
+                        `USER_TAG attempts to give USER_THEMSELF a pat on the head, but USER_THEY USER_ISARE are somehow too blind to see! (This is a bug, report!)`
+                    ],
+                    // These should never occur on self, but I'll add a couple for my demo!
+                    noboundmiss: [
+                        `USER_TAG attempts to give USER_THEMSELF a pat on the head, but somehow can't because of some arcane curse! (This is a bug, report!)`
+                    ]
+                }
+            }
+        },
+        other: {
+            hit: {
+                crit: {
+                    // This is the only thing that can occur on hit
+                    noboundmiss: [
+                        `A chime is heard and USER_TAG's face cuts in as USER_THEY deftly moveUSER_S to deliver a headpat to TARGET_TAG, placing USER_THEIR fingers in just the right spot!`,
+                        `USER_TAG leaps towards TARGET_TAG and places USER_THEIR hand in just the right way, giving TARGET_THEM a critical headpat!`,
+                        `USER_TAG grins devillishly as USER_THEY give TARGET_TAG a headpat! It connects in just the *perfect* spot! USER_THEY_CAP USER_ISARE stunned for a brief moment!`,
+                        `There may have been thousands of headpats before, but the one USER_TAG is giving TARGET_TAG now is a perfectly unique one!`
+                    ]
+                },
+                nocrit: {
+                    // This is the only thing that can occur on hit
+                    noboundmiss: [
+                        `USER_TAG reaches over and gives TARGET_TAG a pat on the head!`,
+                        `USER_TAG smiles as USER_THEY leanUSER_S forward and placeUSER_S USER_THEIR hand on TARGET_TAG's head!`,
+                        `With a soft coo, USER_TAG runs USER_THEIR hand on TARGET_TAG's head, giving TARGET_THEM a headpat!`,
+                        `TARGET_TAG looked like TARGET_THEY needed a headpat, so USER_TAG reaches over and gives TARGET_THEM a pat on the head!`,
+                        `USER_TAG places USER_THEIR hand on TARGET_TAG's head. It's a gentle headpat, endearing even!`,
+                        `USER_TAG dances USER_THEIR fingers over TARGET_TAG's head and through TARGET_THEIR hair! It provides a faintly ticklish sensation!`,
+                        `USER_TAG gives TARGET_TAG a headpat, running USER_THEIR fingers back and forth a bit to ruffle TARGET_THEIR hair!`,
+                        `USER_TAG gently pats TARGET_TAG's head. Pat pat pat!`
+                    ]
+                }
+            },
+            nohit: {
+                nocrit: {
+                    "arms": [
+                        `USER_TAG squirms as USER_THEY try to pat TARGET_TAG, but fails without USER_THEIR arms.`,
+                        `USER_TAG tries to contort USER_THEIR arms in some kind of angle to pat TARGET_TAG, but unfortunately USER_THEY just can't place USER_THEIR hands on TARGET_THEM!`,
+                        `USER_TAG knows USER_THEIR arms are bound away, but that doesn't stop USER_THEM from trying to pat TARGET_TAG on the head!`
+                    ],
+                    "legs": [
+                        `USER_TAG almost falls over trying to pat TARGET_TAG, but TARGET_THEY TARGET_ISARE able to deftly dodge the pats!`,
+                        `USER_TAG tries to reach towards TARGET_TAG, but unfortunately USER_THEIR legs are bound away, making it impossible to even touch TARGET_THEM!`
+                    ],
+                    "container": [
+                        `USER_TAG wants to pat TARGET_TAG, but USER_THEY USER_ISARE locked away in a container!`,
+                        `USER_TAG waves USER_THEIR hands to pat TARGET_TAG, but unfortunately TARGET_THEY TARGET_ISARE in a different container. Or castle. One of the two!`
+                    ],
+                    "blind": [
+                        `USER_TAG waves USER_THEIR hands around in the dark, trying to feel USER_THEIR way to TARGET_TAG to pat TARGET_THEIR head. Unfortunately, TARGET_THEY just can't be found!`,
+                        `Though USER_TAG is peering deeply into USER_THEIR own dark void, USER_THEY just can't find TARGET_TAG, let alone give TARGET_THEM a headpat!`
+                    ],
+                    noboundmiss: [
+                        `USER_TAG tries to pat TARGET_TAG's head, but fumbles and misses TARGET_THEM completely!`,
+                        `USER_TAG lunges forward to pat TARGET_TAG's head, but TARGET_THEY TARGET_ISARE able to move out of the way just in time!`,
+                        `USER_TAG closes USER_THEIR eyes, preparing USER_THEIR signature attack: The Pat Sonata! But the attack misses.`,
+                        `USER_TAG tries to place USER_THEIR hand on TARGET_TAG's head, but unfortunately a slight movement and a cascade of errors causes USER_THEM to miss!`
+                    ]
+                }
+            }
+        }
+    }
+}
+
 const texts_toy = {
     heavy: {
         self: {
@@ -4289,6 +4396,7 @@ const textarrays = {
 	texts_letgo: texts_letgo,
 	texts_mitten: texts_mitten,
 	texts_struggle: texts_struggle,
+    texts_touch: texts_touch,
     texts_toy: texts_toy,
 	texts_unchastity: texts_unchastity,
 	texts_uncollar: texts_uncollar,
