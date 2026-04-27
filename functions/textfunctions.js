@@ -1898,7 +1898,7 @@ const texts_touch = {
                     noboundmiss: [
                         `USER_TAG raises USER_THEIR hand to give USER_THEMSELF a headpat! It hits in JUST the perfect spot and gives USER_THEM the critical satisfaction!`,
                         `As if guided by an unseen hand, USER_TAG places USER_THEIR hand on USER_THEIR head at just the perfect angle for the *perfect* headpat!`,
-                        `USER_TAG gasps as USER_THEY manage to deliver the best headpat ever to USER_THEMSELF! Not too firm, not too soft, it's just right!`,
+                        `USER_TAG gasps as USER_THEY manageUSER_S to deliver the best headpat ever to USER_THEMSELF! Not too firm, not too soft, it's just right!`,
                         `A faint chime can be heard as USER_TAG places USER_THEIR hand on USER_THEIR head! It landed just in the right spot, providing a hefty amount of happiness!`
                     ]
                 },
@@ -1968,7 +1968,7 @@ const texts_touch = {
             nohit: {
                 nocrit: {
                     "arms": [
-                        `USER_TAG squirms as USER_THEY try to pat TARGET_TAG, but fails without USER_THEIR arms.`,
+                        `USER_TAG squirms as USER_THEY attemptUSER_S to pat TARGET_TAG, but fails without USER_THEIR arms.`,
                         `USER_TAG tries to contort USER_THEIR arms in some kind of angle to pat TARGET_TAG, but unfortunately USER_THEY just can't place USER_THEIR hands on TARGET_THEM!`,
                         `USER_TAG knows USER_THEIR arms are bound away, but that doesn't stop USER_THEM from trying to pat TARGET_TAG on the head!`
                     ],
