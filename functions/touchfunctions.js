@@ -18,7 +18,8 @@ function rollPatChance(user, target) {
         boundmiss: undefined
     }
     let hitaccuracy = 0.95; // Base accuracy for successfully patting someone. This is 95% chance. 
-    let critaccuracy = 0.15;
+    let critaccuracy = 0.05;
+    critaccuracy = critaccuracy + Math.min(process.headpatcritchancebonus, 0.20);
     
     // If they are in heavy bondage, we need that list. 
     let userheavyrestrictions = getHeavyRestrictions(user);
@@ -68,6 +69,7 @@ function rollPatChance(user, target) {
     if (returnedobject.hit) {
         returnedobject.crit = (Math.random() <= critaccuracy)
         returnedobject.boundmiss = undefined;
+        process.headpatcritchancebonus = 0.0;
     }
 
     return returnedobject;

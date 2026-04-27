@@ -262,6 +262,13 @@ client.on("clientReady", async () => {
             }
             catch (err) { console.log(err) }
         }, 3600000);
+        process.headpatcritchancebonus = 0.0;
+        setInterval(() => {
+            try {
+                process.headpatcritchancebonus = process.headpatcritchancebonus + 0.001
+            }
+            catch (err) { console.log(err) }
+        }, 6000)
     }
     catch (err) {
         console.log(err)
