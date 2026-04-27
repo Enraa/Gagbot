@@ -1947,7 +1947,7 @@ const texts_touch = {
                     noboundmiss: [
                         `A chime is heard and USER_TAG's face cuts in as USER_THEY deftly moveUSER_S to deliver a headpat to TARGET_TAG, placing USER_THEIR fingers in just the right spot!`,
                         `USER_TAG leaps towards TARGET_TAG and places USER_THEIR hand in just the right way, giving TARGET_THEM a critical headpat!`,
-                        `USER_TAG grins devillishly as USER_THEY give TARGET_TAG a headpat! It connects in just the *perfect* spot! USER_THEY_CAP USER_ISARE stunned for a brief moment!`,
+                        `USER_TAG grins devillishly as USER_THEY giveUSER_S TARGET_TAG a headpat! It connects in just the *perfect* spot! TARGET_THEY_CAP USER_ISARE stunned for a brief moment!`,
                         `There may have been thousands of headpats before, but the one USER_TAG is giving TARGET_TAG now is a perfectly unique one!`
                     ]
                 },
