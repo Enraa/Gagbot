@@ -61,7 +61,7 @@ function rollPatChance(user, target) {
     }
 
     // Check if we are headpatting ourselves. If so, then accuracy should be set to 1.0, if our arms aren't bound. 
-    if ((userheavyrestrictions && !userheavyrestrictions.touchself) && (user == target)) {
+    if ((userheavyrestrictions && userheavyrestrictions.touchself) && (user == target)) {
         hitaccuracy = 1.0;
     }
 
