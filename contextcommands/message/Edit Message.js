@@ -30,6 +30,7 @@ module.exports = {
                             }
 
                             let founduserid;
+
                             // Check for engraved pet tag
                             let engravedpettags = getAllSelectedOption("engravedcollarname")
                             Object.keys(engravedpettags).forEach((k) => {
@@ -58,8 +59,17 @@ module.exports = {
                                     }
                                 }
                             }
+
+                            let origmessagecontent = message.content
+
+                            // Attempt to find the user ID in our recent messages list
+                            if (process.recordedmessages && process.recordedmessages[message.id] && (process.recordedmessages[message.id].authorid == interaction.user.id)) {
+                                founduserid = interaction.user.id,
+                                origmessagecontent = process.recordedmessages[message.id].content
+                            }
+
                             if (founduserid == interaction.user.id) {
-                                interaction.showModal(await generateEditMessageModal(message.content, message.id, message.channel.id, webhookassigned))
+                                interaction.showModal(await generateEditMessageModal(origmessagecontent, message.id, message.channel.id, webhookassigned))
                             }
                             else {
                                 interaction.reply({ content: "This is (probably) not your message and cannot be edited. Let Enraa know if this is an error.", flags: MessageFlags.Ephemeral })

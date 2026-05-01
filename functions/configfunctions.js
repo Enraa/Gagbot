@@ -4,6 +4,125 @@ const path = require("path");
 const https = require("https");
 
 const configoptions = {
+    Me: {
+        profilelink: {
+			name: "Profile Link",
+			desc: "Set a profile link when people /inspect you",
+			descmodal: "Paste the exact link to direct users to when inspecting you.",
+			choices: [
+				{
+					name: "Set Link",
+					helptext: "Link set to \n",
+					helptextnone: "*No profile link*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (userID) => {
+				return `https://discord.gg/`;
+			},
+            textvaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        pronouns: {
+			name: "Pronouns",
+			desc: "Which pronouns should the bot use when referring to you?",
+			choices: [
+				{
+					name: "She/her",
+					helptext: "Feminine Pronouns (she, her, hers, herself)",
+					select_function: (userID) => {
+                        if (process.pronouns == undefined) {
+                            process.pronouns = {};
+                        }
+                        process.pronouns[userID] = { subject: "she", object: "her", possessive: "hers", possessiveDeterminer: "her", reflexive: "herself", subjectIs: "she's", subjectWill: "she'll" }
+                        if (process.readytosave == undefined) {
+                            process.readytosave = {};
+                        }
+                        process.readytosave.pronouns = true;
+                    },
+					value: "she",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "He/him",
+					helptext: "Masculine Pronouns (he, him, his, himself)",
+					select_function: (userID) => {
+                        if (process.pronouns == undefined) {
+                            process.pronouns = {};
+                        }
+                        process.pronouns[userID] = { subject: "he", object: "him", possessive: "his", possessiveDeterminer: "his", reflexive: "himself", subjectIs: "he's", subjectWill: "he'll" }
+                        if (process.readytosave == undefined) {
+                            process.readytosave = {};
+                        }
+                        process.readytosave.pronouns = true;
+                    },
+					value: "he",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "They/them",
+					helptext: "Nonbinary Pronouns (they, them, their, themself)",
+					select_function: (userID) => {
+                        if (process.pronouns == undefined) {
+                            process.pronouns = {};
+                        }
+                        process.pronouns[userID] = { subject: "they", object: "them", possessive: "theirs", possessiveDeterminer: "their", reflexive: "themself", subjectIs: "they're", subjectWill: "they'll" }
+                        if (process.readytosave == undefined) {
+                            process.readytosave = {};
+                        }
+                        process.readytosave.pronouns = true;
+                    },
+					value: "they",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "It/its",
+					helptext: "Object Pronouns (it, it, its, itself)",
+					select_function: (userID) => {
+                        if (process.pronouns == undefined) {
+                            process.pronouns = {};
+                        }
+                        process.pronouns[userID] = { subject: "it", object: "it", possessive: "its", possessiveDeterminer: "its", reflexive: "itself", subjectIs: "it's", subjectWill: "it'll" }
+                        if (process.readytosave == undefined) {
+                            process.readytosave = {};
+                        }
+                        process.readytosave.pronouns = true;
+                    },
+					value: "it",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Not Set",
+					helptext: "Pronouns have not been set yet",
+					select_function: (userID) => {
+                        setOption(userID, "pronouns", "she");
+                    },
+					value: "notset",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "notset",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+    },
 	Arousal: {
 		arousalsystem: {
 			name: "Arousal System",
@@ -567,6 +686,37 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			},
+		},
+        recordmessages: {
+			name: "Record Messages",
+			desc: "When modifying messages, can the bot temporarily record the original message contents?",
+			choices: [
+				{
+					name: "No",
+					helptext: "*Editing messages will use the edited contents*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "disabled",
+					style: ButtonStyle.Danger,
+					uname: "RecordMessagesDisabled",
+				},
+				{
+					name: "Yes",
+					helptext: "Editing Bot messages will use original contents",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Success,
+					uname: "RecordMessages",
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
 		},
 		revokeconsent: {
 			name: "Revoke Consent",

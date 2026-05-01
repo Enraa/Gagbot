@@ -91,7 +91,8 @@ let processdatatoload = [
     { textname: "outfits.txt", processvar: "outfits", default: {}},
     { textname: "dollusers.txt", processvar: "dolls", default: {}},
     { textname: "wearables.txt", processvar: "wearable", default: {}},
-    { textname: "webhooks.txt", processvar: "webhookstoload", default: {}}
+    { textname: "webhooks.txt", processvar: "webhookstoload", default: {}},
+    { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {}},
 ]
 
 processdatatoload.forEach((s) => {
@@ -252,8 +253,22 @@ client.on("clientReady", async () => {
 
         scavengeUsers(client);
         setInterval(() => {
-            scavengeUsers(client);
+            try {
+                scavengeUsers(client);
+            }
+            catch (err) { console.log(err) }
+            try {
+                removeOldMessages();
+            }
+            catch (err) { console.log(err) }
         }, 3600000);
+        process.headpatcritchancebonus = 0.0;
+        setInterval(() => {
+            try {
+                process.headpatcritchancebonus = process.headpatcritchancebonus + 0.001
+            }
+            catch (err) { console.log(err) }
+        }, 6000)
     }
     catch (err) {
         console.log(err)

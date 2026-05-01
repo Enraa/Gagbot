@@ -183,6 +183,10 @@ const saveFiles = () => {
 					filepath = `${process.GagbotSavedFileDirectory}/webhooks.txt`;
 					processvar = "webhookstoload";
 					break;
+                case "recordedmessages":
+					filepath = `${process.GagbotSavedFileDirectory}/recordedmessages.txt`;
+					processvar = "recordedmessages";
+					break;
 				default:
 					console.log(`Unknown save variable: ${k}`);
 			}
@@ -398,6 +402,15 @@ async function scavengeUsers(client) {
                 }
             })
         }
+    })
+}
+
+// Cull any message older than a day. 
+async function removeOldMessages() {
+    Object.keys(process.recordedmessages).forEach((k) => {
+        if (process.recordedmessages && process.recordedmessages[k] && ((process.recordedmessages[k].createdTimestamp + 86400000) < Date.now())) {
+            delete process.recordedmessages[k];
+        } 
     })
 }
 

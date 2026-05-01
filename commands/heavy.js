@@ -114,12 +114,16 @@ module.exports = {
 				data.noheavy = true;
                 // REFLECT
                 if (targetuser.id == process.client.user.id) {
-                    data.reflect = true;
                     data.textdata.interactionuser = process.client.user;
                     data.textdata.targetuser = interaction.user;
                     interactionuser = process.client.user;
                     targetuser = interaction.user;
+                    if (getBaseHeavy(heavychoice) && getBaseHeavy(heavychoice).namefunction) {
+                        data = await getBaseHeavy(heavychoice).namefunction(interaction, data);
+                    }
+                    data.reflect = true;
                 }
+                
                 // This disaster of a function lol
                 let canwear = true;
                 let blocker;

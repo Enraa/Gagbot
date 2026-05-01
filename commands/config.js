@@ -279,5 +279,21 @@ module.exports = {
 				delete process.recentinteraction[interaction.user.id];
 			}
 		}
+        if (optionparts[3] == "profilelink") {
+            if (choiceinput && choiceinput.length > 0) {
+                setOption(interaction.user.id, optionparts[3], choiceinput);
+                await interaction.reply({ content: `Updated your profile link to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral });
+            }
+            else {
+                setOption(interaction.user.id, optionparts[3], ``);
+                await interaction.reply({ content: `Cleared profile link`, flags: MessageFlags.Ephemeral });
+            }
+			if (process.recentinteraction) {
+				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], 1));
+				}
+				delete process.recentinteraction[interaction.user.id];
+			}
+		}
 	},
 };

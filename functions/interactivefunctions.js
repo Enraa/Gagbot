@@ -33,7 +33,7 @@ Restraints and toys used include the following:
 You can access these commands by typing / to bring up a list of what can be done. 
 *Where possible, the bot's design philosophy is **"Consent First,"** meaning that you will have to make an active choice to give up control. Examples of this include mittens, chastity and heavy bondage. Collars can override this, if you wear them. Please use these at your own risk and leverage the **keyholder** and **other controls** presented as necessary.*
 
-**You will *always* be able to speak in ooc (out of context) chat using italics (\\*this would be ungarbled\\*) or underscores.**
+**You will *always* be able to speak in ooc (out of context) chat using italics (\\*this would be ungarbled\\*) or underscores.** Messages are recorded whenever the bot modifies them for editing via Apps -> Gagbot -> Edit Messages. This can be modified in **/config** under General.
 
 Finally, you should review settings found in **/config** concerning effects from vibrators, key giving and effects such as Doll Visors under Misc.
 

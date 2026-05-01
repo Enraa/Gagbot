@@ -2,6 +2,7 @@ const { getOption } = require("../../functions/configfunctions")
 const { messageSendChannel } = require("../../functions/messagefunctions")
 const { getUserVar, setUserVar } = require("../../functions/usercontext")
 const { getGag, assignGag, deleteGag} = require("../../functions/gagfunctions.js");
+const { getPronouns } = require("../../functions/pronounfunctions.js");
 
 const DISSOLVE_RATE_MS = 1200000;
 

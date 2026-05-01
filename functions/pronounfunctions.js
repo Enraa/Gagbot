@@ -1,8 +1,11 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { getOption } = require("../functions/configfunctions.js");
+const { getOption, setOption } = require("../functions/configfunctions.js");
 const { DOLLVISORS, getHeadwear } = require("../functions/headwearfunctions.js");
+const { ButtonBuilder } = require("@discordjs/builders");
+const { ButtonStyle, ComponentType } = require("discord.js");
+const { ActionRowBuilder } = require("@discordjs/builders");
 
 // Pronoun types
 const pronounsMap = new Map([
@@ -50,6 +53,8 @@ const getPronouns = (user, form, capitalize = false) => {
 		output = process.pronouns[user][form];
 	} else {
 		output = pronounsMap.get("they/them")[form];
+        // If the user has not set pronouns, we should try to send them a DM to have them do so
+        remindPronouns(user);
 	}
 	if (capitalize) {
 		output = output.charAt(0).toUpperCase() + output.slice(1);
@@ -79,6 +84,7 @@ const setPronouns = (user, pronouns) => {
 	}
 
 	process.pronouns[user] = pronounsMap.get(pronouns);
+    setOption(user, "pronouns", (pronouns.split("/")[0]))
 
 	if (process.readytosave == undefined) {
 		process.readytosave = {};
@@ -244,6 +250,58 @@ const convertPronounsText = (text, data) => {
 
 	return outtext;
 };
+
+const remindPronouns = async (user) => {
+    if (process.recentlyremindedpronouns == undefined) {
+        process.recentlyremindedpronouns = {}
+    }
+    if (!process.recentlyremindedpronouns[user] && (user != process.client.user.id)) {
+        try {
+            process.recentlyremindedpronouns[user] = true
+            setTimeout(() => {
+                process.recentlyremindedpronouns[user] = false;
+            }, 900000)
+            let userobject = await process.client.users.fetch(user)
+            let buttons = [new ButtonBuilder().setCustomId("sheher").setLabel("She/Her").setStyle(ButtonStyle.Secondary), new ButtonBuilder().setCustomId("hehim").setLabel("He/Him").setStyle(ButtonStyle.Secondary), new ButtonBuilder().setCustomId("theythem").setLabel("They/Them").setStyle(ButtonStyle.Secondary), new ButtonBuilder().setCustomId("itits").setLabel("It/Its").setStyle(ButtonStyle.Secondary)];
+            let pronounremindertext = `This bot uses gendered language for roleplay texts and output to individuals. Your pronouns currently are not set in the bot. Please click an option below to set them:`
+            let dmchannel = await userobject.createDM();
+            await dmchannel
+                .send({ content: `${pronounremindertext}`, components: [new ActionRowBuilder().addComponents(...buttons)]})
+                .then((mess) => {
+                    const collector = mess.createMessageComponentCollector({ componentType: ComponentType.Button, time: 900_000, max: 1 });
+                    collector.on("collect", async (i) => {
+                        console.log(i);
+                        if (i.customId == "sheher") {
+                            setPronouns(user, "she/her")
+                            await i.update({ content: 'Set your pronouns to She/Hers!', components: [] })
+                        }
+                        else if (i.customId == "hehim") {
+                            setPronouns(user, "he/him")
+                            await i.update({ content: 'Set your pronouns to He/Him!', components: [] })
+                        }
+                        else if (i.customId == "theythem") {
+                            setPronouns(user, "they/them")
+                            await i.update({ content: 'Set your pronouns to They/Them!', components: [] })
+                        }
+                        else if (i.customId == "itits") {
+                            setPronouns(user, "it/its")
+                            await i.update({ content: 'Set your pronouns to It/Its!', components: [] })
+                        }
+                    });
+                    collector.on("end", async (collected) => {
+                        // timed out
+                        if (collected.length == 0) {
+                            await i.update({ content: 'Timed Out. Please set your pronouns in the bot.', components: [] })
+                        }
+                    });
+                })
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+}
+
 
 exports.they = (user, capitalise = false) => getPronouns(user, "subject", capitalise);
 exports.them = (user, capitalise = false) => getPronouns(user, "object", capitalise);

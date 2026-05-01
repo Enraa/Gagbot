@@ -90,12 +90,12 @@ let wearabletypes = [
 	{ name: "Doll Barcode", value: "cyberdoll_barcode", category: "Doll" },
 
 	//Faux Bondage and Non Restrictive Gear
-	{ name: "Harness", value: "harness_leather", colorable: true, category: "Bondage", uniqueColors: ["Vine", "Leather", "Latex", "Leather", "Rubber", "Shibari"] },
-	{ name: "Bondage Wrist Cuffs", value: "cuffswrist_bondage", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
+	{ name: "Harness", value: "harness_leather", colorable: true, category: "Bondage", uniqueColors: ["Ribbon", "Vine", "Leather", "Latex", "Leather", "Rubber", "Shibari"] },
+	{ name: "Bondage Wrist Cuffs", value: "cuffswrist_bondage", colorable: true, category: "Bondage", uniqueColors: ["Ribbon", "Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
 	{ name: "Latex Wrist Cuffs", value: "cuffswrist_latex", colorable: true, category: "Bondage", uniqueColors: ["Starry", "Shadow"] },
-	{ name: "Bondage Ankle Cuffs", value: "cuffsankle_bondage", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
+	{ name: "Bondage Ankle Cuffs", value: "cuffsankle_bondage", colorable: true, category: "Bondage", uniqueColors: ["Ribbon", "Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
 	{ name: "Latex Ankle Cuffs", value: "cuffsankle_latex", colorable: true, category: "Bondage", uniqueColors: ["Starry", "Shadow"] },
-	{ name: "Bondage Thigh Cuffs", value: "cuffsthigh_bondage", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
+	{ name: "Bondage Thigh Cuffs", value: "cuffsthigh_bondage", colorable: true, category: "Bondage", uniqueColors: ["Ribbon", "Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
 	{ name: "Latex Thigh Cuffs", value: "cuffsthigh_latex", colorable: true, category: "Bondage", uniqueColors: ["Starry", "Shadow"] },
 	{ name: "Cyber Doll Cuffs", value: "cuffs_cyberdoll", colorable: true, category: "Bondage" },
 	//{ name: "Latex Legbinder", value: "legbinder_latex", colorable: true, category: "Bondage", uniqueColors: ["Starry", "Shadow"] },
@@ -129,6 +129,7 @@ let wearabletypes = [
 	{ name: "Harem Silks", value: "haremsilks", category: "Cosplay", colorable: true },
 	{ name: "Magical Girl Uniform", value: "outfit_magicalgirl", category: "Cosplay", colorable: true },
 	{ name: "Latex Magical Girl Uniform", value: "outfit_magicalgirl_latex", category: "Cosplay", colorable: true, uniqueColors: ["Starry", "Shadow"] },
+	{ name: "Towel", value: "towel", category: "Cosplay", colorable: true },
 
 	// Upper Body
 	{ name: "Comfy Oversized Hoodie", value: "hoodie_oversized", colorable: true, category: "Upper Body" },
@@ -216,6 +217,7 @@ let wearabletypes = [
 	{ name: "Crotchless Panties", value: "panties_crotchless", colorable: true, category: "Undergarments" },
 	{ name: "Lingerie", value: "lingerie", colorable: true, category: "Undergarments" },
 	{ name: "Royal Icing Lingerie", value: "lingerie_royalicing", colorable: false, category: "Undergarments" },
+	{ name: "Dangerous Beast Lingerie", value: "lingerie_dangerbeast", colorable: false, category: "Undergarments" },
 	{ name: "Nightie", value: "nightie", colorable: true, category: "Undergarments" },
 	{ name: "Sheer Nightie", value: "nightie_sheer", colorable: true, category: "Undergarments" },
 	{ name: "Lacy Nightie", value: "nightie_lacy", colorable: true, category: "Undergarments" },
