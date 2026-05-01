@@ -215,7 +215,6 @@ function importFileNames() {
         { processvar: "headpatfunctions", functionvar: "headpatfunction" },
     ]
     for (let i = 0; i < functionspaces.length; i++) {
-        console.log(functionspaces[i])
         process[functionspaces[i].processvar] = {};
     }
 	let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
@@ -412,3 +411,4 @@ exports.scavengeUsers = scavengeUsers;
 
 exports.processUnlockTimes = processUnlockTimes;
 exports.processTimedEvents = processTimedEvents;
+exports.removeOldMessages = removeOldMessages;

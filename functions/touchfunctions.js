@@ -1,5 +1,9 @@
-const { getHeadwearRestrictions } = require("./headwearfunctions");
-const { getHeavyRestrictions } = require("./heavyfunctions");
+const { getCollar } = require("./collarfunctions");
+const { getGags, getMitten } = require("./gagfunctions");
+const { getHeadwearRestrictions, getHeadwear } = require("./headwearfunctions");
+const { getHeavyRestrictions, getHeavy } = require("./heavyfunctions");
+const { getToys } = require("./toyfunctions");
+const { getWearable } = require("./wearablefunctions");
 
 /****************
  * Rolls a Pat based on the user's bondage and the target's bondage. If hit is false, then boundmiss will note the reason, if it is due to the user being bound. 
@@ -72,7 +76,71 @@ function rollPatChance(user, target) {
         process.headpatcritchancebonus = 0.0;
     }
 
+    // Do all of the functions for the person receiving the headpats.
+    // Note, within the function we need to check if headpat was successful! 
+    doHeadpatFunctions(user, target, returnedobject)
+
     return returnedobject;
+}
+
+// This should definitely be refactored. 
+function doHeadpatFunctions(headpatter, recipient, returnedobject) {
+	// Gags
+	if (process.gags) {
+        getGags(recipient).forEach((g) => {
+            if (process.headpatfunctions.gags && process.headpatfunctions.gags[g.gagtype]) {
+                process.headpatfunctions.gags[g.gagtype](recipient, headpatter, returnedobject);
+            }
+        });
+	}
+	// Headwear
+	if (process.headwear) {
+        getHeadwear(recipient).forEach((h) => {
+            if (process.headpatfunctions.headwear && process.headpatfunctions.headwear[h]) {
+                process.headpatfunctions.headwear[h](recipient, headpatter, returnedobject);
+            }
+        });
+	}
+	// Mittens
+	if (process.mitten) {
+        if (getMitten(recipient)) {
+            if (process.headpatfunctions.mitten && process.headpatfunctions.mitten[getMitten(recipient).mittenname]) {
+                process.headpatfunctions.mitten[getMitten(recipient).mittenname](recipient, headpatter, returnedobject);
+            }
+        }
+	}
+	// Heavy Bondage
+	if (process.heavy) {
+        if (getHeavy(recipient)) {
+            if (process.headpatfunctions.heavy && process.headpatfunctions.heavy[getHeavy(recipient).typeval]) {
+                process.headpatfunctions.heavy[getHeavy(recipient).typeval](recipient, headpatter, returnedobject);
+            }
+        }
+	}
+	// Wearables
+	if (process.wearable) {
+        getWearable(recipient).forEach((h) => {
+            if (process.headpatfunctions.wearable && process.headpatfunctions.wearable[h]) {
+                process.headpatfunctions.wearable[h](recipient, headpatter, returnedobject);
+            }
+        });
+	}
+    // Toys
+    if (process.toys) {
+        getToys(recipient).forEach((h) => {
+            if (process.headpatfunctions.toys && process.headpatfunctions.toys[h.type]) {
+                process.headpatfunctions.toys[h.type](recipient, headpatter, returnedobject);
+            }
+        });
+	}
+    // Collars
+    if (process.collar) {
+        if (getCollar(recipient)) {
+            if (process.headpatfunctions.collar && process.headpatfunctions.collar[getCollar(recipient).collartype]) {
+                process.headpatfunctions.collar[getCollar(recipient).collartype](recipient, headpatter, returnedobject);
+            }
+        }
+	}
 }
 
 exports.rollPatChance = rollPatChance;

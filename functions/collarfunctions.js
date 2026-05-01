@@ -25,7 +25,8 @@ const collartypes = [
 	{ name: "Starmetal Collar", value: "collar_starmetal", tags: ["metal"] },
     { name: "Maid Training Collar", value: "collar_maidtraining" },
     { name: "Struggle Collar", value: "collar_struggle" },
-    { name: "Engraved Collar", value: "collarengraved" }
+    { name: "Engraved Collar", value: "collarengraved" },
+    { name: "Collar of Headpat Vulnerability", value: "collarheadpatvuln" },
 ];
 
 function loadCollarTypes() {

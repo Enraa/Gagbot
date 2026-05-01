@@ -1611,6 +1611,54 @@ const configoptions = {
 				return false;
 			},
 		},
+        "extreme-collar-collarheadpatvuln": {
+			name: "Collar - Headpat Vulnerability",
+			desc: "Sets to Free Use when headpatted",
+			prompttext: `The Collar of Headpat Vulnerability will set your collar to public access for 5 minutes when hit with a critical headpat.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Headpat Vulnerability Collar is disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
 		"extreme-gag-politeSub": {
 			name: "Gag - Polite Sub",
 			desc: "Enforces the use of Honorifics to speak",
