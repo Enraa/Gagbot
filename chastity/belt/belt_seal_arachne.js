@@ -9,7 +9,7 @@ exports.growthCoefficient = function(data) {
 
 // Set Min Arousal to be equal to Arachne Heat Value, and allow the cooldown period to shorten as Heat increases starting from 80% of default.
 exports.minArousal = function(data) { return getUserVar(data.userID, "arachne_heat")}
-exports.orgasmCooldown = function(data) { return 1 / 1 + ((getUserVar(data.userID, "arachne_heat"))/2) }
+exports.orgasmCooldown = function(data) { return 1 / (1 + (getUserVar(data.userID, "arachne_heat") / 2)) } // This should be 1.0 -> 0.0 as arachne_heat goes up
 
 // No Increase to denial when worn
 exports.denialCoefficient = (data) => { return 1 }
