@@ -1,4 +1,9 @@
 // Function space for Delves, the function for players to have stats and encounters. 
+
+const { getHeadwear, getBaseHeadwear } = require("./headwearfunctions")
+const { getHeavyRestrictions } = require("./heavyfunctions")
+const { addArousal } = require("./vibefunctions")
+
 /*****************
  * Players will utilize their condition as returned by gags, masks, heavy bondage and the like. 
  * 
@@ -29,12 +34,6 @@
  * 
  * If a player successfully reaches thresholds in 10 floor intervals, a modifier will be applied to skill checks, to a maximum of 18 in the appropriate skill check. A player who has at least 20 in a skill will always succeed.
  */
-
-const { getHeadwear, getBaseHeadwear } = require("./headwearfunctions")
-const { getHeavyRestrictions } = require("./heavyfunctions")
-const { addArousal } = require("./vibefunctions")
-
-    
 
 /*************
  * Delve Rooms that can be chosen. Delve rooms will have the following properties:
