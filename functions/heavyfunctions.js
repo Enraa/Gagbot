@@ -132,7 +132,8 @@ const heavytypes = [
     { name: "Hands-off Blouse", value: "blouse_handsoff", denialCoefficient: 7.5, heavytags: ["arms"] },
 	{ name: "Bondage Exosuit", value: "exosuit_bondage", tags: ["metal"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Sticky Glue", value: "stickyglue_bondage", tags: ["slime"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
-	{ name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+    { name: "Dolly", value: "dolly", tags: ["metal"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
+    { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Capture Sphere", value: "capture_sphere", tags: ["confined", "dimensional"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
@@ -153,11 +154,10 @@ const heavytypes = [
     { name: "Glass Jar", value: "glass_jar", tags: ["confined"], denialCoefficient: 4.5, heavytags: ["container"] },
     { name: "Ballpit", value: "ballpit", denialCoefficient: 1.2, heavytags: ["container"] },
     { name: "Under the Desk", value: "underdesk", tags: ["confined"], denialCoefficient: 1.5, heavytags: ["container"] },
-    { name: "Doll Case", value: "case_doll", tags: ["confined"], denialCoefficient: 4, heavytags: ["container","arms", "legs"] },
-    { name: "Delivery Crate", value: "crate_delivery", tags: ["confined"], denialCoefficient: 4, heavytags: ["container","arms", "legs"] },
-    { name: "Dolly", value: "dolly", tags: ["confined"], denialCoefficient: 3, heavytags: ["container","arms", "legs"] },
-    { name: "Pet Carrier", value: "carrier", tags: ["pet", "confined"], denialCoefficient: 4, heavytags: ["container"] },
-	{ name: "Duffel Bag", value: "duffel_bag", denialCoefficient: 2, heavytags: ["container"] },
+    { name: "Doll Case", value: "case_doll", tags: ["confined"], denialCoefficient: 4, heavytags: ["container", "arms", "legs"] },
+    { name: "Delivery Crate", value: "crate_delivery", tags: ["confined"], denialCoefficient: 4, heavytags: ["container", "arms", "legs"] },
+    { name: "Pet Carrier", value: "petcarrier", tags: ["pet", "confined"], denialCoefficient: 4, heavytags: ["container"] },
+	{ name: "Duffel Bag", value: "duffel_bag", tags: ["confined"], denialCoefficient: 2, heavytags: ["container"] },
 
 	// Heavy Restraints with unique name functions
 	{
