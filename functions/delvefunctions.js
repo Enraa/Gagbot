@@ -131,6 +131,9 @@ const delveroomchoices = {
                     resolve = Math.max(resolve - 5, 0)
                 }
             }
-        ]
+        ],
+        weight: 5,
+        weightspecial: (userID, weight) => { return true },
+        weightforce: undefined
     }
 }
