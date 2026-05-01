@@ -202,46 +202,34 @@ const saveFiles = () => {
 };
 
 // Assigns each function to a process variable for reference later.
+// We need to refactor this further sometime into a singular "event" space under process, but this will do for now
 function importFileNames() {
-	process.eventfunctions = {};
-    process.msgfunctions = {};
-    process.modalfunctions = {};
-    process.modalexecutefunctions = {};
-    process.onremovefunctions = {};
-    process.extraconfigfunctions = {};
-    process.extraconfigresponsefunctions = {};
+    let functionspaces = [
+        { processvar: "eventfunctions", functionvar: "functiontick" },
+        { processvar: "msgfunctions", functionvar: "msgfunction" },
+        { processvar: "modalfunctions", functionvar: "modal" },
+        { processvar: "modalexecutefunctions", functionvar: "modalexecute" },
+        { processvar: "onremovefunctions", functionvar: "functiononremove" },
+        { processvar: "extraconfigfunctions", functionvar: "extraconfig" },
+        { processvar: "extraconfigresponsefunctions", functionvar: "extraconfigresponse" },
+        { processvar: "headpatfunctions", functionvar: "headpatfunction" },
+    ]
+    for (let i = 0; i < functionspaces.length; i++) {
+        console.log(functionspaces[i])
+        process[functionspaces[i].processvar] = {};
+    }
 	let eventfunctionsfolders = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions"));
 	eventfunctionsfolders.forEach((f) => {
-		process.eventfunctions[f] = {};
-        process.msgfunctions[f] = {};
-        process.modalfunctions[f] = {};
-        process.modalexecutefunctions[f] = {};
-        process.onremovefunctions[f] = {};
-        process.extraconfigfunctions[f] = {};
-        process.extraconfigresponsefunctions[f] = {};
+        for (let i = 0; i < functionspaces.length; i++) {
+            process[functionspaces[i].processvar][f] = {};
+        }
 		let eventfunctionsfiles = fs.readdirSync(path.resolve(__dirname, "..", "eventfunctions", f));
 		eventfunctionsfiles.forEach((file) => {
 			let functionfile = require(path.resolve(__dirname, "..", "eventfunctions", f, file));
-			if (typeof functionfile.functiontick === "function") {
-				process.eventfunctions[f][file.replace(".js", "")] = functionfile.functiontick;
-			}
-            if (typeof functionfile.msgfunction === "function") {
-                process.msgfunctions[f][file.replace(".js", "")] = functionfile.msgfunction;
-            }
-            if (typeof functionfile.modal === "function") {
-                process.modalfunctions[f][file.replace(".js", "")] = functionfile.modal;
-            }
-            if (typeof functionfile.modalexecute === "function") {
-                process.modalexecutefunctions[f][file.replace(".js", "")] = functionfile.modalexecute;
-            }
-            if (typeof functionfile.functiononremove === "function") {
-                process.onremovefunctions[f][file.replace(".js","")] = functionfile.functiononremove;
-            }
-            if (typeof functionfile.extraconfig === "function") {
-                process.extraconfigfunctions[f][file.replace(".js","")] = functionfile.extraconfig;
-            }
-            if (typeof functionfile.extraconfigresponse === "function") {
-                process.extraconfigresponsefunctions[f][file.replace(".js","")] = functionfile.extraconfigresponse;
+            for (let i = 0; i < functionspaces.length; i++) {
+                if (typeof functionfile[functionspaces[i].functionvar] === "function") {
+                    process[functionspaces[i].processvar][f][file.replace(".js", "")] = functionfile[functionspaces[i].functionvar];
+                }
             }
 		});
 	});
