@@ -129,6 +129,7 @@ let wearabletypes = [
 	{ name: "Harem Silks", value: "haremsilks", category: "Cosplay", colorable: true },
 	{ name: "Magical Girl Uniform", value: "outfit_magicalgirl", category: "Cosplay", colorable: true },
 	{ name: "Latex Magical Girl Uniform", value: "outfit_magicalgirl_latex", category: "Cosplay", colorable: true, uniqueColors: ["Starry", "Shadow"] },
+	{ name: "Towel", value: "towel", category: "Cosplay", colorable: true},
 
 	// Upper Body
 	{ name: "Comfy Oversized Hoodie", value: "hoodie_oversized", colorable: true, category: "Upper Body" },
