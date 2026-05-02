@@ -137,3 +137,49 @@ const delveroomchoices = {
         weightforce: undefined
     }
 }
+
+/*********
+ * Sets the next Delve room by choice. If choice is not specified, the user is starting a new delve. This will always default to the delveentrance room.
+ * 
+ * - (user ID) user - The user ID doing the delve
+ * - (string) choice - The prop name in delveroomchoices
+ *********/
+function setNextDelveRoom(user, choice) {
+    if ((getCurrentFloor(user) == undefined)) {
+        process.delveuserdata[user] = {
+            floorarr: ["delveentrance"],
+            floorscompleted: 0,
+            floor: 0,
+            tempbuffs: [],
+        }
+    }
+    else {
+        process.delveuserdata[user].floorarr.push(choice);
+    }
+}
+
+/********
+ * Gets the current floor the user is on. Returns undefined if they're not on a delve, 0 if at delve entrance. 
+ * 
+ * - (user ID) user - The user ID doing the delve
+ ********/
+function getCurrentFloor(user) {
+    if (process.delveuserdata == undefined) { process.delveuserdata = {} }
+    if (process.delveuserdata[user]) {
+        // They started a delve, return the floor
+        return process.delveuserdata[user].floor
+    }
+    else {
+        // They're not in the Delve.
+        return undefined;
+    }
+}
+
+/*******
+ * Generates the output modal and returns it. This should be an output for a message.send function. 
+ * 
+ * - (user ID) user - The user ID doing the delve
+ *******/
+function generateDelveModal(user, floor) {
+
+}
