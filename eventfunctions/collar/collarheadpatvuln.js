@@ -9,7 +9,7 @@ const { getUserVar, setUserVar } = require("../../functions/usercontext");
 function headpatfunction(recipient, headpatter, returnedobject) {
     const critheadpatmessages = [
         `The headpat felt so good that it left <@${recipient}> stunned for a few moments! One could capitalize on this opportunity to further bind ${getPronouns(recipient, "object")}!`,
-        `<@${recipient}>'s eyes are a bit hazy as ${getPronouns(recipient, "subject")} is lost in thought after that headpat. ${getPronouns(recipient)} could probably easily be bound right now...`
+        `<@${recipient}>'s eyes are a bit hazy as ${getPronouns(recipient, "subject")} is lost in thought after that headpat. ${getPronouns(recipient, "subject", true)} could probably easily be bound right now...`
     ]
     if (returnedobject && returnedobject.crit && !getUserVar(recipient, "headpatvulntimer") && getCollar(recipient).keyholder_only) {
         messageSendChannel(critheadpatmessages[Math.floor(Math.random() * critheadpatmessages.length)], process.recentmessages[recipient])
