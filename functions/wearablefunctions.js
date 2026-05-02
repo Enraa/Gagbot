@@ -317,6 +317,13 @@ let wearabletypes = [
 	{ name: "Leather Bandolier", value: "bandolier_leather", category: "Misc" },
 	{ name: "", value: "tome", colorable: true, category: "Misc", uniqueColors: ["Tome of Bondage", "Cursed Tome", "Shadowy Tome", "Chained Tome", "Gothic Tome", "Angelic Tome"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "", value: "staff", colorable: true, category: "Misc", uniqueColors: ["Staff of Chains", "Caduceus", "Elemental Staff", "Lunar Staff", "Dollmaker's Staff", "Quarterstaff", "Gohei"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+
+	//Body Modifications 
+	{ name: "Earrings", value: "earrings", colorable: true, category: "Body Modifications", tags: {piercing: true, metal: true}, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Nose Ring", value: "nose_ring", colorable: true, category: "Body Modifications", tags: {piercing: true, metal: true}, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Cow"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Nipple Piercing", value: "nipple_piercing", colorable: true, category: "Body Modifications", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Belly Piercing", value: "belly_piercing", colorable: true, category: "Body Modifications", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Tongue Piercing", value: "tongue_piercing", colorable: true, category: "Body Modifications", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 ];
 
 // Each colorable entry above will have a copy of the following added
@@ -339,6 +346,8 @@ const tagstoadd = [
     { match: `eyeliner_cateye`, tag: "makeup" },
     { match: `mascara`, tag: "makeup" },
     { match: `makeupblush`, tag: "makeup" },
+	{ match: `piercing`, tag: "piercing" },
+	{ match: `piercing`, tag: "metal" },
 ]
 
 /**************
