@@ -1,5 +1,6 @@
 // Function space for Delves, the function for players to have stats and encounters. 
 
+const { ContainerBuilder } = require("discord.js")
 const { getHeadwear, getBaseHeadwear } = require("./headwearfunctions")
 const { getHeavyRestrictions } = require("./heavyfunctions")
 const { addArousal } = require("./vibefunctions")
@@ -56,6 +57,62 @@ const { addArousal } = require("./vibefunctions")
  * - weightforce: If undefined, this is not used. If function returns 1, this is forced as the next room, if 0, this can never roll. 
  *************/
 const delveroomchoices = {
+    // Special Floors
+    // These floors can't normally roll except under special conditions. 
+    // This is the entrance room and will always be floor 0. 
+    delveentrance: {
+        name: "Deepbound Palace Entrance",
+        shortdesc: "An ornate door stands in front of you, an entrance to an underground crypt and it's lined with images of restraints.",
+        longdesc: "You arrive at the entrance of the Deepbound Palace. It's smooth wall is decorated by images of people wearing restraints and a mural above the door depicting several kneeling submissives around a woman sitting in a chair. She is clad with what you recognize to be a black minidress in the image. The door handle is unremarkable, but it reminds you of a handle for a flogger. ",
+        extradesc: (userID, text, resolve) => { return true },
+        revisitshortdesc: "You step back out of the bondage crypt and into the sunlight.",
+        revisitlongdesc: "The warmth of the sun washes over you as you step out of the crypt full of restraints. A forest stretches all around your vision, blocking any reasonable traversal away from here. You might as well head back in...",
+        revisitextradesc: (userID, text, resolve) => { return true },
+        choices: [
+            {
+                name: "Proceed Into the Dungeon",
+                shortoutcome_success: "You pull on the heavy stone door and step inside, ready for your bound adventure!.",
+                longoutcome_success: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later.",
+                shortoutcome_failure: "Undeterred by the obvious glitches in reality, you proceed. (Failure path, report)",
+                longoutcome_failure: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later. (Failure path, report)",
+                statweight: {},
+                statspecial: (userID, stats, resolve) => { return true },
+                successfunction: (userID, stats, resolve) => { return true },
+                failurefunction: (userID, stats, resolve) => { return true }
+            }
+        ],
+        weight: 0,
+        weightspecial: (userID, weight) => { return true },
+        weightforce: () => { return 0 },
+        accentcolor: 0xFFFFFF
+    },
+    // This is the fallback if a room doesn't exist
+    errorroom: {
+        name: "Room of Pink Squares",
+        shortdesc: "You encounter a room full of pink squares and exclamation marks. You shouldn't be here. (Bug, report!)",
+        longdesc: "Gone is the dungeon aesthetic, replaced by a room full of odd looking pink squares over where objects on a table in the center of the room would be. The room is completely silent, even devoid of the sounds of your own breathing. You get the irking feeling that you really should not be here. (This is a bug, please report!)",
+        extradesc: (userID, text, resolve) => { return true },
+        revisitshortdesc: "You return to the pink square room. It remains in it's dormant state and it's still unsettling.",
+        revisitlongdesc: "You return to the pink square room that definitely does not belong in the Deepbound Palace. You can't detect even a hint of life or anything within these walls.",
+        revisitextradesc: (userID, text, resolve) => { return true },
+        choices: [
+            {
+                name: "Proceed Onwards",
+                shortoutcome_success: "Undeterred by the obvious glitches in reality, you proceed.",
+                longoutcome_success: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later.",
+                shortoutcome_failure: "Undeterred by the obvious glitches in reality, you proceed. (Failure path, report)",
+                longoutcome_failure: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later. (Failure path, report)",
+                statweight: {},
+                statspecial: (userID, stats, resolve) => { return true },
+                successfunction: (userID, stats, resolve) => { return true },
+                failurefunction: (userID, stats, resolve) => { return true }
+            }
+        ],
+        weight: 0,
+        weightspecial: (userID, weight) => { return true },
+        weightforce: () => { return 0 },
+        accentcolor: 0xFF4444
+    },
     hall1: {
         name: "Long Corridor",
         shortdesc: "You encounter a long, empty hallway devoid of obstacles or inhabitants.",
@@ -76,7 +133,8 @@ const delveroomchoices = {
         ],
         weight: 10,
         weightspecial: (userID, weight) => { return true },
-        weightforce: undefined
+        weightforce: undefined,
+        accentcolor: 0x0099ff
     },
     garden_intoxicatingspores: {
         name: "Spore Garden",
@@ -134,8 +192,9 @@ const delveroomchoices = {
         ],
         weight: 5,
         weightspecial: (userID, weight) => { return true },
-        weightforce: undefined
-    }
+        weightforce: undefined,
+        accentcolor: 0x0099ff
+    },
 }
 
 /*********
@@ -179,7 +238,11 @@ function getCurrentFloor(user) {
  * Generates the output modal and returns it. This should be an output for a message.send function. 
  * 
  * - (user ID) user - The user ID doing the delve
+ * - (integer) floor - The floor number the user is visiting.
  *******/
 function generateDelveModal(user, floor) {
+    let floordata = delveroomchoices[floor] ?? delveroomchoices["errorroom"]
 
+    let outcontainer = new ContainerBuilder()
+        .setAccentColor(floordata.accentcolor)
 }
