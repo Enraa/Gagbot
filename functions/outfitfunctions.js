@@ -1080,6 +1080,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 Undergarments: [],
                 Footwear: [],
                 Hands: [],
+				"Body Modification": [],
                 Misc: [],
                 "Body Part": [],
                 Other: []

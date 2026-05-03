@@ -10,7 +10,6 @@ let wearabletypes = [
 	{ name: "Wings", value: "wings", category: "Body Part", colorable: true, uniqueColors: ["Demon", "Angelic", "Imp", "Succubus", "Bat", "Butterfly", "Dragonfly", "Draconic", "Crystal"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Horns", value: "horns", category: "Body Part", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline", "Cybernetic"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Horned Headband", value: "hornheadband", category: "Body Part", colorable: true, uniqueColors: ["Curled", "Long", "Short", "Stubby", "Draconic", "Au'Ra", "Demon", "Demonic Sheep", "Sheep", "Goat", "Crystalline"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-	{ name: "Womb Tattoo", value: "wombtat", category: "Body Part", colorable: true, uniqueColors: ["Glowing", "Starry", "Shimmering", "Cyber"] },
 	{ name: "Vine Hair", value: "hair_vine", category: "Body Part", colorable: true, uniqueColors: ["Flowery", "Verdant"] , forbiddenColors: ["Black", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Vampire Fangs", value: "fangs_vampire", category: "Body Part" },
 	{ name: "Halo", value: "halo", category: "Body Part", colorable: true, uniqueColors: ["Angelic", "Ghostly", "Ethereal", "Holy Light", "Cyber"] },
@@ -317,6 +316,16 @@ let wearabletypes = [
 	{ name: "Leather Bandolier", value: "bandolier_leather", category: "Misc" },
 	{ name: "", value: "tome", colorable: true, category: "Misc", uniqueColors: ["Tome of Bondage", "Cursed Tome", "Shadowy Tome", "Chained Tome", "Gothic Tome", "Angelic Tome"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "", value: "staff", colorable: true, category: "Misc", uniqueColors: ["Staff of Chains", "Caduceus", "Elemental Staff", "Lunar Staff", "Dollmaker's Staff", "Quarterstaff", "Gohei"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+
+	//Body Modifications 
+	{ name: "Earrings", value: "earrings", colorable: true, category: "Body Modification", tags: { piercing: true, metal: true }, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Titanium"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Nose Ring", value: "nose_ring", colorable: true, category: "Body Modification", tags: { piercing: true, metal: true }, uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Cow", "Titanium"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Nipple Piercing", value: "nipple_piercing", colorable: true, category: "Body Modification", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Titanium"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Navel Piercing", value: "navel_piercing", colorable: true, category: "Body Modification", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Titanium"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Tongue Piercing", value: "tongue_piercing", colorable: true, category: "Body Modification", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Titanium"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Septum Piercing", value: "septum_piercing", colorable: true, category: "Body Modification", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Titanium"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Nostril Piercing", value: "nostril_piercing", colorable: true, category: "Body Modification", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Starmetal", "Titanium"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Womb Tattoo", value: "wombtat", category: "Body Modification", colorable: true, uniqueColors: ["Glowing", "Starry", "Shimmering", "Cyber"] },
 ];
 
 // Each colorable entry above will have a copy of the following added
@@ -339,6 +348,8 @@ const tagstoadd = [
     { match: `eyeliner_cateye`, tag: "makeup" },
     { match: `mascara`, tag: "makeup" },
     { match: `makeupblush`, tag: "makeup" },
+	{ match: `piercing`, tag: "piercing" },
+	{ match: `piercing`, tag: "metal" },
 ]
 
 /**************
