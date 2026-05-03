@@ -1072,6 +1072,7 @@ module.exports = {
                                         }
                                     }
                                     interaction.editReply(`${(keybit.charAt(0) == "0") ? `Transferred ` : `Cloned `}keys for ${wearertext} ${restraintstext} to ${desttext}.`)
+                                    interaction.followUp(`${interaction.user} ${(keybit.charAt(0) == "0") ? `transfers ` : `clones `}keys for ${wearertext} ${restraintstext} and gives them to ${desttext}.`)
                                     return;
                                 } else {
                                     await mess.delete().then(() => {
@@ -1127,6 +1128,7 @@ module.exports = {
                         }
                     }
                     interaction.editReply(`${(keybit.charAt(0) == "0") ? `Transferred ` : `Cloned `}keys for ${wearertext} ${restraintstext} to ${desttext}.`)
+                    interaction.followUp(`${interaction.user} ${(keybit.charAt(0) == "0") ? `transfers ` : `clones `}keys for ${wearertext} ${restraintstext} and gives them to ${desttext}.`)
                     return;
                 }
             }
