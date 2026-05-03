@@ -11,16 +11,23 @@ function headpatfunction(recipient, headpatter, returnedobject) {
         `The headpat felt so good that it left <@${recipient}> stunned for a few moments! One could capitalize on this opportunity to further bind ${getPronouns(recipient, "object")}!`,
         `<@${recipient}>'s eyes are a bit hazy as ${getPronouns(recipient, "subject")} is lost in thought after that headpat. ${getPronouns(recipient, "subject", true)} could probably easily be bound right now...`
     ]
-    if (returnedobject && returnedobject.crit && !getUserVar(recipient, "headpatvulntimer") && getCollar(recipient).keyholder_only) {
+    if (returnedobject && returnedobject.crit && !getUserVar(recipient, "headpatvulntimer")) {
         messageSendChannel(critheadpatmessages[Math.floor(Math.random() * critheadpatmessages.length)], process.recentmessages[recipient])
-        getCollar(recipient).keyholder_only = false;
         setUserVar(recipient, "headpatvulntimer", Date.now() + 360000)
-        setTimeout(() => {
-            setUserVar(recipient, "headpatvulntimer", undefined);
-            if (getCollar(recipient) && !getCollar(recipient).keyholder_only && getCollar(recipient).collartype == "collarheadpatvuln") {
-                getCollar(recipient).keyholder_only = true;
-            }
-        }, 300000)
+        if (getCollar(recipient).keyholder_only) {
+            getCollar(recipient).keyholder_only = false;
+            setTimeout(() => {
+                setUserVar(recipient, "headpatvulntimer", undefined);
+                if (getCollar(recipient) && !getCollar(recipient).keyholder_only && getCollar(recipient).collartype == "collarheadpatvuln") {
+                    getCollar(recipient).keyholder_only = true;
+                }
+            }, 300000)
+        }
+        else {
+            setTimeout(() => {
+                setUserVar(recipient, "headpatvulntimer", undefined);
+            }, 300000)
+        }
     }
 }
 

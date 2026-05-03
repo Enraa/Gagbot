@@ -64,10 +64,10 @@ const delveroomchoices = {
         name: "Deepbound Palace Entrance",
         shortdesc: "An ornate door stands in front of you, an entrance to an underground crypt and it's lined with images of restraints.",
         longdesc: "You arrive at the entrance of the Deepbound Palace. It's smooth wall is decorated by images of people wearing restraints and a mural above the door depicting several kneeling submissives around a woman sitting in a chair. She is clad with what you recognize to be a black minidress in the image. The door handle is unremarkable, but it reminds you of a handle for a flogger. ",
-        extradesc: (userID, text, resolve) => { return true },
+        extradesc: (userID, text, delvedata, resolve) => { return true },
         revisitshortdesc: "You step back out of the bondage crypt and into the sunlight.",
         revisitlongdesc: "The warmth of the sun washes over you as you step out of the crypt full of restraints. A forest stretches all around your vision, blocking any reasonable traversal away from here. You might as well head back in...",
-        revisitextradesc: (userID, text, resolve) => { return true },
+        revisitextradesc: (userID, text, delvedata, resolve) => { return true },
         choices: [
             {
                 name: "Proceed Into the Dungeon",
@@ -76,9 +76,9 @@ const delveroomchoices = {
                 shortoutcome_failure: "Undeterred by the obvious glitches in reality, you proceed. (Failure path, report)",
                 longoutcome_failure: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later. (Failure path, report)",
                 statweight: {},
-                statspecial: (userID, stats, resolve) => { return true },
-                successfunction: (userID, stats, resolve) => { return true },
-                failurefunction: (userID, stats, resolve) => { return true }
+                statspecial: (userID, delvedata, resolve) => { return true },
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => { return true }
             }
         ],
         weight: 0,
@@ -91,10 +91,10 @@ const delveroomchoices = {
         name: "Room of Pink Squares",
         shortdesc: "You encounter a room full of pink squares and exclamation marks. You shouldn't be here. (Bug, report!)",
         longdesc: "Gone is the dungeon aesthetic, replaced by a room full of odd looking pink squares over where objects on a table in the center of the room would be. The room is completely silent, even devoid of the sounds of your own breathing. You get the irking feeling that you really should not be here. (This is a bug, please report!)",
-        extradesc: (userID, text, resolve) => { return true },
+        extradesc: (userID, text, delvedata, resolve) => { return true },
         revisitshortdesc: "You return to the pink square room. It remains in it's dormant state and it's still unsettling.",
         revisitlongdesc: "You return to the pink square room that definitely does not belong in the Deepbound Palace. You can't detect even a hint of life or anything within these walls.",
-        revisitextradesc: (userID, text, resolve) => { return true },
+        revisitextradesc: (userID, text, delvedata, resolve) => { return true },
         choices: [
             {
                 name: "Proceed Onwards",
@@ -103,9 +103,9 @@ const delveroomchoices = {
                 shortoutcome_failure: "Undeterred by the obvious glitches in reality, you proceed. (Failure path, report)",
                 longoutcome_failure: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later. (Failure path, report)",
                 statweight: {},
-                statspecial: (userID, stats, resolve) => { return true },
-                successfunction: (userID, stats, resolve) => { return true },
-                failurefunction: (userID, stats, resolve) => { return true }
+                statspecial: (userID, delvedata, resolve) => { return true },
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => { return true }
             }
         ],
         weight: 0,
@@ -117,7 +117,10 @@ const delveroomchoices = {
         name: "Long Corridor",
         shortdesc: "You encounter a long, empty hallway devoid of obstacles or inhabitants.",
         longdesc: "You turn a corner and encounter a long hallway, stretching so far back that the end of it is swallowed by the inky black void of darkness. The floor is plain and sturdy, while the walls textured only by the carved rock of the dungeon. Nothing is out of place and you can proeed without worry. ",
-        extradesc: (userID, text, resolve) => { return true },
+        extradesc: (userID, text, delvedata, resolve) => { return true },
+        revisitshortdesc: "You return to the long, empty corridor.",
+        revisitlongdesc: "You step back into the long, empty corridor. No inhabitants nor obstacles have shown up since the last time you were here. It still seems to stretch into a void infinity over the plain floor and carved rock walls.",
+        revisitextradesc: (userID, text, delvedata, resolve) => { return true },
         choices: [
             {
                 name: "Proceed Carefree",
@@ -126,9 +129,9 @@ const delveroomchoices = {
                 shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
                 longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
                 statweight: {},
-                statspecial: (userID, stats, resolve) => { return true },
-                successfunction: (userID, stats, resolve) => { return true },
-                failurefunction: (userID, stats, resolve) => { return true }
+                statspecial: (userID, delvedata, resolve) => { return true },
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => { return true }
             }
         ],
         weight: 10,
@@ -140,11 +143,14 @@ const delveroomchoices = {
         name: "Spore Garden",
         shortdesc: "You find a room full of foliage including plants with pink flowers. The room gives off a faint pink haze.",
         longdesc: "You encounter a room full of vines, flowers and plants snaking around stone pillars. The vines look innocuous enough but the flowers are pink and in full bloom as the room gives off a distinctly pink haze. A small whiff makes you feel slightly woozy as you find yourself suddenly considering how you feel about the various bondage restraints you usually encounter in this place.",
-        extradesc: (userID, text) => {
+        extradesc: (userID, text, delvedata, resolve) => {
             if (getHeadwear(userID).find((f) => getBaseHeadwear(f)?.tags?.includes("gasmask"))) {
                 text = `${text}\n\nYou are wearing a gasmask, so maintaining a clear head in this place should be trivial.`
             }
         },
+        revisitshortdesc: "You return to the long, empty corridor.",
+        revisitlongdesc: "You step back into the long, empty corridor. No inhabitants nor obstacles have shown up since the last time you were here. It still seems to stretch into a void infinity over the plain floor and carved rock walls.",
+        revisitextradesc: (userID, text, delvedata, resolve) => { return true },
         choices: [
             {
                 name: "Proceed",
@@ -155,7 +161,7 @@ const delveroomchoices = {
                 statweight: {
                     dexterity: 10,
                 },
-                statspecial: (userID, stats) => {
+                statspecial: (userID, delvedata) => {
                     if (getHeadwear(userID).find((f) => getBaseHeadwear(f)?.tags?.includes("gasmask"))) {
                         // If they are wearing a gasmask, they will always succeed.
                         stats = {}; // This makes it 100%
@@ -167,8 +173,8 @@ const delveroomchoices = {
                         }
                     }
                 },
-                successfunction: (userID, stats, resolve) => { return true },
-                failurefunction: (userID, stats, resolve) => {
+                successfunction: (userID, delvedata, resolve) => { return true },
+                failurefunction: (userID, delvedata, resolve) => {
                     addArousal(userID, 20)
                     resolve = Math.max(resolve - 5, 0)
                 }
@@ -183,8 +189,10 @@ const delveroomchoices = {
                     intelligence: 10,
                 },
                 statspecial: (userID, stats) => { return true },
-                successfunction: (userID, stats, resolve) => { return true },
-                failurefunction: (userID, stats, resolve) => {
+                successfunction: (userID, delvedata, resolve) => {
+                    
+                },
+                failurefunction: (userID, delvedata, resolve) => {
                     addArousal(userID, 20)
                     resolve = Math.max(resolve - 5, 0)
                 }
@@ -231,6 +239,45 @@ function getCurrentFloor(user) {
     else {
         // They're not in the Delve.
         return undefined;
+    }
+}
+
+/*******
+ * Get a floor's props. 
+ * 
+ * - (user ID) user - The user ID doing the delve
+ * - (integer) floor - Floor number they are on
+ * - (string) prop - Name of the property to save
+ * - (any) value - Value to store in the prop key
+ *******/
+function getDelveFloorState(user, floor) {
+    if (process.delveuserdata == undefined) { process.delveuserdata = {} }
+    if (process.delveuserdata[user]) {
+        // They started a delve, now check what floor they're on
+        if (process.delveuserdata[user].floordata == undefined) { process.delveuserdata[user].floordata = [] }
+        if (process.delveuserdata[user].floordata[floor] == undefined) { process.delveuserdata[user].floordata[floor] = {} }
+        return process.delveuserdata[user].floordata[floor]
+    }
+    else {
+        return undefined;
+    }
+}
+
+/*******
+ * Set a floor prop on the floordata array. This is data only used by the floor itself. 
+ * 
+ * - (user ID) user - The user ID doing the delve
+ * - (integer) floor - Floor number they are on
+ * - (string) prop - Name of the property to save
+ * - (any) value - Value to store in the prop key
+ *******/
+function setDelveFloorState(user, floor, prop, value) {
+    if (process.delveuserdata == undefined) { process.delveuserdata = {} }
+    if (process.delveuserdata[user]) {
+        // They started a delve, now check what floor they're on
+        if (process.delveuserdata[user].floordata == undefined) { process.delveuserdata[user].floordata = [] }
+        if (process.delveuserdata[user].floordata[floor] == undefined) { process.delveuserdata[user].floordata[floor] = {} }
+        process.delveuserdata[user].floordata[floor][prop] = value;
     }
 }
 
