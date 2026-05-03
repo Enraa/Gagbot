@@ -28,6 +28,7 @@ const { getClonedChastityBraKeysOwned } = require("./vibefunctions");
 const { calcDenialCoefficient } = require("./vibefunctions");
 const { getToys, getBaseToy } = require("./toyfunctions");
 const { getOption } = require("./configfunctions");
+const { getUserVar } = require("./usercontext");
 
 function getOutfits(userID) {
 	if (process.outfits == undefined) {
@@ -1245,6 +1246,12 @@ async function getDisplayTexts(userID, inspectuserID) {
         bartext = `${bartext}\n\n${process.emojis.gasmask} Sharing Breath with: <@${process.headwear[inspectuserID].sharedbreathhose}>`
     } 
     // ****************** 
+
+    // ****************** Headpat Battery
+    if (getToys(inspectuserID).find((t) => t.type == "vibe_headpatbattery")) {
+        bartext = `${bartext}\n\n🔋 Headpat Vibrator Battery: **${Math.round(getUserVar(inspectuserID, "headpatvibecharge") * 100)}%**`
+    }
+    // ******************
 
     return bartext.slice(1); // Cut the first linebreak for better look
 }

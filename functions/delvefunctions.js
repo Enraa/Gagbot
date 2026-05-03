@@ -1,6 +1,6 @@
 // Function space for Delves, the function for players to have stats and encounters. 
 
-const { ContainerBuilder, ButtonBuilder } = require("discord.js")
+const { ContainerBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require("discord.js")
 const { getHeadwear, getBaseHeadwear } = require("./headwearfunctions")
 const { getHeavyRestrictions } = require("./heavyfunctions")
 const { addArousal } = require("./vibefunctions")
@@ -308,6 +308,7 @@ function generateDelveModal(user, floor) {
     // Set room choice buttons!
     // Alternatively, select 3 random floors by vaguedescription to display if the current floor is completed, but floors length is not longer.
     let roomchoices = [];
+    let directiontext = [];
     if (getCurrentFloor(user) > delveuserdata.floorscompleted) {
         // This floor has not been cleared
         for (let i = 0; i < floordata.choices.length; i++) {
@@ -326,22 +327,54 @@ function generateDelveModal(user, floor) {
                 let successmult = Math.min(Math.max(0.5 + ((playerstats[stat] - floorstats[stat]) * 0.2), 0.0), 1.0)
                 successchance = successchance * successmult;
             })
+            let buttoncolor = ButtonStyle.Success
+            if (successchance < 0.8) {
+                buttoncolor = ButtonStyle.Primary
+            }
+            if (successchance < 0.5) {
+                buttoncolor = ButtonStyle.Secondary
+            }
+            if (successchance < 0.2) {
+                buttoncolor = ButtonStyle.Danger
+            }
 
             roomchoices.push(new ButtonBuilder()
-                .setCustomId(`delve_${floor}_${i}`)
-                .setLabel(`${floordata.choices[i].name} (${successchance * 100}% chance)`)    
+                .setCustomId(`delve_${floor}_button${i}`)
+                .setLabel(`${floordata.choices[i].name} (${successchance * 100}% chance)`)
+                .setStyle(buttoncolor)
             )
         }
     }
+    // Else, if theyve completed the primary action, generate a list of buttons as options where to go
+    else if ((delveuserdata.floorarr.length - 1) == getCurrentFloor(user)) {
+
+    }
 
     // Set the back and forward buttons
-    let moveroomchoices = [];
     // Backward button if floor > 0, disable if floor <= 0;
     // Level display counter
     // Forward button if floor < floors completed
-
+    let moveroomchoices = [
+        // Previous Floor
+        new ButtonBuilder()
+            .setCustomId(`delve_${floor}_backbutton`)
+            .setLabel("Previous Floor")
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled((floor <= 0)), // Disable if we're at the entrance!
+        // Floor Counter
+        new ButtonBuilder()
+            .setCustomId(`delve_${floor}_floorcounter`)
+            .setLabel(`Floor ${floor}`)
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled(true),
+        // Next Floor
+        new ButtonBuilder()
+            .setCustomId(`delve_${floor}_nextbutton`)
+            .setLabel(`Next Floor`)
+            .setStyle(ButtonStyle.Secondary)
+            .setDisabled((floor > (process.delveuserdata && process.delveuserdata[user] && process.delveuserdata[user].floorscompleted))) // Disable if current floor is NOT completed
+    ];
     
-
     let outcontainer = new ContainerBuilder()
         .setAccentColor(floordata.accentcolor)
         .addTextDisplayComponents((td) => {
@@ -350,9 +383,16 @@ function generateDelveModal(user, floor) {
 
         .addSeparatorComponents((sep) => sep);
 
-    if (getCurrentFloor(user) > delveuserdata.floorscompleted) {
+    if (roomchoices.length > 0) {
         outcontainer.addActionRowComponents((ar) => {
-            ar.setComponents()
+            ar.setComponents(...roomchoices)
         })
+        outcontainer.addSeparatorComponents((sep) => sep);
     }
+
+    ar.addActionRowComponents((ar) => {
+        ar.setComponents(...moveroomchoices)
+    })
+
+    return { components: outcontainer, flags: [MessageFlags.IsComponentsV2] }
 }
