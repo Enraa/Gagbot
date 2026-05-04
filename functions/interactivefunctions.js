@@ -845,13 +845,13 @@ async function handleMajorRestraint(user, target, type, restraint) {
 				restraintfullname = getBaseChastity(restraint)?.name;
                 prettytype = "Chastity Belt"
                 emoji = `${process.emojis.chastity}`;
-                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${target} until it is unlocked by ${getPronouns(target.id, "object")}!`
+                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${user} until it is unlocked by ${getPronouns(user.id, "object")}!`
 				break;
             case "chastitybra":
 				restraintfullname = getBaseChastity(restraint)?.name;
                 prettytype = "Chastity Bra"
                 emoji = `${process.emojis.chastitybra}`;
-                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${target} until it is unlocked by ${getPronouns(target.id, "object")}!`
+                limitationstext = `This will prevent you from using commands to modify relevant toy on your breasts with **/toy**! Additionally, the restraint will be keyed to ${user} until it is unlocked by ${getPronouns(user.id, "object")}!`
 				break;
             case "mitten":
                 restraintfullname = getMittenName(undefined, restraint);
