@@ -33,8 +33,12 @@ module.exports = {
                                 founduserid = k
                             }
                         })
-                        // They're probably not visored, so lets search and see if we can find
-                        // them in the guild list. 
+                        // They're probably not visored
+                        // Attempt to find the user ID in our recent messages list
+                        if (process.recordedmessages && process.recordedmessages[message.id]) {
+                            founduserid = process.recordedmessages[message.id].authorid
+                        }
+                        // Lets search and see if we can find them in the guild list. 
                         if (!founduserid) {
                             let membername = await message.guild.members.search({ query: message.author.username, limit: 1 });
                             if (membername && membername.first() && membername.first().user) {
