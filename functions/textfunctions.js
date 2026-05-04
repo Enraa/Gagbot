@@ -1801,6 +1801,11 @@ const texts_touch = {
     headpat: {
         self: {
             hit: {
+                triplecrit: {
+                    noboundmiss: [
+                        `USER_TAG looks upon the channel and thinks to USER_THEMSELF - *Never tell me the odds*. Then, with careful precision, USER_THEY place USER_THEIR hand on USER_THEIR head. The critical hit echoes, for a second time. And then... a ***third*** time! USER_THEY_CAP beat the 1/8000 odds!`
+                    ]
+                },
                 doublecrit: {
                     noboundmiss: [
                         `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on USER_THEMSELF, critting *twice* in one swing!`
@@ -1855,6 +1860,11 @@ const texts_touch = {
         },
         other: {
             hit: {
+                triplecrit: {
+                    noboundmiss: [
+                        `USER_TAG looks upon the channel and thinks to USER_THEMSELF - *Never tell me the odds*. Then, with careful precision, USER_THEY place USER_THEIR hand on TARGET_TAG's head. The critical hit echoes, for a second time. And then... a ***third*** time! USER_THEY_CAP beat the 1/8000 odds!`
+                    ]
+                },
                 doublecrit: {
                     noboundmiss: [
                         `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on TARGET_TAG, critting *twice* on TARGET_THEIR head in one swing!`
@@ -1866,7 +1876,9 @@ const texts_touch = {
                         `A chime is heard and USER_TAG's face cuts in as USER_THEY deftly moveUSER_S to deliver a headpat to TARGET_TAG, placing USER_THEIR fingers in just the right spot!`,
                         `USER_TAG leaps towards TARGET_TAG and places USER_THEIR hand in just the right way, giving TARGET_THEM a critical headpat!`,
                         `USER_TAG grins devillishly as USER_THEY giveUSER_S TARGET_TAG a headpat! It connects in just the *perfect* spot! TARGET_THEY_CAP USER_ISARE stunned for a brief moment!`,
-                        `There may have been thousands of headpats before, but the one USER_TAG is giving TARGET_TAG now is a perfectly unique one!`
+                        `There may have been thousands of headpats before, but the one USER_TAG is giving TARGET_TAG now is a perfectly unique one!`,
+                        `A different sound is heard as USER_TAG places USER_THEIR hand on TARGET_TAG. The headpat leaves TARGET_THEM in a bubbly glee!`,
+                        `USER_TAG disappears for a brief moment and then appears behind TARGET_TAG, giving TARGET_THEM a stealthy critical pat before TARGET_THEY spotTARGET_S USER_THEM!`
                     ]
                 },
                 nocrit: {

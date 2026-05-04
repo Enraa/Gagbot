@@ -60,7 +60,12 @@ module.exports = {
 
                     if (headpatattempt.crit) {
                         if (Math.random() < 0.05) {
-                            data.doublecrit = true
+                            if (Math.random() < 0.05) {
+                                data.triplecrit = true;
+                            }
+                            else {
+                                data.doublecrit = true
+                            }
                         }
                         else {
                             data.crit = true;
