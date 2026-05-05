@@ -89,7 +89,7 @@ const heavytypes = [
 	// Metal Restraints
 	{ name: "Scavenger's Daughter", value: "scavengersdaughter", tags: ["metal"], denialCoefficient: 4, heavytags: ["arms", "legs"] },
 	{ name: "Yoke", value: "yoke", tags: ["metal"], denialCoefficient: 2, heavytags: ["arms"] },
-    { name: "Handcuffs", value: "handcuffs", tags: ["metal"], denialCoefficient: 2, heavytags: ["arms"] },
+	{ name: "Handcuffs", value: "handcuffs", tags: ["metal"], denialCoefficient: 2, heavytags: ["arms"] },
     { name: "Handcuffs (Irish-8)", value: "handcuffs_irish8", tags: ["metal"], denialCoefficient: 4, heavytags: ["arms"] },
     { name: "Handcuffs (Hinged)", value: "handcuffs_hinged", tags: ["metal"], denialCoefficient: 4, heavytags: ["arms"] },
 	{ name: "Hardlight Cuffs (loose links)", value: "hardlight_looselink", denialCoefficient: 1.5, heavytags: ["arms"] },
@@ -134,7 +134,8 @@ const heavytypes = [
 	{ name: "Entangling Vines", value: "entangling_vines", tags: ["living"], denialCoefficient: 1.5, heavytags: ["arms", "legs"] },
 	//{ name: "Glue Spill", value: "glue_trap", denialCoefficient: 3.5 },
     { name: "Hands-off Blouse", value: "blouse_handsoff", denialCoefficient: 7.5, heavytags: ["arms"] },
-	{ name: "Bondage Exosuit", value: "exosuit_bondage", tags: ["metal"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+	{ name: "Fiddle", value: "fiddle", denialCoefficient: 3, heavytags: ["arms"] },
+    { name: "Bondage Exosuit", value: "exosuit_bondage", tags: ["metal"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Sticky Glue", value: "stickyglue_bondage", tags: ["slime"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Dolly", value: "dolly", tags: ["metal"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
