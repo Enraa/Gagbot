@@ -1880,7 +1880,7 @@ const texts_touch = {
                         `A different sound is heard as USER_TAG places USER_THEIR hand on TARGET_TAG. The headpat leaves TARGET_THEM in a bubbly glee!`,
                         `USER_TAG disappears for a brief moment and then appears behind TARGET_TAG, giving TARGET_THEM a stealthy critical pat before TARGET_THEY spotTARGET_S USER_THEM!`,
                         `USER_TAG limit breaks and casts a super-pat on TARGET_TAG! TARGET_THEY_CAP TARGET_ISARE left stunned from the sensation!`,
-                        `USER_TAG meditates for a moment and then gently places USER_THEIR hand on TARGET_TAG, moving at such a practiced and deliberate pace. The efforts pay off as TARGET_THEY melt under the gentlest, bestest of pats!`
+                        `USER_TAG meditates for a moment and then gently places USER_THEIR hand on TARGET_TAG, moving at such a practiced and deliberate pace. The efforts pay off as TARGET_THEY meltTARGET_S under the gentlest, bestest of pats!`
                     ]
                 },
                 nocrit: {
