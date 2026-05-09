@@ -4,6 +4,7 @@ const { getChastity, getChastityBra, getArousal } = require("./vibefunctions.js"
 const { getHeadwearRestrictions } = require("./headwearfunctions.js");
 const { getUserTags } = require("./configfunctions.js");
 const { getHeavy } = require("./heavyfunctions.js");
+const { getCollar } = require("./collarfunctions.js");
 
 const texts_chastity = {
     self: {
@@ -1905,7 +1906,29 @@ const texts_touch = {
                         `USER_TAG places a hand on TARGET_TAG's head, giggling to USER_THEMSELF as TARGET_THEY leanTARGET_S into the pat!`,
                         `Because TARGET_TAG is absolutely adorable, USER_TAG pats TARGET_THEIR head!`,
                         `USER_TAG places a single finger on TARGET_TAG's head... then adds more one by one before lowering USER_THEIR hand fully onto TARGET_THEIR head. **Pat.**`,
-                        `USER_TAG imagines USER_THEY USER_ISARE petting a pet as USER_THEY placeUSER_S USER_THEIR hand on TARGET_TAG's head.`,
+                        {
+                            // If both parties like pet play...
+                            required: (t) => {
+                                return !(getUserTags(t.interactionuser.id).includes("pet") && getUserTags(t.targetuser.id).includes("pet"));
+                            },
+                            text: `USER_TAG imagines USER_THEY USER_ISARE petting a pet as USER_THEY placeUSER_S USER_THEIR hand on TARGET_TAG's head.`
+                        },
+                        {
+                            // If both parties havent blocked pet tag and the interaction user has targetuser's collar key, this can happen!
+                            required: (t) => {
+                                return (!(getUserTags(t.interactionuser.id).includes("pet") && getUserTags(t.targetuser.id).includes("pet")) &&
+                                        (getCollar(t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.targetuser.id)?.clonedKeyholders && getCollar(t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
+                            },
+                            text: `USER_TAG runs USER_THEIR hand over USER_THEIR beautiful and loyal pet's head! TARGET_TAG shines in delight!`
+                        },
+                        {
+                            // If both parties havent blocked pet tag and the interaction user has targetuser's collar key, this can happen!
+                            required: (t) => {
+                                return (!(getUserTags(t.interactionuser.id).includes("pet") && getUserTags(t.targetuser.id).includes("pet")) &&
+                                        (getCollar(t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.targetuser.id)?.clonedKeyholders && getCollar(t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
+                            },
+                            text: `USER_TAG plays with TARGET_TAG's ears as USER_THEY pat USER_THEIR bestest pet! TARGET_THEY_CAP TARGET_ISARE such a good TARGET_PRAISEOBJECT! Yes TARGET_THEY TARGET_ISARE!`
+                        },
                         `USER_TAG places USER_THEIR hand on TARGET_TAG's head. TARGET_THEY_CAP nuzzleTARGET_S into USER_THEIR hand with zero thoughts!`,
                         `USER_TAG considers pouncing on TARGET_TAG to tie TARGET_THEM up, but instead opts to pat TARGET_THEM. The bondage can wait for later!`
                     ]
