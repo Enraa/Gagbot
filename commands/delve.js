@@ -4,7 +4,17 @@ const { handleDelveInteraction, handleDelveSlashCommand } = require("../function
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("delve")
-		.setDescription(`ALPHA - Only available to Enraa`),
+		.setDescription(`ALPHA - Only available to Enraa`)
+        .addSubcommand((subcommand) => 
+            subcommand
+                .setName("run")
+                .setDescription("Display your current Delve run")
+        )
+        .addSubcommand((subcommand) => 
+            subcommand
+                .setName("inventory")
+                .setDescription("View your Delve Inventory")
+        ),
 	async execute(interaction) {
 		try {
             if (interaction.user.id != process.client.application.owner.id) {

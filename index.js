@@ -377,6 +377,10 @@ client.on('interactionCreate', async (interaction) => {
                 let configfunc = require(`./commands/key.js`)
                 configfunc.interactionresponse(interaction); 
             }
+            else if (interaction.customId.startsWith("delve_")) {
+                let configfunc = require(`./commands/delve.js`)
+                configfunc.interactionresponse(interaction); 
+            }
             else if (interaction.customId.startsWith("extraconfig_")) {
                 if (process.extraconfigresponsefunctions && process.extraconfigresponsefunctions.gags && process.extraconfigresponsefunctions.gags[interaction.customId.split("_")[1]]) {
                     process.extraconfigresponsefunctions.gags[interaction.customId.split("_")[1]](interaction);

@@ -2,8 +2,12 @@
 
 const { ContainerBuilder, ButtonBuilder, ButtonStyle, MessageFlags } = require("discord.js")
 const { getHeadwear, getBaseHeadwear } = require("./headwearfunctions")
-const { getHeavyRestrictions } = require("./heavyfunctions")
-const { addArousal } = require("./vibefunctions")
+const { getHeavyRestrictions, assignHeavy, getHeavy } = require("./heavyfunctions")
+const { addArousal, assignChastity, getChastity } = require("./vibefunctions")
+const { getMitten, assignGag, assignMitten, getGag } = require("./gagfunctions")
+const { getChastityBra } = require("./vibefunctions")
+const { assignChastityBra } = require("./vibefunctions")
+const { getUserTags } = require("./configfunctions")
 
 /*****************
  * Players will utilize their condition as returned by gags, masks, heavy bondage and the like. 
@@ -67,17 +71,17 @@ const delveroomchoices = {
         longdesc: "You arrive at the entrance of the Deepbound Palace. It's smooth wall is decorated by images of people wearing restraints and a mural above the door depicting several kneeling submissives around a woman sitting in a chair. She is clad with what you recognize to be a black minidress in the image. The door handle is unremarkable, but it reminds you of a handle for a flogger.",
         extradesc: (userID, text, delvedata, resolve) => { return text },
         revisitshortdesc: "You step back out of the bondage crypt and into the sunlight.",
-        revisitlongdesc: "You're standing just inside the entrance to the bondage crypt. The pitter patter of the rain can be heard outside, along with the hint of light from the entrance of the Deepbound Palace. The sounds of the outdoor world are already so far away, so you might as well head on inside!",
+        revisitlongdesc: "You're standing just inside the entrance to the bondage crypt. The pitter patter of the rain can be heard outside, along with the hint of light from the entrance of the Deepbound Palace. The sounds of the outdoor world are already so far away, so you might as well head back inside!",
         revisitextradesc: (userID, text, delvedata, resolve) => { return text },
         choices: [
             {
                 name: "Proceed Into the Dungeon",
                 shortoutcome_success: "You pull on the heavy stone door and step inside, ready for your bound adventure!.",
-                longoutcome_success: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later.",
+                longoutcome_success: "You pull on the door and walk inside. Your vision is hindered for a bit, as if you're wearing a blindfold but slowly your vision returns. The door softly shuts behind you, sealing you in and leaving you with only a hint of the outdoor light. You'll have to find another way out of this place.",
                 shortoutcome_failure: "Undeterred by the obvious glitches in reality, you proceed. (Failure path, report)",
                 longoutcome_failure: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later. (Failure path, report)",
                 statweight: {},
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
                 successfunction: (userID, delvedata, resolve) => { return true },
                 failurefunction: (userID, delvedata, resolve) => { return true }
             }
@@ -105,7 +109,7 @@ const delveroomchoices = {
                 shortoutcome_failure: "Undeterred by the obvious glitches in reality, you proceed. (Failure path, report)",
                 longoutcome_failure: "Despite your senses telling you everything is wrong, you still continue forth. A sickening thought in the back of your head worries that this particular iteration of the Deepbound Palace may be cursed, but that is a problem for the developers of this place to sort out later. (Failure path, report)",
                 statweight: {},
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
                 successfunction: (userID, delvedata, resolve) => { return true },
                 failurefunction: (userID, delvedata, resolve) => { return true }
             }
@@ -132,7 +136,7 @@ const delveroomchoices = {
                 shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
                 longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
                 statweight: {},
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
                 successfunction: (userID, delvedata, resolve) => { return true },
                 failurefunction: (userID, delvedata, resolve) => { return true }
             }
@@ -166,8 +170,11 @@ const delveroomchoices = {
                 shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
                 longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
                 statweight: {},
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
-                successfunction: (userID, delvedata, resolve) => { return true },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
+                successfunction: (userID, delvedata, resolve) => { 
+                    delvedata.extratext = "You obtain some loot!"
+                    return true
+                },
                 failurefunction: (userID, delvedata, resolve) => { return true }
             },
             {
@@ -177,7 +184,7 @@ const delveroomchoices = {
                 shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
                 longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
                 statweight: {},
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
                 successfunction: (userID, delvedata, resolve) => { return true },
                 failurefunction: (userID, delvedata, resolve) => { return true }
             }
@@ -187,7 +194,7 @@ const delveroomchoices = {
         weightforce: undefined,
         accentcolor: 0x0099ff
     },
-    rewardchest1_mimic: {
+    rewardchest1mimic: {
         name: "Simple Chest Room",
         hintdesc: "Simple Room with Chest",
         shortdesc: "You step into a room with nothing but a singular chest.",
@@ -207,12 +214,117 @@ const delveroomchoices = {
             {
                 name: "Open the Chest",
                 shortoutcome_success: "You walk up to the chest and carefully undo the clasp on it. It opens... and immediately wraps you in tentacles as it places some restraints on you!",
-                longoutcome_success: "You walk up to the chest. The room darkens a bit as your eyes adjust to the bright light and you open the chest. It glows brightly as you peer inside and pull out some loot!",
+                longoutcome_success: "You walk up to the chest. The room darkens a bit as you undo the clasp and... it immediately grabs you with a tentacle and pulls you inside! You fight fiercely inside despite the tentacles crawling over your body! Eventually it throws you out on the floor in front of it, a magical seal locking it back up.",
                 shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
                 longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
                 statweight: {},
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
-                successfunction: (userID, delvedata, resolve) => { return true },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
+                successfunction: (userID, delvedata, resolve) => { 
+                    let extratextt = "You take 3 damage!"
+                    // Decide on a restraint to equip on the player
+                    let eligiblerestraints = [];
+                    if (!getGag(userID, "ball")) {
+                        eligiblerestraints.push("ball")
+                    }
+                    if (!getGag(userID, "stuff")) {
+                        eligiblerestraints.push("stuff")
+                    }
+                    if (!getGag(userID, "tape")) {
+                        eligiblerestraints.push("tape")
+                    }
+                    if (!getChastity(userID) && !getUserTags(userID).includes("chastity")) {
+                        eligiblerestraints.push("chastitybelt")
+                        if (getUserTags(userID, true).includes("chastity")) {
+                            // Add two more because it's preferred.
+                            eligiblerestraints.push("chastitybelt")
+                            eligiblerestraints.push("chastitybelt")
+                        }
+                    }
+                    if (!getChastityBra(userID) && !getUserTags(userID).includes("chastity")) {
+                        eligiblerestraints.push("chastitybra")
+                        if (getUserTags(userID, true).includes("chastity")) {
+                            // Add two more because it's preferred.
+                            eligiblerestraints.push("chastitybra")
+                            eligiblerestraints.push("chastitybra")
+                        }
+                    }
+                    if (!getHeavy(userID, "armbinder_latex") && !getUserTags(userID).includes("latex")) {
+                        eligiblerestraints.push("armbinderlatex")
+                        if (getUserTags(userID, true).includes("latex")) {
+                            // Add two more because it's preferred.
+                            eligiblerestraints.push("armbinderlatex")
+                            eligiblerestraints.push("armbinderlatex")
+                        }
+                    }
+                    if (!getHeavy(userID, "armbinder_leather") && !getUserTags(userID).includes("leather")) {
+                        eligiblerestraints.push("armbinderleather")
+                        if (getUserTags(userID, true).includes("leather")) {
+                            // Add two more because it's preferred.
+                            eligiblerestraints.push("armbinderleather")
+                            eligiblerestraints.push("armbinderleather")
+                        }
+                    }
+                    if (!getMitten(userID) && !getUserTags(userID).includes("latex")) {
+                        eligiblerestraints.push("mittenslatex")
+                        if (getUserTags(userID, true).includes("latex")) {
+                            // Add two more because it's preferred.
+                            eligiblerestraints.push("mittenslatex")
+                            eligiblerestraints.push("mittenslatex")
+                        }
+                    }
+                    if (!getMitten(userID)) {
+                        eligiblerestraints.push("mittenstape")
+                    }
+                    if (!getMitten(userID)) {
+                        eligiblerestraints.push("mittensmaid")
+                    }
+                    if (eligiblerestraints.length > 0) {
+                        let choicerestraint = eligiblerestraints[Math.floor(Math.random() * eligiblerestraints.length)]
+                        if (choicerestraint == "ball") {
+                            assignGag(userID, "ball", 5, userID);
+                            extratextt = `${extratextt}\nThe Mimic equips a **Ball Gag** on you!`
+                        }
+                        if (choicerestraint == "stuff") {
+                            assignGag(userID, "stuff", 5, userID);
+                            extratextt = `${extratextt}\nThe Mimic equips a **Stuff Gag** on you!`
+                        }
+                        if (choicerestraint == "tape") {
+                            assignGag(userID, "tape", 5, userID);
+                            extratextt = `${extratextt}\nThe Mimic equips a **Tape Gag** on you!`
+                        }
+                        if (choicerestraint == "chastitybelt") {
+                            assignChastity(userID, userID, "belt_silver");
+                            extratextt = `${extratextt}\nThe Mimic equips a **Silver Chastity Belt** on you!`
+                        }
+                        if (choicerestraint == "chastitybra") {
+                            assignChastityBra(userID, userID, "bra_silver");
+                            extratextt = `${extratextt}\nThe Mimic equips a **Silver Chastity Bra** on you!`
+                        }
+                        if (choicerestraint == "armbinderlatex") {
+                            assignHeavy(userID, "armbinder_latex", userID);
+                            extratextt = `${extratextt}\nThe Mimic equips a **Latex Armbinder** on you!`
+                        }
+                        if (choicerestraint == "armbinderleather") {
+                            assignHeavy(userID, "armbinder_leather", userID);
+                            extratextt = `${extratextt}\nThe Mimic equips a **Leather Armbinder** on you!`
+                        }
+                        if (choicerestraint == "mittenslatex") {
+                            assignMitten(userID, "mittens_latex")
+                            extratextt = `${extratextt}\nThe Mimic equips a pair of **Latex Mittens** on you!`
+                        }
+                        if (choicerestraint == "mittenstape") {
+                            assignMitten(userID, "mittens_tape")
+                            extratextt = `${extratextt}\nThe Mimic wraps your hands into **Taped Fists**!`
+                        }
+                        if (choicerestraint == "mittensmaid") {
+                            assignMitten(userID, "mittens_maid")
+                            extratextt = `${extratextt}\nThe Mimic equips a pair of **Good Maid Mittens** on you!`
+                        }
+                    }
+                    delvedata.extratext = extratextt
+                    modifyResolve(userID, -3);
+                    return true
+                },
                 failurefunction: (userID, delvedata, resolve) => { return true }
             },
             {
@@ -222,7 +334,7 @@ const delveroomchoices = {
                 shortoutcome_failure: "This cannot fail. (This is a bug, please report!)",
                 longoutcome_failure: "Despite a 100% success rate, you somehow failed. (This is a bug, please report!)",
                 statweight: {},
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
                 successfunction: (userID, delvedata, resolve) => { return true },
                 failurefunction: (userID, delvedata, resolve) => { return true }
             }
@@ -232,7 +344,7 @@ const delveroomchoices = {
         weightforce: undefined,
         accentcolor: 0x0099ff
     },
-    garden_intoxicatingspores: {
+    gardenintoxicatingspores: {
         name: "Spore Garden",
         hintdesc: "Hazy Vineyard",
         shortdesc: "You find a room full of foliage including plants with pink flowers. The room gives off a faint pink haze.",
@@ -276,7 +388,7 @@ const delveroomchoices = {
                             dexterity: 99
                         }
                     }
-                    return delvedata
+                    return delvedata.stats
                 },
                 successfunction: (userID, delvedata, resolve) => { return true },
                 failurefunction: (userID, delvedata, resolve) => {
@@ -293,7 +405,7 @@ const delveroomchoices = {
                 statweight: {
                     intelligence: 10,
                 },
-                statspecial: (userID, delvedata, resolve) => { return delvedata },
+                statspecial: (userID, delvedata, resolve) => { return delvedata.stats },
                 successfunction: (userID, delvedata, resolve) => {
                     getDelveFloorState(userID, delvedata.floor).burned = true;
                 },
@@ -323,6 +435,7 @@ function setNextDelveRoom(user, choice) {
             floorscompleted: -1,
             floor: 0,
             tempbuffs: [],
+            resolve: 10 + Math.round(getDelvePlayerStats(user).stamina / 2)
         }
         if (process.readytosave == undefined) {
             process.readytosave = {};
@@ -400,16 +513,15 @@ function setDelveFloorState(user, floor, prop, value) {
  * - (user ID) user - The user ID doing the delve
  * - (integer) floor - The floor number the user is visiting.
  *******/
-async function generateDelveModal(user, floor) {
+async function generateDelveModal(user, floor, incomingdelvedata) {
     let floordata = delveroomchoices[process.delveuserdata[user]?.floorarr[floor]] ?? delveroomchoices["errorroom"]
     let delveuserdata = process.delveuserdata[user]
-    console.log(getCurrentFloor(user))
-    console.log(delveuserdata)
 
     let floortext = floordata[`${ getCurrentFloor(user) > delveuserdata.floorscompleted ? "" : "revisit" }longdesc`]
-    console.log(floortext)
-    floortext = floordata[`${ getCurrentFloor(user) > delveuserdata.floorscompleted ? "" : "revisit" }extradesc`](user, floortext)
-    console.log(floortext)
+    floortext = floordata[`${ getCurrentFloor(user) > delveuserdata.floorscompleted ? "" : "revisit" }extradesc`](user, floortext, { floor: floor })
+    floortext = `## ${floordata.name}\n\n${floortext}`
+
+    if (incomingdelvedata && incomingdelvedata.completedtext) { floortext = `## ${floordata.name}\n\n${incomingdelvedata.completedtext}` }
 
     // Set room choice buttons!
     // Alternatively, select 3 random floors by vaguedescription to display if the current floor is completed, but floors length is not longer.
@@ -426,7 +538,14 @@ async function generateDelveModal(user, floor) {
             // If the choice also requires 10 dexterity and they have 12 dexterity, then the skill chance will be 0.3 * 0.9, or 27%. 
             let playerstats = getDelvePlayerStats(user);
             let floorstats = floordata.choices[i].statweight;
-            floorstats = floordata.choices[i].statspecial(); // Modify the stats!
+            let delvedata = {
+                stats: floorstats,
+                playerstats: playerstats,
+                delveuserdata: delveuserdata
+            }
+            floorstats = floordata.choices[i].statspecial(user, delvedata); // Modify the stats!
+
+            
 
             let successchance = 1.0;
             Object.keys(floorstats).forEach((stat) => {
@@ -445,7 +564,7 @@ async function generateDelveModal(user, floor) {
             }
 
             roomchoices.push(new ButtonBuilder()
-                .setCustomId(`delve_${floor}_button${i}`)
+                .setCustomId(`delve_${user}_${floor}_button${i}`)
                 .setLabel(`${floordata.choices[i].name} (${successchance * 100}% chance)`)
                 .setStyle(buttoncolor)
             )
@@ -456,7 +575,7 @@ async function generateDelveModal(user, floor) {
         roomchoices = chooseNextRooms(user, 3);
         roomchoices = roomchoices.map((r) => {
             return new ButtonBuilder()
-                        .setCustomId(`delve_${floor}_newroom_${r}`)
+                        .setCustomId(`delve_${user}_${floor}_newroom_${r}`)
                         .setLabel(delveroomchoices[r].hintdesc)
                         .setStyle(ButtonStyle.Success)
         })
@@ -469,22 +588,22 @@ async function generateDelveModal(user, floor) {
     let moveroomchoices = [
         // Previous Floor
         new ButtonBuilder()
-            .setCustomId(`delve_${floor}_backbutton`)
+            .setCustomId(`delve_${user}_${floor}_backbutton`)
             .setLabel("Previous Floor")
             .setStyle(ButtonStyle.Secondary)
             .setDisabled((floor <= 0)), // Disable if we're at the entrance!
         // Floor Counter
         new ButtonBuilder()
-            .setCustomId(`delve_${floor}_floorcounter`)
+            .setCustomId(`delve_${user}_${floor}_floorcounter`)
             .setLabel(`Floor ${floor}`)
             .setStyle(ButtonStyle.Secondary)
             .setDisabled(true),
         // Next Floor
         new ButtonBuilder()
-            .setCustomId(`delve_${floor}_nextbutton`)
+            .setCustomId(`delve_${user}_${floor}_nextbutton`)
             .setLabel(`Next Floor`)
             .setStyle(ButtonStyle.Secondary)
-            .setDisabled((floor > (process.delveuserdata && process.delveuserdata[user] && process.delveuserdata[user].floorscompleted))) // Disable if current floor is NOT completed
+            .setDisabled((floor >= process.delveuserdata[user].floorscompleted) && ((process.delveuserdata[user].floorarr.length - 1) <= parseInt(process.delveuserdata[user].floor))) // Disable if current floor is NOT completed
     ];
 
     let outcontainer = new ContainerBuilder()
@@ -496,19 +615,30 @@ async function generateDelveModal(user, floor) {
         )
         .addSeparatorComponents((sep) => sep);
 
-    if (roomchoices.length > 0) {
-        outcontainer.addSeparatorComponents((sep) => sep);
+    if (incomingdelvedata && incomingdelvedata.extratext) {
         outcontainer.addTextDisplayComponents((td) => 
-            td.setContent(
-                `In the next room you see...`
-            ),
+            td.setContent(incomingdelvedata.extratext),
+        )
+        outcontainer.addSeparatorComponents((sep) => sep);
+    }
+
+    if (roomchoices.length > 0) {
+        let optiontext = (getCurrentFloor(user) > delveuserdata.floorscompleted) ? `You decide to...` : `In the next room you see a...`
+        outcontainer.addTextDisplayComponents((td) => 
+            td.setContent(optiontext),
         )
         outcontainer.addActionRowComponents((ar) => 
             ar.addComponents(...roomchoices)
         )
+        outcontainer.addSeparatorComponents((sep) => sep);
     }
 
-    outcontainer.addSeparatorComponents((sep) => sep);
+    if (delveModalStats(user).length > 0) {
+        outcontainer.addTextDisplayComponents((td) => 
+            td.setContent(delveModalStats(user))
+        )
+    }
+
     outcontainer.addActionRowComponents((ar) => 
         ar.addComponents(...moveroomchoices)
     )
@@ -593,6 +723,52 @@ function arrayShuffle(arr) {
 }
 
 /*******
+ * Gets the user's current Resolve
+ * 
+ * - (user id) user - User ID doing the Delve
+ *******/
+function getResolve(user) {
+    if (process.delveuserdata == undefined) { process.delveuserdata = {} }
+    if (process.delveuserdata[user]) {
+        // They started a delve, return their current resolve
+        return process.delveuserdata[user].resolve
+    }
+    else {
+        // They're not in the Delve.
+        return undefined;
+    }
+}
+
+/*******
+ * Modifies the user's current Resolve, reducing it to 0 at minimum if it goes past that. 
+ * 
+ * - (user id) user - User ID doing the Delve
+ * - (integer) resolveamt - Amount of resolve to add or remove
+ *******/
+function modifyResolve(user, resolveamt) {
+    if (process.delveuserdata == undefined) { process.delveuserdata = {} }
+    if (process.delveuserdata[user]) {
+        process.delveuserdata[user].resolve = Math.max(parseInt(process.delveuserdata[user].resolve) + resolveamt, 0);
+    }
+}
+
+/*******
+ * Generates the Delve Stats display for the delve modal
+ * 
+ * - (user id) user - User ID doing the Delve
+ *******/
+function delveModalStats(user) {
+    let outtext = `**Player:** <@${user}>`;
+    if (getResolve(user)) {
+        outtext = `${outtext}\n**Resolve:** ${getResolve(user)}`
+    }
+    if (process.delveuserdata[user] && (process.delveuserdata[user].floorscompleted != undefined)) {
+        outtext = `${outtext}\n**Floors Completed:** ${Math.max(process.delveuserdata[user].floorscompleted, 0)}`
+    }
+    return outtext;
+}
+
+/*******
  * Handle Delve slash command interactions
  * 
  * (interaction) interaction - the interaction received
@@ -608,29 +784,121 @@ async function handleDelveSlashCommand(interaction) {
 }
 
 /*******
- * Handle Delve command interactions
- * 
- * (interaction) interaction - the interaction received
- *******/
-function handleDelveInteraction(interaction) {
-    console.log(interaction);
-
-}
-
-/*******
  * Get player stats from process.delvestats if it exists. Otherwise, create a template for the player. 
  * 
- * (user id) user - User ID doing the Delve
+ * - (user id) user - User ID doing the Delve
  *******/
 function getDelvePlayerStats(user) {
     if (process.delveuserstats == undefined) { process.delveuserstats = {} }
-    if (process.delveuserstats[user]) {
-        // They started a delve, return the floor
-        return process.delveuserstats[user].floor
+    if (process.delveuserstats[user] == undefined) {
+        // Create a template if it does not exist. 
+        process.delveuserstats[user] = {
+            // Main
+            strength: 6,
+            dexterity: 6,
+            intelligence: 6,
+            stamina: 6,
+            // Kink
+            dominance: 6,
+            submissive: 6,
+            rigger: 6,
+            rope_bunny: 6,
+            // Affinity
+            latex: 6,
+            leather: 6,
+            metal: 6,
+            magic: 6,
+            // Unallocated
+            unallocated: 24,
+            level: 1
+        }
     }
-    else {
-        // They're not in the Delve.
-        return undefined;
+    return process.delveuserstats[user]
+}
+
+/******
+ * Handle the button events from Delve
+ * 
+ * - (interaction) - The Interaction object from /delve
+ ******/
+async function handleDelveInteraction(interaction) {
+    await interaction.deferUpdate();
+    if (process.readytosave == undefined) {
+        process.readytosave = {};
+    }
+    process.readytosave.delveuserdata = true;
+    let buttonparts = interaction.customId.split("_")
+
+    // If this isn't the user that is doing the delve, stop here. 
+    if (buttonparts[1] != interaction.user.id) {
+        return;
+    }
+
+    let buttonfloor = buttonparts[2]
+    // Navigation buttons
+    if (buttonparts[3] && (buttonparts[3] == "backbutton")) {
+        process.delveuserdata[interaction.user.id].floor = parseInt(buttonfloor) - 1
+        interaction.editReply(await generateDelveModal(interaction.user.id, parseInt(buttonfloor) - 1))
+        return;
+    } 
+    if (buttonparts[3] && (buttonparts[3] == "nextbutton")) {
+        process.delveuserdata[interaction.user.id].floor = parseInt(buttonfloor) + 1
+        interaction.editReply(await generateDelveModal(interaction.user.id, parseInt(buttonfloor) + 1))
+        return
+    } 
+    // Room choice buttons
+    if (buttonparts[3] && (buttonparts[3].startsWith("button"))) {
+        let choicenum = buttonparts[3].slice(-1); // Get num at end of 3rd part
+        let delvedata = {};
+        if (process.delveuserdata && process.delveuserdata[interaction.user.id] && process.delveuserdata[interaction.user.id].floorarr && process.delveuserdata[interaction.user.id].floorarr[buttonfloor]) {
+            let floordata = delveroomchoices[process.delveuserdata[interaction.user.id].floorarr[buttonfloor]]
+            let playerstats = getDelvePlayerStats(interaction.user.id);
+            let floorstats = floordata.choices[choicenum].statweight;
+            delvedata = {
+                stats: floorstats,
+                playerstats: playerstats,
+                floor: parseInt(buttonfloor),
+                //delveuserdata: delveuserdata
+            }
+            floorstats = floordata.choices[choicenum].statspecial(interaction.user.id, delvedata); // Modify the stats!
+
+            let successchance = 1.0;
+            Object.keys(floorstats).forEach((stat) => {
+                let successmult = Math.min(Math.max(0.5 + ((playerstats[stat] - floorstats[stat]) * 0.2), 0.0), 1.0)
+                successchance = successchance * successmult;
+            })
+
+            if (!(successchance > 0.98)) { // less than 2% chance to fail, we'll just give it to them lol
+                let randomroll = Math.random();
+                if (randomroll < successchance) {
+                    // Successful!
+                    if (floordata.choices[choicenum].successfunction) { floordata.choices[choicenum].successfunction(interaction.user.id, delvedata) }
+                    if (floordata.choices[choicenum].longoutcome_success) { delvedata.completedtext = floordata.choices[choicenum].longoutcome_success }
+                }
+                else {
+                    // Failed
+                    if (floordata.choices[choicenum].failurefunction) { floordata.choices[choicenum].failurefunction(interaction.user.id, delvedata) }
+                    if (floordata.choices[choicenum].longoutcome_success) { delvedata.completedtext = floordata.choices[choicenum].longoutcome_failure }
+                }
+            }
+            else {
+                // Successful!
+                if (floordata.choices[choicenum].successfunction) { floordata.choices[choicenum].successfunction(interaction.user.id, delvedata) }
+                if (floordata.choices[choicenum].longoutcome_success) { delvedata.completedtext = floordata.choices[choicenum].longoutcome_success }
+            }
+        }
+        // Now increment the floor completed counter. 
+        process.delveuserdata[interaction.user.id].floorscompleted = parseInt(process.delveuserdata[interaction.user.id].floorscompleted) + 1;
+        console.log(delvedata);
+        interaction.editReply(await generateDelveModal(interaction.user.id, buttonfloor, delvedata))
+        return
+    } 
+    if (buttonparts[3] && (buttonparts[3].startsWith("newroom"))) {
+        if (process.delveuserdata && process.delveuserdata[interaction.user.id] && process.delveuserdata[interaction.user.id].floorarr) {
+            process.delveuserdata[interaction.user.id].floorarr.push(buttonparts[4])
+            process.delveuserdata[interaction.user.id].floor = parseInt(buttonfloor) + 1
+            interaction.editReply(await generateDelveModal(interaction.user.id, parseInt(buttonfloor) + 1))
+        }
     }
 }
 
