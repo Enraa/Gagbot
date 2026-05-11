@@ -51,14 +51,14 @@ async function generateList(menuchoice) {
 	menupageoptions.addOptions(...menupageoptionsarr);
 	pagecomponents.push(new ActionRowBuilder().addComponents(menupageoptions));
 
-	return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2] };
+	return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
 }
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("scoreboard").setDescription("View the Leaderboard for Stats!"),
 	async execute(interaction) {
 		try {
-			interaction.reply(await generateList("headpatsgiven"));
+			interaction.reply(await generateList("headpatsgiven"))
 		} catch (err) {
 			console.log(err);
 		}
