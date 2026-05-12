@@ -1045,11 +1045,23 @@ const texts_heavy = {
                         },
                         text: `USER_TAG throws a VAR_C3 at TARGET_TAG! It clunks off of TARGET_THEIR body before activating and pulling TARGET_THEM inside!`,
                     },
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Arcane Bindings");
+                        },
+                        text: `USER_TAG traces some runes in the air near TARGET_TAG's arms, placing TARGET_THEM into a set of VAR_C3!`,
+                    },
                 ],
                 legs: [
                     `USER_TAG grabs TARGET_TAG's legs and wraps a VAR_C3 over them, pulling the restraint tightly around and securing it.`,
                     `USER_TAG pulls out a VAR_C3 and puts it on over TARGET_TAG's legs, immobilizing TARGET_THEM in place!`,
-                    `USER_TAG trips TARGET_TAG and catches TARGET_THEM before putting a VAR_C3 on over TARGET_THEIR legs, binding TARGET_THEM in place!`
+                    `USER_TAG trips TARGET_TAG and catches TARGET_THEM before putting a VAR_C3 on over TARGET_THEIR legs, binding TARGET_THEM in place!`,
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Arcane Bindings");
+                        },
+                        text: `USER_TAG traces some runes in the air near TARGET_TAG's legs, placing TARGET_THEM into a set of VAR_C3!`,
+                    },
                 ],
                 container: [
                     `USER_TAG guides TARGET_TAG into a VAR_C3 and then closes the door shut behind TARGET_THEM, sealing TARGET_THEM in!`,
@@ -1076,6 +1088,12 @@ const texts_heavy = {
                             return t.c3.includes("Dancer's Pole");
                         },
                         text: `USER_TAG helps TARGET_TAG climb onto the stage and pushes TARGET_THEM gently towards the VAR_C3, swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for USER_THEIR enjoyment!`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Binding Circle");
+                        },
+                        text: `USER_TAG inscribes an intricate set of runes and circles on the floor near TARGET_TAG, creating a VAR_C3 that traps TARGET_THEM inside!`,
                     },
                 ]
             },
