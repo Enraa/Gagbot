@@ -876,7 +876,7 @@ const texts_heavy = {
                         only: (t) => {
                             return t.c2.includes("Pet Cage");
                         },
-                        text: `USER_TAG crawls into the VAR_C2, blushing as USER_THEY hear the door to the VAR_C2 swing closed behind USER_THEM and lock with a soft click!`,
+                        text: `USER_TAG crawls into the VAR_C2, blushing as USER_THEY hearUSER_S the door to the VAR_C2 swing closed behind USER_THEM and lock with a soft click!`,
                     },
                     {
                         only: (t) => {
@@ -3258,7 +3258,7 @@ const texts_unheavy = {
                     only: (t) => {
                         return t.c2.includes("Duffel Bag");
                     },
-                    text: `USER_TAG unzips the VAR_C2 to see a carefully folded TARGET_TAG inside! USER_THEY_CAP helpUSER_S out of it.`,
+                    text: `USER_TAG unzips the VAR_C2 to see a carefully folded TARGET_TAG inside! USER_THEY_CAP helpUSER_S TARGET_THEM out of it.`,
                 },
                 {
                     only: (t) => {
