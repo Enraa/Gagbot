@@ -181,6 +181,7 @@ const heavytypes = [
     { name: "Pet Carrier", value: "petcarrier", tags: ["pet", "confined"], denialCoefficient: 4, heavytags: ["container"] },
 	{ name: "Duffel Bag", value: "duffel_bag", tags: ["confined"], denialCoefficient: 2, heavytags: ["container"] },
     { name: "Magic Binding Circle", value: "bindingcircle", tags: ["magic"], denialCoefficient: 1, heavytags: ["container"] },
+    { name: "Cuddle Puddle", value: "cuddlepuddle", denialCoefficient: 0.5, heavytags: ["container"] }, // Yes, cuddlepuddle makes it EASIER
 
 	// Heavy Restraints with unique name functions
 	{

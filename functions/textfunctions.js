@@ -890,6 +890,12 @@ const texts_heavy = {
                         },
                         text: `USER_TAG climbs onto the stage, stalking over to the VAR_C2 and beginning to dance sensuously for the pleasure of USER_THEIR audience!`,
                     },
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Cuddle Puddle");
+                        },
+                        text: `USER_TAG walks towards the VAR_C2! It envelops USER_THEM in a collage of cuddles!`,
+                    },
                 ]
             },
             nocanwear: {
@@ -1100,6 +1106,12 @@ const texts_heavy = {
                             return t.c3.includes("Binding Circle");
                         },
                         text: `USER_TAG inscribes an intricate set of runes and circles on the floor near TARGET_TAG, creating a VAR_C3 that traps TARGET_THEM inside!`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Cuddle Puddle");
+                        },
+                        text: `USER_TAG pulls TARGET_TAG into the VAR_C2! It welcomes TARGET_THEM as one of its own!`,
                     },
                 ]
             },
@@ -3161,6 +3173,12 @@ const texts_unheavy = {
                     },
                     text: `USER_TAG casts a minor dispelling charm over USER_THEIR legs to shatter the VAR_C2.`,
                 },
+                {
+                    only: (t) => {
+                        return t.c2.includes("Cuddle Puddle");
+                    },
+                    text: `USER_TAG slowly rises out of the VAR_C2 and away from all the warm cuddles it had!`,
+                },
             ],
             other: [
                 `USER_TAG helps TARGET_TAG out of TARGET_THEIR VAR_C2! TARGET_THEY_CAP stretchTARGET_ES TARGET_THEIR arms and sighTARGET_S with gratitude!`,
@@ -3379,6 +3397,12 @@ const texts_unheavy = {
                         return t.c2.includes("Strappado");
                     },
                     text: `USER_TAG lowers the winch of the VAR_C2 while catching TARGET_TAG so that TARGET_THEY TARGET_ISARE no longer falling forward.`,
+                },
+                {
+                    only: (t) => {
+                        return t.c2.includes("Cuddle Puddle");
+                    },
+                    text: `USER_TAG gently pulls TARGET_TAG out of the VAR_C2 and into the cold, cruel world!`,
                 },
             ],
         },
