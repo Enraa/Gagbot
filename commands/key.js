@@ -22,7 +22,7 @@ const { getUserTags } = require("../functions/configfunctions.js");
 const { getBaseChastity } = require("../functions/chastityfunctions.js");
 const { discardKey } = require("../functions/keyfindingfunctions.js");
 const { modalexecute } = require("./config.js");
-const { generateKeyGivingModal } = require("../functions/interactivefunctions.js");
+const { generateKeyGivingModal, handleExtremeRestraint } = require("../functions/interactivefunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -353,38 +353,22 @@ module.exports = {
                                 }
                             }
                         })
-                        choices = newsorted;
-                    }
-                    if (chosentype == "additionalcollar_remove") {
-                        let autocompletes = process.autocompletes.collar;
-                        let matches = didYouMean(focusedValue, autocompletes, {
-                            matchPath: ['name'], 
-                            returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
-                            threshold: 0.2, // Default is 0.4 - this is how much of the word must exist. 
-                        })
-                        if (matches.length == 0) {
-                            matches = autocompletes;
-                        }
-                        let tags = getUserTags(chosenuserid);
-                        let newsorted = [];
-                        matches.forEach((f) => {
-                            let tagged = false;
-                            let i = getBaseCollar(f.value)
-                            tags.forEach((t) => {
-                                if (i.tags && i.tags.includes(t)) { tagged = true }
-                            })
-                            // Only attempt to add it to the list if it is not the worn collar type or the additional collar effect
-                            if (getCollar(chosenuserid)?.additionalcollars && getCollar(chosenuserid)?.additionalcollars.includes(f.value)) {
-                                newsorted.push(f)
-                            }
-                        })
-                        if (newsorted.length == 0) {
-                            // No additional collar effects to remove!
-                            choices = [
-                                { name: "No Additional Effects", value: "noeffect" }
+                        // Remove all the non-special collars
+                        newsorted = newsorted.filter((a) => getBaseCollar(a.value).special)
+                        if (newsorted.length <= 0) {
+                            newsorted = [
+                                { name: "No Eligible Effects", value: "nokeys" }
                             ]
                         }
                         choices = newsorted;
+                    }
+                    if (chosentype == "additionalcollar_remove") {
+                        choices = [
+                            { name: "No Additional Effects", value: "noeffect" }
+                        ]
+                        if (getCollar(chosenuserid)?.additionalcollars && getCollar(chosenuserid)?.additionalcollars.length > 0) {
+                            choices = getCollar(chosenuserid).additionalcollars.map((ac) => { return { name: getCollarName(undefined, ac), value: ac }})
+                        }
                     }
                 }
                 await interaction.respond(choices);
@@ -889,12 +873,21 @@ module.exports = {
 					if (restrainttype == "collar") {
 						data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						getCollar(wearer.id).collartype = newrestraint;
-                        if (process.readytosave == undefined) {
-							process.readytosave = {};
-						}
-						process.readytosave.collar = true;
-						interaction.reply(getText(data));
+                        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                        await handleExtremeRestraint(interaction.user, wearer, "collar", newrestraint).then(
+                            async (success) => {
+                                await interaction.followUp({ content: `Swapping your collar to the ${data.textdata.c2}.`, flags: MessageFlags.Ephemeral })
+                                await interaction.followUp({ content: getText(data) })
+                                getCollar(wearer.id).collartype = newrestraint;
+                                if (process.readytosave == undefined) {
+                                    process.readytosave = {};
+                                }
+                                process.readytosave.collar = true;
+                            },
+                            async (reject) => {
+                                await interaction.followUp({ content: `The ${data.textdata.c2} swap was rejected.`, flags: MessageFlags.Ephemeral })
+                            }
+                        )
 					} else if (restrainttype == "chastitybelt") {
 						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
 						data.textdata.c2 = newrestraintname;
@@ -913,12 +906,21 @@ module.exports = {
 					if (restrainttype == "collar") {
 						data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						getCollar(wearer.id).collartype = newrestraint;
-						if (process.readytosave == undefined) {
-							process.readytosave = {};
-						}
-						process.readytosave.collar = true;
-						interaction.reply(getText(data));
+                        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                        await handleExtremeRestraint(interaction.user, wearer, "collar", newrestraint).then(
+                            async (success) => {
+                                await interaction.followUp({ content: `Swapping ${wearer}'s collar to the ${data.textdata.c2}.`, flags: MessageFlags.Ephemeral })
+                                await interaction.followUp({ content: getText(data) })
+                                getCollar(wearer.id).collartype = newrestraint;
+                                if (process.readytosave == undefined) {
+                                    process.readytosave = {};
+                                }
+                                process.readytosave.collar = true;
+                            },
+                            async (reject) => {
+                                await interaction.followUp({ content: `The ${data.textdata.c2} swap was rejected.`, flags: MessageFlags.Ephemeral })
+                            }
+                        )
 					} else if (restrainttype == "chastitybelt") {
 						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
 						data.textdata.c2 = newrestraintname;
@@ -1050,14 +1052,17 @@ module.exports = {
                                 data.other = true;
                             }
                             data.add = true;
-                            /*await handleExtremeRestraint(interaction.user, wearer, "collar", collareffect).then(
+                            await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+                            await handleExtremeRestraint(interaction.user, wearer, "collar", collareffect).then(
                                 async (success) => {
+                                    await interaction.followUp({ content: `Applying the ${data.textdata.c2} effect`, flags: MessageFlags.Ephemeral })
+                                    await interaction.followUp({ content: getText(data) })
+                                    addAdditionalCollarEffect(wearer.id, collareffect);
                                 },
                                 async (reject) => {
+                                    await interaction.followUp({ content: `The ${data.textdata.c2} effect was rejected.`, flags: MessageFlags.Ephemeral })
                                 }
-                            )*/
-                            interaction.reply({ content: getText(data) })
-                            addAdditionalCollarEffect(wearer.id, collareffect);
+                            )
                         }
                     }
                     else {
