@@ -5090,12 +5090,85 @@ const getTextGeneric = (type, data_in) => {
             `USER_TAG pretends the VAR_C1 button is a head and headpats it!`,
             `USER_TAG opts against words and presses the VAR_C1 button!`,
             `The VAR_C1 button lights up brilliantly as USER_TAG pushes it!`,
-            `Its an important conversation and USER_TAG wants to contribute by pressing... VAR_C1`
+            `Its an important conversation and USER_TAG wants to contribute by pressing... VAR_C1`,
+            {
+                only: (t) => {
+                    return (t.c2 == "blind");
+                },
+                text: `USER_TAG boops USER_THEIR head into the VAR_C1 button! A shame USER_THEY couldn't tell what it was.`,
+            },
+            {
+                only: (t) => {
+                    return (t.c2 == "blind");
+                },
+                text: `USER_TAG taps the VAR_C1 button at random because USER_THEY can't see.`,
+            },
+            {
+                only: (t) => {
+                    return (t.c2 == "blind");
+                },
+                text: `USER_TAG feels around in the darkness and runs USER_THEIR fingers on the VAR_C1 button.`,
+            },
+            {
+                only: (t) => {
+                    return (t.c2 == "blind");
+                },
+                text: `USER_TAG awkwardly bumps into a button that lights up with a VAR_C1. It's probably not deliberate.`,
+            },
+            {
+                only: (t) => {
+                    return (t.c2 == "blind");
+                },
+                text: `USER_TAG taps a button at random and manages to land on VAR_C1 by sheer dumb luck in USER_THEIR darkness.`,
+            },
+            {
+                only: (t) => {
+                    return (t.c2 == "blind");
+                },
+                text: `USER_TAG tries USER_THEIR very best to tap a button despite USER_THEIR blindfolded eyes. Hopefully VAR_C1 is exactly what USER_THEY meant to say.`,
+            },
         ]
 	};
+    if (Array.isArray(generics[type])) {
+        // Within the array, we want to handle the following cases:
+        // - Standard strings
+        // - Required strings via "required: (userID) => {}" -- When true, the phrase is included along with standard strings
+        // - Only strings via "only: (userID) => {}" -- When any are true, only use these phrases
+        //
+        // For example, { only: () => { return data_in.c1.includes("Lipstick") }, `USER_TAG wipes off USER_THEIR VAR_C1` }
+        // would allow only this phrase to be used when the chosen item is something Lipstick in the c1 slot.
+        //
+        // If there are *any* onlyphrases, then chosenphrases will not be used.
+        let chosenphrases = [];
+        let onlyphrases = [];
+        let only = false;
+        generics[type].forEach((a) => {
+            if (typeof a == "string") {
+                chosenphrases.push(a);
+            } else {
+                if (a.only != undefined && a.only(data_in)) {
+                    onlyphrases.push(a.text);
+                    only = true;
+                } else if (a.required != undefined && a.required(data_in)) {
+                    chosenphrases.push(a.text);
+                }
+            }
+        });
+        let outstring;
+        if (only) {
+            outstring = onlyphrases[Math.floor(Math.random() * onlyphrases.length)];
+        } else {
+            outstring = chosenphrases[Math.floor(Math.random() * chosenphrases.length)];
+        }
+        outstring = convertPronounsText(outstring, data_in);
 
-	let chosentext = generics[type][Math.floor(generics[type].length * Math.random())];
-	return convertPronounsText(chosentext, data_in);
+        return outstring;
+    } else {
+        return "There was an error generating this text. No error, but the destination was not an array of strings. Please tell Enraa that the tree followed this path: " + props.join(", ");
+    }
+
+	//let chosentext = generics[type][Math.floor(generics[type].length * Math.random())];
+	//return convertPronounsText(chosentext, data_in);
 };
 
 /* ----------------------------------

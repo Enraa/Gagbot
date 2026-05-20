@@ -62,7 +62,8 @@ module.exports = {
         let data_in = {
             interactionuser: interaction.user,
             targetuser: interaction.user,
-            c1: buttonemoji
+            c1: buttonemoji,
+            c2: getHeadwearRestrictions(interaction.user.id).canInspect ? "cansee" : "blind"
         }
 
         let channelwithmessage = interaction.client.channels.cache.get(interaction.channelId);
