@@ -317,7 +317,7 @@ module.exports = {
                 await interaction.respond(choices);
             } else if (subcommand == "additionalcollar") {
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-                let collarkeyholder = canAccessCollar(collaruser.id, interaction.user.id, true).access
+                let collarkeyholder = canAccessCollar(chosenuserid, interaction.user.id, true).access
                 let chosentype = interaction.options.get("type")?.value;
                 let choices = [];
                 console.log(chosentype)
@@ -999,7 +999,7 @@ module.exports = {
                 let wearer = interaction.options.getUser("wearer") ?? interaction.user;
                 let additionaltype = interaction.options.getString("type"); // "additionalcollar_add", "additionalcollar_remove"
 				let collareffect = interaction.options.getString("collareffect"); // eligible collar type!
-                let collarkeyholder = canAccessCollar(collaruser.id, interaction.user.id, true).access
+                let collarkeyholder = canAccessCollar(wearer.id, interaction.user.id, true).access
                 if ((!collarkeyholder) || (collareffect == "nokeys")) {
                     // If we do not have the target's collar keys, go away.
                     if (interaction.user.id == wearer.id) {
