@@ -10,9 +10,10 @@ const { getOption } = require(`./../functions/configfunctions.js`);
 const { getText } = require(`./../functions/textfunctions.js`);
 const { DOLLMAXPUNISHMENT, textGarbleDOLL } = require(`./../functions/dollfunctions.js`);
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
-const { assignHeavy } = require(`./../functions/heavyfunctions.js`);
+const { assignHeavy, getHeavyRestrictions } = require(`./../functions/heavyfunctions.js`);
 const { MessageAST } = require(`./../functions/message_ast.js`);
 const { emitEvent } = require("./eventhandling.js");
+const { convertPronounsText } = require("./pronounfunctions.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -427,6 +428,11 @@ const modifymessage = async (msg, threadId, messageonly) => {
 		// Scrub all control characters used to delineate text.
 		outtext = outtext.replaceAll(/[]/g, "");
 
+        // Append any extra messages from collar effects
+        let appendcollar = await appendCollarEffects(msg, outtext, msgTreeMods);
+        if (appendcollar.outtext) { outtext = appendcollar.outtext }
+        if (appendcollar.msgTreeMods) { msgTreeMods = appendcollar.msgTreeMods }
+
         // Iterate through any speech events in process.msgfunctions
         emitEvent("msgfunction", msg.author.id, { msg: msg, msgcontent: msg.content, outtext: outtext })
 
@@ -473,6 +479,9 @@ const replaceStutter = (text, parent, msg, msgModified, intensity, arousedtexts)
 	try {
 		let garbledtext = stutterText(msg, text, intensity, arousedtexts);
 		if (garbledtext.stuttered) {
+            if (garbledtext.shocked) {
+                msgModified.shocked = true;
+            }
 			msgModified.modified = true;
 			return garbledtext.text;
 		}
@@ -568,6 +577,91 @@ async function processPregarbleGags(msg, msgTree, msgTreeMods) {
             msgTreeMods.modified = true;
         }
     }
+}
+
+async function appendCollarEffects(msg, outtext, msgTreeMods) {
+    console.log(msgTreeMods);
+    // Create an array of messages to add
+    let appendmessages = [];
+
+    // If they were shocked, then give a shocked message. 
+    if (msgTreeMods.shocked) {
+        let shocks = [
+            `*USER_TAG yelps in pain as USER_THEIR speech is cut short!*`,
+            `*USER_TAG grits USER_THEIR teeth as the collar triggers a shock!*`,
+            `*USER_TAG's breath seizes up in USER_THEIR throat as the collar shocks USER_THEM!*`,
+            `*USER_TAG's face flushes red as the shock registers how horny USER_THEY USER_ISARE!*`,
+            {
+                required: (t) => {
+                    return getHeavyRestrictions(t.interactionuser.id).touchself;
+                },
+                text: `*USER_TAG's grabs USER_THEIR collar with tears as it shocks USER_THEM!*`,
+            },
+            {
+                required: (t) => {
+                    return getHeavyRestrictions(t.interactionuser.id).touchself;
+                },
+                text: `*USER_TAG tries to slip a finger under USER_THEIR collar as it stings USER_THEM!*`,
+            },
+        ]
+        let texts = [];
+        shocks.forEach((t) => {
+            if (typeof t != "string" && t.required({ interactionuser: msg.member, targetuser: msg.member })) {
+                texts.push(t.text)
+            }
+            else {
+                texts.push(t)
+            }
+        })
+        appendmessages.push(convertPronounsText(texts[Math.floor(texts.length * Math.random())], { interactionuser: msg.member, targetuser: msg.member }));
+    }
+
+    // If they're wearing a sponsorship collar, 30% chance to add a sponsor. 
+    if (process.collar && process.collar[msg.author.id] && ((process.collar[msg.author.id].collartype == "sponsorcollar") || (process.collar[msg.author.id].additionalcollars && process.collar[msg.author.id].additionalcollars.includes("sponsorcollar")))) {
+        if (Math.random() > 0.70) {
+            let sponsors = [
+                `FANG (Fox Asset and National Growth) - Asset Management since 2008!`,
+                `FEC (Fox Exchange Commission) - Your Trusted Stock Broker since 1929!`,
+                `Chain Corp - Keeping you in chains!`,
+                `Dragon Banking Guild - ~~Hoarding~~ Protecting Your Money!`,
+                `WeenRawr - Chastity for All!`,
+                `Fandumb - Ads and Wikis For Anything`,
+                `Soupman - In Cinemas Now!`,
+                `FWAT (Fox Weapons And Tactics) - Bondage and Capture services since 1975!`,
+                `LenOwO - Bringing Your Porn to Your Display!`,
+                `Intranet Ignorer - Returning Chastity Keys on Time... We Promise!`,
+                `Pizza House - Get 3 Large Pizzas for the Price of 2! Order now!`,
+                `Sub-Way - Eating ~~out~~ Fresh!`,
+                `Jenny Jones - Freaky Fast Doms at your door in 15 minutes or less!`,
+                `Collar-Cola - The Dungeon's Favorite Soda!`,
+                `Dressup Co - Making Pretty Subbies out of Everyone!`,
+                `Eldritch Entities - You will Serve Us. Enquire today with the Overseer!`,
+                `Latex Mills Inc - Carefully manufacturing Latex since the last Latex Spill of 2026!`,
+                `Gagbot Enterprises - Making all subs words "Mmmph!~"`,
+                `Helix Handcuffs - Wrapping wrists since 1962!`,
+                `Luscious Leather - Manufacturing Leather Clothing for the Distinguished Dominant`,
+                `Maidsweeper Company - Sweeping Dishes and hidden bombs since 1983!`,
+                `J.G. Whisker - If you have a structured tuna plan and you need food **now,** call J.G. Whisker! 877-FOOD-MEOW!`,
+                `Chastity Arbitrage - Facilitating Chastity Sharing for all Good Girls and Boys!`,
+                `Puppy Girls United - Where's the Ball? Where's the Ball!?`,
+                `Royalty Brats Rights Advocates - Helping Princesses and Princes get what they're owed from the Mean Dommes!`,
+                `Crossroad Demons Inc - Do you have a problem in your life? Let us help you for a low cost you won't ever miss!`,
+                `Doll Corp - It **will** be a Doll. It will put on a Doll Visor. It will serve.`,
+                `The Ropeworks - Tying Everything Together!`,
+            ]
+            appendmessages.push(`-# Sponsored by ${sponsors[Math.floor(sponsors.length * Math.random())]}`);
+        }
+    }
+
+    if (appendmessages.length > 0) {
+        msgTreeMods.modified = true;
+        outtext = `${outtext}\n\n`
+        appendmessages.forEach((m) => {
+            outtext = `${outtext}${m}\n`
+        })
+    }
+
+    return { outtext: outtext, msgTreeMods: msgTreeMods }
 }
 
 async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtocol, modified) {
