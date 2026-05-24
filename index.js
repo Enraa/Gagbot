@@ -97,6 +97,7 @@ let processdatatoload = [
     { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {}},
     { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}},
     { textname: "userstats.txt", processvar: "userstats", default: {}},
+    { textname: "memberavatars.txt", processvar: "memberavatars", default: {}},
 ]
 
 processdatatoload.forEach((s) => {

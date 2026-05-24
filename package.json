@@ -10,11 +10,13 @@
   "description": "",
   "dependencies": {
     "adm-zip": "^0.5.16",
+    "axios": "^1.16.1",
     "compromise": "^14.14.5",
     "compromise-speech": "^0.1.1",
     "didyoumean2": "^7.0.4",
     "discord.js": "^14.26.4",
     "dotenv": "^17.2.3",
-    "garble": "^0.1.1"
+    "garble": "^0.1.1",
+    "sharp": "^0.34.5"
   }
 }

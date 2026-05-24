@@ -1,6 +1,8 @@
 const { WebhookClient, AttachmentBuilder, PermissionsBitField } = require("discord.js");
 const fs = require("fs");
 const path = require("path");
+const sharp = require("sharp");
+const axios = require("axios");
 const { getToys } = require("./toyfunctions");
 const { getWearable } = require("./wearablefunctions");
 const { getHeavy } = require("./heavyfunctions");
@@ -351,10 +353,117 @@ function getAlternateName(user) {
 /**********
  * Get the combined profile picture of the user, if their original one matches the one we have on file
  * 
- * 
+ * (guild member) member - The Guild Member object sending the message
  **********/
-function getPFP(userobject) {
+async function getPFP(member, mods = []) {
+    console.log(member.displayAvatarURL());
+    console.log(member.displayAvatarDecorationURL());
+    if (process.memberavatars == undefined) { process.memberavatars = {} }
+    if (process.memberavatars[member.id] && (process.memberavatars[member.id].avatarURL == member.displayAvatarURL()) && (process.memberavatars[member.id].decorationURL == member.displayAvatarDecorationURL())) {
+        if (process.memberavatars[member.id].link) {
+            return process.memberavatars[member.id].link;
+        }
+    }
 
+    // Fetch the Avatar URL
+    try {
+        // Get avatar decoration image
+        let imgfetch = await fetch(member.displayAvatarDecorationURL())
+        if (!imgfetch.ok) { console.log(`Error fetching Decoration URL: ${member.displayAvatarDecorationURL()}`)}
+        let buffd = await Buffer.from(await imgfetch.arrayBuffer())
+
+        let decorationimage = await sharp(buffd)
+            .resize({
+                fit: sharp.fit.contain,
+                height: 288,
+                width: 288
+            })
+            .toBuffer({ resolveWithObject: true })
+
+        // Get Avatar Image
+        imgfetch = await fetch(member.displayAvatarURL())
+        if (!imgfetch.ok) { console.log(`Error fetching Avatar URL: ${member.displayAvatarURL()}`)}
+        let buff = await Buffer.from(await imgfetch.arrayBuffer())
+
+        let avatarimage = await sharp(buff)
+            .resize({
+                fit: sharp.fit.contain,
+                height: 256,
+                width: 256
+            })
+            .toBuffer({ resolveWithObject: true})
+
+        console.log(decorationimage)
+        console.log(avatarimage)
+
+        // Put them all together!
+        let almostfinalimage = await sharp({
+            create: {
+                width: 300,
+                height: 300,
+                channels: 4,
+                background: { r: 255, g: 255, b: 255, alpha: 0}
+            }})
+            .composite([
+                {
+                    input: avatarimage.data,
+                    top: 16,
+                    left: 16,
+                },
+                {
+                    input: decorationimage.data,
+                    top: 0,
+                    left: 0
+                }
+            ])
+            .png()
+            .toBuffer()
+
+        // Create another instance to shrink it, because apparently doing this cleanly in one sharp instance is too hard. 
+        let finalimage = await sharp(almostfinalimage)
+            .extract({
+                top: 16,
+                left: 16,
+                width: 256,
+                height: 256
+            })
+            .png()
+            .toBuffer({ resolveWithObject: true })
+
+        // Finally, make a payload and upload the image
+        let imagepayload = new URLSearchParams({
+            image: finalimage.data.toString('base64'),
+            type: "base64"
+        })
+        let imgurupload = await axios.post('https://api.imgur.com/3/image', imagepayload, {
+            headers: { 
+                'Authorization': 'Client-ID 546c25a59c58ad7',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            }
+        })
+        let imgururl = imgurupload?.data?.data?.link;
+
+        if (imgururl) {
+            process.memberavatars[member.id] = {
+                avatarURL: member.displayAvatarURL(),
+                decorationURL: member.displayAvatarDecorationURL(),
+                link: imgururl
+            }
+
+            if (process.readytosave == undefined) {
+                process.readytosave = {};
+            }
+            process.readytosave.memberavatars = true;
+
+            return imgururl;
+        }
+    }
+    catch (err) {
+        console.log(err);
+        return member.displayAvatarURL();
+    }
+
+    return member.displayAvatarURL();
 }
 
 /*********
@@ -382,3 +491,5 @@ exports.messageSendChannel = messageSendChannel;
 exports.runMessageEvents = runMessageEvents;
 
 exports.getAlternateName = getAlternateName;
+
+exports.getPFP = getPFP;
