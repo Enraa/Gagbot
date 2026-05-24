@@ -924,6 +924,12 @@ const texts_heavy = {
                         },
                         text: `USER_TAG tosses a VAR_C2 in the air and lets it hit USER_THEIR head, activating its capture function and sealing USER_THEM inside!`,
                     },
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Pile of Cats");
+                        },
+                        text: `USER_TAG reaches out to pet a cat. Soon after, the cat hops into USER_THEIR lap! USER_THEY_CAP USER_ISARE trapped as more cats show up to cuddle with USER_THEM!`,
+                    },
                 ],
                 legs: [
                     `USER_TAG pulls out a VAR_C2 and wraps it over USER_THEIR legs! USER_THEY_CAP will be quite unable to move now!`,
@@ -1002,6 +1008,12 @@ const texts_heavy = {
                             return t.c3.includes("One Bar Prison");
                         },
                         text: `USER_TAG guides TARGET_TAG onto the VAR_C3, forcing TARGET_THEM to spread TARGET_THEIR legs to stand in the footrests before holding TARGET_THEM in place as the pole rises between TARGET_THEIR's legs, trapping TARGET_THEM in place!`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Pile of Cats");
+                        },
+                        text: `Like the Simpsons crazy cat lady, USER_TAG picks up a bunch of cats and starts lobbing them one by one at TARGET_TAG! Soon, TARGET_THEY TARGET_ISARE stunned as TARGET_THEY become trapped by a purring VAR_C3!`,
                     },
                     {
                         only: (t) => {
