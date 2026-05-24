@@ -4817,7 +4817,7 @@ const texts_eventfunctions = {
 					`The Doll Processing Facility's arms use scissors to cut off the VAR_C1 that USER_TAG is wearing!`,
 					{
 						only: (t) => {
-							return t.c1.includes("Lipstick") || t.c1.includes("Eyeshadow");
+                            return (process.wearabletypes?.find((w) => w.name == t.c1)?.tags && process.wearabletypes?.find((w) => w.name == t.c1)?.tags["makeup"])
 						},
 						text: `The Doll Processing Facility's arms wipe away USER_TAG's VAR_C1!`,
 					},
@@ -4829,7 +4829,7 @@ const texts_eventfunctions = {
 					`The Doll Processing Facility appears to make an "oops" sound as it realizes USER_TAG is still wearing a VAR_C1. It removes the item posthaste!`,
 					{
 						only: (t) => {
-							return t.c1.includes("Lipstick") || t.c1.includes("Eyeshadow");
+                            return (process.wearabletypes?.find((w) => w.name == t.c1)?.tags && process.wearabletypes?.find((w) => w.name == t.c1)?.tags["makeup"])
 						},
 						text: `The Doll Processing Facility realizes USER_TAG is still wearing VAR_C1. It cleans it off it with haste!`,
 					},
@@ -4840,7 +4840,7 @@ const texts_eventfunctions = {
 					`The Doll Processing Facility's belt reverses in direction as it sees offending clothing on USER_TAG. The VAR_C1 is removed in agitation.`,
 					{
 						only: (t) => {
-							return t.c1.includes("Lipstick") || t.c1.includes("Eyeshadow");
+                            return (process.wearabletypes?.find((w) => w.name == t.c1)?.tags && process.wearabletypes?.find((w) => w.name == t.c1)?.tags["makeup"])
 						},
 						text: `The Doll Processing Facility realizes USER_TAG has somehow gained VAR_C1. It promptly removes it with a cloth!`,
 					},
@@ -4851,7 +4851,7 @@ const texts_eventfunctions = {
 					`The Doll Processing Facility beeps loudly as it detects a foreign object, VAR_C1 on the new doll, USER_TAG. The item is incinerated immediately.`,
 					{
 						only: (t) => {
-							return t.c1.includes("Lipstick") || t.c1.includes("Eyeshadow");
+                            return (process.wearabletypes?.find((w) => w.name == t.c1)?.tags && process.wearabletypes?.find((w) => w.name == t.c1)?.tags["makeup"])
 						},
 						text: `The Doll Processing Facility sounds an alert as it detects someone has applied VAR_C1 on the new doll, USER_TAG. The doll is promptly scrubbed clean!`,
 					},

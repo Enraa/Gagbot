@@ -320,6 +320,7 @@ let wearabletypes = [
 	{ name: "Pocket Watch", value: "pocket_watch", colorable: true, category: "Misc", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Hoshi no Tama", value: "tama", category: "Misc" },
 	{ name: "Silk Belt", value: "belt_silk", colorable: true, category: "Misc" },
+    { name: "Warden Belt", value: "belt_warden", colorable: true, category: "Misc" },
 	{ name: "Leather Belt", value: "belt_leather", colorable: true, category: "Misc" },
 	{ name: "Leather Bandolier", value: "bandolier_leather", category: "Misc" },
 	{ name: "", value: "tome", colorable: true, category: "Misc", uniqueColors: ["Tome of Bondage", "Cursed Tome", "Shadowy Tome", "Chained Tome", "Gothic Tome", "Angelic Tome"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
