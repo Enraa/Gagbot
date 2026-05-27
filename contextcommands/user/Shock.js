@@ -24,7 +24,7 @@ module.exports = {
                     await interaction.reply({ content: `<@${interaction.targetId}> isn't wearing a remote controlled shock collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                await handleTouchEvent(interaction.user.id, interaction.targetId, "shock", true).then(
+                await handleTouchEvent({ id: interaction.user.id }, { id: interaction.targetId }, "shock", true).then(
                     async (success) => {
                         addArousal(interaction.targetId, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                         await interaction.reply({ content: getTextGeneric("remotecontrolshock_other", data) })
