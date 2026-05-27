@@ -2100,7 +2100,11 @@ const texts_touch = {
                     "arms": [
                         `USER_TAG squirms as USER_THEY attemptUSER_S to pat TARGET_TAG, but fails without USER_THEIR arms.`,
                         `USER_TAG tries to contort USER_THEIR arms in some kind of angle to pat TARGET_TAG, but unfortunately USER_THEY just can't place USER_THEIR hands on TARGET_THEM!`,
-                        `USER_TAG knows USER_THEIR arms are bound away, but that doesn't stop USER_THEM from trying to pat TARGET_TAG on the head!`
+                        `USER_TAG knows USER_THEIR arms are bound away, but that doesn't stop USER_THEM from trying to pat TARGET_TAG on the head!`,
+                        `With the power of imagination, USER_TAG tries to pat TARGET_TAG. It's about the best that can be done without arms.`,
+                        `USER_TAG wants to pat TARGET_TAG but cannot. Maybe USER_THEY should enlist the help of some nearby friends to assist!`,
+                        `USER_TAG tugs against USER_THEIR bondage to try to break an arm free, but sadly fails to do so. TARGET_TAG's head will just have to remain unpatted.`,
+                        `*If only my arms were free...* thinks USER_TAG. TARGET_TAG's head looks so appealing to pat right now but USER_THEY just can't get USER_THEIR hand free to do so.`
                     ],
                     "legs": [
                         `USER_TAG almost falls over trying to pat TARGET_TAG, but TARGET_THEY TARGET_ISARE able to deftly dodge the pats!`,
@@ -2108,17 +2112,26 @@ const texts_touch = {
                     ],
                     "container": [
                         `USER_TAG wants to pat TARGET_TAG, but USER_THEY USER_ISARE locked away in a container!`,
-                        `USER_TAG waves USER_THEIR hands to pat TARGET_TAG, but unfortunately TARGET_THEY TARGET_ISARE in a different container. Or castle. One of the two!`
+                        `USER_TAG waves USER_THEIR hands to pat TARGET_TAG, but unfortunately TARGET_THEY TARGET_ISARE in a different container. Or castle. One of the two!`,
+                        `USER_TAG probably forgot that USER_THEY USER_ISARE in a container right now, so reaching TARGET_TAG is a challenging prospect.`,
+                        `USER_TAG imagines patting TARGET_TAG since USER_THEY USER_ISARE in a container. Oh well.`,
+                        `TARGET_TAG looks like TARGET_THEY want a headpat, from over there. Sadly, TARGET_THEY aren't in the same container as USER_TAG so TARGET_THEIR head remains unpatted.`
                     ],
                     "blind": [
                         `USER_TAG waves USER_THEIR hands around in the dark, trying to feel USER_THEIR way to TARGET_TAG to pat TARGET_THEIR head. Unfortunately, TARGET_THEY just can't be found!`,
-                        `Though USER_TAG is peering deeply into USER_THEIR own dark void, USER_THEY just can't find TARGET_TAG, let alone give TARGET_THEM a headpat!`
+                        `Though USER_TAG is peering deeply into USER_THEIR own dark void, USER_THEY just can't find TARGET_TAG, let alone give TARGET_THEM a headpat!`,
+                        `USER_TAG tries to focus on the voice of TARGET_TAG, to find TARGET_THEM in the inky darkness, but sadly, USER_THEIR hands do not find TARGET_THEIR head...`,
+                        `USER_TAG is not a bat, so using echolocation to find TARGET_TAG is a serious challenge. USER_THEY_CAP failUSER_S to find TARGET_THEM.`
                     ],
                     noboundmiss: [
                         `USER_TAG tries to pat TARGET_TAG's head, but fumbles and misses TARGET_THEM completely!`,
                         `USER_TAG lunges forward to pat TARGET_TAG's head, but TARGET_THEY TARGET_ISARE able to move out of the way just in time!`,
-                        `USER_TAG closes USER_THEIR eyes, preparing USER_THEIR signature attack: The Pat Sonata! But the attack misses.`,
-                        `USER_TAG tries to place USER_THEIR hand on TARGET_TAG's head, but unfortunately a slight movement and a cascade of errors causes USER_THEM to miss!`
+                        `USER_TAG closes USER_THEIR eyes, preparing USER_THEIR signature attack: The Pat Sonata! But the attack misses TARGET_TAG.`,
+                        `USER_TAG tries to place USER_THEIR hand on TARGET_TAG's head, but unfortunately a slight movement and a cascade of errors causes USER_THEM to miss!`,
+                        `It's not for lack of trying, but for some reason, USER_TAG fumbles while trying to give TARGET_TAG a headpat and misses TARGET_THEM!`,
+                        `USER_TAG may need to check USER_THEIR calculations because the headpat missed TARGET_TAG entirely.`,
+                        `Despite not being blindfolded or USER_THEIR legs bound or anything, USER_TAG still manages to miss TARGET_TAG. TARGET_THEY_CAP must be built different.`,
+                        `The accuracy check is 95% - a 1 in 20 chance to miss - and *still* USER_TAG manages to miss TARGET_TAG when trying to place USER_THEIR hand on TARGET_THEIR head.`
                     ]
                 }
             }
