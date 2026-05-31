@@ -619,6 +619,63 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
             }
         })
         appendmessages.push(convertPronounsText(texts[Math.floor(texts.length * Math.random())], { interactionuser: msg.member, targetuser: msg.member }));
+        /*** This code is ugly because I couldn't call the functions due to circulars. 
+         * 
+         * This should ideally be refactored in the future. 
+        */
+        if (process.userstats == undefined) { process.userstats = {} }
+        if (process.userstats[targetuser.id] == undefined) { process.userstats[targetuser.id] = {} }
+        let newcount = (process.userstats[targetuser.id]["timesshocked"] ?? 0) + amount;
+        process.userstats[targetuser.id]["timesshocked"] = newcount;
+        if (process.readytosave == undefined) {
+            process.readytosave = {};
+        }
+        process.readytosave.userstats = true;
+        try {
+            if (getOption(user, "pishockusername") && (typeof getOption(user, "pishockusername") == "string") &&
+                getOption(user, "pishockname") && (typeof getOption(user, "pishockname") == "string") &&
+                getOption(user, "pishockcode") && (typeof getOption(user, "pishockcode") == "string") &&
+                getOption(user, "pishockapikey") && (typeof getOption(user, "pishockapikey") == "string")) {
+                    // Set up the https request. 
+                    const reqdata = JSON.stringify({
+                        Username: getOption(user, "pishockusername"),
+                        Name: getOption(user, "pishockname"),
+                        Code: getOption(user, "pishockcode"),
+                        Intensity: 100,
+                        Duration: 2,
+                        Apikey: getOption(user, "pishockapikey"),
+                        Op: (getOption(user, "pishockop") ? getOption(user, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
+                    });
+                    const options = {
+                        hostname: 'do.pishock.com/api/apioperate', // without https://
+                        port: 443, // Default SSL port
+                        path: '/path', // Path after the domain
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                    }
+
+                    fetch('https://do.pishock.com/api/apioperate', {
+                        method: 'POST', // Specifying the method
+                        headers: {
+                            'Content-Type': 'application/json', // Specifying content type as JSON
+                        },
+                        body: reqdata, // Stringifying the JSON body
+                    })
+                    .then(response => console.log(response)) // Parsing the JSON response
+                    .catch((error) => {
+                        console.error('Error:', error); // Error handling
+                    });
+            }
+            else {
+                console.log(`No shocker or invalid shocker information configured for ID ${user}.`)
+            }
+        }
+        catch (err) {
+            console.log(err)
+        }
+        /***/
     }
 
     // If they're wearing a sponsorship collar, 30% chance to add a sponsor. 

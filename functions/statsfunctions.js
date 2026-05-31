@@ -195,6 +195,18 @@ function statsGeneratePage(user) {
                 type: "counter",
                 stat: "headpattriplecrits"
             },
+        ],
+        Other: [
+            {
+                name: "Shocks Received",
+                type: "counter",
+                stat: "timesshocked"
+            },
+            {
+                name: "Shocks On Self",
+                type: "counter",
+                stat: "timesshockedself"
+            },
         ]
     }
 

@@ -2,7 +2,8 @@ const { ContextMenuCommandBuilder, ApplicationCommandType, MessageFlags } = requ
 const { canAccessCollar, getCollar, getCollarName } = require('../../functions/collarfunctions');
 const { getTextGeneric } = require('../../functions/textfunctions');
 const { addArousal } = require('../../functions/vibefunctions');
-const { handleTouchEvent } = require('../../functions/touchfunctions');
+const { handleTouchEvent, shockUser } = require('../../functions/touchfunctions');
+const { statsAddCounter } = require('../../functions/statsfunctions');
 
 module.exports = {
     data: new ContextMenuCommandBuilder()
@@ -28,6 +29,8 @@ module.exports = {
                     async (success) => {
                         addArousal(interaction.targetId, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                         await interaction.reply({ content: getTextGeneric("remotecontrolshock_other", data) })
+                        statsAddCounter(interaction.targetId, "timesshocked");
+                        shockUser(interaction.targetId);
                     },
                     async (failure) => {
                         await interaction.reply({ content: `You don't have access to <@${interaction.targetId}>'s collar remote control!`, flags: MessageFlags.Ephemeral })
@@ -49,6 +52,9 @@ module.exports = {
                 }
                 addArousal(interaction.targetId, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                 await interaction.reply({ content: getTextGeneric("remotecontrolshock_self", data) })
+                statsAddCounter(interaction.targetId, "timesshocked");
+                statsAddCounter(interaction.targetId, "timesshockedself");
+                shockUser(interaction.targetId);
             }
         } catch (err) {
             console.log(err);

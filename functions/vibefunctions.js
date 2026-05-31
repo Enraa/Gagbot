@@ -1521,7 +1521,15 @@ function getArousal(user) {
 
 function addArousal(user, change) {
 	if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: Date.now() };
+    if (isNaN(change)) {
+        console.log(`ERROR - Attempting to add a NaN arousal to user ID ${user}`)
+        change = 0; // set it to 0
+    }
 	process.arousal[user].arousal += change;
+    if (isNaN(process.arousal[user].arousal)) {
+        console.log(`ERROR - ${user} is somehow not a number!`)
+        process.arousal[user].arousal = 0;
+    }
 	getCombinedTraits(user).afterArousalChange({ userID: user, prevArousal: (process.arousal[user].arousal - change), currArousal: process.arousal[user].arousal });
 	return process.arousal[user].arousal;
 }

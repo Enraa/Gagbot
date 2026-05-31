@@ -400,6 +400,197 @@ const configoptions = {
 				return false;
 			},
 		},
+        shockermodel: {
+			name: "External Shocker",
+			desc: "Which Shock API to use? Choices include Pishock",
+			choices: [
+				{
+					name: "None",
+					helptext: "*No Third-Party Shocker*",
+					select_function: (userID) => { return true },
+					value: "none",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Pishock",
+					helptext: `Utilizing the Pishock API. Check menu choices for **Pishock Config**`,
+					select_function: (userID) => { return true },
+					value: "pishock",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "none",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		}
+    },
+    "Pishock Config": {
+        pishockusername: {
+			name: "Pishocker Configuration - Username",
+			desc: "Set username to display when shocking you:",
+			descmodal: "Write the exact username to shock as:",
+			choices: [
+				{
+					name: "Set Username",
+					helptext: "Displaying as **",
+					helptextnone: "*No Shocker Username Set*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `Gagbot`;
+			},
+			placeholder: (userID) => {
+				return `Gagbot`;
+			},
+            textvaluedisplay: (val) => {
+                return `${val}**`;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        pishockname: {
+			name: "Pishocker Configuration - Name",
+			desc: "Name of the Pishocker:",
+			descmodal: "Write the exact name of the shocker:",
+			choices: [
+				{
+					name: "Set Name",
+					helptext: "Shocker Name is **",
+					helptextnone: "*No Shocker Name Set*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `Gagbot`;
+			},
+			placeholder: (userID) => {
+				return `Gagbot`;
+			},
+            textvaluedisplay: (val) => {
+                return `${val}**`;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        pishockcode: {
+			name: "Pishocker Configuration - Code",
+			desc: "Set the shocker's share code:",
+			descmodal: "Copy-paste the shocker code:",
+			choices: [
+				{
+					name: "Set Shocker Code",
+					helptext: "Shocker Code: **",
+					helptextnone: "*No Shocker Code Set*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `Shocker Code...`;
+			},
+			placeholder: (userID) => {
+				return `Shocker Code...`;
+			},
+            textvaluedisplay: (val) => {
+                return `${val}**`;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        pishockapikey: {
+			name: "Pishocker Configuration - API Key",
+			desc: "Set the shocker's API Key:",
+			descmodal: "Copy-paste the API Key:",
+			choices: [
+				{
+					name: "Set API Key",
+					helptext: "API Key: **",
+					helptextnone: "*No API Key Set*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (userID) => {
+				return `Shocker API Key...`;
+			},
+			placeholder: (userID) => {
+				return `Shocker API Key...`;
+			},
+            textvaluedisplay: (val) => {
+                return `${val}**`;
+            },
+			menutype: "choice_textentry",
+			default: (userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        pishockop: {
+			name: "Pishocker Mode",
+			desc: "Which Mode should the Pishockers operate as?",
+			choices: [
+				{
+					name: "Shock",
+					helptext: "Shock when triggered",
+					select_function: (userID) => { return true },
+					value: "0",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Vibrate",
+					helptext: `Vibrate when Triggered`,
+					select_function: (userID) => { return true },
+					value: "1",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Beep",
+					helptext: `Beep when Triggered`,
+					select_function: (userID) => { return true },
+					value: "2",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "0",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
     },
 	Arousal: {
 		arousalsystem: {
@@ -3135,9 +3326,17 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 
 		let menupageoptionsarr = [];
 		Object.keys(configoptions).forEach((k) => {
-			if (k != "Server" && k != "Bot") {
-				let opt = new StringSelectMenuOptionBuilder().setLabel(k).setValue(`menuopt_${k}`);
-				menupageoptionsarr.push(opt);
+			if ((k != "Server") && (k != "Bot")) {
+                if (k == "Pishock Config") {
+                    if ((getOption(interaction.user.id, "shockermodel") == "pishock")) {
+                        let opt = new StringSelectMenuOptionBuilder().setLabel(k).setValue(`menuopt_${k}`);
+				        menupageoptionsarr.push(opt);
+                    }
+                }
+                else {
+                    let opt = new StringSelectMenuOptionBuilder().setLabel(k).setValue(`menuopt_${k}`);
+				    menupageoptionsarr.push(opt);
+                }
 			}
 		});
 

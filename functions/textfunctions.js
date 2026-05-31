@@ -2108,7 +2108,7 @@ const texts_touch = {
                         `USER_TAG places USER_THEIR hand on TARGET_TAG's head. TARGET_THEY_CAP nuzzleTARGET_S into USER_THEIR hand with zero thoughts!`,
                         `USER_TAG considers pouncing on TARGET_TAG to tie TARGET_THEM up, but instead opts to pat TARGET_THEM. The bondage can wait for later!`,
                         `USER_TAG giggles as USER_THEY placeUSER_S USER_THEIR hands on TARGET_TAG's head, giving TARGET_THEM a silly little headpat!`,
-                        `USER_TAG scritches TARGET_TAG's head in all the fun little places! TARGET_TAG sighs in content at the headpat...`,
+                        `USER_TAG scritches TARGET_TAG's head in all the fun little places! TARGET_THEY_CAP sighTARGET_S in content at the headpat...`,
                         `USER_TAG gently pats the hair on TARGET_TAG's head, giving TARGET_THEM a sense of glee as the sensations run down TARGET_THEIR body!`,
                         `USER_TAG gingerly runs USER_THEIR fingers over TARGET_TAG's ears and behind TARGET_THEIR head to give TARGET_THEM a small but gentle scritch!`,
                         `USER_TAG brushes the hair out of TARGET_TAG's face as USER_THEY runUSER_S their hand over TARGET_THEIR head with a cute little headpat!`,

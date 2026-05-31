@@ -6,8 +6,9 @@ const { getConsent, handleConsent, collarPermModal } = require("./../functions/i
 const { getTextGeneric } = require("./../functions/textfunctions.js");
 const { getOption } = require("../functions/configfunctions.js");
 const { getUserTags } = require("../functions/configfunctions.js");
-const { handleTouchEvent } = require("../functions/touchfunctions.js");
+const { handleTouchEvent, shockUser } = require("../functions/touchfunctions.js");
 const { addArousal } = require("../functions/vibefunctions.js");
+const { statsAddCounter } = require("../functions/statsfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -48,6 +49,8 @@ module.exports = {
                     async (success) => {
                         addArousal(targetuser.id, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                         await interaction.reply({ content: getTextGeneric("remotecontrolshock_other", data) })
+                        statsAddCounter(targetuser.id, "timesshocked");
+                        shockUser(targetuser.id)
                     },
                     async (failure) => {
                         await interaction.reply({ content: `You don't have access to <@${targetuser.id}>'s collar remote control!`, flags: MessageFlags.Ephemeral })
@@ -69,6 +72,9 @@ module.exports = {
                 }
                 addArousal(targetuser.id, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                 await interaction.reply({ content: getTextGeneric("remotecontrolshock_self", data) })
+                statsAddCounter(targetuser.id, "timesshocked");
+                statsAddCounter(targetuser.id, "timesshockedself");
+                shockUser(targetuser.id)
             }
 		} catch (err) {
 			console.log(err);

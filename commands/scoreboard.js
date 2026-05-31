@@ -18,6 +18,8 @@ async function generateList(menuchoice) {
         { name: "Headpat Crits Received", useroption: "headpatcritsreceived" },
         { name: "Headpat Double Crits Received", useroption: "headpatdoublecritsreceived" },
         { name: "Headpat Triple Crits Received", useroption: "headpattriplecritsreceived" },
+        { name: "Shocks Received", useroption: "timesshocked" },
+        { name: "Shocks on Self", useroption: "timesshockedself" },
         { name: "Gagged Messages", useroption: "gaggedmessages" },
         { name: "Struggle Messages", useroption: "strugglemessages" },
     ]

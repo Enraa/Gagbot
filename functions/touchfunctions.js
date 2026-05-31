@@ -187,6 +187,58 @@ function doHeadpatFunctions(headpatter, recipient, returnedobject) {
 }
 
 /********
+ * Attempt to shock the target user ID, if they have configurations set.
+ * 
+ * - (user id) user - The person to shock!
+ ********/
+async function shockUser(user) {
+    try {
+        if (getOption(user, "pishockusername") && (typeof getOption(user, "pishockusername") == "string") &&
+            getOption(user, "pishockname") && (typeof getOption(user, "pishockname") == "string") &&
+            getOption(user, "pishockcode") && (typeof getOption(user, "pishockcode") == "string") &&
+            getOption(user, "pishockapikey") && (typeof getOption(user, "pishockapikey") == "string")) {
+                // Set up the https request. 
+                const reqdata = JSON.stringify({
+                    Username: getOption(user, "pishockusername"),
+                    Name: getOption(user, "pishockname"),
+                    Code: getOption(user, "pishockcode"),
+                    Intensity: 100,
+                    Duration: 2,
+                    Apikey: getOption(user, "pishockapikey"),
+                    Op: (getOption(user, "pishockop") ? getOption(user, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
+                });
+                const options = {
+                    hostname: 'do.pishock.com/api/apioperate', // without https://
+                    port: 443, // Default SSL port
+                    path: '/path', // Path after the domain
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                }
+
+                fetch('https://do.pishock.com/api/apioperate', {
+                    method: 'POST', // Specifying the method
+                    headers: {
+                        'Content-Type': 'application/json', // Specifying content type as JSON
+                    },
+                    body: reqdata, // Stringifying the JSON body
+                })
+                .then(response => console.log(response)) // Parsing the JSON response
+                .catch((error) => {
+                    console.error('Error:', error); // Error handling
+                });
+        }
+        else {
+            console.log(`No shocker or invalid shocker information configured for ID ${user}.`)
+        }
+    }
+    catch (err) {
+        console.log(err)
+    }
+}
+
+/********
  * Returns a Promise where Resolve allowed the action and Reject disallowed the action. Checks the relevant config variable under "type" and DMs the recipient for permission if necessary.
  * 
  * - (user object) user - The person performing the action
@@ -370,3 +422,4 @@ async function handleTouchEvent(user, target, type, noprompt = false) {
 
 exports.rollPatChance = rollPatChance;
 exports.handleTouchEvent = handleTouchEvent;
+exports.shockUser = shockUser;
