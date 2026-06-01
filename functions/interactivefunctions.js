@@ -819,7 +819,7 @@ async function handleMajorRestraint(user, target, type, restraint) {
                 limitationstext = `This will prevent you from using commands to modify relevant toy on your breasts with **/toy**! Additionally, the restraint will be keyed to ${user} until it is unlocked by ${getPronouns(user.id, "object")}!`
 				break;
             case "mitten":
-                restraintfullname = getMittenName(undefined, restraint);
+                restraintfullname = getMittenName(undefined, restraint) ?? "Standard Mittens";
                 prettytype = "Mittens"
                 emoji = `${process.emojis.mitten}`;
                 limitationstext = `This will prevent you from adding or removing gags with **/gag** or masks with **/mask** until someone else unmittens you!`
