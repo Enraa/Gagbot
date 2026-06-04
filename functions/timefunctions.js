@@ -419,13 +419,14 @@ function checkFumbledTemporaryKeys() {
         Object.entries(process[pv]).forEach(async (en) => {
             try {
                 if (en[1]?.fumbled && en[1]?.temporarykeyholdertime && (en[1]?.temporarykeyholdertime < Date.now())) {
-                    delete en[1].fumbled;
-                    delete en[1].temporarykeyholdertime;
-                    delete en[1].temporarykeyholder;
                     let data = {
                         interactionuser: { id: en[1].temporarykeyholder },
                         targetuser: { id: en[0] }
                     }
+
+                    delete en[1].fumbled;
+                    delete en[1].temporarykeyholdertime;
+                    delete en[1].temporarykeyholder;
 
                     if ((pv == "chastity") || (pv == "chastitybra")) {
                         let def = (pv == "chastity") ? "belt" : "bra"
@@ -436,8 +437,16 @@ function checkFumbledTemporaryKeys() {
                     }
 
                     // Now that @___ has had her fun, she returns the keys for @___'s chastity belt. 
-                    messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), message.channel.id)
-
+                    if (process.recentmessages[en[0]]) {
+                        messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[en[0]])
+                    }
+                    else if (process.recentmessages[data.interactionuser.id]) {
+                        messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[data.interactionuser.id])
+                    }
+                    else {
+                        console.log("No suitable channel found for returning temp key.")
+                    }
+                    
                     if (process.readytosave == undefined) {
                         process.readytosave = {};
                     }
