@@ -1045,6 +1045,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             if (collarkeyaccess == 2) {
                 collartimelockedtext = "Timelocked (Sealed)";
             }
+            let addlcollartext = ``;
             if (getCollar(inspectuserID) && getCollar(inspectuserID).additionalcollars) {
                 addlcollartext = `\n-# ‎   |--- Additional Effects: `
                 getCollar(inspectuserID).additionalcollars.forEach((ac) => {
