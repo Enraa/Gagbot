@@ -5155,11 +5155,26 @@ const getTextGeneric = (type, data_in) => {
             `USER_TAG finds the key to TARGET_TAG's VAR_C1! TARGET_THEY_CAP would be in trouble if USER_TAG had arms to pick it up...`,
             `TARGET_TAG's key has been missing for a bit, but fortunately, USER_TAG spots it! Not that USER_THEY can pick it up, of course, but it's the thought that counts.`
         ],
+        spot_key_self: [
+            `USER_TAG thinks USER_THEY can see a little glimmer on the ground that looks a lot like USER_THEIR VAR_C1 key. USER_THEY_CAP motionUSER_S towards TARGET_TAG to pick it up, but TARGET_THEY failTARGET_S to find it.`,
+            `While talking, USER_TAG sees a glint on the ground that looks suspiciously like USER_THEIR VAR_C1 key. TARGET_TAG is busy though, so USER_THEY failUSER_S to point it out for TARGET_THEM.`
+        ],
+        spot_key_other: [
+            `USER_TAG thinks USER_THEY see a glimmer on the ground, but the moment USER_THEY blinkUSER_S, it's gone again. Hopefully it wasn't the key to TARGET_TAG's VAR_C1.`,
+            `USER_TAG wonders if USER_THEY actually saw TARGET_TAG's VAR_C1 key there, but that would be such a silly place to put it. TARGET_THEY_CAP would never put it there, afterall.`
+        ],
+        returnkeysfromfumble: [
+            `Having had USER_THEIR fun, USER_TAG finally returns the key for TARGET_TAG's VAR_C1 to its rightful owner!`,
+            `It was but a brief moment, but USER_TAG hands the key USER_THEY found for TARGET_TAG's VAR_C1 back to its owner.`
+        ],
         given_key: [
-            `USER_TAG is confused when it is given keys for TARGET_TAG. It makes a note to return them... eventually.`
+            `USER_TAG is confused when it is given keys for TARGET_TAG. It makes a note to return them... eventually.`,
+            `USER_TAG grins devillishly as it notices it has keys for TARGET_TAG. TARGET_THEY_CAP may have to subject TARGET_THEMSELF to some... *experiments*... to get them back!`,
+            `USER_TAG smirks as TARGET_TAG is so subby that TARGET_THEY just can't help but throw keys at it. Such a good TARGET_PRAISEOBJECT!`,
+            `It may be the purveyor of restraints, but USER_TAG still enjoys holding keys from silly little TARGET_PRAISEOBJECTs that hand them to it.`
         ],
         return_key_collar: [
-            `USER_TAG returns the keys for TARGET_TAG's collar after a while. `
+            `USER_TAG returns the keys for TARGET_TAG's collar after a while.`
         ],
         return_key_chastity: [
             `USER_TAG grants TARGET_TAG TARGET_THEIR chastity once more as it gives TARGET_THEM TARGET_THEIR keys.`

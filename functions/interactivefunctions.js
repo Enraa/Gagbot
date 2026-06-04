@@ -785,6 +785,12 @@ async function handleMajorRestraint(user, target, type, restraint) {
             }
 		} 
 
+        // Always approve ourselves. 
+        if (user.id === target.id) {
+            res(true);
+            return
+        }
+
 		if (hasOption == "disabled") {
 			rej("Disabled");
 			return;

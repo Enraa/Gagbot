@@ -6,6 +6,7 @@ const fs = require("fs");
 const { getTextGeneric } = require("./textfunctions.js");
 const { getChastityBraKeys } = require("./vibefunctions.js");
 const { transferChastityBraKey } = require("./vibefunctions.js");
+const { getOption } = require("./configfunctions.js");
 
 // returns whether the locking was successful
 function timelockChastity(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
@@ -219,9 +220,14 @@ function gagbotHeldKeyTime(wearerid, type) {
             targetuser: { id: wearerid },
         }
         messageSendChannel(getTextGeneric("given_key", data), process.recentmessages[wearerid])
+        let addedtime = Math.floor(Math.min(Math.random(), 0.4) * getOption(wearerid, "gagbotholdtimer")); // 40-100% of the time
         process.heldkeytimers[`${wearerid}_${type}`] = {
-            releasetime: Date.now() + (Math.floor(Math.random() * 480000)) + 120000 // 2-10 minutes
+            releasetime: Date.now() + addedtime
         }
+        if (process.readytosave == undefined) {
+            process.readytosave = {};
+        }
+        process.readytosave.heldkeytimers = true;
     }
     else {
         if (process[type] && process[type][wearerid] && process[type][wearerid].keyholder != process.client.user.id) { // Key somehow returned to the wearer, or the device was removed

@@ -98,6 +98,7 @@ let processdatatoload = [
     { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}},
     { textname: "userstats.txt", processvar: "userstats", default: {}},
     { textname: "memberavatars.txt", processvar: "memberavatars", default: {}},
+    { textname: "heldkeytimers.txt", processvar: "heldkeytimers", default: {}},
 ]
 
 processdatatoload.forEach((s) => {
@@ -289,11 +290,6 @@ client.on("messageCreate", async (msg) => {
     // This is called when a message is received.
     try {
         if (msg.author.bot || msg.webhookId || msg.stickers?.first()) { return };
-        /*console.log(`${(msg.channel.id != process.env.CHANNELID)}`)
-        console.log(`${msg.webhookId}`)
-        console.log(`${msg.author.bot}`)
-        console.log(`${msg.stickers?.first()}`)
-        console.log(`${msg.attachments?.first()}`)*/
         let channelid = msg.channelId;
         let thread = false;
         if (msg.channel.isThread()) {
@@ -301,17 +297,13 @@ client.on("messageCreate", async (msg) => {
             channelid = msg.channel.parentId
         }
         if (process.webhook[channelid]) {
-            if ((getBotOption("bot-allowkeyfinding") == "Enabled") && (getOption(msg.author.id, "canfindkeys") == "enabled")) {
+            if ((getBotOption("bot-allowkeyfinding") == "Enabled")) {
                 handleKeyFinding(msg);
             }
             process.recentmessages[msg.author.id] = msg.channel.id;
             modifymessage(msg, thread ? msg.channelId : null);
         }
         if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
-        //console.log(msg.member.displayAvatarURL())
-        //console.log(msg.member.displayName)
-        //handleKeyFinding(msg);
-        //garbleMessage(msg.channel.isThread() ? msg.channelId : null, msg);
     }
     catch (err) {
         console.log(err);

@@ -31,6 +31,11 @@ function rollKeyFumble(keyholder, locked) {
 	// get the initial fumble chance
 	let fumbleChance = getFumbleChance(keyholder, locked);
 
+    if (process.forcefumble) { 
+        process.forcefumble = false;
+        return 2 
+    };
+
 	// just save time and skip this thing if they cannot fumble
 	if (fumbleChance <= 0) return 0;
     console.log(fumbleChance)
@@ -122,7 +127,9 @@ async function handleKeyFinding(message) {
         Object.entries(process[pv]).forEach(async (en) => {
             try {
                 if (en[1]?.fumbled) {
-                    if ((en[1].keyholder == message.member.id) && (Math.random() < (Math.max(Math.min(message.content.length * 0.0005, 0.2), 0.01)))) {
+                    console.log("Attempting to find key " + en[0])
+                    if (Math.random() < (Math.max(Math.min(message.content.length * 0.0005, 0.3), process.forcefindkey ? 1.0 : 0.01))) {
+                        process.forcefindkey = false;
                         let weareruser = await message.guild.members.fetch(en[0]);
                         let finderpart = "other";
                         if (weareruser.id == message.member.id) {
@@ -154,22 +161,64 @@ async function handleKeyFinding(message) {
                         else if (pv == "collar") {
                             data.c1 = getBaseCollar(en[1].collartype ?? `collar_leather`).name
                         }
-                        if (Math.random() < chance) {
-                            // Successfully found the key!
-                            messageSendChannel(getTextGeneric(`find_key_${finderpart}${extrafindkeypart}`, data), message.channel.id)
-                            // Delete the Fumbled date.
-                            delete process[pv][en[0]].fumbled;
-                            if (process.readytosave == undefined) {
-                                process.readytosave = {};
+                        // Now, we're gonna check if we were allowed to find it in the first place.
+                        // Case 1: We own the keys, this is the conventional unfumble approach. 
+                        // Simply remove the fumbled flag. 
+                        if ((en[1].keyholder == message.member.id)) {
+                            if (Math.random() < chance) {
+                                // Successfully found the key!
+                                messageSendChannel(getTextGeneric(`find_key_${finderpart}${extrafindkeypart}`, data), message.channel.id)
+                                // Delete the Fumbled date.
+                                delete process[pv][en[0]].fumbled;
+                                if (process.readytosave == undefined) {
+                                    process.readytosave = {};
+                                }
+                                process.readytosave.collar = true;
+                                process.readytosave.chastity = true;
+                                process.readytosave.chastitybra = true;
                             }
-                            process.readytosave.collar = true;
-                            process.readytosave.chastity = true;
-                            process.readytosave.chastitybra = true;
+                            else {
+                                // Fumbled finding the key lol
+                                messageSendChannel(getTextGeneric(`find_keyfail_${finderpart}${extrafindkeypart}`, data), message.channel.id)
+                            }
+                        }   
+                        // Case 2: We spot our own key... we wont be able to do anything about it though, our keyholder needs to find the key!
+                        // This inherently prevents potentially finding own keys to escape, but if thats really needed we can just bump this down the list probably.
+                        else if (en[0] == message.member.id) {
+                            targetuser = await message.guild.members.fetch(en[1].keyholder) // Use the keyholder object to bring that into scope
+                            // @___ spots the key to her chastity belt! She tries to point it out to @___ but they're unable to find it...
+                            messageSendChannel(getTextGeneric(`spot_key_self`, data), message.channel.id)
                         }
-                        else {
-                            // Fumbled finding the key lol
-                            messageSendChannel(getTextGeneric(`find_keyfail_${finderpart}${extrafindkeypart}`, data), message.channel.id)
+                        // Case 3: We can find keys but the person whose restraint it is does NOT want us to find their key
+                        // Simply send a message hinting at a sparkle. 
+                        else if ((getOption(message.member.id, "findkeymode") == "others") && (getOption(en[0], "ownrestraintfindkeymode") == "onlykh")) {
+                            // @___ *thinks* she sees a little glimmer that looks like @___'s chastity belt key, but the moment she blinks, it disappears again...
+                            messageSendChannel(getTextGeneric(`spot_key_other`, data), message.channel.id)
                         }
+                        // Case 4: We can find keys and the person whose restraint it is DOES want us to find their key.
+                        // This will result in giving us keyholder using the .temporarykeyholder prop and .temporarykeyholdertime. This MUST be set and checked every bot tick to clear.
+                        else if ((getOption(message.member.id, "findkeymode") == "others") && (getOption(en[0], "ownrestraintfindkeymode") != "onlykh")) {
+                            if (Math.random() < chance) {
+                                // Successfully found the key!
+                                messageSendChannel(getTextGeneric(`find_key_${finderpart}${extrafindkeypart}`, data), message.channel.id)
+                                // Set temporary keyholder!
+                                process[pv][en[0]].temporarykeyholder = message.member.id;
+                                process[pv][en[0]].temporarykeyholdertime = (Date.now() + getOption(en[0], "ownrestraintfindkeymode"))
+                                if (process.readytosave == undefined) {
+                                    process.readytosave = {};
+                                }
+                                process.readytosave.collar = true;
+                                process.readytosave.chastity = true;
+                                process.readytosave.chastitybra = true;
+                            }
+                            else {
+                                // Fumbled finding the key lol
+                                messageSendChannel(getTextGeneric(`find_keyfail_${finderpart}${extrafindkeypart}`, data), message.channel.id)
+                            }
+                        }
+                    }
+                    else {
+                        console.log("Failed roll")
                     }
                 }
             }

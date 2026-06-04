@@ -820,6 +820,91 @@ const configoptions = {
 				return getOption(userID, "fumbling") == "disabled";
 			},
 		},
+        findkeymode: {
+            name: "Find Keys",
+            desc: "Whose fumbled keys can you discover?",
+            choices: [
+                {
+                    name: "Only Mine",
+                    helptext: "You will only be able to find keys for restraints you are the primary keyholder of",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: "self",
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "Others",
+                    helptext: "You will be able to find any fumbled keys. When you discover a key that isn't yours, you will return it after a short period of time.",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: "others",
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice",
+            default: "self",
+            disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+        },
+        ownrestraintfindkeymode: {
+            name: "Find My Keys",
+            desc: "Who can discover your fumbled keys?",
+            choices: [
+                {
+                    name: "Only Keyholder",
+                    helptext: "Only your keyholder can discover the keys to your restraints. Others may detect a sparkle.",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: "onlykh",
+                    style: ButtonStyle.Primary
+                },
+                {
+                    name: "2 Minutes",
+                    helptext: "Others can discover your keys and play with you for 2 minutes before automatically returning them.",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 120000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "5 Minutes",
+                    helptext: "Others can discover your keys and play with you for 5 minutes before automatically returning them.",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 300000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "15 Minutes",
+                    helptext: "Others can discover your keys and play with you for 15 minutes before automatically returning them.",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 900000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "30 Minutes",
+                    helptext: "Others can discover your keys and play with you for 30 minutes before automatically returning them.",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 1800000,
+                    style: ButtonStyle.Secondary
+                },
+            ],
+            menutype: "choice",
+            default: "onlykh",
+            disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+        },
 		arousaleffectpotency: {
 			name: "Arousal Effect Potency",
 			desc: "How much should arousal modify your speech?",
@@ -1187,6 +1272,66 @@ const configoptions = {
 				return false;
 			}, // if true, button is greyed out
 		},
+        gagbotholdtimer: {
+            name: "Gagbot Held Time",
+            desc: "If your keys are found in Gagbot's possession, up to how long is Gagbot allowed to hold them?",
+            choices: [
+                {
+                    name: "10 minutes",
+                    helptext: "Only a short while...",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 600000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "30 minutes",
+                    helptext: "A little while!",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 1800000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "60 minutes",
+                    helptext: "A while!",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 3600000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "3 hours",
+                    helptext: "A *while!*",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 10800000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "24 hours",
+                    helptext: "A decent time",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 86400000,
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "72 hours",
+                    helptext: "A long time",
+                    select_function: (userID) => {
+                        return false;
+                    },
+                    value: 259200000,
+                    style: ButtonStyle.Danger
+                },
+            ]
+        },
 		revokeconsent: {
 			name: "Revoke Consent",
 			desc: "Revoke your consent from the bot? You will need to consent again to bondage in the future.",

@@ -29,7 +29,7 @@ exports.fumble = (data) => {
 
 // Discard for bras
 exports.discard = (data) => {
-    return discardKey(data.userID, data.keyholderID, "chastitybra")
+    return discardKey(data.userID, data.keyholderID, "chastity bra")
 }
 
 exports.canUnequip = (data) => { return canAccessChastityBra(data.userID, data.keyholderID, true).access }

@@ -221,6 +221,10 @@ const saveFiles = () => {
 					filepath = `${process.GagbotSavedFileDirectory}/memberavatars.txt`;
 					processvar = "memberavatars";
 					break;
+                case "heldkeytimers":
+					filepath = `${process.GagbotSavedFileDirectory}/heldkeytimers.txt`;
+					processvar = "heldkeytimers";
+					break;
 				default:
 					console.log(`Unknown save variable: ${k}`);
 			}
@@ -273,6 +277,7 @@ function processTimedEvents() {
     updateSharedBreath();
 	processUnlockTimes(process.client);
     runTickEvents();
+    checkFumbledTemporaryKeys();
     checkGagbotKeys();
 }
 
@@ -402,6 +407,47 @@ function runTickEvents() {
             }
 		});
 	}
+}
+
+function checkFumbledTemporaryKeys() {
+    let processvars = ["collar", "chastity", "chastitybra"];
+    processvars.forEach((pv) => {
+        if (process[pv] == undefined) { process[pv] = {} }
+        Object.entries(process[pv]).forEach(async (en) => {
+            try {
+                if (en[1]?.fumbled && en[1]?.temporarykeyholdertime && (en[1]?.temporarykeyholdertime < Date.now())) {
+                    delete en[1].fumbled;
+                    delete en[1].temporarykeyholdertime;
+                    delete en[1].temporarykeyholder;
+                    let data = {
+                        interactionuser: { id: en[1].temporarykeyholder },
+                        targetuser: { id: en[0] }
+                    }
+
+                    if ((pv == "chastity") || (pv == "chastitybra")) {
+                        let def = (pv == "chastity") ? "belt" : "bra"
+                        data.c1 = getBaseChastity(en[1].chastitytype ?? `${def}_silver`).name
+                    }
+                    else if (pv == "collar") {
+                        data.c1 = getBaseCollar(en[1].collartype ?? `collar_leather`).name
+                    }
+
+                    // Now that @___ has had her fun, she returns the keys for @___'s chastity belt. 
+                    messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), message.channel.id)
+
+                    if (process.readytosave == undefined) {
+                        process.readytosave = {};
+                    }
+                    process.readytosave.collar = true;
+                    process.readytosave.chastity = true;
+                    process.readytosave.chastitybra = true;
+                }
+            }
+            catch (err) {
+                console.log(err)
+            }
+        })
+    })
 }
 
 // Checks each user ID in process variables against all of the guild member maps
