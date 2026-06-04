@@ -658,6 +658,11 @@ const canAccessChastity = (chastityuser, keyholder, unlock, cloning) => {
 	if (clonedkeys.includes(keyholder) && getChastity(chastityuser)?.access == 1 && chastityuser != keyholder) {
 		accessval.access = true;
 	}
+    // Secondary Keyholder access if temporary keyholder. 
+    if (getChastity(chastityuser)?.temporarykeyholder && (getChastity(chastityuser)?.temporarykeyholder == keyholder) && (getChastity(chastityuser)?.temporarykeyholdertime < Date.now())) {
+        accessval.access = true;
+    }
+
 	// Else, return false.
 
 	return accessval;
@@ -741,6 +746,10 @@ const canAccessChastityBra = (chastityuser, keyholder, unlock, cloning) => {
 	if (clonedkeys.includes(keyholder) && getChastityBra(chastityuser)?.access == 1 && chastityuser != keyholder) {
 		accessval.access = true;
 	}
+    // Keyholder access if temporary keyholder. 
+    if (getChastityBra(chastityuser)?.temporarykeyholder && (getChastityBra(chastityuser)?.temporarykeyholder == keyholder) && (getChastityBra(chastityuser)?.temporarykeyholdertime < Date.now())) {
+        accessval.access = true;
+    }
 	// Else, return false.
 
 	return accessval;

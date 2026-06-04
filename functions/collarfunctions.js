@@ -226,6 +226,10 @@ const canAccessCollar = (collaruser, keyholder, unlock, cloning) => {
 		accessval.access = true;
 		accessval.public = true;
 	}
+    // Keyholder access if temporary keyholder. 
+    if (getCollar(collaruser)?.temporarykeyholder && (getCollar(collaruser)?.temporarykeyholder == keyholder) && (getCollar(collaruser)?.temporarykeyholdertime < Date.now())) {
+        accessval.access = true;
+    }
 	// Else, return false.
 
 	return accessval;

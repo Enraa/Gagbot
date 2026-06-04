@@ -126,7 +126,7 @@ async function handleKeyFinding(message) {
         if (process[pv] == undefined) { process[pv] = {} }
         Object.entries(process[pv]).forEach(async (en) => {
             try {
-                if (en[1]?.fumbled) {
+                if (en[1]?.fumbled && !en[1]?.temporarykeyholder) {
                     console.log("Attempting to find key " + en[0])
                     if (Math.random() < (Math.max(Math.min(message.content.length * 0.0005, 0.3), process.forcefindkey ? 1.0 : 0.01))) {
                         process.forcefindkey = false;
