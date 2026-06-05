@@ -75,8 +75,8 @@ module.exports = {
 					interactionuser: interaction.user,
 					targetuser: chastityuser,
 					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: (braorbelt == "chastitybelt" ? getChastityName(chastityuser, bondagetype) : getChastityBraName(chastityuser, bondagetype)) ?? (braorbelt == "chastitybelt" ? "chastity belt" : "chastity bra"),
-                    c3: `<@${braorbelt == "chastitybelt" ? getChastity(chastityuser)?.keyholder : getChastityBra(chastityuser)?.keyholder}>`
+					c2: (braorbelt == "chastitybelt" ? getChastityName(chastityuser.id, bondagetype) : getChastityBraName(chastityuser.id, bondagetype)) ?? (braorbelt == "chastitybelt" ? "chastity belt" : "chastity bra"),
+                    c3: `<@${braorbelt == "chastitybelt" ? getChastity(chastityuser.id)?.keyholder : getChastityBra(chastityuser.id)?.keyholder}>`
 				},
 			};
             if (braorbelt == "chastitybelt") {

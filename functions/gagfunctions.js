@@ -640,27 +640,27 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
          * This should ideally be refactored in the future. 
         */
         if (process.userstats == undefined) { process.userstats = {} }
-        if (process.userstats[targetuser.id] == undefined) { process.userstats[targetuser.id] = {} }
-        let newcount = (process.userstats[targetuser.id]["timesshocked"] ?? 0) + amount;
-        process.userstats[targetuser.id]["timesshocked"] = newcount;
+        if (process.userstats[msg.member.id] == undefined) { process.userstats[msg.member.id] = {} }
+        let newcount = (process.userstats[msg.member.id]["timesshocked"] ?? 0) + 1;
+        process.userstats[msg.member.id]["timesshocked"] = newcount;
         if (process.readytosave == undefined) {
             process.readytosave = {};
         }
         process.readytosave.userstats = true;
         try {
-            if (getOption(user, "pishockusername") && (typeof getOption(user, "pishockusername") == "string") &&
-                getOption(user, "pishockname") && (typeof getOption(user, "pishockname") == "string") &&
-                getOption(user, "pishockcode") && (typeof getOption(user, "pishockcode") == "string") &&
-                getOption(user, "pishockapikey") && (typeof getOption(user, "pishockapikey") == "string")) {
+            if (getOption(msg.member.id, "pishockusername") && (typeof getOption(msg.member.id, "pishockusername") == "string") &&
+                getOption(msg.member.id, "pishockname") && (typeof getOption(msg.member.id, "pishockname") == "string") &&
+                getOption(msg.member.id, "pishockcode") && (typeof getOption(msg.member.id, "pishockcode") == "string") &&
+                getOption(msg.member.id, "pishockapikey") && (typeof getOption(msg.member.id, "pishockapikey") == "string")) {
                     // Set up the https request. 
                     const reqdata = JSON.stringify({
-                        Username: getOption(user, "pishockusername"),
-                        Name: getOption(user, "pishockname"),
-                        Code: getOption(user, "pishockcode"),
+                        Username: getOption(msg.member.id, "pishockusername"),
+                        Name: getOption(msg.member.id, "pishockname"),
+                        Code: getOption(msg.member.id, "pishockcode"),
                         Intensity: 100,
                         Duration: 2,
-                        Apikey: getOption(user, "pishockapikey"),
-                        Op: (getOption(user, "pishockop") ? getOption(user, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
+                        Apikey: getOption(msg.member.id, "pishockapikey"),
+                        Op: (getOption(msg.member.id, "pishockop") ? getOption(msg.member.id, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
                     });
                     const options = {
                         hostname: 'do.pishock.com/api/apioperate', // without https://
@@ -685,7 +685,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                     });
             }
             else {
-                console.log(`No shocker or invalid shocker information configured for ID ${user}.`)
+                console.log(`No shocker or invalid shocker information configured for ID ${msg.member.id}.`)
             }
         }
         catch (err) {
