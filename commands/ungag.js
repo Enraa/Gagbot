@@ -172,6 +172,14 @@ module.exports = {
 						if (getGag(gaggeduser.id)) {
 							// They are wearing a gag
 							data.gag = true;
+                            // Now check if we have any gags that are locked on!
+                            let lockedheadgears = [];
+                            if (process.headwear[gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[gaggeduser.id]) }
+                            if (gagtoremove && process.headwear[gaggeduser.id] && process.headwear[gaggeduser.id][`gagharness_${gagtoremove}`]) {
+                                data.failed = true
+                                interaction.reply(getText(data));
+                                return;
+                            }
 							// Now lets make sure the wearer wants that.
 							if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
 								// Allowed immediately, lets go
@@ -180,7 +188,12 @@ module.exports = {
 									interaction.reply(getText(data));
 									deleteGag(gaggeduser.id, gagtoremove);
 								} else {
-									data.multiple = true;
+                                    if (lockedheadgears.find((h) => h.startsWith(`gagharness`))) {
+                                        data.multipleharnessed = true;
+                                    }
+                                    else {
+                                        data.multiple = true;
+                                    }
 									interaction.reply(getText(data));
 									deleteGag(gaggeduser.id);
 								}
@@ -197,7 +210,12 @@ module.exports = {
 											await interaction.followUp(getText(data));
 											deleteGag(gaggeduser.id, gagtoremove);
 										} else {
-											data.multiple = true;
+											if (lockedheadgears.find((h) => h.startsWith(`gagharness`))) {
+                                                data.multipleharnessed = true;
+                                            }
+                                            else {
+                                                data.multiple = true;
+                                            }
 											await interaction.followUp(getText(data));
 											deleteGag(gaggeduser.id);
 										}

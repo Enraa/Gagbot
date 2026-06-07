@@ -3192,10 +3192,18 @@ const texts_ungag = {
 			},
 			other: {
 				gag: {
+                    failed: [
+                        `USER_TAG tugs at the VAR_C2 on TARGET_TAG's face, but fails miserably in removing the head harness holding the gag securely in TARGET_THEIR mouth.`,
+                        `Despite USER_TAG's best efforts, TARGET_TAG's speech remains stolen from TARGET_THEM. A shame. Maybe someone should unlock the harness on TARGET_THEM!`
+                    ],
 					single: [
                         `USER_TAG undoes the straps holding TARGET_TAG's VAR_C2 on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, 
                         `USER_TAG unclasps the buckle for TARGET_TAG's VAR_C2, then carefully pops it out.`, 
                         `USER_TAG carefully unbuckles TARGET_TAG's VAR_C2, and lets TARGET_THEIR face fall forward to allow the drool to drain out from TARGET_THEIR mouth.`
+                    ],
+                    multipleharnessed: [
+                        `USER_TAG pulls off some of the gags on TARGET_TAG, but not all of them. Several have some pesky locks on the straps covering TARGET_THEIR head!`,
+                        `TARGET_TAG looks gratefully at USER_TAG as USER_THEY removeUSER_S the gags. Sadly, not all of them can be removed because of the head harness still on TARGET_THEIR head!`
                     ],
 					multiple: [
                         `USER_TAG undoes all the straps holding TARGET_TAG's gags in TARGET_THEIR mouth, letting them fall into TARGET_THEIR lap.`, 
