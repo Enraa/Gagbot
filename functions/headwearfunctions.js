@@ -130,7 +130,7 @@ const getHeadwear = (userID) => {
 	return process.headwear[userID]?.wornheadwear ? process.headwear[userID]?.wornheadwear : [];
 };
 
-const getHeadwearBinder = (userID) => {
+const getHeadwearBinder = (userID, item) => {
 	if (process.headwear == undefined) {
 		process.headwear = {};
 	}
