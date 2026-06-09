@@ -115,6 +115,9 @@ let wearabletypes = [
 	{ name: "Nipple Clamps", value: "nippleclamps", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Leather", "Rubber", "Magic", "Crystal"] },
 	{ name: "Wingbinders", value: "wingbinders", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
 	{ name: "Tail Bindings", value: "tail_bind", colorable: true, category: "Bondage", uniqueColors: ["Hardlight", "Steel", "Golden", "Leather", "Rubber", "Cursed"] },
+    { name: "Ribbon Body Wrappings", value: "ribbon_wearablebody", colorable: true, category: "Bondage", uniqueColors: ["Festive"] },
+    { name: "Ribbon Leg Wrappings", value: "ribbon_wearablelegs", colorable: true, category: "Bondage", uniqueColors: ["Festive"] },
+    { name: "Ribbon Arm Wrappings", value: "ribbon_wearablearms", colorable: true, category: "Bondage", uniqueColors: ["Festive"] },
 
 	// Cosplay, Swimwear and Outfits
 	{ name: "Labcoat", value: "labcoat", category: "Cosplay" },
@@ -280,6 +283,10 @@ let wearabletypes = [
 	{ name: "Pumps", value: "pumps", colorable: true, category: "Footwear" },
 	{ name: "Anklets", value: "anklets", colorable: true, category: "Footwear", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Floral", "Leafy"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Greaves", value: "greaves", colorable: true, category: "Footwear", uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Fluffy Paw Socks", value: "socks_fluffypaw", colorable: true, category: "Footwear" },
+    { name: "Socks", value: "socks", colorable: true, category: "Footwear" },
+    { name: "Latex Socks", value: "socks_latex", colorable: true, category: "Footwear" },
+    { name: "Satin Socks", value: "socks_satin", colorable: true, category: "Footwear" },
 
 	// Gloves and Armwear
 	{ name: "Opera Gloves", value: "gloves_opera", colorable: true, category: "Hands", uniqueColors: ["Gothic"] },
