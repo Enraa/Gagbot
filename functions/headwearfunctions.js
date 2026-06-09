@@ -195,18 +195,28 @@ const deleteHeadwear = (userID, headwear) => {
             process.headtypes[headwear].onUnlock({ userID: userID });
         }
 		process.headwear[userID].wornheadwear.splice(process.headwear[userID].wornheadwear.indexOf(headwear), 1);
+        delete process.headwear[userID][headwear]; // Removed origbinders for specific headgears
 		if (process.headwear[userID].wornheadwear.length == 0) {
 			delete process.headwear[userID];
 		}
 	} else if (process.headwear[userID]) {
 		let locks = getLockedHeadgear(userID);
 		let savedheadgear = [];
+        let origbounds = {};
 		process.headwear[userID].wornheadwear.forEach((g) => {
 			if (locks.includes(g)) {
 				savedheadgear.push(g);
+                if (process.headwear[userID][g]) {
+                    origbounds[g] = Object.assign({}, process.headwear[userID][g]) // deep clone the origbound object
+                }
+                delete process.headwear[userID][g];
 			}
 		});
 		process.headwear[userID].wornheadwear = savedheadgear;
+        Object.keys(origbounds).forEach((k) => {
+            // Bring back the objects!
+            process.headwear[userID][k] = origbounds[k];
+        })
 		if (process.headwear[userID].wornheadwear.length == 0) {
 			delete process.headwear[userID];
 		}

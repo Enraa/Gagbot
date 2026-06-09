@@ -15,7 +15,5 @@ exports.setupfunction = (data) => {
             showfunction: (targetuser) => { return (process.gags[targetuser] && process.gags[targetuser].find((ga) => ga.gagtype == g)) }
         })
     })
-    console.log(process.gagtypes)
-    console.log(returnheadwear);
     return returnheadwear;
 }

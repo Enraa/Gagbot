@@ -275,15 +275,13 @@ client.on("clientReady", async () => {
             }
             catch (err) { console.log(err) }
         }, 6000)
-    }
+    } 
     catch (err) {
         console.log(err)
     }
     process.timetick = setInterval(() => {
         processTimedEvents()
     }, getBotOption("bot-timetickrate") ?? 6000)
-    //restartChastityTimers(client);
-    // setInterval(updateArousalValues, Number(process.env.AROUSALSTEPSIZE ?? 6000));
 })
 
 client.on("messageCreate", async (msg) => {
