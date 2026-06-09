@@ -768,7 +768,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             let lockedheadgears = [];
             if (process.headwear[inspectuserID]) { lockedheadgears = Object.keys(process.headwear[inspectuserID]) }
             lockedheadgears.forEach((lh) => {
-                if (process.headwear[inspectuserID][lh] && process.headwear[inspectuserID][lh].origbinder) {
+                if (process.headwear[inspectuserID][lh] && process.headwear[inspectuserID][lh].lockable && process.headwear[inspectuserID][lh].origbinder) {
                     wearingtext = `${wearingtext}\n-# ‎   - **${process.headtypes[lh].name}** key held by <@${process.headwear[inspectuserID][lh].origbinder}>`
                 }
             })
@@ -959,7 +959,7 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
             let lockedheadgears = [];
             if (process.headwear[inspectuserID]) { lockedheadgears = Object.keys(process.headwear[inspectuserID]) }
             lockedheadgears.forEach((lh) => {
-                if (process.headwear[inspectuserID][lh].origbinder) {
+                if (process.headwear[inspectuserID][lh] && process.headwear[inspectuserID][lh].lockable && process.headwear[inspectuserID][lh].origbinder) {
                     wearingtext = `${wearingtext}\n-# ‎   - **${process.headtypes[lh].name}** key held by <@${process.headwear[inspectuserID][lh].origbinder}>`
                 }
             })
