@@ -4403,6 +4403,12 @@ const texts_unwear = {
                         },
                         text: `USER_TAG carefully unclasps USER_THEIR VAR_C2 and slides them out of USER_THEIR ears!`,
                     },
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Blåhaj")
+                        },
+                        text: `USER_TAG finally loosens USER_THEIR grip on the VAR_C2 and sets it aside with a promise to cuddle it some more later!`,
+                    },
 				],
 				// Ephemeral
 				noworn: [`You aren't currently wearing a VAR_C2!`],
@@ -4521,6 +4527,12 @@ const texts_unwear = {
                             return t.c2.includes("Earrings");
                         },
                         text: `USER_TAG carefully unclasps TARGET_TAG's VAR_C2 and slides them out of TARGET_THEIR ears!`,
+                    },
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Blåhaj")
+                        },
+                        text: `USER_TAG gently pulls the VAR_C2 from TARGET_TAG's arms and sets it aside, despite TARGET_THEIR protesting eyes!`,
                     },
 				],
 				// Ephemeral
@@ -4771,6 +4783,12 @@ const texts_wear = {
                     },
                     text: `USER_TAG takes a pair of beautiful VAR_C2 and puts them on USER_THEIR ears!`,
                 },
+                {
+					only: (t) => {
+						return t.c2.includes("Blåhaj")
+					},
+					text: `USER_TAG picks up a VAR_C2 and cuddles it tightly! USER_THEY_CAP becomeUSER_S the Blåhaj!`,
+				},
 			],
 		},
 		other: {
@@ -4895,6 +4913,12 @@ const texts_wear = {
                     },
                     text: `USER_TAG takes a pair of beautiful VAR_C2 and puts them on TARGET_TAG's ears!`,
                 },
+                {
+					only: (t) => {
+						return t.c2.includes("Blåhaj")
+					},
+					text: `USER_TAG picks up a VAR_C2 and hands it to TARGET_TAG to cuddle! TARGET_THEY_CAP TARGET_ISARE so cute!`,
+				},
 			],
 		},
 	},
