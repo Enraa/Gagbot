@@ -1319,7 +1319,7 @@ const texts_key = {
                     required: (t) => {
                         return !getHeadwearRestrictions(t.interactionuser.id).canInspect;
                     },
-                    text: `USER_TAG is unable to see, so USER_THEY toss the key to USER_THEIR VAR_C1 somewhere... Who knows where?`,
+                    text: `USER_TAG is unable to see, so USER_THEY decideUSER_S to toss the key to USER_THEIR VAR_C1 somewhere... Who knows where?`,
                 },
                 {
                     required: (t) => {

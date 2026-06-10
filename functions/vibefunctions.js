@@ -602,13 +602,13 @@ const canAccessChastity = (chastityuser, keyholder, unlock, cloning) => {
 	// If unlock is set, only allow access to unlock if the keyholder is the correct one.
 	if (unlock) {
 		// Allow unlocks by a non-self keyholder at all times, assuming its not sealed.
-		if (getChastity(chastityuser)?.access != 2 && getChastity(chastityuser)?.keyholder == keyholder && keyholder != chastityuser && !getChastityBra(chastityuser)?.fumbled) {
+		if (getChastity(chastityuser)?.access != 2 && getChastity(chastityuser)?.keyholder == keyholder && keyholder != chastityuser && !getChastity(chastityuser)?.fumbled) {
 			accessval.access = true;
 		}
 		// Allow unlocks by any keyholder if no timelock if the key isn't fumbled!
 		if (getChastity(chastityuser)?.access == undefined && getChastity(chastityuser)?.keyholder == keyholder && !getChastity(chastityuser)?.fumbled) {
-			accessval.access = true;
-		}
+            accessval.access = true;
+        }
 		// Allow unlocks by secondary keyholder if no timelock
 		let clonedkeys = getChastity(chastityuser)?.clonedKeyholders ?? [];
 		if (getChastity(chastityuser)?.access == undefined && clonedkeys.includes(keyholder)) {
