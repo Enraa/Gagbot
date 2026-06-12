@@ -1,3 +1,4 @@
+const { DOLLVISORS, DRONEVISORS } = require("../headwearfunctions");
 const { getCollar } = require("./getCollar");
 const { getHeadwear } = require("./getHeadwear");
 const { getOption } = require("./getOption");
@@ -36,6 +37,11 @@ function getAlternateName(user) {
         else {
             outname = dollIDOverride;
         }
+    }
+
+    // Handle Drone Visor name
+    if (getHeadwear(user.id).find((headwear) => DRONEVISORS.includes(headwear))) {
+        outname = `⬡-Drone ${getOption(user.id, "dronevisorname")}`;
     }
 
     // Finally, if the outname is EXACTLY the same as the displayName we recieved, 
