@@ -28,8 +28,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("key")
 		.setDescription(`Prevent a worn item from being removed...`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addSubcommand((subcommand) =>
+        .addSubcommand((subcommand) =>
 			subcommand
 				.setName("clone")
 				.setDescription("Clone a primary key you're holding...")

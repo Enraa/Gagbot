@@ -7,8 +7,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("item")
 		.setDescription(`Prevent a worn item from being removed...`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addSubcommand((subcommand) =>
+        .addSubcommand((subcommand) =>
 			subcommand
 				.setName("protect")
 				.setDescription("Protect an item...")

@@ -12,8 +12,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("timelock")
 		.setDescription(`Lock yourself or your sub with a timer`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addUserOption((opt) => opt.setName("wearer").setDescription("Who's device to unlock?"))
+        .addUserOption((opt) => opt.setName("wearer").setDescription("Who's device to unlock?"))
 		.addStringOption((opt) => opt.setName("device").setDescription("What device to timelock?").setAutocomplete(true)),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();

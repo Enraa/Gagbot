@@ -10,8 +10,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("unwear")
 		.setDescription(`Remove fashion from someone. . .`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addUserOption((opt) => opt.setName("user").setDescription("Who to remove fashion from?"))
+        .addUserOption((opt) => opt.setName("user").setDescription("Who to remove fashion from?"))
 		.addStringOption((opt) => opt.setName("type").setDescription("What fashion to remove...").setAutocomplete(true)),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();

@@ -14,8 +14,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("gag")
 		.setDescription("Apply a gag to the user")
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addUserOption((opt) => opt.setName("user").setDescription("The user to gag"))
+        .addUserOption((opt) => opt.setName("user").setDescription("The user to gag"))
 		.addStringOption((opt) => opt.setName("gag").setDescription("Type of gag to use").setAutocomplete(true)
 		)
 		.addNumberOption((opt) => opt.setName("intensity").setDescription("How tightly to gag. Range 1-10").setMinValue(1).setMaxValue(10))

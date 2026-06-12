@@ -8,9 +8,7 @@ const { getText } = require("./../functions/textfunctions.js");
 module.exports = {
 	data: new SlashCommandBuilder()
         .setName("letgo")
-        .setDescription(`Try to get release`)
-        .setNSFW(process.nsfwflag), // Override this with /debug for testing, if necessary.
-
+        .setDescription(`Try to get release`),
 	async execute(interaction) {
 		try {
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT

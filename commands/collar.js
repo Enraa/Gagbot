@@ -12,7 +12,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("collar")
 		.setDescription(`Put a collar on, allowing others to /chastity, /heavy and /mitten you`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
 		//.addUserOption((opt) => opt.setName("keyholder").setDescription("Who can do anything to you?"))
 		//.addBooleanOption((opt) => opt.setName("freeuse").setDescription("Allow public access (Free Use?"))
 		.addStringOption((opt) => opt.setName("type").setDescription("What kind of collar to wear...").setAutocomplete(true)),

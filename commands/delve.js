@@ -5,7 +5,6 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("delve")
 		.setDescription(`ALPHA - Only available to Enraa`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
         .addSubcommand((subcommand) => 
             subcommand
                 .setName("run")
@@ -27,7 +26,7 @@ module.exports = {
                 interaction.reply(`You're not <@${process.client.application.owner.id}>. This command is currently in development and is not available for others to run.`)
                 return;
             }
-            await handleDelveSlashCommand(interaction);
+            await handleDelveSlashCommand(interaction);     
 		} catch (err) {
 			console.log(err);
 		}

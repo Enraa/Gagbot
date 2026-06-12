@@ -11,8 +11,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("drone")
 		.setDescription("Drone Commands")
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addSubcommand((subcommand) => 
+        .addSubcommand((subcommand) => 
             subcommand
                 .setName("code")
                 .setDescription("Use a status code...")

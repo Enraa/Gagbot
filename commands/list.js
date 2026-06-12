@@ -61,8 +61,7 @@ async function generateList(listchoice, page, details) {
 module.exports = {
 	data: new SlashCommandBuilder()
         .setName("list")
-        .setDescription("List out items of categories")
-        .setNSFW(process.nsfwflag), // Override this with /debug for testing, if necessary.
+        .setDescription("List out items of categories"),
 	async execute(interaction) {
 		try {
 			interaction.reply(await generateList("Heavy", 1, false));

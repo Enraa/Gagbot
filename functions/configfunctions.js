@@ -3942,6 +3942,10 @@ function getServerCmdRefresh(serverID) {
 // Syncs commands for server, with disabled options removing their
 // appropriate functions.
 async function setCommands(interaction, serverID) {
+    // Determine the nsfw level of the command. If it is level 3 (explict, in the API), individual channels
+    // cannot be marked as NSFW, as the entire server is considered NSFW. So we'll disable the flag. 
+    let server = await process.client.guilds.fetch(serverID);
+
 	// Grab all the command files from the commands directory
 	const commands = {};
 	const commandsPath = path.join(__dirname, "..", "commands");
@@ -3993,6 +3997,22 @@ async function setCommands(interaction, serverID) {
 	if (getServerOption(serverID, "server-allowapparel") == "Disabled" && getServerOption(serverID, "server-allowhead") == "Disabled") {
 		delete commands["item.js"];
 	}
+
+    // Mark all of the commands as NSFW, except for designated exemptions, but only if server is not NSFW
+    // Discord's API really needs to get more intelligent and let us detect that directly.
+    // And also allow NSFW commands on non-NSFW channels on NSFW servers.
+    // Really Discord, just... let us actually change the NSFW level of a channel
+    // You know you can.
+    // You just have a stupid client. 
+    // Anyway, this thing auto detects it now, no need to play with process flags anymore. 
+    if (server.nsfwLevel < 3) {
+        console.log("Server is not NSFW, setting commands to be NSFW")
+        Object.keys(commands).forEach((c) => {
+            if (commands[c] && commands[c].data && !["debug.js", "help.js", "pronouns.js", "reset.js"].includes(c)) {
+                commands[c].data.setNSFW(true);
+            }
+        })
+    }
 
 	let commandsforrest = [];
 	Object.keys(commands).forEach((k) => {

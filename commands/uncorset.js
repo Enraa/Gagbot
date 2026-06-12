@@ -14,8 +14,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("uncorset")
 		.setDescription("Remove a corset")
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addUserOption((opt) => opt.setName("user").setDescription("Who to remove the corset from")),
+        .addUserOption((opt) => opt.setName("user").setDescription("Who to remove the corset from")),
 	async execute(interaction) {
 		try {
 			let corsetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;

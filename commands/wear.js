@@ -12,8 +12,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("wear")
 		.setDescription(`Apply fashion to someone. . .`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addUserOption((opt) => opt.setName("user").setDescription("Who to apply fashion to?"))
+        .addUserOption((opt) => opt.setName("user").setDescription("Who to apply fashion to?"))
 		.addStringOption((opt) => opt.setName("type").setDescription("What fashion to wear...").setAutocomplete(true)),
 	async autoComplete(interaction) {
         try {

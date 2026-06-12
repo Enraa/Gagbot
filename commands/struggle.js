@@ -15,8 +15,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("struggle")
 		.setDescription("Struggle with one of your restraints...")
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addStringOption((opt) => opt.setName("type").setDescription("Which restraint to struggle with?").setAutocomplete(true)),
+        .addStringOption((opt) => opt.setName("type").setDescription("Which restraint to struggle with?").setAutocomplete(true)),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		try {

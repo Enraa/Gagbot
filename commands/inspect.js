@@ -6,8 +6,7 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("inspect")
 		.setDescription(`Inspect someone's restraints if they are wearing any`)
-        .setNSFW(process.nsfwflag) // Override this with /debug for testing, if necessary.
-		.addUserOption((opt) => opt.setName("user").setDescription("Who to inspect (blank to inspect yourself)")),
+        .addUserOption((opt) => opt.setName("user").setDescription("Who to inspect (blank to inspect yourself)")),
     async execute(interaction) {
         try {
             let inspectuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
