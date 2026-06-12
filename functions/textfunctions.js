@@ -1150,7 +1150,7 @@ const texts_heavy = {
                         only: (t) => {
                             return t.c3.includes("Cat in Lap");
                         },
-                        text: `USER_TAG sits down while talking. Suddenly, a cute and adorable cat hops up into USER_THEIR lap and starts purring!`,
+                        text: `USER_TAG places a cat toy in TARGET_TAG's lap. Suddenly, an adorable little furball shows up and roosts itself in TARGET_THEIR lap, purring loudly!`,
                     }
                 ],
                 container: [
