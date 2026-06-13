@@ -1,8 +1,6 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { getOption } = require("./configfunctions");
-const { getUserVar } = require("./usercontext");
 
 const heavytypes = [
 	// Armbinders

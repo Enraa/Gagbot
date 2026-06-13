@@ -1,8 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { getOption, setOption } = require("../functions/configfunctions.js");
-const { DOLLVISORS, getHeadwear } = require("../functions/headwearfunctions.js");
+const { DOLLVISORS } = require("../functions/headwearfunctions.js");
 const { ButtonBuilder } = require("@discordjs/builders");
 const { ButtonStyle, ComponentType } = require("discord.js");
 const { ActionRowBuilder } = require("@discordjs/builders");

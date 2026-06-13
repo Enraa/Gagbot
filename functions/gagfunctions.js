@@ -1,20 +1,16 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName, recordMessage, getPFP } = require(`./../functions/messagefunctions.js`);
-const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
-const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
-const { getVibeEquivalent } = require("./vibefunctions.js");
-const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS, processHeadwearTruthgas } = require("./headwearfunctions.js");
-const { getOption } = require(`./../functions/configfunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName, recordMessage } = require(`./../functions/messagefunctions.js`);
+const { corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
+const { stutterText } = require(`./../functions/vibefunctions.js`);
+const { processHeadwearEmoji, DOLLVISORS, processHeadwearTruthgas } = require("./headwearfunctions.js");
 const { getText } = require(`./../functions/textfunctions.js`);
 const { DOLLMAXPUNISHMENT, textGarbleDOLL, textGarbleDrone } = require(`./../functions/dollfunctions.js`);
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
-const { assignHeavy, getHeavyRestrictions } = require(`./../functions/heavyfunctions.js`);
 const { MessageAST } = require(`./../functions/message_ast.js`);
 const { emitEvent } = require("./eventhandling.js");
 const { convertPronounsText } = require("./pronounfunctions.js");
-const { getUserVar, setUserVar } = require("./usercontext.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];

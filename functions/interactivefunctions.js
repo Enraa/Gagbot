@@ -2,23 +2,11 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 const { SlashCommandBuilder, UserSelectMenuBuilder, MessageFlags, TextInputBuilder, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder, ComponentType, SectionBuilder, CheckboxGroupBuilder, User } = require("discord.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { collartypes, getCollarKeyholder, canAccessCollar, getCollar, getCollarTimelock, getCollarName } = require("./collarfunctions.js");
-const { getOption } = require("./../functions/configfunctions.js");
-const { getChastityKeyholder, getChastity, getChastityTimelock } = require("./../functions/vibefunctions.js");
-const { getHeavyBinder, convertheavy, heavytypes, getHeavyList } = require("./../functions/heavyfunctions.js");
-const { getGagBinder, getMittenBinder, mittentypes, gagtypes, getMittenName, getGags, getMitten } = require("./../functions/gagfunctions.js");
-const { getCorsetBinder } = require("./../functions/corsetfunctions.js");
-const { getHeadwearBinder, headweartypes, getHeadwearName, getHeadwear } = require("./../functions/headwearfunctions.js");
+const { collartypes } = require("./collarfunctions.js");
+const { mittentypes } = require("./../functions/gagfunctions.js");
+const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { configoptions } = require("./configfunctions.js");
-const { canAccessChastity } = require("./vibefunctions.js");
-const { wearabletypes, getWearable } = require("./wearablefunctions.js");
-const { getChastityName } = require("./vibefunctions.js");
-const { getChastityBra } = require("./vibefunctions.js");
-const { getChastityBraTimelock } = require("./vibefunctions.js");
-const { getChastityBraName } = require("./vibefunctions.js");
-const { getBaseChastity } = require("./chastityfunctions.js");
-const { getToys } = require("./toyfunctions.js");
+const { wearabletypes } = require("./wearablefunctions.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {

@@ -3,15 +3,8 @@ let fs = require("fs");
 let path = require("path");
 let admZip = require("adm-zip");
 const { unlockTimelockChastity, unlockTimelockChastityBra, unlockTimelockCollar, gagbotHeldKeyTime, checkGagbotKeys } = require(`./timelockfunctions.js`);
-const { updateArousalValues, getChastity, getChastityBra } = require("./vibefunctions.js");
-const { getGags, getMitten } = require("./gagfunctions.js");
-const { getHeadwear } = require("./headwearfunctions.js");
-const { getHeavy, getHeavyList } = require("./heavyfunctions.js");
-const { getWearable } = require("./wearablefunctions.js");
-const { getToys } = require("./toyfunctions.js");
-const { getCollar, getBaseCollar } = require("./collarfunctions.js");
+const { updateArousalValues } = require("./vibefunctions.js");
 const { updateSharedBreath } = require("./vibefunctions.js");
-const { getBaseChastity } = require("./chastityfunctions.js");
 const { messageSendChannel } = require("./messagefunctions.js");
 const { getTextGeneric } = require("./textfunctions.js");
 

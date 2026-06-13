@@ -1,7 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { getOption } = require("./configfunctions");
-const { getBaseChastity } = require("./chastityfunctions");
 
 // Imports each toy in ./toys and makes them accessible as objects
 // in process.toyslist mapped to their respective ids.

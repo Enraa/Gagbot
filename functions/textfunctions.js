@@ -1,10 +1,4 @@
 const { convertPronounsText } = require("./pronounfunctions.js");
-const { getWearable } = require("./wearablefunctions.js");
-const { getChastity, getChastityBra, getArousal } = require("./vibefunctions.js");
-const { getHeadwearRestrictions } = require("./headwearfunctions.js");
-const { getUserTags } = require("./configfunctions.js");
-const { getHeavy, getHeavyRestrictions } = require("./heavyfunctions.js");
-const { getCollar } = require("./collarfunctions.js");
 
 const texts_chastity = {
     self: {

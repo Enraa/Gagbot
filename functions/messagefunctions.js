@@ -3,12 +3,7 @@ const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 const axios = require("axios");
-const { getToys } = require("./toyfunctions");
-const { getWearable } = require("./wearablefunctions");
-const { getHeavy } = require("./heavyfunctions");
-const { getHeadwear, DOLLVISORS, DRONEVISORS } = require("./headwearfunctions");
-const { getCollar } = require("./collarfunctions");
-const { getOption } = require("./configfunctions");
+const { DOLLVISORS, DRONEVISORS } = require("./headwearfunctions");
 
 // Load all .png files into the bot as emoji, then assign them to process.emojis.
 // This can be used to allow the bot's emojis to function elsewhere.

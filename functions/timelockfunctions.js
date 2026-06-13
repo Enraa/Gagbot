@@ -1,12 +1,6 @@
-const { removeChastity, removeChastityBra, getChastityKeys, transferChastityKey } = require("./vibefunctions");
-const { removeCollar, getCollarKeys, transferCollarKey } = require("./collarfunctions.js");
-const { getPronouns } = require("./pronounfunctions.js");
 const { messageSendChannel } = require("./messagefunctions.js");
 const fs = require("fs");
 const { getTextGeneric } = require("./textfunctions.js");
-const { getChastityBraKeys } = require("./vibefunctions.js");
-const { transferChastityBraKey } = require("./vibefunctions.js");
-const { getOption } = require("./configfunctions.js");
 
 // returns whether the locking was successful
 function timelockChastity(client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {

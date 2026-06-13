@@ -1,13 +1,6 @@
 // Function space for Delves, the function for players to have stats and encounters. 
 
 const { ContainerBuilder, ButtonBuilder, ButtonStyle, MessageFlags, TextDisplayBuilder, ActionRowBuilder, StringSelectMenuOptionBuilder, StringSelectMenuBuilder } = require("discord.js")
-const { getHeadwear, getBaseHeadwear } = require("./headwearfunctions")
-const { getHeavyRestrictions, assignHeavy, getHeavy } = require("./heavyfunctions")
-const { addArousal, assignChastity, getChastity } = require("./vibefunctions")
-const { getMitten, assignGag, assignMitten, getGag } = require("./gagfunctions")
-const { getChastityBra } = require("./vibefunctions")
-const { assignChastityBra } = require("./vibefunctions")
-const { getUserTags } = require("./configfunctions")
 
 /*****************
  * Players will utilize their condition as returned by gags, masks, heavy bondage and the like. 

@@ -1,21 +1,10 @@
-const { findCollarKey, getBaseCollar } = require("./collarfunctions");
-const { findChastityKey, getChastity, getArousal, calcFrustration } = require("./vibefunctions");
+const { calcFrustration } = require("./vibefunctions");
 const { their } = require("./pronounfunctions");
-const { getMitten } = require("./gagfunctions");
 const fs = require("fs");
-const { getUserVar, setUserVar } = require("./usercontext");
-const { getHeavy } = require("./heavyfunctions");
-const { config, getOption, getBotOption } = require("./configfunctions");
-const { findChastityBraKey } = require("./vibefunctions");
 const { messageSendChannel } = require("./messagefunctions.js");
 const { PermissionsBitField } = require("discord.js");
 const { frustrationPenalties } = require("./vibefunctions.js");
-const { getCombinedTraits } = require("./vibefunctions.js");
 const { logConsole } = require("./logfunctions.js");
-const { getBaseChastity } = require("./chastityfunctions.js");
-const { getTextGeneric } = require("./textfunctions.js");
-const { getHeadwearRestrictions } = require("./headwearfunctions.js");
-const { statsAddCounter } = require("./statsfunctions.js");
 
 const MAX_FUMBLE_CHANCE = 0.95;
 
@@ -278,20 +267,6 @@ function discardKey(userid, keyholderid, device) {
 	}
     process.readytosave[processvar] = true;
     return typelocked;
-}
-
-function getFindFunction(restraint) {
-	switch (restraint) {
-		case "chastity belt":
-			return findChastityKey;
-		case "collar":
-			return findCollarKey;
-		case "chastity bra":
-			return findChastityBraKey;
-		default:
-			console.log(`No find function for restraint ${restraint}`);
-			return (_0, _1) => false;
-	}
 }
 
 async function sendFindMessage(message, lockedUser, restraint) {

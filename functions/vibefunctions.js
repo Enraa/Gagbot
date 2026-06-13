@@ -7,15 +7,9 @@ const nlpSpeech = require("compromise-speech");
 nlp.extend(nlpSpeech);
 
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
-const { getHeavy, heavyDenialCoefficient, getHeavyRestrictions } = require("./heavyfunctions.js");
 const { arousedtexts } = require("../vibes/aroused/aroused_texts.js");
 const { config } = require("./configfunctions.js");
-const { getOption, getBotOption } = require(`./configfunctions.js`);
-const { getUserVar, setUserVar } = require("./usercontext.js");
-const { getToys } = require("./toyfunctions.js");
 const { logConsole } = require("./logfunctions.js");
-const { getBaseChastity } = require("./chastityfunctions.js");
-const { getHeadwear } = require("./headwearfunctions.js");
 const { convertPronounsText } = require("./pronounfunctions.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated

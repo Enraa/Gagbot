@@ -1,14 +1,4 @@
 const { ButtonBuilder, ButtonStyle, ActionRowBuilder, ComponentType } = require("discord.js");
-const { getCollar, getOtherKeysCollar, getClonedCollarKey, canAccessCollar } = require("./collarfunctions");
-const { getOption } = require("./configfunctions");
-const { getGags, getMitten } = require("./gagfunctions");
-const { getHeadwearRestrictions, getHeadwear } = require("./headwearfunctions");
-const { getHeavyRestrictions, getHeavy } = require("./heavyfunctions");
-const { getToys } = require("./toyfunctions");
-const { getChastityBra } = require("./vibefunctions");
-const { getClonedChastityKey, getChastity } = require("./vibefunctions");
-const { getClonedChastityBraKey } = require("./vibefunctions");
-const { getWearable } = require("./wearablefunctions");
 const { statsAddCounter } = require("./statsfunctions");
 const { emitEvent } = require("./eventhandling");
 
