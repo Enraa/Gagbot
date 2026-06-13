@@ -1,5 +1,5 @@
 /***********
- * Gets a list of cloned keys the user is holding. 
+ * Gets a list of cloned collar keys the user is holding. 
  * 
  * - (user ID) userID - The user to check held keys
  * ---
