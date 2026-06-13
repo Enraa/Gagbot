@@ -2166,7 +2166,7 @@ const texts_touch = {
                         `USER_TAG scritches TARGET_TAG's head in all the fun little places! TARGET_THEY_CAP sighTARGET_S in content at the headpat...`,
                         `USER_TAG gently pats the hair on TARGET_TAG's head, giving TARGET_THEM a sense of glee as the sensations run down TARGET_THEIR body!`,
                         `USER_TAG gingerly runs USER_THEIR fingers over TARGET_TAG's ears and behind TARGET_THEIR head to give TARGET_THEM a small but gentle scritch!`,
-                        `USER_TAG brushes the hair out of TARGET_TAG's face as USER_THEY runUSER_S their hand over TARGET_THEIR head with a cute little headpat!`,
+                        `USER_TAG brushes the hair out of TARGET_TAG's face as USER_THEY runUSER_S USER_THEIR hand over TARGET_THEIR head with a cute little headpat!`,
                         {
                             required: (t) => {
                                 return (getArousal(t.targetuser.id) > 50)
@@ -3399,13 +3399,13 @@ const texts_unheadwear = {
                             required: (t) => {
                                 return process.headtypes[t.headwearchoice]?.blockinspect
                             },
-                            text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again as TARGET_THEY lookTARGET_S at USER_TAG rescuing USER_THEM from the darkness of the VAR_C2.`
+                            text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again after USER_TAG rescues USER_THEM from the darkness of the VAR_C2!`
                         },
                         {
                             required: (t) => {
                                 return process.headtypes[t.headwearchoice]?.blockinspect
                             },
-                            text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again as TARGET_THEY lookTARGET_S at USER_TAG rescuing USER_THEM from the darkness of the VAR_C2.`
+                            text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again after USER_TAG rescues USER_THEM from the darkness of the VAR_C2!`
                         },,
                         {
                             required: (t) => {
