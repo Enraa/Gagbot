@@ -1,4 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
+
 
 // This plug will vibrate when the wearer speaks, setting the vibe scale HIGH for it
 exports.calcVibeEffect = function (data) { 

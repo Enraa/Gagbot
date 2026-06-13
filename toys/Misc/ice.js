@@ -1,4 +1,4 @@
-const { getChastity, getArousal } = require("../../functions/vibefunctions")
+
 
 // Ice 
 // This reduces the arousal of the wearer by a proportion of their current arousal

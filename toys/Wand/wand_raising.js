@@ -1,4 +1,4 @@
-const { getChastity } = require("../../functions/vibefunctions")
+
 
 // Rising Vibes will modify their arousal gain over 5 minute intervals. 
 // The effective output will be *triple* the base rate,

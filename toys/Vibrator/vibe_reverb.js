@@ -1,4 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
+
 
 // This vibrator will only function if getUserVar(userID, "reverbEndTime") has any value
 exports.vibescale = (data) => { 

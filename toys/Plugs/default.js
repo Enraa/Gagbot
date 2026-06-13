@@ -1,6 +1,4 @@
-const { getBaseChastity } = require("../../functions/chastityfunctions")
-const { getOption } = require("../../functions/configfunctions")
-const { canAccessChastity, addArousal, getChastity } = require("../../functions/vibefunctions")
+
 
 // These values are used whenever they're unspecified on the plug in this folder.
 // Arousal gain per intensity for this plug type

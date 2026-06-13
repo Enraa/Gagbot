@@ -1,4 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
+
 
 // This vibrator will only function if getUserVar(userID, "politeSubVibeTime") has any value
 exports.vibescale = (data) => { return 3.0 } // Not a mistake. Very arousing to be compliant!
