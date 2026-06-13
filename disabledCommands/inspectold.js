@@ -1,17 +1,4 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getMittenName, getMitten, getGag, convertGagText, getGagIntensity, getGags } = require("./../functions/gagfunctions.js");
-const { getChastity, getVibe, getChastityKeys, getChastityTimelock, getArousalDescription, getArousalChangeDescription, getChastityName, getClonedChastityKeysOwned, canAccessChastity } = require("./../functions/vibefunctions.js");
-const { getCollar, getCollarPerm, getCollarKeys, getCollarName, getClonedCollarKeysOwned, canAccessCollar, getCollarTimelock } = require("./../functions/collarfunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
-const { getCorset } = require("./../functions/corsetfunctions.js");
-const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear, deleteHeadwear, removeLockedHeadgear } = require("./../functions/headwearfunctions.js");
-const { getPronouns, getPronounsSet } = require("./../functions/pronounfunctions.js");
-const { getWearable, getWearableName, getLockedWearable, deleteWearable, removeLockedWearable } = require("../functions/wearablefunctions.js");
-const { canAccessChastityBra } = require("../functions/vibefunctions.js");
-const { getChastityBra } = require("../functions/vibefunctions.js");
-const { getChastityBraName, getChastityBraTimelock } = require("../functions/vibefunctions.js");
-const { getChastityBraKeys } = require("../functions/vibefunctions.js");
-const { getClonedChastityBraKeysOwned } = require("../functions/vibefunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

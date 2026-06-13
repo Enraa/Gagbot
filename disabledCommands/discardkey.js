@@ -1,7 +1,4 @@
 const { SlashCommandBuilder, MessageFlags, ComponentType, ButtonStyle } = require("discord.js");
-const { getHeavy } = require("../functions/heavyfunctions.js");
-const { discardCollarKey, getCollarKeyholder } = require("../functions/collarfunctions.js");
-const { discardChastityKey, getChastityKeyholder } = require("../functions/vibefunctions.js");
 const { their, they } = require("../functions/pronounfunctions.js");
 const { config } = require("../functions/configfunctions.js");
 

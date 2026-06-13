@@ -1,16 +1,8 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getHeavy, assignHeavy, commandsheavy, convertheavy, heavytypes, getBaseHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getCollar, getCollarPerm, canAccessCollar } = require("./../functions/collarfunctions.js");
-const { getChastity, assignChastity, getChastityName, getChastityBraName, } = require("./../functions/vibefunctions.js");
-const { getMittenName, assignMitten, getMitten, mittentypes, getBaseMitten } = require("./../functions/gagfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
+const { commandsheavy } = require("./../functions/heavyfunctions.js");
+const { handleConsent, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getChastityBra } = require("../functions/vibefunctions.js");
-const { assignChastityBra } = require("../functions/vibefunctions.js");
-const { getBaseChastity } = require("../functions/chastityfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
-const { getUserTags } = require("../functions/configfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
