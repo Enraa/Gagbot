@@ -1508,7 +1508,7 @@ const texts_struggle = {
 		// Blacklisted Generics - Filter Out Messages that will not read smoothly with some types
 		{
 			required: (t) => {
-				let blacklistTypes = ["Doll Processing", "Mimic", "Dancer", "Horse"]
+				let blacklistTypes = ["Doll Processing", "Mimic", "Dancer", "Horse", "Sticky Glue"]
 				return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
 			},
 			text: `USER_TAG squirms in USER_THEIR VAR_C1, trying to squeeze out of it but USER_THEY really didn't think about how challenging that'd be.`,
@@ -1522,14 +1522,14 @@ const texts_struggle = {
 		},
 		{
 			required: (t) => {
-				let blacklistTypes = ["One Bar Prison", "Weighted Blanket", "Toasty Kotatsu"]
+				let blacklistTypes = ["One Bar Prison", "Weighted Blanket", "Toasty Kotatsu","Sticky Glue"]
 				return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
 			},
 			text: `The VAR_C1 creaks loudly as USER_TAG *thrashes* in USER_THEIR bondage, trying to escape!`,
 		},
 		{
 			required: (t) => {
-				let blacklistTypes = ["Doll Processing", "Mimic"]
+				let blacklistTypes = ["Doll Processing", "Mimic","Sticky Glue"]
 				return !blacklistTypes.some(blacklistTypes => t.c1.includes(blacklistTypes));
 			},
 			text: `USER_TAG fights against USER_THEIR VAR_C1, trying to loosen it even a little bit to maybe escape...`,
@@ -1667,7 +1667,20 @@ const texts_struggle = {
                 return t.c1.includes("Cat in Lap");
             },
             text: `USER_TAG giggles and continues petting the adorable little kitty sitting in USER_THEIR lap! It purrs in delight!`,
-        }
+        },
+        // Misc
+        {
+			required: (t) => {
+				return t.c1.includes("Sticky Glue");
+		 },
+		 text: `USER_TAG struggles and pulls against USER_THEIR VAR_C1, but the stickiness leaves USER_THEM more helpless than before!`,
+		},
+		{
+			required: (t) => {
+				return t.c1.includes("Sticky Glue");
+		 },
+		 text: `USER_TAG squirms helplessly like a cute mouse in USER_THEIR VAR_C1 trap!`,
+		}
 	],
 	gag: {
 		heavy: [`Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_THEY USER_ISARE wearing!`, `USER_TAG noms on USER_THEIR VAR_C2, trying to loosen it and maybe get it out of USER_THEIR mouth!`, `USER_TAG tries to push USER_THEIR VAR_C2 out with USER_THEIR tongue! It had no effect!`],
