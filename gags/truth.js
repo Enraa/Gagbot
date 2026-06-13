@@ -1,5 +1,3 @@
-const { getOption } = require("../functions/configfunctions");
-const { getPronouns } = require("../functions/pronounfunctions");
 const nlp = require("compromise");
 
 // This is called after parsing the message tree, just after the emoji. 

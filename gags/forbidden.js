@@ -1,4 +1,4 @@
-const { getOption } = require("../functions/configfunctions");
+
 
 const garbleText = (text, parent, intensity, msg) => {
 	let newtextparts = text.split(" ");

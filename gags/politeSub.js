@@ -1,4 +1,4 @@
-const { setUserVar, getUserVar } = require("../functions/usercontext");
+
 
 const honorifictitles = [
 	// Oh god its hard to type these without caps

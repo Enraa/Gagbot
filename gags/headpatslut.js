@@ -1,5 +1,4 @@
 const { convertPronounsText } = require("../functions/pronounfunctions");
-const { getUserVar } = require("../functions/usercontext");
 
 const headpatlines = [
     `USER_TAG needs a headpat...`,
