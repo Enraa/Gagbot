@@ -1,4 +1,20 @@
+const { getChastity } = require("../../functions/getters/chastity/getChastity");
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra");
+const { getChastityBraName } = require("../../functions/getters/chastity/getChastityBraName");
+const { getChastityName } = require("../../functions/getters/chastity/getChastityName");
+const { getCollar } = require("../../functions/getters/collar/getCollar");
+const { getCollarName } = require("../../functions/getters/collar/getCollarName");
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
+const { getCorset } = require("../../functions/getters/corset/getCorset");
+const { getGagLast } = require("../../functions/getters/gag/getGagLast");
+const { convertGagText } = require("../../functions/getters/gag/getGagName");
+const { getHeadwear } = require("../../functions/getters/headwear/getHeadwear");
+const { getHeavy } = require("../../functions/getters/heavy/getHeavy");
+const { getMitten } = require("../../functions/getters/mitten/getMitten");
+const { getMittenName } = require("../../functions/getters/mitten/getMittenName");
 const { messageSendChannel } = require("../../functions/messagefunctions");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
+const { getText } = require("../../functions/textfunctions");
 
 exports.tick = async (userID, data) => {
     try {

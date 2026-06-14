@@ -1,4 +1,7 @@
+const { getPronouns } = require("../../functions/getters/config/getPronouns");
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 function msgfunction(userid, data) {
     if (getUserVar(userid, "motionplugtime") == undefined) {

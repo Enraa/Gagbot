@@ -1,4 +1,8 @@
+const { getCollar } = require("../../functions/getters/collar/getCollar");
+const { getPronouns } = require("../../functions/getters/config/getPronouns");
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 const { getTextGeneric } = require("../../functions/textfunctions");
 
 // Since headpats can only ever crit if they hit, then we should just simply check for that! 

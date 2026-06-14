@@ -1,5 +1,30 @@
-const { DOLLVISORS } = require("../../functions/headwearfunctions.js");
+const { getChastity } = require("../../functions/getters/chastity/getChastity.js");
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra.js");
+const { getChastityBraName } = require("../../functions/getters/chastity/getChastityBraName.js");
+const { getChastityName } = require("../../functions/getters/chastity/getChastityName.js");
+const { getCollar } = require("../../functions/getters/collar/getCollar.js");
+const { getCollarName } = require("../../functions/getters/collar/getCollarName.js");
+const { getGag } = require("../../functions/getters/gag/getGag.js");
+const { convertGagText } = require("../../functions/getters/gag/getGagName.js");
+const { getHeadwear } = require("../../functions/getters/headwear/getHeadwear.js");
+const { getHeadwearName } = require("../../functions/getters/headwear/getHeadwearName.js");
+const { getHeavy } = require("../../functions/getters/heavy/getHeavy.js");
+const { getMitten } = require("../../functions/getters/mitten/getMitten.js");
+const { getMittenName } = require("../../functions/getters/mitten/getMittenName.js");
+const { getLockedWearable } = require("../../functions/getters/wearable/getLockedWearable.js");
+const { getWearable } = require("../../functions/getters/wearable/getWearable.js");
+const { getWearableName } = require("../../functions/getters/wearable/getWearableName.js");
 const { messageSendChannel } = require("../../functions/messagefunctions.js");
+const { assignChastity } = require("../../functions/setters/chastity/assignChastity.js");
+const { assignChastityBra } = require("../../functions/setters/chastity/assignChastityBra.js");
+const { assignCollar } = require("../../functions/setters/collar/assignCollar.js");
+const { assignGag } = require("../../functions/setters/gag/assignGag.js");
+const { assignHeadwear } = require("../../functions/setters/headwear/assignHeadwear.js");
+const { assignHeavy } = require("../../functions/setters/heavy/assignHeavy.js");
+const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy.js");
+const { assignMitten } = require("../../functions/setters/mitten/assignMitten.js");
+const { assignWearable } = require("../../functions/setters/wearable/assignWearable.js");
+const { deleteWearable } = require("../../functions/setters/wearable/removeWearable.js");
 const { getText } = require("../../functions/textfunctions.js");
 
 // File Containing Costumer Mimic Outfits - Wearables, Headwear, Mittens, Gags, Heavy. Only one Heavy item per outfit, and always at the end.

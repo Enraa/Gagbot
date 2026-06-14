@@ -1,4 +1,6 @@
+const { getUserVar } = require("../../functions/getters/config/getUserVar")
 const { messageSendChannel } = require("../../functions/messagefunctions")
+const { setUserVar } = require("../../functions/setters/config/setUserVar")
 
 async function tick(userID, data) {
     // Remind them on the third infraction and reset
