@@ -26,7 +26,7 @@ function assignMitten(userID, mittentype, origbinder) {
 		process.readytosave = {};
 	}
 	process.readytosave.mitten = true;
-    process.readytosave.userdata = true;
+    process.readytosave.usersdata = true;
 };
 
 exports.assignMitten = assignMitten;

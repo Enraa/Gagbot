@@ -225,7 +225,7 @@ let tick = async (userID, datain) => {
                 heavyend = { category: "heavy", itemtowear: choice.value, color: null }
             }
             else if ((randomchoice == 5) && !blocks.includes("headwear")) {
-                arr = headweartypes
+                arr = process.headtypes
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
