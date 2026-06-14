@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
+const { getCollarPerm } = require("./getters/collar/getCollarPerm");
 
 const collartypes = [
 	{ name: "Latex Collar", value: "collar_latex", tags: ["latex"] },
@@ -122,55 +123,6 @@ async function promptTransferCollarKey(user, target, newKeyholder) {
 	});
 }
 
-//////// OLD CODE
-const discardCollarKey = (user) => {
-	if (process.collar == undefined) {
-		process.collar = {};
-	}
-	if (process.discardedKeys == undefined) {
-		process.discardedKeys = [];
-	}
-	if (process.collar[user]) {
-		process.collar[user].keyholder = "discarded";
-		process.collar[user].clonedKeyholders = [];
-		process.discardedKeys.push({ restraint: "collar", wearer: user });
-	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.collar = true;
-	process.readytosave.discardedKeys = true;
-};
-
-/////// OLD CODE
-const findCollarKey = (index, newKeyholder) => {
-	if (process.collar == undefined) {
-		process.collar = {};
-	}
-	if (process.discardedKeys == undefined) {
-		process.discardedKeys = [];
-	}
-	const collar = process.discardedKeys.splice(index, 1);
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.discardedKeys = true;
-	if (collar.length < 1) return false;
-	if (process.collar[collar[0].wearer]) {
-		process.collar[collar[0].wearer].keyholder = newKeyholder;
-		// Erase cloned keys in this process!
-		process.collar[collar[0].wearer].clonedKeyholders = [];
-		if (process.readytosave == undefined) {
-			process.readytosave = {};
-		}
-		process.readytosave.collar = true;
-		return true;
-	}
-	return false;
-};
-
-exports.discardCollarKey = discardCollarKey;
-exports.findCollarKey = findCollarKey;
 exports.collartypes = collartypes;
 exports.promptCloneCollarKey = promptCloneCollarKey;
 exports.promptTransferCollarKey = promptTransferCollarKey;

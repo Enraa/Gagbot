@@ -1,10 +1,11 @@
-const fs = require("fs");
-const path = require("path");
-const https = require("https");
 const { DOLLVISORS } = require("../functions/headwearfunctions.js");
 const { ButtonBuilder } = require("@discordjs/builders");
 const { ButtonStyle, ComponentType } = require("discord.js");
 const { ActionRowBuilder } = require("@discordjs/builders");
+const { getPronouns } = require("./getters/config/getPronouns.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getOption } = require("./getters/config/getOption.js");
+const { setPronouns } = require("./setters/config/setPronouns.js");
 
 // Pronoun types
 const pronounsMap = new Map([

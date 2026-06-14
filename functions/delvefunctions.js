@@ -1,6 +1,22 @@
 // Function space for Delves, the function for players to have stats and encounters. 
 
 const { ContainerBuilder, ButtonBuilder, ButtonStyle, MessageFlags, TextDisplayBuilder, ActionRowBuilder, StringSelectMenuOptionBuilder, StringSelectMenuBuilder } = require("discord.js")
+const { getCurrentFloor } = require("./getters/delve/getCurrentFloor")
+const { getDelvePlayerStats } = require("./getters/delve/getDelvePlayerStats")
+const { getResolve } = require("./getters/delve/getResolve")
+const { getUserTags } = require("./getters/config/getUserTags")
+const { getChastity } = require("./getters/chastity/getChastity")
+const { getGag } = require("./getters/gag/getGag")
+const { getChastityBra } = require("./getters/chastity/getChastityBra")
+const { getHeavy } = require("./getters/heavy/getHeavy")
+const { getMitten } = require("./getters/mitten/getMitten")
+const { assignGag } = require("./setters/gag/assignGag")
+const { assignChastity } = require("./setters/chastity/assignChastity")
+const { assignChastityBra } = require("./setters/chastity/assignChastityBra")
+const { assignHeavy } = require("./setters/heavy/assignHeavy")
+const { assignMitten } = require("./setters/mitten/assignMitten")
+const { modifyResolve } = require("./setters/delve/setResolve")
+const { getDelveFloorState } = require("./getters/delve/getDelveFloorState")
 
 /*****************
  * Players will utilize their condition as returned by gags, masks, heavy bondage and the like. 

@@ -3,6 +3,9 @@ const { MessageAST } = require(`./../functions/message_ast.js`);
 const fs = require("fs");
 const path = require("path");
 const { forcedtextemoji } = require("../headwear/doll_visor.js");
+const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getHeadwearBlocks } = require("./getters/headwear/getBaseHeadwear.js");
 
 /* // This can probably be retired - leaving here for reference
 const headweartypes = [

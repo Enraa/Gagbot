@@ -1,10 +1,10 @@
 let fs = require("fs");
 let path = require("path");
-const { getCollar } = require("./collarfunctions");
-const { getHeadwear } = require("./headwearfunctions");
-const { getHeavy } = require("./heavyfunctions");
-const { getToys } = require("./toyfunctions");
-const { getWearable } = require("./wearablefunctions");
+const { getHeadwear } = require("./getters/headwear/getHeadwear");
+const { getHeavy } = require("./getters/heavy/getHeavy");
+const { getWearable } = require("./getters/wearable/getWearable");
+const { getToys } = require("./getters/toy/getToys");
+const { getCollar } = require("./getters/collar/getCollar");
 
 
 /*********

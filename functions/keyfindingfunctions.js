@@ -5,6 +5,18 @@ const { messageSendChannel } = require("./messagefunctions.js");
 const { PermissionsBitField } = require("discord.js");
 const { frustrationPenalties } = require("./vibefunctions.js");
 const { logConsole } = require("./logfunctions.js");
+const { getBotOption } = require("./getters/config/getBotOption");
+const { getOption } = require("./getters/config/getOption");
+const { getUserVar } = require("./getters/config/getUserVar");
+const { setUserVar } = require("./setters/config/setUserVar");
+const { getArousal } = require("./getters/arousal/getArousal");
+const { getMitten } = require("./getters/mitten/getMitten");
+const { getHeavy } = require("./getters/heavy/getHeavy");
+const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions");
+const { getBaseChastity } = require("./getters/chastity/getBaseChastity");
+const { getBaseCollar } = require("./getters/collar/getBaseCollar");
+const { statsAddCounter } = require("./setters/config/statsAddCounter");
+const { getTextGeneric } = require("./textfunctions");
 
 const MAX_FUMBLE_CHANCE = 0.95;
 
@@ -34,7 +46,7 @@ function rollKeyFumble(keyholder, locked) {
     if (Math.random() < Math.min(fumbleChance, MAX_FUMBLE_CHANCE)) {
         // They fumbled, lets work with that.
         // Push the chance they had to fumble to blessings
-        if (config.getBlessedLuck(keyholder)) {
+        if (getOption(keyholder, "blessed-luck") == "enabled") {
             // if they use blessed luck, add the success chance to their saved blessing
             const blessing = getUserVar(keyholder, "blessed") ?? 0;
             setUserVar(keyholder, "blessing", blessing + 1 - fumbleChance);
@@ -76,11 +88,11 @@ function rollKeyFumble(keyholder, locked) {
 
 function getFumbleChance(keyholder, locked) {
 	// cannot fumble if disabled
-	if (config.getDisabledKeyFumbling(locked)) return 0;
+	if (getOption(locked, "fumbling") == "disabled") return 0;
 	// ... or if not using the dynamic arousal system
-	if (!config.getDynamicArousal(keyholder)) return 0;
+	if (getOption(locked, "arousalsystem") != 2) return 0;
 	// ... or if it's someone else and either has disable fumbling for others
-	if (keyholder != locked && (!config.getKeyFumblingOthers(keyholder) || !config.getKeyFumblingOthers(locked))) return 0;
+	if ((keyholder != locked) && ((getOption(keyholder, "fumbling") != "everyone") || (getOption(locked, "fumbling") != "everyone"))) return 0;
 
     // Add frustration if trying to unlock OWN device
     // Idk why frustration is broken apparently, but w/e, can fix later. 
@@ -100,7 +112,7 @@ function getFumbleChance(keyholder, locked) {
 	}
 
 	// reduce the fumble chance by saved up blessing from prior unlucky rolls
-	if (config.getBlessedLuck(keyholder)) chance -= getUserVar(keyholder, "blessed") ?? 0;
+	if (getOption(keyholder, "blessed-luck") == "enabled") chance -= getUserVar(keyholder, "blessed") ?? 0;
 
 	// divine intervention
 	if (Math.random() < 0.02) chance -= 50;
@@ -182,7 +194,7 @@ async function handleKeyFinding(message) {
                         // Case 2: We spot our own key... we wont be able to do anything about it though, our keyholder needs to find the key!
                         // This inherently prevents potentially finding own keys to escape, but if thats really needed we can just bump this down the list probably.
                         else if (en[0] == message.member.id) {
-                            targetuser = await message.guild.members.fetch(en[1].keyholder) // Use the keyholder object to bring that into scope
+                            data.targetuser = await message.guild.members.fetch(en[1].keyholder) // Use the keyholder object to bring that into scope
                             // @___ spots the key to her chastity belt! She tries to point it out to @___ but they're unable to find it...
                             messageSendChannel(getTextGeneric(`spot_key_self`, data), message.channel.id)
                             statsAddCounter(message.member.id, "fumbledkeysfailedtorecover")
@@ -267,30 +279,6 @@ function discardKey(userid, keyholderid, device) {
 	}
     process.readytosave[processvar] = true;
     return typelocked;
-}
-
-async function sendFindMessage(message, lockedUser, restraint) {
-	try {
-		if (message.author.id == lockedUser) message.channel.send(`${message.author} has found the key to ${their(message.author.id)} ${restraint}!`);
-		else message.channel.send(`${message.author} has found the key to <@${lockedUser}>'s ${restraint}!`);
-	} catch (err) {
-		console.log(err); // Seriously plz dont crash
-	}
-}
-
-async function sendFindFumbleMessage(message, lockedUser, restraint) {
-	try {
-		if (message.author.id == lockedUser) message.channel.send(`${message.author} has found the key to ${their(message.author.id)} ${restraint} but fumbles when trying to pick it up!`);
-		else message.channel.send(`${message.author} has found the key to <@${lockedUser}>'s ${restraint} but fumbles when trying to pick it up!`);
-	} catch (err) {
-		console.log(err); // Seriously plz dont crash
-	}
-}
-
-function calcFindSuccessChance(user) {
-	if (getHeavy(user)) return 0;
-	if (getMitten(user)) return 0.5;
-	else return 1;
 }
 
 exports.getFumbleChance = getFumbleChance;

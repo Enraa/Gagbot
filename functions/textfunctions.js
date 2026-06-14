@@ -1,3 +1,8 @@
+const { getArousal } = require("./getters/arousal/getArousal.js");
+const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getCollar } = require("./getters/collar/getCollar.js");
+const { getUserTags } = require("./getters/config/getUserTags.js");
+const { getHeavy } = require("./getters/heavy/getHeavy.js");
 const { convertPronounsText } = require("./pronounfunctions.js");
 
 const texts_chastity = {

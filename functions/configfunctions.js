@@ -2,6 +2,12 @@ const { ButtonStyle, ActionRowBuilder, SectionBuilder, StringSelectMenuBuilder, 
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
+const { getOption } = require("./getters/config/getOption.js");
+const { clearArousal } = require("./setters/arousal/clearArousal.js");
+const { removeToy } = require("./setters/toy/removeToy.js");
+const { getServerCmdRefresh } = require("./getters/config/getServerCmdRefresh.js");
+const { getServerOption } = require("./getters/config/getServerOption.js");
+const { getBotOption } = require("./getters/config/getBotOption.js");
 
 const configoptions = {
     Me: {
@@ -633,9 +639,8 @@ const configoptions = {
 					name: "Off",
 					helptext: "*Arousal disabled*",
 					select_function: (userID) => {
-                        if (process.vibe && process.vibe[userID]) {
-                            delete process.vibe[userID];
-                        }
+                        clearArousal(userID)
+                        removeToy(userID, userID, undefined, true);
 					},
 					value: 0,
 					style: ButtonStyle.Danger,
@@ -1139,36 +1144,6 @@ const configoptions = {
 				return false;
 			},
 		},
-        // Removing canfindkeys for now as it is currently not used
-        /*canfindkeys: {
-			name: "Find Keys",
-			desc: "Can you discover misplaced keys that others dropped?",
-			choices: [
-				{
-					name: "No",
-					helptext: "*Keys cannot be picked up*",
-					select_function: (userID) => {
-						return false;
-					},
-					value: "disabled",
-					style: ButtonStyle.Danger,
-				},
-				{
-					name: "Yes",
-					helptext: "You may be able to pick up keys",
-					select_function: (userID) => {
-						return false;
-					},
-					value: "enabled",
-					style: ButtonStyle.Secondary,
-				},
-			],
-			menutype: "choice",
-			default: "enabled",
-			disabled: (userID) => {
-				return false;
-			}, // if true, button is greyed out
-		},*/
         majorrestraint: {
             name: "Major Restraints from Others",
             desc: "Can others offer to put chastity, mittens, heavy bondage or masks on you? You must accept the prompt for it to be permitted unless that user has collar key access for you. You must have DMs from this server turned on to utilize this option.",

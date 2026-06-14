@@ -253,4 +253,3 @@ const loadHeavyTypes = () => {
 exports.loadHeavyTypes = loadHeavyTypes;
 exports.heavytypes = heavytypes;
 exports.commandsheavy = heavytypes;
-exports.heavyDenialCoefficient = heavyDenialCoefficient;

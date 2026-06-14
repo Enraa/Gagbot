@@ -4,6 +4,14 @@ const path = require("path");
 const sharp = require("sharp");
 const axios = require("axios");
 const { DOLLVISORS, DRONEVISORS } = require("./headwearfunctions");
+const { recordMessage } = require("./setters/config/recordMessage");
+const { getHeadwear } = require("./getters/headwear/getHeadwear");
+const { getMitten } = require("./getters/mitten/getMitten");
+const { getGags } = require("./getters/gag/getGags");
+const { getHeavy } = require("./getters/heavy/getHeavy");
+const { getWearable } = require("./getters/wearable/getWearable");
+const { getToys } = require("./getters/toy/getToys");
+const { getCollar } = require("./getters/collar/getCollar");
 
 // Load all .png files into the bot as emoji, then assign them to process.emojis.
 // This can be used to allow the bot's emojis to function elsewhere.
@@ -200,7 +208,7 @@ const splitMessage = (text, inputRegex = null) => {
 
 function runMessageEvents(data) {
 	// Gags
-	/*if (process.gags) {
+	if (process.gags) {
 		Object.keys(process.gags).forEach((userid) => {
 			getGags(userid).forEach((g) => {
 				if (process.msgfunctions.gags && process.msgfunctions.gags[g.gagtype]) {
@@ -208,7 +216,7 @@ function runMessageEvents(data) {
 				}
 			});
 		});
-	}*/ // This will cause a circular to have it. 
+	}
 	// Headwear
 	if (process.headwear) {
         getHeadwear(data.msg.author.id).forEach((h) => {
@@ -218,7 +226,7 @@ function runMessageEvents(data) {
         });
 	}
 	// Mittens
-	/*if (process.mitten) {
+	if (process.mitten) {
 		Object.keys(process.mitten).forEach((userid) => {
 			if (getMitten(userid)) {
 				if (process.msgfunctions.mitten && process.msgfunctions.mitten[getMitten(userid).mittenname]) {
@@ -226,7 +234,7 @@ function runMessageEvents(data) {
 				}
 			}
 		});
-	}*/ // This will cause a circular to have it. 
+	}
 	// Heavy Bondage
 	if (process.heavy) {
         if (getHeavy(data.msg.author.id)) {

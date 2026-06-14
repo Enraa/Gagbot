@@ -4,9 +4,36 @@ const https = require("https");
 const { SlashCommandBuilder, UserSelectMenuBuilder, MessageFlags, TextInputBuilder, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder, ComponentType, SectionBuilder, CheckboxGroupBuilder, User } = require("discord.js");
 const { collartypes } = require("./collarfunctions.js");
 const { mittentypes } = require("./../functions/gagfunctions.js");
-const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { configoptions } = require("./configfunctions.js");
 const { wearabletypes } = require("./wearablefunctions.js");
+const { assignConsent } = require("./setters/config/assignConsent.js");
+const { getPronouns } = require("./getters/config/getPronouns.js");
+const { getOption } = require("./getters/config/getOption.js");
+const { canAccessChastity } = require("./getters/chastity/canAccessChastity.js");
+const { canAccessCollar } = require("./getters/collar/canAccessCollar.js");
+const { getHeavyBinder } = require("./getters/heavy/getHeavyBinder.js");
+const { getGagBinder } = require("./getters/gag/getGagBinder.js");
+const { getMittenBinder } = require("./getters/mitten/getMittenBinder.js");
+const { getCorsetBinder } = require("./getters/corset/getCorsetBinder.js");
+const { getHeadwearBinder } = require("./getters/headwear/getHeadwearBinder.js");
+const { getCollarName } = require("./getters/collar/getCollarName.js");
+const { getHeavyName } = require("./getters/heavy/getHeavyName.js");
+const { getCollar } = require("./getters/collar/getCollar.js");
+const { getHeadwearName } = require("./getters/headwear/getHeadwearName.js");
+const { getMittenName } = require("./getters/mitten/getMittenName.js");
+const { getBaseChastity } = require("./getters/chastity/getBaseChastity.js");
+const { heavytypes } = require("./heavyfunctions.js");
+const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
+const { getChastityTimelock } = require("./getters/chastity/getChastityTimelock.js");
+const { getChastityBraTimelock } = require("./getters/chastity/getChastityBraTimelock.js");
+const { getCollarTimelock } = require("./getters/collar/getCollarTimelock.js");
+const { getHeavyList } = require("./getters/heavy/getHeavyList.js");
+const { getMitten } = require("./getters/mitten/getMitten.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getGags } = require("./getters/gag/getGags.js");
+const { getWearable } = require("./getters/wearable/getWearable.js");
+const { getToys } = require("./getters/toy/getToys.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
@@ -687,7 +714,7 @@ async function handleExtremeRestraint(user, target, type, restraint) {
                 restraintfullname = getCollarName(user, restraint);
                 break;
 			case "heavy":
-				restraintfullname = convertheavy(restraint);
+				restraintfullname = getHeavyName(restraint);
 				break;
 			case "gag":
 				restraintfullname = process.autocompletes.gag.find((f) => f.value == restraint)?.name;
@@ -785,7 +812,7 @@ async function handleMajorRestraint(user, target, type, restraint) {
         let limitationstext = ``;
 		switch (type) {
 			case "heavy":
-				restraintfullname = convertheavy(restraint);
+				restraintfullname = getHeavyName(restraint);
                 prettytype = "Heavy Bondage"
                 emoji = `${process.emojis.armbinder}`;
                 limitationstext = `This will prevent you from using most commands in the bot, including **/unheavy** to free yourself!`

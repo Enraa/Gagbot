@@ -1,3 +1,5 @@
+const { wearabletypes } = require("../../wearablefunctions");
+
 /********* 
  * Gets the base wearable type by ID.
  * 
@@ -12,8 +14,18 @@
  * - forbiddenColors?: Colors not represented in variants
  * - uniqueColors?: Additional color variants
  **********/
-function getBaseCollar(type) {
-    return process.collartypes.find((c) => c.value == type)
+function getBaseWearable(type) {
+    try {
+        let returnval = wearabletypes.find((w) => w.value == type)
+        if (!returnval) {
+            let colortosearch = type.split("_").slice(0,-1).join("_"); // remove the last element which should only be the color
+            returnval = wearabletypes.find((w) => w.value == colortosearch)
+        }
+        return returnval;
+    }
+    catch (err) {
+        console.log(err);
+    }
 }
 
-exports.getBaseCollar = getBaseCollar;
+exports.getBaseWearable = getBaseWearable;

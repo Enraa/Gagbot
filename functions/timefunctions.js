@@ -7,6 +7,17 @@ const { updateArousalValues } = require("./vibefunctions.js");
 const { updateSharedBreath } = require("./vibefunctions.js");
 const { messageSendChannel } = require("./messagefunctions.js");
 const { getTextGeneric } = require("./textfunctions.js");
+const { getBaseCollar } = require("./getters/collar/getBaseCollar.js");
+const { getBaseChastity } = require("./getters/chastity/getBaseChastity.js");
+const { getCollar } = require("./getters/collar/getCollar.js");
+const { getToys } = require("./getters/toy/getToys.js");
+const { getWearable } = require("./getters/wearable/getWearable.js");
+const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
+const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getHeavyList } = require("./getters/heavy/getHeavyList.js");
+const { getMitten } = require("./getters/mitten/getMitten.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getGags } = require("./getters/gag/getGags.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {

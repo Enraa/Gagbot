@@ -1,3 +1,4 @@
+const { statsGetCounter } = require("./getters/config/statsGetCounter");
 const { parseDuration } = require("./timefunctions");
 
 /*********

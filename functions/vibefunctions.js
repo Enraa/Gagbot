@@ -11,6 +11,16 @@ const { arousedtexts } = require("../vibes/aroused/aroused_texts.js");
 const { config } = require("./configfunctions.js");
 const { logConsole } = require("./logfunctions.js");
 const { convertPronounsText } = require("./pronounfunctions.js");
+const { getOption } = require("./getters/config/getOption.js");
+const { getArousal } = require("./getters/arousal/getArousal.js");
+const { addArousal } = require("./setters/arousal/addArousal.js");
+const { getBotOption } = require("./getters/config/getBotOption.js");
+const { getCombinedTraits } = require("./getters/chastity/getCombinedTraits.js");
+const { getToys } = require("./getters/toy/getToys.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getHeavy } = require("./getters/heavy/getHeavy.js");
+const { heavyDenialCoefficient } = require("./getters/heavy/getHeavyDenialCoefficient.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -473,6 +483,8 @@ function stutterText(msg, text, intensity, arousedtexts) {
     if (shocked) {
         // This is a circular if we try to use the text array, so this is a workaround. 
         // I made mistakes when I originally set up these ___functions.js files. 
+        // 
+        // WE CAN USE THE PROPER GETDATA PATH NOW AFTER PROJECT RELINK
         let shocks = [
             `- owk-`,
             `- g-aaa-`,
@@ -603,7 +615,7 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
 // user attempts to orgasm, returns if it succeeds
 function tryOrgasm(user) {
 	// always succeed if user isnt using the system
-	if (!config.getDynamicArousal(user)) return true;
+	if (getOption(user, "arousalsystem") != 2) return true;
 
 	const now = Date.now();
 	const arousal = getArousal(user);

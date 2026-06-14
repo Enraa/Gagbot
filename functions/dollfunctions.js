@@ -1,6 +1,8 @@
 const { DOLLVISORS } = require("./headwearfunctions.js");
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
 const garble = require("garble");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getOption } = require("./getters/config/getOption.js");
 
 // Regex to capture the user's intended text segments post-corset and post-vibrator.
 // NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.

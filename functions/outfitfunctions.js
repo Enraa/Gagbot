@@ -1,14 +1,53 @@
 const { ActionRowBuilder } = require("@discordjs/builders");
-const { StringSelectMenuOptionBuilder } = require("@discordjs/builders");
-const { StringSelectMenuBuilder } = require("@discordjs/builders");
 const { ButtonBuilder } = require("@discordjs/builders");
 const { TextDisplayBuilder, MessageFlags, ButtonStyle, ActionRow, SectionBuilder, LabelBuilder, TextInputStyle } = require("discord.js");
 const { ModalBuilder } = require("@discordjs/builders");
 const { TextInputBuilder } = require("@discordjs/builders");
 const { UserSelectMenuBuilder } = require("@discordjs/builders");
-const { arousedtexts } = require("../vibes/aroused/aroused_texts");
-const { calcDenialCoefficient } = require("./vibefunctions");
 const { statsGeneratePage } = require("./statsfunctions");
+const { getOutfits } = require("./getters/config/getOutfits");
+const { getHeavy } = require("./getters/heavy/getHeavy");
+const { getMitten } = require("./getters/mitten/getMitten");
+const { canAccessCollar } = require("./getters/collar/canAccessCollar");
+const { canAccessChastity } = require("./getters/chastity/canAccessChastity");
+const { canAccessChastityBra } = require("./getters/chastity/canAccessChastityBra");
+const { getGags } = require("./getters/gag/getGags");
+const { convertGagText } = require("./getters/gag/getGagName");
+const { getGag } = require("./getters/gag/getGag");
+const { getHeadwear } = require("./getters/headwear/getHeadwear");
+const { getHeadwearName } = require("./getters/headwear/getHeadwearName");
+const { getMittenName } = require("./getters/mitten/getMittenName");
+const { getWearable } = require("./getters/wearable/getWearable");
+const { getWearableName } = require("./getters/wearable/getWearableName");
+const { getChastity } = require("./getters/chastity/getChastity");
+const { getChastityTimelock } = require("./getters/chastity/getChastityTimelock");
+const { getChastityName } = require("./getters/chastity/getChastityName");
+const { getChastityBra } = require("./getters/chastity/getChastityBra");
+const { getChastityBraTimelock } = require("./getters/chastity/getChastityBraTimelock");
+const { getChastityBraName } = require("./getters/chastity/getChastityBraName");
+const { getCorset } = require("./getters/corset/getCorset");
+const { getCollar } = require("./getters/collar/getCollar");
+const { getCollarTimelock } = require("./getters/collar/getCollarTimelock");
+const { getCollarName } = require("./getters/collar/getCollarName");
+const { getOption } = require("./getters/config/getOption");
+const { getPronounsSet } = require("./getters/config/getPronounsSet");
+const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions");
+const { getLockedHeadgear } = require("./getters/headwear/getLockedHeadgear");
+const { getToys } = require("./getters/toy/getToys");
+const { getBaseCorset } = require("./getters/corset/getBaseCorset");
+const { getBaseToy } = require("./getters/toy/getBaseToy");
+const { getHeavyList } = require("./getters/heavy/getHeavyList");
+const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions");
+const { getCollarPerm } = require("./getters/collar/getCollarPerm");
+const { getLockedWearable } = require("./getters/wearable/getLockedWearable");
+const { getDisplayTexts } = require("./getters/config/getDisplayTexts");
+const { getBaseWearable } = require("./getters/wearable/getBaseWearable");
+const { getChastityKeys } = require("./getters/chastity/getChastityKeys");
+const { getChastityBraKeys } = require("./getters/chastity/getChastityBraKeys");
+const { getCollarKeys } = require("./getters/collar/getCollarKeys");
+const { getClonedChastityKeysOwned } = require("./getters/chastity/getClonedChastityKeysOwned");
+const { getClonedChastityBraKeysOwned } = require("./getters/chastity/getClonedChastityBraKeysOwned");
+const { getClonedCollarKeysOwned } = require("./getters/collar/getClonedCollarKeysOwned");
 
 async function generateOutfitModal(userID, menu, page, options) {
 	let pagecomponents = [new TextDisplayBuilder().setContent(`## Outfitter - ${menu.slice(0, 1).toUpperCase()}${menu.slice(1)}`)];
@@ -965,7 +1004,6 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 }
             }
 
-            //clothingtext = `${clothingtext}**${getWearable(inspectuserID).map((h) => (!getLockedWearable(inspectuserID).includes(h) ? getWearableName(undefined, h) : `*${getWearableName(undefined, h)}*`)).join(", ")}**`
         }
         if (clothingtext.length > 1800) {
             clothingtext = `${clothingtext.slice(0,1800)}...` // We'll make a more elegant overflow solution later. 

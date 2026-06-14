@@ -1,16 +1,28 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName, recordMessage } = require(`./../functions/messagefunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel, getAlternateName } = require(`./../functions/messagefunctions.js`);
 const { corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
 const { stutterText } = require(`./../functions/vibefunctions.js`);
-const { processHeadwearEmoji, DOLLVISORS, processHeadwearTruthgas } = require("./headwearfunctions.js");
+const { processHeadwearEmoji, processHeadwearTruthgas } = require("./headwearfunctions.js");
 const { getText } = require(`./../functions/textfunctions.js`);
 const { DOLLMAXPUNISHMENT, textGarbleDOLL, textGarbleDrone } = require(`./../functions/dollfunctions.js`);
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
 const { MessageAST } = require(`./../functions/message_ast.js`);
 const { emitEvent } = require("./eventhandling.js");
 const { convertPronounsText } = require("./pronounfunctions.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getOption } = require("./getters/config/getOption.js");
+const { assignGag } = require("./setters/gag/assignGag.js");
+const { assignMitten } = require("./setters/mitten/assignMitten.js");
+const { assignHeavy } = require("./setters/heavy/assignHeavy.js");
+const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
+const { getVibeEquivalent } = require("./getters/chastity/getVibeEquivalent.js");
+const { getArousedTexts } = require("./getters/arousal/getArousedTexts.js");
+const { getCorset } = require("./getters/corset/getCorset.js");
+const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions.js");
+const { getUserVar } = require("./getters/config/getUserVar.js");
+const { getPFP } = require("./getters/config/getPFP.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
