@@ -5,6 +5,8 @@
  * - (integer) floor - Floor number they are on
  * - (string) prop - Name of the property to save
  * - (any) value - Value to store in the prop key
+ * ---
+ * ##### *No return value*
  *******/
 function setDelveFloorState(user, floor, prop, value) {
     if (process.delveuserdata == undefined) { process.delveuserdata = {} }

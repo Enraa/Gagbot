@@ -1,3 +1,6 @@
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastity } = require("../../getters/chastity/getChastity");
+
 /**********
  * Removes a chastity belt from the user.
  * 

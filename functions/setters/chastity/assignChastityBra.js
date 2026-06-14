@@ -1,3 +1,6 @@
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastityBra } = require("../../getters/chastity/getChastityBra");
+
 /**********
  * Adds or modifies a chastity bra on the user.
  * 

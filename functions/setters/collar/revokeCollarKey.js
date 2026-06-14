@@ -1,3 +1,5 @@
+const { getCollar } = require("../../getters/collar/getCollar");
+
 /*******
  * Removes a cloned key from a collar
  * 
@@ -7,17 +9,17 @@
  * ##### *No return value*
  *******/
 function revokeCollarKey(collarUser, newKeyholder) {
-    let chastity = getChastity(chastityuser);
-    if (!chastity.clonedKeyholders) {
-        chastity.clonedKeyholders = [];
+    let collar = getCollar(collarUser);
+    if (!collar.clonedKeyholders) {
+        collar.clonedKeyholders = [];
     }
-    if (chastity.clonedKeyholders.includes(newKeyholder)) {
-        chastity.clonedKeyholders.splice(chastity.clonedKeyholders.indexOf(newKeyholder), 1);
+    if (collar.clonedKeyholders.includes(newKeyholder)) {
+        collar.clonedKeyholders.splice(collar.clonedKeyholders.indexOf(newKeyholder), 1);
     }
     if (process.readytosave == undefined) {
         process.readytosave = {};
     }
-    process.readytosave.chastity = true;
+    process.readytosave.collar = true;
 };
 
 exports.revokeCollarKey = revokeCollarKey;

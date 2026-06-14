@@ -23,7 +23,7 @@ function assignGag(userID, gagtype = "ball", intensity = 5, origbinder) {
 		process.gags[userID].splice(foundgag, 1);
 	}
 	process.gags[userID].push({ gagtype: gagtype, intensity: intensity, origbinder: originalbinder });
-    // Increment the worn corset counter
+
     if (process.userstats == undefined) { process.userstats = {} }
     if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
 

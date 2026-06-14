@@ -1,3 +1,5 @@
+const { setOption } = require("./setOption");
+
 /*********
  * Sets pronouns for a user
  * 

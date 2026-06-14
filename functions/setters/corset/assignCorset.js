@@ -1,3 +1,8 @@
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getChastity } = require("../../getters/chastity/getChastity");
+const { getBaseCorset } = require("../../getters/corset/getBaseCorset");
+const { getBreath } = require("../../getters/corset/getBreath");
+
 /**********
  * Adds or modifies a corset on the user.
  * 

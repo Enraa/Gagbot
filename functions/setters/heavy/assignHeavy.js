@@ -1,3 +1,5 @@
+const { getHeavyName } = require("../../getters/heavy/getHeavyName");
+
 /**************
  * Adds a heavy bondage to a user. 
  * 

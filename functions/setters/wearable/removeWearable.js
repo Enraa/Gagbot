@@ -1,3 +1,5 @@
+const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
+
 /**********
  * Removes a clothing from the user.
  * 

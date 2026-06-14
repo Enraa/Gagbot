@@ -1,3 +1,5 @@
+const { getCollar } = require("../../getters/collar/getCollar");
+
 /*******
  * Removes an additional Collar effect from the user's collar, if they are wearing a collar. 
  * 
@@ -9,11 +11,11 @@
 function removeAdditionalCollarEffect(user, type) {
     try {
         if (getCollar(user)) {
-            if (process.collar[user].additionalcollars && process.collar[user].additionalcollars.includes(type)) {
-                process.collar[user].additionalcollars.splice(process.collar[user].additionalcollars.indexOf(type), 1);
+            if (getCollar(user).additionalcollars && getCollar(user).additionalcollars.includes(type)) {
+                getCollar(user).additionalcollars.splice(getCollar(user).additionalcollars.indexOf(type), 1);
             }
-            if (process.collar[user].additionalcollars && process.collar[user].additionalcollars.length == 0) {
-                delete process.collar[user].additionalcollars;
+            if (getCollar(user).additionalcollars && getCollar(user).additionalcollars.length == 0) {
+                delete getCollar(user).additionalcollars;
             }
             if (process.readytosave == undefined) {
                 process.readytosave = {};

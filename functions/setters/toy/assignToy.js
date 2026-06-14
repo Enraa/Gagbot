@@ -1,3 +1,6 @@
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+const { getOption } = require("../../getters/config/getOption");
+
 /**********
  * Adds or modifies a toy on the user.
  * 

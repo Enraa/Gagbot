@@ -1,3 +1,5 @@
+const { getCollar } = require("../../getters/collar/getCollar");
+
 /******
  * Adds an additional Collar effect to the user's collar, if they are wearing a collar. 
  * 
@@ -9,8 +11,8 @@
 function addAdditionalCollarEffect(user, type) {
     try {
         if (getCollar(user)) {
-            if (!process.collar[user].additionalcollars) { process.collar[user].additionalcollars = [] }
-            process.collar[user].additionalcollars.push(type)
+            if (!getCollar(user).additionalcollars) { getCollar(user).additionalcollars = [] }
+            getCollar(user).additionalcollars.push(type)
             if (process.readytosave == undefined) {
                 process.readytosave = {};
             }

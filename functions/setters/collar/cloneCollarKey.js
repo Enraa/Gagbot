@@ -1,3 +1,5 @@
+const { getCollar } = require("../../getters/collar/getCollar");
+
 /********
  * Adds a user as a cloned keyholder for the collar
  * 

@@ -1,3 +1,5 @@
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
+
 /**********
  * Removes a toy from the user.
  * 

@@ -1,3 +1,16 @@
+const { canAccessChastity } = require("../../getters/chastity/canAccessChastity");
+const { canAccessChastityBra } = require("../../getters/chastity/canAccessChastityBra");
+const { getChastityBra } = require("../../getters/chastity/getChastityBra");
+const { canAccessCollar } = require("../../getters/collar/canAccessCollar");
+const { getCollar } = require("../../getters/collar/getCollar");
+const { getCorset } = require("../../getters/corset/getCorset");
+const { getGags } = require("../../getters/gag/getGags");
+const { getHeadwear } = require("../../getters/headwear/getHeadwear");
+const { getHeavy } = require("../../getters/heavy/getHeavy");
+const { getMitten } = require("../../getters/mitten/getMitten");
+const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
+const { getWearable } = require("../../getters/wearable/getWearable");
+
 /*********
  * Retrieves an outfit and attempts to apply it to the user. 
  * Application will follow the same constraints as applying the bondage pieces from their other standard commands.

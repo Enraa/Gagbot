@@ -1,3 +1,6 @@
+const { getCurrentFloor } = require("../../getters/delve/getCurrentFloor");
+const { getDelvePlayerStats } = require("../../getters/delve/getDelvePlayerStats");
+
 /*********
  * Sets the next Delve room by choice. If choice is not specified, the user is starting a new delve. This will always default to the delveentrance room.
  * 

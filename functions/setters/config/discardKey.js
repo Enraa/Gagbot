@@ -1,3 +1,5 @@
+const { statsAddCounter } = require("./statsAddCounter");
+
 /*******
  * Discards a key held by keyholderid. Cloned keys are destroyed.
  * 

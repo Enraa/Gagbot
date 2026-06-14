@@ -1,3 +1,5 @@
+const { getOption } = require("../../getters/config/getOption")
+
 /*********
  * Records a message for Edit Message app command
  * 

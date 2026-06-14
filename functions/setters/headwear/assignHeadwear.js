@@ -1,3 +1,5 @@
+const { getBaseHeadwear } = require("../../getters/headwear/getBaseHeadwear");
+
 /**********
  * Adds or modifies a headwear on the user.
  * 

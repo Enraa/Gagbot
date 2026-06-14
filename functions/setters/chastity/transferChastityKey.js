@@ -1,3 +1,5 @@
+const { getChastity } = require("../../getters/chastity/getChastity");
+
 /********
  * Changes the primary keyholder for a user's chastity belt. Removes cloned keys.
  * 
@@ -7,13 +9,10 @@
  * ##### Returns true if successful, false if lockedUser is not wearing a chastity belt
  ********/
 function transferChastityKey(lockedUser, newKeyholder) {
-    if (process.chastity == undefined) {
-		process.chastity = {};
-	}
-	if (process.chastity[lockedUser]) {
-		if (process.chastity[lockedUser].keyholder != newKeyholder) {
-			process.chastity[lockedUser].keyholder = newKeyholder;
-			process.chastity[lockedUser].clonedKeyholders = [];
+	if (getChastity(lockedUser)) {
+		if (getChastity(lockedUser).keyholder != newKeyholder) {
+			getChastity(lockedUser).keyholder = newKeyholder;
+			getChastity(lockedUser).clonedKeyholders = [];
 			if (process.readytosave == undefined) {
 				process.readytosave = {};
 			}

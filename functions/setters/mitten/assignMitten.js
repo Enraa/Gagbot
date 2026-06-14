@@ -16,7 +16,7 @@ function assignMitten(userID, mittentype, origbinder) {
 		mittenname: mittentype,
 		origbinder: originalbinder ?? origbinder, // Preserve original binder until it is removed.
 	};
-    // Increment the worn corset counter
+
     if (process.userstats == undefined) { process.userstats = {} }
     if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
 

@@ -1,3 +1,5 @@
+const { getChastity } = require("../../getters/chastity/getChastity");
+
 /********
  * Adds a user as a cloned keyholder for the chastity belt
  * 

@@ -1,3 +1,5 @@
+const { getLockedHeadgear } = require("../../getters/headwear/getLockedHeadgear");
+
 /**********
  * Removes a headwear from the user.
  * 

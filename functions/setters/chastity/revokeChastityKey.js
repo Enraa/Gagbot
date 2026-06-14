@@ -1,3 +1,5 @@
+const { getChastity } = require("../../getters/chastity/getChastity");
+
 /*******
  * Removes a cloned key from a chastity belt
  * 
