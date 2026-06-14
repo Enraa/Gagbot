@@ -4,7 +4,6 @@ const https = require("https");
 const { SlashCommandBuilder, UserSelectMenuBuilder, MessageFlags, TextInputBuilder, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder, ComponentType, SectionBuilder, CheckboxGroupBuilder, User } = require("discord.js");
 const { collartypes } = require("./collarfunctions.js");
 const { mittentypes } = require("./../functions/gagfunctions.js");
-const { configoptions } = require("./configfunctions.js");
 const { wearabletypes } = require("./wearablefunctions.js");
 const { assignConsent } = require("./setters/config/assignConsent.js");
 const { getPronouns } = require("./getters/config/getPronouns.js");
@@ -34,6 +33,7 @@ const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getGags } = require("./getters/gag/getGags.js");
 const { getWearable } = require("./getters/wearable/getWearable.js");
 const { getToys } = require("./getters/toy/getToys.js");
+const { configoptions } = require("../lists/configoptions.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {

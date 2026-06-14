@@ -1,10 +1,6 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, PermissionsBitField, ApplicationCommandOptionChannelTypesMixin } = require("discord.js");
-const { mittentypes } = require("./../functions/gagfunctions.js");
-const { heavytypes } = require("./../functions/heavyfunctions.js");
-const { handleConsent, timelockChastityModalnew } = require("./../functions/interactivefunctions.js");
-const { generateConfigModal, configoptions, initializeOptions } = require("./../functions/configfunctions.js");
+const { generateConfigModal, } = require("./../functions/configfunctions.js");
 const { removeAllCommands } = require("../functions/configfunctions.js");
-const { initializeServerOptions } = require("../functions/configfunctions.js");
 const { setCommands, generateTextEntryModal } = require("../functions/configfunctions.js");
 const { processTimedEvents } = require("../functions/timefunctions.js");
 const { generateUserEntryModal } = require("../functions/configfunctions.js");
@@ -16,6 +12,8 @@ const { createWebhook } = require("../functions/setters/config/createWebhook.js"
 const { deleteWebhook } = require("../functions/setters/config/deleteWebhook.js");
 const { leaveServerOptions } = require("../functions/setters/config/leaveServerOptions.js");
 const { setOption } = require("../functions/setters/config/setOption.js");
+const { configoptions } = require("../lists/configoptions.js");
+const { initializeServerOptions } = require("../functions/other/initializeServerOptions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("config").setDescription(`Configure settings...`),

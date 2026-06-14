@@ -31,4 +31,6 @@ function removeToy(user, keyholder, toytype, force = false) {
     process.readytosave.toys = true;
 }
 
-exports.removeToy = removeToy;
+module.exports = {
+    removeToy
+}

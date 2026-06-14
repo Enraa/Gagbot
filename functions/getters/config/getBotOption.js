@@ -1,4 +1,5 @@
-const { initializeBotOptions, configoptions } = require("../configfunctions");
+const { configoptions } = require("../../../lists/configoptions");
+const { initializeBotOptions } = require("../../other/initializeBotOptions");
 
 /*********
  * Gets the value of an option set for the bot

@@ -1,8 +1,10 @@
 {
     "compilerOptions": {
-        "module": "ES6",
-        //"checkJs": true // Uncomment this to see all the missing types!
+        "module": "commonjs",
+        "target": "ES6",
+        "moduleResolution": "nodenext",
+        "checkJs": false // Set true to get typescripted
     },
     "exclude": ["node_modules"],
-    "include": ["functions/*"],
+    "include": ["functions/*", "lists/*"],
 }

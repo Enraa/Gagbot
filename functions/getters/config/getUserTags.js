@@ -1,4 +1,4 @@
-const { configoptions } = require("../../configfunctions");
+const { configoptions } = require("../../../lists/configoptions");
 const { getOption } = require("./getOption");
 
 

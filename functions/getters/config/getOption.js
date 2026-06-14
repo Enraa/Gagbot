@@ -1,4 +1,5 @@
-const { initializeOptions, configoptions } = require("../configfunctions");
+const { configoptions } = require("../../../lists/configoptions");
+const { initializeOptions } = require("../../other/initializeOptions");
 
 /********
  * Gets the configured option for the user ID as set in /config
