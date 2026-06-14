@@ -4,5 +4,5 @@
         //"checkJs": true // Uncomment this to see all the missing types!
     },
     "exclude": ["node_modules"],
-    "inclue": ["functions/*"],
+    "include": ["functions/*"],
 }
