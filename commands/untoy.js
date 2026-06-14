@@ -6,6 +6,9 @@ const { getBaseToy } = require("../functions/getters/toy/getBaseToy");
 const { getConsent } = require("../functions/getters/config/getConsent");
 const { handleConsent } = require("../functions/interactivefunctions");
 const { getHeavy } = require("../functions/getters/heavy/getHeavy");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound");
+const { getSpecificToy } = require("../functions/getters/toy/getSpecificToy");
+const { removeToy } = require("../functions/setters/toy/removeToy");
 
 
 module.exports = {
