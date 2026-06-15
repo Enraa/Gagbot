@@ -1,15 +1,20 @@
-const { getCollar, getCollarName } = require("../../functions/collarfunctions");
-const { getCorset } = require("../../functions/corsetfunctions");
-const { getGagLast, getMitten, convertGagText, getMittenName } = require("../../functions/gagfunctions");
-const { getHeadwear } = require("../../functions/headwearfunctions");
-const { getHeavy } = require("../../functions/heavyfunctions");
+const { getChastity } = require("../../functions/getters/chastity/getChastity");
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra");
+const { getChastityBraName } = require("../../functions/getters/chastity/getChastityBraName");
+const { getChastityName } = require("../../functions/getters/chastity/getChastityName");
+const { getCollar } = require("../../functions/getters/collar/getCollar");
+const { getCollarName } = require("../../functions/getters/collar/getCollarName");
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
+const { getCorset } = require("../../functions/getters/corset/getCorset");
+const { getGagLast } = require("../../functions/getters/gag/getGagLast");
+const { convertGagText } = require("../../functions/getters/gag/getGagName");
+const { getHeadwear } = require("../../functions/getters/headwear/getHeadwear");
+const { getHeavy } = require("../../functions/getters/heavy/getHeavy");
+const { getMitten } = require("../../functions/getters/mitten/getMitten");
+const { getMittenName } = require("../../functions/getters/mitten/getMittenName");
 const { messageSendChannel } = require("../../functions/messagefunctions");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 const { getText } = require("../../functions/textfunctions");
-const { getUserVar, setUserVar } = require("../../functions/usercontext");
-const { getChastityBraName } = require("../../functions/vibefunctions");
-const { getChastityName } = require("../../functions/vibefunctions");
-const { getChastityBra } = require("../../functions/vibefunctions");
-const { getChastity } = require("../../functions/vibefunctions");
 
 exports.tick = async (userID, data) => {
     try {

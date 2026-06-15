@@ -1,5 +1,4 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getArousal, addArousal, getChastity } = require("../../functions/vibefunctions")
+const { getChastity } = require("../../functions/getters/chastity/getChastity")
 
 // Petals of Anguish as shown here: https://www.reddit.com/r/femalechastity/comments/1rbjaqq/fantasy_device_20/#lightbox
 // This variant limits "actions" to the wearer to one per other user. This is simple to track with a "touchedbelt" array.

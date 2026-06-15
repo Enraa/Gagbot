@@ -1,12 +1,15 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { getWearable, assignWearable, getWearableName, getBaseWearable } = require("../functions/wearablefunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums, ThresholdTypeEnums } = require("didyoumean2");
-const { getUserTags } = require("../functions/configfunctions.js");
+const { getWearable } = require("../functions/getters/wearable/getWearable.js");
+const { getUserTags } = require("../functions/getters/config/getUserTags.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getWearableName } = require("../functions/getters/wearable/getWearableName.js");
+const { getBaseWearable } = require("../functions/getters/wearable/getBaseWearable.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { assignWearable } = require("../functions/setters/wearable/assignWearable.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -168,7 +171,7 @@ module.exports = {
 -# Restricted if in heavy bondage
 
 Applies clothing, makeup or other ornamentation to the user. These items can be protected by the wearer using **/item**. Outfits can be saved using the **/outfit** menu.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

@@ -1,7 +1,6 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { gagtypes, mittentypes } = require("./../functions/gagfunctions.js");
 const { heavytypes } = require("./../functions/heavyfunctions.js");
-//const { chastitytypes, chastitybratypes } = require("./../functions/vibefunctions.js");
 const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { collartypes } = require("./../functions/collarfunctions.js");
 const { wearabletypes } = require("./../functions/wearablefunctions.js");
@@ -92,7 +91,7 @@ module.exports = {
 ### Usage: /list
 
 Displays all items of a given category that can be applied, such as gags, mittens, chastity devices or others.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

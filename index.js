@@ -5,23 +5,24 @@ dotenv.config()
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
-const { assignMitten, garbleMessage, setUpGags, modifymessage, loadMittenTypes } = require(`./functions/gagfunctions.js`);
+const { garbleMessage, setUpGags, modifymessage, loadMittenTypes } = require(`./functions/gagfunctions.js`);
 const { handleKeyFinding } = require('./functions/keyfindingfunctions.js');
 const { restartChastityTimers } = require('./functions/timelockfunctions.js');
 const { loadHeavyTypes } = require('./functions/heavyfunctions.js');
 const { loadHeadwearTypes } = require('./functions/headwearfunctions.js')
-const { assignCorset, setUpCorsets } = require('./functions/corsetfunctions.js');
+const { setUpCorsets } = require('./functions/corsetfunctions.js');
 const { assignMemeImages, generateListTexts } = require('./functions/interactivefunctions.js');
 const { backupsAreAnnoying, saveFiles, processUnlockTimes, processTimedEvents, importFileNames, scavengeUsers, removeOldMessages } = require('./functions/timefunctions.js');
 const { loadEmoji } = require("./functions/messagefunctions.js");
 const { loadWearables } = require("./functions/wearablefunctions.js");
-const { knownServer, setGlobalCommands, loadWebhooks, getBotOption, getOption } = require('./functions/configfunctions.js');
-const { getAllJoinedGuilds } = require('./functions/configfunctions.js');
+const { setGlobalCommands, loadWebhooks } = require('./functions/configfunctions.js');
 const { setUpToys } = require('./functions/toyfunctions.js');
 const { setUpChastity } = require('./functions/chastityfunctions.js');
 const { loadCollarTypes } = require('./functions/collarfunctions.js');
 const { buttonboard } = require('./contextcommands/message/Button Board.js');
 const { setUpEventFunctions } = require('./functions/eventhandling.js');
+const { getBotOption } = require('./functions/getters/config/getBotOption.js');
+const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js")
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();

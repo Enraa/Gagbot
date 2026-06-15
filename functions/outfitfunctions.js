@@ -1,242 +1,53 @@
 const { ActionRowBuilder } = require("@discordjs/builders");
-const { StringSelectMenuOptionBuilder } = require("@discordjs/builders");
-const { StringSelectMenuBuilder } = require("@discordjs/builders");
 const { ButtonBuilder } = require("@discordjs/builders");
 const { TextDisplayBuilder, MessageFlags, ButtonStyle, ActionRow, SectionBuilder, LabelBuilder, TextInputStyle } = require("discord.js");
-const { getWearable, getLockedWearable, getWearableName, getBaseWearable } = require("./wearablefunctions");
-const { getGags, getMitten, getGag, convertGagText, getMittenName } = require("./gagfunctions");
-const { getCollar, canAccessCollar, getCollarName, getCollarTimelock, getCollarPerm, getCollarKeys, getClonedCollarKeysOwned } = require("./collarfunctions");
-const { getCorset, getBaseCorset } = require("./corsetfunctions");
-const { getChastity, getVibe, getChastityTimelock, getArousal, getChastityKeys, getArousalDescription, getArousalChangeDescription } = require("./vibefunctions");
-const { getChastityBra } = require("./vibefunctions");
-const { getHeadwear, getHeadwearName, getHeadwearRestrictions, getLockedHeadgear } = require("./headwearfunctions");
-const { getHeavy, convertheavy, getBaseHeavy, getHeavyList, getHeavyRestrictions } = require("./heavyfunctions");
-const { canAccessChastity } = require("./vibefunctions");
-const { canAccessChastityBra } = require("./vibefunctions");
-const { getChastityName } = require("./vibefunctions");
-const { getChastityBraTimelock } = require("./vibefunctions");
-const { getChastityBraName } = require("./vibefunctions");
 const { ModalBuilder } = require("@discordjs/builders");
 const { TextInputBuilder } = require("@discordjs/builders");
 const { UserSelectMenuBuilder } = require("@discordjs/builders");
-const { arousedtexts } = require("../vibes/aroused/aroused_texts");
-const { getArousalBar } = require("./vibefunctions");
-const { getPronounsSet } = require("./pronounfunctions");
-const { getChastityBraKeys } = require("./vibefunctions");
-const { getClonedChastityKeysOwned } = require("./vibefunctions");
-const { getClonedChastityBraKeysOwned } = require("./vibefunctions");
-const { calcDenialCoefficient } = require("./vibefunctions");
-const { getToys, getBaseToy } = require("./toyfunctions");
-const { getOption } = require("./configfunctions");
-const { getUserVar } = require("./usercontext");
 const { statsGeneratePage } = require("./statsfunctions");
-
-function getOutfits(userID) {
-	if (process.outfits == undefined) {
-		process.outfits = {};
-	}
-	if (process.outfits[userID] == undefined) {
-		process.outfits[userID] = [];
-	}
-	return process.outfits[userID];
-}
-
-function assignOutfit(userID, slot, options) {
-	if (process.outfits == undefined) {
-		process.outfits = {};
-	}
-	if (process.outfits[userID] == undefined) {
-		process.outfits[userID] = [];
-	}
-	let storedobject = {};
-	if (typeof options == "string") {
-		// These go in order based on inspect text.
-		let optionbit = 0;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.gag = getGags(userID).length > 0 ? getGags(userID) : undefined;
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.headwear = process.headwear[userID]; // Oops.
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.mitten = getMitten(userID);
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.wearable = getWearable(userID).length > 0 ? getWearable(userID) : undefined;
-			storedobject.lockedwearable = getLockedWearable(userID).length > 0 ? getLockedWearable(userID) : undefined;
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.vibe = getToys(userID);
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.chastity = getChastity(userID);
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.chastitybra = getChastityBra(userID);
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.corset = getCorset(userID);
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.heavy = getHeavy(userID);
-		}
-		optionbit++;
-		if (options.charAt(optionbit) == 1) {
-			storedobject.collar = getCollar(userID);
-		}
-		if (Object.keys(storedobject).length > 0) {
-			process.outfits[userID][slot] = JSON.parse(JSON.stringify(storedobject));
-			if (process.readytosave == undefined) {
-				process.readytosave = {};
-			}
-			process.readytosave.outfits = true;
-		}
-	}
-}
-
-function restoreOutfit(userID, storedobject) {
-	Object.keys(storedobject).forEach((k) => {
-		// I could use a switch statement here but I feel like using if conditionals.
-		if (k == "wearable") {
-			getWearable(userID);
-			getLockedWearable(userID);
-			if (!getHeavy(userID)) {
-				process.wearable[userID] = { wornwearable: storedobject.wearable, locked: storedobject.lockedwearable };
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.wearable = true;
-			}
-		}
-		if (k == "gag") {
-			getGags(userID);
-			if (!getHeavy(userID) && !getMitten(userID)) {
-				process.gags[userID] = storedobject.gag;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.gags = true;
-			}
-		}
-		if (k == "mitten") {
-			getMitten(userID);
-			if (!getHeavy(userID) && !getMitten(userID)) {
-				process.mitten[userID] = storedobject.mitten;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.mitten = true;
-			}
-		}
-		if (k == "headwear") {
-			getHeadwear(userID);
-			if (!getHeavy(userID) && !getMitten(userID)) {
-				process.headwear[userID] = storedobject.headwear;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.headwear = true;
-			}
-		}
-		if (k == "collar") {
-			getCollar(userID);
-			if (!getHeavy(userID) && (canAccessCollar(userID, userID, true).access || !canAccessCollar(userID, userID, true).hascollar)) {
-				process.collar[userID] = storedobject.collar;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.collar = true;
-			}
-		}
-		if (k == "heavy") {
-			getHeavy(userID);
-			if (!getHeavy(userID)) {
-                if (!Array.isArray(storedobject.heavy)) {
-                    console.log("Loading a heavy that is not an array")
-                    console.log(storedobject.heavy)
-                    process.heavy[userID] = [storedobject.heavy];
-                }
-                else {
-                    process.heavy[userID] = storedobject.heavy;
-                }
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.heavy = true;
-			}
-		}
-		if (k == "corset") {
-			getCorset(userID);
-			if (!getHeavy(userID) && (canAccessChastity(userID, userID, true).access || !canAccessChastity(userID, userID, true).hasbelt)) {
-				process.corset[userID] = storedobject.corset;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.corset = true;
-			}
-		}
-		if (k == "chastity") {
-			getChastity(userID);
-			if (!getHeavy(userID) && (canAccessChastity(userID, userID, true).access || !canAccessChastity(userID, userID, true).hasbelt)) {
-				process.chastity[userID] = storedobject.chastity;
-                if (process.chastity[userID].stateligible) {
-                    process.chastity[userID].stateligible = false;
-                }
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.chastity = true;
-			}
-		}
-		if (k == "chastitybra") {
-			getChastityBra(userID);
-			if (!getHeavy(userID) && (canAccessChastityBra(userID, userID, true).access || !canAccessChastityBra(userID, userID, true).hasbelt)) {
-				process.chastitybra[userID] = storedobject.chastitybra;
-                if (process.chastitybra[userID].stateligible) {
-                    process.chastitybra[userID].stateligible = false;
-                }
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.chastitybra = true;
-			}
-		}
-		/*if (k == "vibe") { // Disabling toys since now there are multiple different conditions that can apply. 
-			getToys(userID);
-			if (!getHeavy(userID) && (canAccessChastity(userID, userID, true).access || !canAccessChastity(userID, userID, true).hasbelt)) {
-				process.vibe[userID] = storedobject.vibe;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.vibe = true;
-			}
-		}*/
-	});
-}
-
-function renameOutfit(userID, slot, newname) {
-	if (process.outfits == undefined) {
-		process.outfits = {};
-	}
-	if (process.outfits[userID] == undefined) {
-		process.outfits[userID] = [];
-	}
-	if (process.outfits[userID][slot]) {
-		process.outfits[userID][slot].outfitname = newname;
-	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.outfits = true;
-}
+const { getOutfits } = require("./getters/config/getOutfits");
+const { getHeavy } = require("./getters/heavy/getHeavy");
+const { getMitten } = require("./getters/mitten/getMitten");
+const { canAccessCollar } = require("./getters/collar/canAccessCollar");
+const { canAccessChastity } = require("./getters/chastity/canAccessChastity");
+const { canAccessChastityBra } = require("./getters/chastity/canAccessChastityBra");
+const { getGags } = require("./getters/gag/getGags");
+const { convertGagText } = require("./getters/gag/getGagName");
+const { getGag } = require("./getters/gag/getGag");
+const { getHeadwear } = require("./getters/headwear/getHeadwear");
+const { getHeadwearName } = require("./getters/headwear/getHeadwearName");
+const { getMittenName } = require("./getters/mitten/getMittenName");
+const { getWearable } = require("./getters/wearable/getWearable");
+const { getWearableName } = require("./getters/wearable/getWearableName");
+const { getChastity } = require("./getters/chastity/getChastity");
+const { getChastityTimelock } = require("./getters/chastity/getChastityTimelock");
+const { getChastityName } = require("./getters/chastity/getChastityName");
+const { getChastityBra } = require("./getters/chastity/getChastityBra");
+const { getChastityBraTimelock } = require("./getters/chastity/getChastityBraTimelock");
+const { getChastityBraName } = require("./getters/chastity/getChastityBraName");
+const { getCorset } = require("./getters/corset/getCorset");
+const { getCollar } = require("./getters/collar/getCollar");
+const { getCollarTimelock } = require("./getters/collar/getCollarTimelock");
+const { getCollarName } = require("./getters/collar/getCollarName");
+const { getOption } = require("./getters/config/getOption");
+const { getPronounsSet } = require("./getters/config/getPronounsSet");
+const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions");
+const { getLockedHeadgear } = require("./getters/headwear/getLockedHeadgear");
+const { getToys } = require("./getters/toy/getToys");
+const { getBaseCorset } = require("./getters/corset/getBaseCorset");
+const { getBaseToy } = require("./getters/toy/getBaseToy");
+const { getHeavyList } = require("./getters/heavy/getHeavyList");
+const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions");
+const { getCollarPerm } = require("./getters/collar/getCollarPerm");
+const { getLockedWearable } = require("./getters/wearable/getLockedWearable");
+const { getDisplayTexts } = require("./getters/config/getDisplayTexts");
+const { getBaseWearable } = require("./getters/wearable/getBaseWearable");
+const { getChastityKeys } = require("./getters/chastity/getChastityKeys");
+const { getChastityBraKeys } = require("./getters/chastity/getChastityBraKeys");
+const { getCollarKeys } = require("./getters/collar/getCollarKeys");
+const { getClonedChastityKeysOwned } = require("./getters/chastity/getClonedChastityKeysOwned");
+const { getClonedChastityBraKeysOwned } = require("./getters/chastity/getClonedChastityBraKeysOwned");
+const { getClonedCollarKeysOwned } = require("./getters/collar/getClonedCollarKeysOwned");
 
 async function generateOutfitModal(userID, menu, page, options) {
 	let pagecomponents = [new TextDisplayBuilder().setContent(`## Outfitter - ${menu.slice(0, 1).toUpperCase()}${menu.slice(1)}`)];
@@ -1193,7 +1004,6 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
                 }
             }
 
-            //clothingtext = `${clothingtext}**${getWearable(inspectuserID).map((h) => (!getLockedWearable(inspectuserID).includes(h) ? getWearableName(undefined, h) : `*${getWearableName(undefined, h)}*`)).join(", ")}**`
         }
         if (clothingtext.length > 1800) {
             clothingtext = `${clothingtext.slice(0,1800)}...` // We'll make a more elegant overflow solution later. 
@@ -1275,84 +1085,6 @@ async function inspectModal(userID, inspectuserIDin, menu, page) {
     return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
 }
 
-/*************
- * Get the user's additional display texts, ordered and only viewable if necessary. 
- * 
- * - **userID** - User ID of the person viewing
- * - **inspectuserID** - User ID of the person we're checking
- ************/
-async function getDisplayTexts(userID, inspectuserID) {
-    let bartext = ``;
-
-    // ******************** Arousal Display
-    if (getArousal(inspectuserID) > 2.0) {
-        if (getOption(userID, "arousaldisplay") == "bar") {
-            bartext = `\n\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
-            if (calcDenialCoefficient(inspectuserID) > 1) {
-                bartext = `${bartext}\n\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
-            }
-        }
-        if (getOption(userID, "arousaldisplay") == "desc") {
-            arousaltext = getArousalDescription(inspectuserID);
-            arousalchangetext = getArousalChangeDescription(inspectuserID)
-            bartext = `\n\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
-        }
-        if (getOption(userID, "arousaldisplay") == "numbers") {
-            bartext = `\n\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${Math.round(calcDenialCoefficient(inspectuserID) * 10)}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
-        }
-    }
-    // ****************** 
-
-    // ****************** People in lap
-    let lappeople = [];
-    // Attempt to get the current guild member object for the user. This might have unintended consequences
-    // however I'd have to retool the main function to narrow down to one guild. Too much work currently. 
-    let inspectusername = (process.client.guilds.cache.map(guild => guild.members.cache.get(inspectuserID)).find(m => m !== undefined))?.displayName;
-    Object.keys(process.heavy).forEach((k) => {
-        let lapped = false;
-        if (!Array.isArray(process.heavy[k])) {
-            console.log("Not an array")
-            console.log(process.heavy[k])
-        }
-        else {
-            process.heavy[k].forEach((h) => {
-                // If its a lap and starts with the inspect user's name, then it's OURS
-                if ((h.type === "dominants_lap") && (h.displayname.startsWith(inspectusername ?? "undefined"))) {
-                    lappeople.push(k)
-                }
-            })
-        }
-    })
-    if (lappeople.length > 0) {
-        bartext = `${bartext}\n\n🫂 Subs in Lap: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
-    }
-    // ****************** 
-
-    // ****************** Shared Gasmask --- Can't currently test this because linked was disabled for now. 
-    if (process.headwear && process.headwear[inspectuserID] && process.headwear[inspectuserID].sharedbreathhose) {
-        bartext = `${bartext}\n\n${process.emojis.gasmask} Sharing Breath with: <@${process.headwear[inspectuserID].sharedbreathhose}>`
-    } 
-    // ****************** 
-
-    // ****************** Headpat Battery
-    if (getToys(inspectuserID).find((t) => t.type == "vibe_headpatbattery")) {
-        bartext = `${bartext}\n\n🔋 Headpat Vibrator Battery: **${Math.round(getUserVar(inspectuserID, "headpatvibecharge") * 100)}%**`
-    }
-    // ******************
-
-    // ****************** Headpat Battery
-    if (getHeavy(inspectuserID, "windupclockwork")) {
-        bartext = `${bartext}\n\n🕰️ Wind-up Key Tension: **${Math.round(getUserVar(inspectuserID, "windupcharge") * 100)}%**`
-    }
-    // ******************
-
-    return bartext.slice(1); // Cut the first linebreak for better look
-}
-
 exports.generateOutfitModal = generateOutfitModal;
 exports.outfitEntryModal = outfitEntryModal;
 exports.inspectModal = inspectModal;
-exports.assignOutfit = assignOutfit;
-exports.getOutfits = getOutfits;
-exports.restoreOutfit = restoreOutfit;
-exports.renameOutfit = renameOutfit;

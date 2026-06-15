@@ -1,10 +1,10 @@
-const { convertPronounsText } = require("./pronounfunctions.js");
-const { getWearable } = require("./wearablefunctions.js");
-const { getChastity, getChastityBra, getArousal } = require("./vibefunctions.js");
-const { getHeadwearRestrictions } = require("./headwearfunctions.js");
-const { getUserTags } = require("./configfunctions.js");
-const { getHeavy, getHeavyRestrictions } = require("./heavyfunctions.js");
-const { getCollar } = require("./collarfunctions.js");
+const { getArousal } = require("./getters/arousal/getArousal.js");
+const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getCollar } = require("./getters/collar/getCollar.js");
+const { getUserTags } = require("./getters/config/getUserTags.js");
+const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
+const { getHeavy } = require("./getters/heavy/getHeavy.js");
+const { convertPronounsText } = require("./other/convertPronounsText.js");
 
 const texts_chastity = {
     self: {
@@ -5487,7 +5487,7 @@ const getTextGeneric = (type, data_in) => {
             },
         ],
         remotecontrolshock_other_playful: [
-            `TARGET_TAG is suddenly interrupted as USER_TAG presses a button, causing TARGET_THEM to tear up slightly, even though the shock really didn't hurt that much...`,
+            `TARGET_TAG is suddenly interrupted as USER_TAG presses a button, giving TARGET_THEM a tingly sensation!`,
             `USER_TAG pulls out a remote and presses the flashing red button on it, causing TARGET_TAG to "eep!" as it buzzes a small shock to TARGET_THEM!`,
         ],
         remotecontrolshock_other_painful: [

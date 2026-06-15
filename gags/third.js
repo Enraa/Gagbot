@@ -1,6 +1,6 @@
-const { getOption } = require("../functions/configfunctions");
-const { getPronouns } = require("../functions/pronounfunctions");
 const nlp = require("compromise");
+const { getPronouns } = require("../functions/getters/config/getPronouns");
+const { getOption } = require("../functions/getters/config/getOption");
 
 const selfreplacements = [
     { regex: "i am", replace: `SUBJECT is`}, // "I am"

@@ -1,6 +1,6 @@
-const { assignGag } = require("../../functions/gagfunctions");
+const { getPronouns } = require("../../functions/getters/config/getPronouns");
 const { messageSendChannel } = require("../../functions/messagefunctions");
-const { getPronouns } = require("../../functions/pronounfunctions");
+const { assignGag } = require("../../functions/setters/gag/assignGag");
 
 function msgfunction(userid, data) {
     const curses = ["fuck", "fucking", "fuckin", "motherfucker", "damn", "dammit", "bitch", "shit", "bitchin'", "ass", "asshole", "arse", "goddammit", "piss", "dick", "dickhead", "damned", "bullshit", "fucked", "fucker", "crap", "hell", "cunt", "bollocks", "slut", "sluts", "idiot"];

@@ -1,6 +1,7 @@
 const { ModalBuilder, LabelBuilder, MessageFlags, TextInputStyle } = require("discord.js");
-const { setOption, getOption } = require("../../functions/configfunctions");
 const { TextInputBuilder } = require("discord.js");
+const { setOption } = require("../../functions/setters/config/setOption");
+const { getOption } = require("../../functions/getters/config/getOption");
 
 exports.modal = async (interaction, userid) => {
     let modal = new ModalBuilder()
@@ -26,6 +27,6 @@ exports.modal = async (interaction, userid) => {
 
 exports.modalexecute = async (interaction) => {
     interaction.deferUpdate();
-    setOption(user.id, "engravedcollarname", interaction.fields.getTextInputValue("choiceinput").slice(0,30));
-    await interaction.reply({ content: `Updated your engraved pet tag to ${getOption(user.id, "engravedcollarname")}`, flags: MessageFlags.Ephemeral })
+    setOption(interaction.user.id, "engravedcollarname", interaction.fields.getTextInputValue("choiceinput").slice(0,30));
+    await interaction.reply({ content: `Updated your engraved pet tag to ${getOption(interaction.user.id, "engravedcollarname")}`, flags: MessageFlags.Ephemeral })
 }

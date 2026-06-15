@@ -1,11 +1,12 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { dronecodes } = require("../functions/dollfunctions");
 const { default: didYouMean, ReturnTypeEnums, ThresholdTypeEnums } = require("didyoumean2");
-const { getConsent, handleConsent } = require("../functions/interactivefunctions");
+const { handleConsent } = require("../functions/interactivefunctions");
 const { messageSend } = require("../functions/messagefunctions");
-const { getOption } = require("../functions/getters/getOption");
-const { getPFP } = require("../functions/getters/getPFP");
-const { getAlternateName } = require("../functions/getters/getAlternateName");
+const { getConsent } = require("../functions/getters/config/getConsent");
+const { getOption } = require("../functions/getters/config/getOption");
+const { getAlternateName } = require("../functions/getters/config/getAlternateName");
+const { getPFP } = require("../functions/getters/config/getPFP");
 
 module.exports = {
 	data: new SlashCommandBuilder()

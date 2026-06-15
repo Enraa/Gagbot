@@ -1,6 +1,6 @@
 const { SlashCommandBuilder, TextDisplayBuilder } = require("discord.js")
 const { inspectModal } = require("../functions/outfitfunctions");
-const { getHeadwearRestrictions } = require("../functions/headwearfunctions");
+const { getHeadwearRestrictions } = require("../functions/getters/headwear/getHeadwearRestrictions");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -35,7 +35,7 @@ module.exports = {
 -# Restricted if blindfolded
 ${restrictedtext}
 Provides detailed information on what an individual is wearing, who is holding the **Keys** to their **Restraints**, and any **Keys** they are holding. When blindfolded, limited information can be displayed on self, while no information can be seen on others.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 }

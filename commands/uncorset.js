@@ -1,14 +1,19 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getChastity, canAccessChastity } = require("./../functions/vibefunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { getCorset, removeCorset, getBaseCorset } = require("./../functions/corsetfunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
 const { checkBondageRemoval, handleBondageRemoval } = require("../functions/interactivefunctions.js");
 const { config } = require("../functions/configfunctions.js");
-const { getBaseChastity } = require("../functions/chastityfunctions.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getBaseCorset } = require("../functions/getters/corset/getBaseCorset.js");
+const { getCorset } = require("../functions/getters/corset/getCorset.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { canAccessChastity } = require("../functions/getters/chastity/canAccessChastity.js");
+const { getBaseChastity } = require("../functions/getters/chastity/getBaseChastity.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { removeCorset } = require("../functions/setters/corset/removeCorset.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -96,7 +101,7 @@ module.exports = {
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if (config.getKeyLoss(corsetuser.id) && fumbleResult > 1) {
+									if ((getOption(corsetuser.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
 										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
@@ -146,7 +151,7 @@ module.exports = {
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if (config.getKeyLoss(corsetuser.id) && fumbleResult > 1) {
+									if ((getOption(corsetuser.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
 										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })

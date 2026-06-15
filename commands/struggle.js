@@ -1,14 +1,21 @@
-const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { mittentypes, getMittenName, getGag, convertGagText, assignMitten, getMitten, getGagLast } = require("./../functions/gagfunctions.js");
-const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { SlashCommandBuilder, TextDisplayBuilder } = require("discord.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getHeadwear } = require("../functions/headwearfunctions.js");
-const { getCorset } = require("../functions/corsetfunctions.js");
-const { getChastity, getChastityBra, getChastityName, getChastityBraName } = require("../functions/vibefunctions.js");
-const { getCollar, getCollarName } = require("../functions/collarfunctions.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getGagLast } = require("../functions/getters/gag/getGagLast.js");
+const { getMitten } = require("../functions/getters/mitten/getMitten.js");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { getChastityBra } = require("../functions/getters/chastity/getChastityBra.js");
+const { getHeadwear } = require("../functions/getters/headwear/getHeadwear.js");
+const { getCorset } = require("../functions/getters/corset/getCorset.js");
+const { getCollar } = require("../functions/getters/collar/getCollar.js");
+const { convertGagText } = require("../functions/getters/gag/getGagName.js");
+const { getMittenName } = require("../functions/getters/mitten/getMittenName.js");
+const { getChastityName } = require("../functions/getters/chastity/getChastityName.js");
+const { getChastityBraName } = require("../functions/getters/chastity/getChastityBraName.js");
+const { getCollarName } = require("../functions/getters/collar/getCollarName.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { statsAddCounter } = require("../functions/setters/config/statsAddCounter.js");
 
 module.exports = {
 	cooldown: 10,
@@ -286,13 +293,7 @@ module.exports = {
 				interaction.reply(getText(data));
 			}
             // Increment the struggle message counter
-            if (process.userstats == undefined) { process.userstats = {} }
-            if (process.userstats[interaction.user.id] == undefined) { process.userstats[interaction.user.id] = {} }
-            process.userstats[interaction.user.id].strugglemessages = (process.userstats[interaction.user.id].strugglemessages ?? 0) + 1;
-            if (process.readytosave == undefined) {
-                process.readytosave = {};
-            }
-            process.readytosave.userstats = true;
+            statsAddCounter(interaction.user.id, "strugglemessages", 1)
 		} catch (err) {
 			console.log(err);
 		}
@@ -302,7 +303,7 @@ module.exports = {
 ### Usage: /struggle (type)
 
 Struggle with a restraint or nothing at all. This will print out a relevant struggle text (or a joke line if "Nothing"). Note, this does not actually do anything to the restraint you're struggling with.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

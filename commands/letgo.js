@@ -1,9 +1,12 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
 const { their } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { tryOrgasm, getChastity, setArousalCooldown } = require("../functions/vibefunctions.js");
-const { getHeavy, getHeavyBound } = require("../functions/heavyfunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
+const { tryOrgasm, setArousalCooldown } = require("../functions/vibefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

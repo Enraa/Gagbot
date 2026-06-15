@@ -1,12 +1,15 @@
-const { getCollar, getClonedCollarKey } = require("../../functions/collarfunctions.js")
-const { removeHeavy, getHeavy } = require("../../functions/heavyfunctions")
+const { getChastity } = require("../../functions/getters/chastity/getChastity")
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra")
+const { getClonedChastityBraKey } = require("../../functions/getters/chastity/getClonedChastityBraKey")
+const { getClonedChastityKey } = require("../../functions/getters/chastity/getClonedChastityKey")
+const { getClonedCollarKey } = require("../../functions/getters/collar/getClonedCollarKey")
+const { getCollar } = require("../../functions/getters/collar/getCollar")
+const { getUserVar } = require("../../functions/getters/config/getUserVar")
+const { getHeavy } = require("../../functions/getters/heavy/getHeavy")
 const { messageSendChannel } = require("../../functions/messagefunctions")
+const { setUserVar } = require("../../functions/setters/config/setUserVar")
+const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy")
 const { getText } = require("../../functions/textfunctions")
-const { getUserVar, setUserVar } = require("../../functions/usercontext.js")
-const { getArousal, getChastity } = require("../../functions/vibefunctions")
-const { getClonedChastityBraKey } = require("../../functions/vibefunctions.js")
-const { getClonedChastityKey } = require("../../functions/vibefunctions.js")
-const { getChastityBra } = require("../../functions/vibefunctions.js")
 const { calculatecapture } = require("./capture_sphere.js") // reuse the calculation!
 
 let tick = async (userID, datain) => {

@@ -1,9 +1,9 @@
 // Allows a user to edit a message if they were webhooked using an edit modal. 
 const { ContextMenuCommandBuilder, ApplicationCommandType, MessageFlags } = require('discord.js');
-const { getAllSelectedOption } = require('../../functions/configfunctions');
 const { generateEditMessageModal } = require('../../functions/interactivefunctions');
 const { modalexecute } = require('../../commands/config');
 const { modifymessage } = require('../../functions/gagfunctions');
+const { getAllSelectedOption } = require('../../functions/getters/config/getAllSelectedOption');
 
 module.exports = {
     data: new ContextMenuCommandBuilder()

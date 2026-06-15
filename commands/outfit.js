@@ -1,5 +1,9 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { assignOutfit, restoreOutfit, getOutfits, generateOutfitModal, outfitEntryModal, renameOutfit } = require("../functions/outfitfunctions.js");
+const { generateOutfitModal, outfitEntryModal } = require("../functions/outfitfunctions.js");
+const { getOutfits } = require("../functions/getters/config/getOutfits.js");
+const { restoreOutfit } = require("../functions/setters/config/restoreOutfit.js");
+const { assignOutfit } = require("../functions/setters/config/assignOutfit.js");
+const { renameOutfit } = require("../functions/setters/config/renameOutfit.js");
 
 const PAGE_SIZE = 5;
 
@@ -111,7 +115,7 @@ module.exports = {
 -# Restrictions vary depending on if you can normally remove saved outfit pieces
 
 Opens the Outfitter menu, which provides options for saving and restoring up to 20 outfits, each with their respective clothing and respective settings on each **Restraint**, including any **Keys** and **Cloned Keys**.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

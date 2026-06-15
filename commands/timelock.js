@@ -1,12 +1,17 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { timelockChastityModal, timelockChastityBraModal, timelockCollarModal, timelockBuildConfirm } = require("./../functions/interactivefunctions.js");
-const { getChastity, getChastityBra, canAccessChastity, canAccessChastityBra } = require("../functions/vibefunctions.js");
-const { getCollar, canAccessCollar } = require("../functions/collarfunctions.js");
 const { their } = require("../functions/pronounfunctions.js");
-const { getHeavy, getHeavyBound } = require("../functions/heavyfunctions.js");
-const { timelockChastity, timelockChastityBra, timelockCollar } = require("./../functions/timelockfunctions.js");
 const { parseTime } = require("./../functions/timefunctions.js");
 const { getText } = require("../functions/textfunctions.js");
+const { getCollar } = require("../functions/getters/collar/getCollar.js");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { getChastityBra } = require("../functions/getters/chastity/getChastityBra.js");
+const { canAccessCollar } = require("../functions/getters/collar/canAccessCollar.js");
+const { canAccessChastity } = require("../functions/getters/chastity/canAccessChastity.js");
+const { canAccessChastityBra } = require("../functions/getters/chastity/canAccessChastityBra.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { timelockChastity, timelockChastityBra, timelockCollar } = require("../functions/timelockfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -249,7 +254,7 @@ module.exports = {
 ### Usage: /timelock (wearer) (device)
 
 Opens a window to configure a timelock to apply to your **Chastity Belt**, **Chastity Bra**, or **Collar**. Can be configured to temporarily designate someone else to have keyholder access to your device, as well as temporarily granting public access.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

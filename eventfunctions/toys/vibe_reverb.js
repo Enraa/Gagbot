@@ -1,5 +1,6 @@
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
-const { setUserVar, getUserVar } = require("../../functions/usercontext");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 const initial_timespan = 180000
 const timespan_inc = 15000
@@ -13,7 +14,7 @@ const BOLD = new RegExp(/([\*][\*])/)
 function msgfunction(userid, data) {
 
     // Catch Message, and Check for OOC, Whispers, or Shouting
-    intensity = volumetest(data.msgcontent)
+    let intensity = volumetest(data.msgcontent)
     //console.log(intensity);
 
     // Escape if purely OOC message
@@ -61,10 +62,10 @@ async function tick(userID) {
 
 function volumetest(message) {
     // Split into lines
-    arrayOfLines = message.match(newline);
+    let arrayOfLines = message.match(newline);
     //console.log(`ARRAY OF LINES: ${arrayOfLines}\n`);
 
-    intensityMod = 0;
+    let intensityMod = 0;
     // Discard OOC Lines
     arrayOfLines.forEach((line) => {
 

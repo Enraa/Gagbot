@@ -1,7 +1,6 @@
-const { getOption } = require("../../functions/configfunctions")
-const { discardKey } = require("../../functions/keyfindingfunctions")
-const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
-const { canAccessChastity } = require("../../functions/vibefunctions")
+const { canAccessChastity } = require("../../functions/getters/chastity/canAccessChastity")
+const { getOption } = require("../../functions/getters/config/getOption")
+const { rollKeyFumble, discardKey } = require("../../functions/keyfindingfunctions")
 
 // These values are used whenever they're unspecified on the belt in this folder.
 // Growth Coefficient. Higher = more growth, this is a multiplier(?) on arousal gains

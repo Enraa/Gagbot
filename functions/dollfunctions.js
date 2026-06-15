@@ -1,9 +1,8 @@
-const { getOption } = require(`./../functions/configfunctions.js`);
-const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS } = require("./headwearfunctions.js");
+const { DOLLVISORS } = require("./headwearfunctions.js");
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
-//const { assignGag, assignMitten } = require('./../functions/gagfunctions.js') // These do not appear to be in use and are creating a circular dependency.
-const { assignHeavy } = require(`./../functions/heavyfunctions.js`);
 const garble = require("garble");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getOption } = require("./getters/config/getOption.js");
 
 // Regex to capture the user's intended text segments post-corset and post-vibrator.
 // NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.

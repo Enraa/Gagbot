@@ -4,7 +4,6 @@ function messagebegin (msg, msgTree, msgTreeMods, intensity) {
 	const duration = 20 - intensity;
 	const period = 25 + 7 * intensity;
 
-	console.log("is called")
 	if (Math.floor(Date.now() / 1000) % period < duration) return;
 
 	let silenced = {"isSilenced":false}

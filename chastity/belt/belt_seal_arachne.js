@@ -1,5 +1,6 @@
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { addArousal } = require("../../functions/vibefunctions")
+const { getUserVar } = require("../../functions/getters/config/getUserVar")
+const { addArousal } = require("../../functions/setters/arousal/addArousal")
+const { setUserVar } = require("../../functions/setters/config/setUserVar")
 
 // Seal of the Pleasurable Descent (Arachne's Kiss)
 // This Seal gradually increases the wearer's sensitivity (growthCoefficient), and raises the min arousal level for every successful orgasm while wearing it~

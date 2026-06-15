@@ -1,12 +1,9 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar, canAccessCollar } = require("./../functions/collarfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
+const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getOption } = require("../functions/configfunctions.js");
-const { getUserTags } = require("../functions/configfunctions.js");
 const { rollPatChance, handleTouchEvent } = require("../functions/touchfunctions.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getPronouns } = require("../functions/getters/config/getPronouns.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -90,7 +87,7 @@ module.exports = {
                         nomessage = `Something went wrong - Submit a bug report!`;
                     }
                     if (reject == "NoDM") {
-                        nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(chastityuser.id, "subject")} ${getPronouns(chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent to touch.`;
+                        nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent to touch.`;
                     }
                     await interaction.followUp({ content: nomessage });
                 },

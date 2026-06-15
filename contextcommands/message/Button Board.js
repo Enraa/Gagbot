@@ -1,6 +1,6 @@
 const { ContextMenuCommandBuilder, ApplicationCommandType, ButtonBuilder, ButtonStyle, ActionRowBuilder, MessageFlags } = require('discord.js');
 const { getTextGeneric } = require('../../functions/textfunctions');
-const { getHeadwearRestrictions } = require('../../functions/headwearfunctions');
+const { getHeadwearRestrictions } = require('../../functions/getters/headwear/getHeadwearRestrictions');
 
 function arrayShuffle(arr) {
     for (let i = arr.length - 1; i > 0; i--) {

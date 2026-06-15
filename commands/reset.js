@@ -1,13 +1,15 @@
 const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits } = require("discord.js");
-const { deleteGag, deleteMitten } = require("./../functions/gagfunctions.js");
-const { removeChastity, removeVibe } = require("./../functions/vibefunctions.js");
-const { removeCollar } = require("./../functions/collarfunctions.js");
-const { removeHeavy } = require("./../functions/heavyfunctions.js");
-const { removeCorset } = require("../functions/corsetfunctions.js");
-const { deleteWearable } = require("../functions/wearablefunctions.js");
-const { removeChastityBra, setArousalCooldown } = require("../functions/vibefunctions.js");
-const { getServerOption } = require("../functions/configfunctions.js");
-const { deleteHeadwear } = require("../functions/headwearfunctions.js");
+const { setArousalCooldown } = require("../functions/vibefunctions.js");
+const { deleteGag } = require("../functions/setters/gag/removeGag.js");
+const { deleteMitten } = require("../functions/setters/mitten/removeMitten.js");
+const { removeChastity } = require("../functions/setters/chastity/removeChastity.js");
+const { removeChastityBra } = require("../functions/setters/chastity/removeChastityBra.js");
+const { removeCollar } = require("../functions/setters/collar/removeCollar.js");
+const { removeHeavy } = require("../functions/setters/heavy/removeHeavy.js");
+const { removeCorset } = require("../functions/setters/corset/removeCorset.js");
+const { deleteWearable } = require("../functions/setters/wearable/removeWearable.js");
+const { deleteHeadwear } = require("../functions/setters/headwear/removeHeadwear.js");
+const { getServerOption } = require("../functions/getters/config/getServerOption.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

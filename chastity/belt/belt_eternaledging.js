@@ -1,6 +1,6 @@
-const { getBaseChastity } = require("../../functions/chastityfunctions");
-const { getChastityBra } = require("../../functions/vibefunctions");
-const { getArousal } = require("../../functions/vibefunctions")
+const { getArousal } = require("../../functions/getters/arousal/getArousal");
+const { getBaseChastity } = require("../../functions/getters/chastity/getBaseChastity");
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra");
 
 // Chastity Belt of Eternal Edging
 // The Denial Coefficient output of this belt will always be set to 1% higher than the wearer's current arousal. 

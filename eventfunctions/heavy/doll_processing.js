@@ -1,17 +1,30 @@
-const { getCollarName, getCollar, assignCollar } = require("../../functions/collarfunctions.js");
-const { assignMitten, getMitten, getMittenName } = require("../../functions/gagfunctions.js");
-const { getHeadwear, DOLLVISORS, getHeadwearName, assignHeadwear } = require("../../functions/headwearfunctions.js");
-const { removeHeavy, getHeavy } = require("../../functions/heavyfunctions.js");
+const { getChastity } = require("../../functions/getters/chastity/getChastity.js");
+const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra.js");
+const { getChastityBraName } = require("../../functions/getters/chastity/getChastityBraName.js");
+const { getChastityName } = require("../../functions/getters/chastity/getChastityName.js");
+const { getCollar } = require("../../functions/getters/collar/getCollar.js");
+const { getCollarName } = require("../../functions/getters/collar/getCollarName.js");
+const { getOption } = require("../../functions/getters/config/getOption.js");
+const { getHeadwear } = require("../../functions/getters/headwear/getHeadwear.js");
+const { getHeadwearName } = require("../../functions/getters/headwear/getHeadwearName.js");
+const { getHeavy } = require("../../functions/getters/heavy/getHeavy.js");
+const { getMitten } = require("../../functions/getters/mitten/getMitten.js");
+const { getMittenName } = require("../../functions/getters/mitten/getMittenName.js");
+const { getLockedWearable } = require("../../functions/getters/wearable/getLockedWearable.js");
+const { getWearable } = require("../../functions/getters/wearable/getWearable.js");
+const { getWearableName } = require("../../functions/getters/wearable/getWearableName.js");
+const { DOLLVISORS } = require("../../functions/headwearfunctions.js");
 const { messageSendChannel } = require("../../functions/messagefunctions.js");
+const { assignChastity } = require("../../functions/setters/chastity/assignChastity.js");
+const { assignChastityBra } = require("../../functions/setters/chastity/assignChastityBra.js");
+const { assignCollar } = require("../../functions/setters/collar/assignCollar.js");
+const { assignHeadwear } = require("../../functions/setters/headwear/assignHeadwear.js");
+const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy.js");
+const { assignMitten } = require("../../functions/setters/mitten/assignMitten.js");
+const { assignWearable } = require("../../functions/setters/wearable/assignWearable.js");
+const { removeWearable } = require("../../functions/setters/wearable/removeWearable.js");
 const { getText } = require("../../functions/textfunctions.js");
-const { getChastityBra } = require("../../functions/vibefunctions.js");
-const { assignChastityBra } = require("../../functions/vibefunctions.js");
-const { getChastityBraName } = require("../../functions/vibefunctions.js");
-const { getChastityName, assignChastity } = require("../../functions/vibefunctions.js");
-const { getChastity } = require("../../functions/vibefunctions.js");
-const { getWearable, getLockedWearable, deleteWearable, getWearableName, assignWearable, wearablecolors } = require("../../functions/wearablefunctions.js");
-const { getOption } = require(`../../functions/configfunctions.js`);
-const { User } = require("discord.js");
+const { wearablecolors } = require("../../functions/wearablefunctions.js");
 
 // Doll Processing Facility will slowly strip the wearer of all of their clothes!
 // Then after they are naked, it will announce once that it is applying restraints
@@ -63,7 +76,7 @@ let tick = async (userID, datain) => {
     if (currclothes.length > 0) {
         data.textdata.c1 = getWearableName(undefined, currclothes[0]), // wearable name
             data.removeclothing = true;
-        deleteWearable(userID, currclothes[0]);
+        removeWearable(userID, currclothes[0]);
         // Taking off the clothes at the beginning!
         if (process.userevents[userID].dollprocessing.stage == 0) {
             data.stage1 = true;

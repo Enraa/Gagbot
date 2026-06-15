@@ -1,9 +1,9 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { getCollar } = require("./collarfunctions")
-const { getChastityBra } = require("./vibefunctions")
-const { getChastity } = require("./vibefunctions")
+const { getCollar } = require("./getters/collar/getCollar");
+const { getChastity } = require("./getters/chastity/getChastity");
+const { getChastityBra } = require("./getters/chastity/getChastityBra");
 
 // Load the game files! 
 function loadGames() {

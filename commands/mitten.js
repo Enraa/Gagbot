@@ -1,12 +1,19 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { mittentypes, getMittenName, getGag, assignMitten, getMitten, getBaseMitten } = require("./../functions/gagfunctions.js");
+const { mittentypes } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, handleMajorRestraint, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
+const { handleConsent, handleMajorRestraint, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
-const { getUserTags } = require("../functions/configfunctions.js");
+const { getUserTags } = require("../functions/getters/config/getUserTags.js");
+const { getBaseMitten } = require("../functions/getters/mitten/getBaseMitten.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getMittenName } = require("../functions/getters/mitten/getMittenName.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getMitten } = require("../functions/getters/mitten/getMitten.js");
+const { getGag } = require("../functions/getters/gag/getGag.js");
+const { assignMitten } = require("../functions/setters/mitten/assignMitten.js");
+const { getPronouns } = require("../functions/getters/config/getPronouns.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -181,7 +188,7 @@ module.exports = {
 -# Restricted if wearing mittens
 ${restrictedtext}
 Applies mittens to yourself. Mittens prevent the use of **/gag** and **/mask**, as well as **/unmitten**. If you apply mittens to yourself, others will be able to gag you without you being able to remove it!`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

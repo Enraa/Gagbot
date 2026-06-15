@@ -1,10 +1,8 @@
+const { canAccessChastityBra } = require("../../functions/getters/chastity/canAccessChastityBra")
+const { getOption } = require("../../functions/getters/config/getOption")
+const { rollKeyFumble, discardKey } = require("../../functions/keyfindingfunctions")
+
 // These values are used whenever they're unspecified on the bra in this folder.
-
-const { getOption } = require("../../functions/configfunctions")
-const { discardKey } = require("../../functions/keyfindingfunctions")
-const { rollKeyFumble } = require("../../functions/keyfindingfunctions")
-const { canAccessChastityBra } = require("../../functions/vibefunctions")
-
 // Growth Coefficient. Higher = more growth, this is a multiplier(?) on arousal gains
 exports.growthCoefficient = (data) => { return 1 }
 

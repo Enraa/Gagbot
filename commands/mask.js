@@ -1,13 +1,17 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, handleMajorRestraint, handleExtremeRestraint, generateExtraConfig } = require("./../functions/interactivefunctions.js");
-const { getHeadwear, assignHeadwear, getHeadwearName, getBaseHeadwear } = require("../functions/headwearfunctions.js");
+const { handleConsent, handleMajorRestraint, handleExtremeRestraint, generateExtraConfig } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getCollar, getCollarPerm, canAccessCollar } = require("../functions/collarfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
-const { getUserTags } = require("../functions/configfunctions.js");
+const { getHeadwear } = require("../functions/getters/headwear/getHeadwear.js");
+const { getUserTags } = require("../functions/getters/config/getUserTags.js");
+const { getBaseHeadwear } = require("../functions/getters/headwear/getBaseHeadwear.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getHeadwearName } = require("../functions/getters/headwear/getHeadwearName.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getMitten } = require("../functions/getters/mitten/getMitten.js");
+const { assignHeadwear } = require("../functions/setters/headwear/assignHeadwear.js");
+const { getPronouns } = require("../functions/getters/config/getPronouns.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -274,7 +278,7 @@ module.exports = {
 -# Restricted if in mittens or not holding the user's collar key
 ${restrictedtext}
 Applies some kind of headwear to the user. This headwear can potentially restrict **Emotes** and **Inspect** when worn, as well as other unique effects such as the **Doll Visor**. Requires **Collar** permissions in order to use it on others.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

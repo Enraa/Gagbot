@@ -1,20 +1,29 @@
 const fs = require("fs");
 const path = require("path");
 const https = require("https");
-const { messageSend, messageSendImg, messageSendChannel, runMessageEvents, getAlternateName, recordMessage, getPFP } = require(`./../functions/messagefunctions.js`);
-const { getCorset, corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
-const { stutterText, getArousedTexts } = require(`./../functions/vibefunctions.js`);
-const { getVibeEquivalent } = require("./vibefunctions.js");
-const { getHeadwearRestrictions, processHeadwearEmoji, getHeadwearName, getHeadwear, DOLLVISORS, processHeadwearTruthgas } = require("./headwearfunctions.js");
-const { getOption } = require(`./../functions/configfunctions.js`);
+const { messageSend, messageSendImg, messageSendChannel } = require(`./../functions/messagefunctions.js`);
+const { corsetLimitWords, silenceMessage } = require(`./../functions/corsetfunctions.js`);
+const { stutterText } = require(`./../functions/vibefunctions.js`);
+const { processHeadwearEmoji, processHeadwearTruthgas } = require("./headwearfunctions.js");
 const { getText } = require(`./../functions/textfunctions.js`);
 const { DOLLMAXPUNISHMENT, textGarbleDOLL, textGarbleDrone } = require(`./../functions/dollfunctions.js`);
 const { splitMessage } = require(`./../functions/messagefunctions.js`);
-const { assignHeavy, getHeavyRestrictions } = require(`./../functions/heavyfunctions.js`);
 const { MessageAST } = require(`./../functions/message_ast.js`);
 const { emitEvent } = require("./eventhandling.js");
-const { convertPronounsText } = require("./pronounfunctions.js");
-const { getUserVar, setUserVar } = require("./usercontext.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
+const { getOption } = require("./getters/config/getOption.js");
+const { assignGag } = require("./setters/gag/assignGag.js");
+const { assignMitten } = require("./setters/mitten/assignMitten.js");
+const { assignHeavy } = require("./setters/heavy/assignHeavy.js");
+const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
+const { getVibeEquivalent } = require("./getters/chastity/getVibeEquivalent.js");
+const { getArousedTexts } = require("./getters/arousal/getArousedTexts.js");
+const { getCorset } = require("./getters/corset/getCorset.js");
+const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions.js");
+const { getUserVar } = require("./getters/config/getUserVar.js");
+const { getPFP } = require("./getters/config/getPFP.js");
+const { convertPronounsText } = require("./other/convertPronounsText.js");
+const { getAlternateName } = require("./getters/config/getAlternateName.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -69,230 +78,6 @@ function loadMittenTypes() {
     process.autocompletes.mitten = mittentypes.map((m) => {
         return { name: m.name, value: m.value }
     })
-}
-
-const convertGagText = (type) => {
-	let convertgagarr;
-	for (let i = 0; i < gagtypes.length; i++) {
-		if (convertgagarr == undefined) {
-			convertgagarr = {};
-		}
-		convertgagarr[gagtypes[i].value] = gagtypes[i].name;
-	}
-	return convertgagarr[type];
-};
-
-/*const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
-    if (process.gags == undefined) { process.gags = {} }
-    let originalbinder = process.gags[userID]?.origbinder
-    process.gags[userID] = {
-        gagtype: gagtype,
-        intensity: intensity,
-        origbinder: originalbinder ?? origbinder // Preserve original binder until it is removed. 
-    }
-    if (process.readytosave == undefined) { process.readytosave = {} }
-    process.readytosave.gags = true;
-}*/
-
-const assignGag = (userID, gagtype = "ball", intensity = 5, origbinder) => {
-	if (process.gags == undefined) {
-		process.gags = {};
-	}
-	if (process.gags[userID] == undefined) {
-		process.gags[userID] = [];
-	}
-	// Retrieve the index if it is already on the wearer.
-	let foundgag = process.gags[userID].findIndex((s) => s.gagtype == gagtype);
-	let originalbinder = origbinder;
-	if (foundgag > -1) {
-		originalbinder = process.gags[userID][foundgag].origbinder;
-		process.gags[userID].splice(foundgag, 1);
-	}
-	process.gags[userID].push({ gagtype: gagtype, intensity: intensity, origbinder: originalbinder });
-    // Increment the worn corset counter
-    if (process.userstats == undefined) { process.userstats = {} }
-    if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
-
-    process.userstats[userID].worngags = (process.userstats[userID].worngags ?? 0) + 1;
-    
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.gags = true;
-    process.readytosave.userstats = true;
-};
-
-// to ensure compatibility with existing code, this will retrieve the first gag
-// in the list, if not called with an extra param for specific gag.
-const getGag = (userID, gagbyname) => {
-	if (process.gags == undefined) {
-		process.gags = {};
-	}
-	if (process.gags[userID] == undefined) {
-		return undefined;
-	}
-	if (gagbyname) {
-		let foundgag = process.gags[userID].find((s) => s.gagtype == gagbyname);
-		return foundgag;
-	} else if (process.gags[userID].length > 0) {
-		return process.gags[userID][0].gagtype;
-	}
-	return undefined;
-};
-
-const getGags = (userID) => {
-	if (process.gags == undefined) {
-		process.gags = {};
-	}
-	return process.gags[userID] ?? [];
-};
-
-const getGagLast = (userID) => {
-	if (process.gags == undefined) {
-		process.gags = {};
-	}
-	if (process.gags[userID] == undefined) {
-		return undefined;
-	}
-
-	if (process.gags[userID].length > 0) {
-		return process.gags[userID][process.gags[userID].length - 1].gagtype;
-	} else {
-		return undefined;
-	}
-};
-
-const getGagBinder = (userID, item) => {
-	if (process.gags == undefined) {
-		process.gags = {};
-	}
-	return process.gags[userID]?.find((g) => g.gagtype == item)?.origbinder;
-};
-
-const getGagIntensity = (userID) => {
-	if (process.gags == undefined) {
-		process.gags = {};
-	}
-	if (process.gags[userID] && process.gags[userID].length > 0) {
-		return process.gags[userID][0].intensity;
-	} else {
-		return undefined;
-	}
-};
-
-const deleteGag = (userID, specificgag, force = false) => {
-	if (process.gags == undefined) {
-		process.gags = {};
-	}
-	// Remove all gags if none is specified.
-	if (!specificgag && process.gags[userID]) {
-        let lockedheadgears = [];
-        if (process.headwear[userID]) { lockedheadgears = Object.keys(process.headwear[userID]) }
-        if ((lockedheadgears.length <= 1) || force) {
-            // They dont have anything locked on their head, business as usual. 
-            process.gags[userID].forEach((g) => {
-                if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
-                    process.gagtypes[g.gagtype].onUnlock(userID);
-                }
-            })
-            delete process.gags[userID];
-        }
-        else {
-            process.gags[userID].forEach((g) => {
-                if (process.gagtypes[g.gagtype] && process.gagtypes[g.gagtype].onUnlock) {
-                    process.gagtypes[g.gagtype].onUnlock(userID);
-                }
-                if (!process.headwear[userID][`gagharness_${g.gagtype}`]) {
-                    // Splice out any gags that are eligible to be removed. 
-                    let loc = process.gags[userID].findIndex((f) => f.gagtype == g.gagtype);
-                    process.gags[userID].splice(loc, 1);
-                }
-            })
-        }
-	} else if (process.gags[userID]) {
-		let loc = process.gags[userID].findIndex((f) => f.gagtype == specificgag);
-		if (loc > -1) {
-            if (process.gagtypes[process.gags[userID][loc].gagtype] && process.gagtypes[process.gags[userID][loc].gagtype].onUnlock) {
-                process.gagtypes[process.gags[userID][loc].gagtype].onUnlock({ userID: userID });
-            }
-			process.gags[userID].splice(loc, 1);
-		}
-		if (process.gags[userID].length == 0) {
-			delete process.gags[userID];
-		}
-	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.gags = true;
-};
-
-const assignMitten = (userID, mittentype, origbinder) => {
-	if (process.mitten == undefined) {
-		process.mitten = {};
-	}
-	let originalbinder = process.mitten[userID]?.origbinder;
-	process.mitten[userID] = {
-		mittenname: mittentype,
-		origbinder: originalbinder ?? origbinder, // Preserve original binder until it is removed.
-	};
-    // Increment the worn corset counter
-    if (process.userstats == undefined) { process.userstats = {} }
-    if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
-
-    process.userstats[userID].wornmittens = (process.userstats[userID].wornmittens ?? 0) + 1;
-    
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.mitten = true;
-    process.readytosave.userdata = true;
-};
-
-const getMitten = (userID) => {
-	if (process.mitten == undefined) {
-		process.mitten = {};
-	}
-	return process.mitten[userID];
-};
-
-const getMittenBinder = (userID) => {
-	if (process.mitten == undefined) {
-		process.mitten = {};
-	}
-	return process.mitten[userID]?.origbinder;
-};
-
-const deleteMitten = (userID) => {
-	if (process.mitten == undefined) {
-		process.mitten = {};
-	}
-	delete process.mitten[userID];
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.mitten = true;
-};
-
-const getMittenName = (userID, mittenname) => {
-	if (process.mitten == undefined) {
-		process.mitten = {};
-	}
-	let convertmittenarr = {};
-	for (let i = 0; i < mittentypes.length; i++) {
-		convertmittenarr[mittentypes[i].value] = mittentypes[i].name;
-	}
-	if (mittenname) {
-		return convertmittenarr[mittenname];
-	} else if (process.mitten[userID]?.mittenname) {
-		return convertmittenarr[process.mitten[userID]?.mittenname];
-	} else {
-		return undefined;
-	}
-};
-
-function getBaseMitten(type) {
-    return mittentypes.find((m) => m.value == type)
 }
 
 /**********************************************
@@ -652,8 +437,10 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
         }
         let texts = [];
         shocks[tone].forEach((t) => {
-            if (typeof t != "string" && t.required({ interactionuser: msg.member, targetuser: msg.member })) {
-                texts.push(t.text)
+            if (typeof t != "string") {
+                if (t.required({ interactionuser: msg.member, targetuser: msg.member })) {
+                    texts.push(t.text)
+                }
             }
             else {
                 texts.push(t)
@@ -920,22 +707,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 exports.setUpGags = setUpGags;
 exports.loadMittenTypes = loadMittenTypes;
 
-exports.getBaseMitten = getBaseMitten;
-
-exports.assignGag = assignGag;
-exports.getGag = getGag;
-exports.getGags = getGags;
-exports.getGagLast = getGagLast;
-exports.getGagBinder = getGagBinder;
-exports.getMittenBinder = getMittenBinder;
-exports.getGagIntensity = getGagIntensity;
-exports.deleteGag = deleteGag;
-exports.assignMitten = assignMitten;
-exports.getMitten = getMitten;
-exports.deleteMitten = deleteMitten;
 exports.modifymessage = modifymessage;
-exports.convertGagText = convertGagText;
-exports.getMittenName = getMittenName;
 exports.mittentypes = mittentypes;
 exports.gagtypes = gagtypesout;
 exports.mittentypes = mittentypes;

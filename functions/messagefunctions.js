@@ -3,12 +3,15 @@ const fs = require("fs");
 const path = require("path");
 const sharp = require("sharp");
 const axios = require("axios");
-const { getToys } = require("./toyfunctions");
-const { getWearable } = require("./wearablefunctions");
-const { getHeavy } = require("./heavyfunctions");
-const { getHeadwear, DOLLVISORS, DRONEVISORS } = require("./headwearfunctions");
-const { getCollar } = require("./collarfunctions");
-const { getOption } = require("./configfunctions");
+const { DOLLVISORS, DRONEVISORS } = require("./headwearfunctions");
+const { recordMessage } = require("./setters/config/recordMessage");
+const { getHeadwear } = require("./getters/headwear/getHeadwear");
+const { getMitten } = require("./getters/mitten/getMitten");
+const { getGags } = require("./getters/gag/getGags");
+const { getHeavy } = require("./getters/heavy/getHeavy");
+const { getWearable } = require("./getters/wearable/getWearable");
+const { getToys } = require("./getters/toy/getToys");
+const { getCollar } = require("./getters/collar/getCollar");
 
 // Load all .png files into the bot as emoji, then assign them to process.emojis.
 // This can be used to allow the bot's emojis to function elsewhere.
@@ -37,29 +40,6 @@ const loadEmoji = async (client) => {
 		process.emojis[emojisbot.get(emoji).name] = `${emojisbot.get(emoji)}`;
 	}
 };
-/**********
- * Records a message into process.recordedmessages.
- * This will generate a map of IDs to reference against, where searching the modifiedmsg's ID will provide the content, user ID and timestamp of the message
- **********/
-function recordMessage (msg, modifiedmsg, reply) {
-    if (getOption(msg?.author?.id, "recordmessages") == "disabled") { return }
-    if (process.recordedmessages == undefined) { process.recordedmessages = {} }
-    if (modifiedmsg?.id && msg?.content && msg?.author?.id && msg?.createdTimestamp) {
-        process.recordedmessages[modifiedmsg.id] = {
-            content: msg.content,
-            timestamp: msg.createdTimestamp,
-            authorid: msg.author.id
-        }
-        if (reply) {
-            process.recordedmessages[modifiedmsg.id].replyauthor = reply.replyauthor
-            process.recordedmessages[modifiedmsg.id].replymessageid = reply.replymessageid
-        }
-    } 
-    if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.recordedmessages = true;
-}
 
 const messageSend = async (msg, str, avatarURL, username, threadId, botemoji, isreply, replyobject) => {
     try {
@@ -228,7 +208,7 @@ const splitMessage = (text, inputRegex = null) => {
 
 function runMessageEvents(data) {
 	// Gags
-	/*if (process.gags) {
+	if (process.gags) {
 		Object.keys(process.gags).forEach((userid) => {
 			getGags(userid).forEach((g) => {
 				if (process.msgfunctions.gags && process.msgfunctions.gags[g.gagtype]) {
@@ -236,7 +216,7 @@ function runMessageEvents(data) {
 				}
 			});
 		});
-	}*/ // This will cause a circular to have it. 
+	}
 	// Headwear
 	if (process.headwear) {
         getHeadwear(data.msg.author.id).forEach((h) => {
@@ -246,7 +226,7 @@ function runMessageEvents(data) {
         });
 	}
 	// Mittens
-	/*if (process.mitten) {
+	if (process.mitten) {
 		Object.keys(process.mitten).forEach((userid) => {
 			if (getMitten(userid)) {
 				if (process.msgfunctions.mitten && process.msgfunctions.mitten[getMitten(userid).mittenname]) {
@@ -254,7 +234,7 @@ function runMessageEvents(data) {
 				}
 			}
 		});
-	}*/ // This will cause a circular to have it. 
+	}
 	// Heavy Bondage
 	if (process.heavy) {
         if (getHeavy(data.msg.author.id)) {
@@ -296,197 +276,10 @@ function runMessageEvents(data) {
 	}
 }
 
-// Retrieves any alternate user name for a given user.
-function getAlternateName(user) {
-    let outname = user.displayName // We're putting a member object in here
-    // Handle pet collar name
-    if ((getCollar(user.id)?.collartype == "collarengraved") || (getCollar(user.id) && getCollar(user.id).additionalcollars && getCollar(user.id).additionalcollars.includes("collarengraved"))) {
-        if (getOption(user.id, "engravedcollarname") && getOption(user.id, "engravedcollarname").length > 0) {
-            outname = getOption(user.id, "engravedcollarname");
-        }
-    }
-
-    // Handle Doll Visor name
-    if (getHeadwear(user.id).find((headwear) => DOLLVISORS.includes(headwear))) {
-        let dollIDOverride = getOption(user.id, "dollvisorname");
-        let dollmaker = getHeadwear(user.id).find((headwear) => headwear === "dollmaker_visor");
-        // If dollIDOverride is not specified or the override is exactly a string of numbers...
-        // Force Dollmaker's Visor wearers to get this generation function
-        if (!dollIDOverride || (Number.isFinite(dollIDOverride) && dollIDOverride.length < 6) || dollmaker) {
-            if (!dollIDOverride.search(new RegExp(/\\D/, "g"))) {
-                // If the DollIDOverride is only a string of numbers 
-                outname = `DOLL-${dollIDout}`;
-            }
-            else {
-                outname = `DOLL-${user.id.slice(-4)}`
-            }
-        }
-        else {
-            outname = dollIDOverride;
-        }
-    }
-
-    // Handle Drone Visor name
-    if (getHeadwear(user.id).find((headwear) => DRONEVISORS.includes(headwear))) {
-        outname = `⬡-Drone ${getOption(user.id, "dronevisorname")}`;
-    }
-
-    // Finally, if the outname is EXACTLY the same as the displayName we recieved, 
-    // or the user's display name can be found in the modified name,
-    // or the modified name can be found in the user's display name, return it
-    if ((user.displayName.toLowerCase() == outname.toLowerCase()) || 
-        (outname.toLowerCase().includes(user.displayName.toLowerCase())) ||
-        (user.displayName.toLowerCase().includes(outname.toLowerCase()))) { return outname }
-
-    // Otherwise, we need to append the user's display name as we can
-    let additionalpart = ``;
-    // If the length of the replacement name is less than 25, we can add some of the username...
-    if (outname.length < 25) {
-        let additionallength = 32 - outname.length; // max length of name
-        if (additionallength - 3 > user.displayName.length) {
-            additionalpart = ` (${user.displayName})`;
-        } else {
-            // Get the length of their name, minus 6 for additional characters to fit into ...
-            let reducedname = user.displayName.slice(0, Math.min(additionallength - 6, user.displayName.length));
-            additionalpart = ` (${reducedname}...)`;
-        }
-    }
-
-    return `${outname}${additionalpart}`.slice(0,32)
-}
-
-/**********
- * Get the combined profile picture of the user, if their original one matches the one we have on file
- * 
- * (guild member) member - The Guild Member object sending the message
- * (mods) mods - Additional images to overlay in reverse order (not implemented yet)
- **********/
-async function getPFP(member, mods = []) {
-    let imagelist = mods.slice(0);
-    if (member.displayAvatarDecorationURL()) {
-        imagelist.push(member.displayAvatarDecorationURL())
-    }
-    imagelist.push(member.displayAvatarURL())
-
-    if (process.memberavatars == undefined) { process.memberavatars = {} }
-    if (process.memberavatars[member.id]) {
-        if (process.memberavatars[member.id].avatarURL == member.displayAvatarURL()) {
-            if (process.memberavatars[member.id].decorationURL == member.displayAvatarDecorationURL()) {
-                let modifiers = Object.keys(mods).join("")
-                if (process.memberavatars[member.id][`${mods}link`]) {
-                    return process.memberavatars[member.id][`${mods}link`]
-                }
-            }
-        }
-    }
-
-    if ((mods.length == 0) && !member.displayAvatarDecorationURL()) { return member.displayAvatarURL() } // No decorations, no image enhancements
-
-    try {
-        let modifiers = Object.keys(mods).join("")
-        console.log(`Creating image ${mods}link for ${member.displayName}`)
-
-        // Get avatar decoration image
-        let imgfetch = await fetch(member.displayAvatarDecorationURL())
-        if (!imgfetch.ok) { console.log(`Error fetching Decoration URL: ${member.displayAvatarDecorationURL()}`)}
-        let buffd = await Buffer.from(await imgfetch.arrayBuffer())
-
-        let decorationimage = await sharp(buffd)
-            .resize({
-                fit: sharp.fit.contain,
-                height: 288,
-                width: 288
-            })
-            .toBuffer({ resolveWithObject: true })
-
-        // Get Avatar Image
-        imgfetch = await fetch(member.displayAvatarURL())
-        if (!imgfetch.ok) { console.log(`Error fetching Avatar URL: ${member.displayAvatarURL()}`)}
-        let buff = await Buffer.from(await imgfetch.arrayBuffer())
-
-        let avatarimage = await sharp(buff)
-            .resize({
-                fit: sharp.fit.contain,
-                height: 256,
-                width: 256
-            })
-            .toBuffer({ resolveWithObject: true})
-
-        // Put them all together!
-        let almostfinalimage = await sharp({
-            create: {
-                width: 300,
-                height: 300,
-                channels: 4,
-                background: { r: 255, g: 255, b: 255, alpha: 0}
-            }})
-            .composite([
-                {
-                    input: avatarimage.data,
-                    top: 16,
-                    left: 16,
-                },
-                {
-                    input: decorationimage.data,
-                    top: 0,
-                    left: 0
-                }
-            ])
-            .png()
-            .toBuffer()
-
-        // Create another instance to shrink it, because apparently doing this cleanly in one sharp instance is too hard. 
-        let finalimage = await sharp(almostfinalimage)
-            .extract({
-                top: 16,
-                left: 16,
-                width: 256,
-                height: 256
-            })
-            .png()
-            .toBuffer({ resolveWithObject: true })
-
-        // Finally, make a payload and upload the image
-        let imagepayload = new URLSearchParams({
-            image: finalimage.data.toString('base64'),
-            type: "base64"
-        })
-        let imgurupload = await axios.post('https://api.imgur.com/3/image', imagepayload, {
-            headers: { 
-                'Authorization': 'Client-ID 546c25a59c58ad7',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        })
-        let imgururl = imgurupload?.data?.data?.link;
-
-        if (imgururl) {
-            process.memberavatars[member.id] = {
-                avatarURL: member.displayAvatarURL(),
-                decorationURL: member.displayAvatarDecorationURL(),
-                link: imgururl
-            }
-
-            if (process.readytosave == undefined) {
-                process.readytosave = {};
-            }
-            process.readytosave.memberavatars = true;
-
-            return imgururl;
-        }
-    }
-    catch (err) {
-        console.log(err);
-        return member.displayAvatarURL();
-    }
-
-    return member.displayAvatarURL();
-}
-
 exports.splitMessage = splitMessage;
 
 exports.messageSend = messageSend;
 exports.messageSendImg = messageSendImg;
-exports.recordMessage = recordMessage;
 
 exports.loadEmoji = loadEmoji;
 
@@ -495,7 +288,3 @@ exports.splitMessage = splitMessage;
 exports.messageSendChannel = messageSendChannel;
 
 exports.runMessageEvents = runMessageEvents;
-
-exports.getAlternateName = getAlternateName;
-
-exports.getPFP = getPFP;

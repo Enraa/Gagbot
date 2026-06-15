@@ -1,8 +1,10 @@
-const { getOption } = require("../../functions/configfunctions")
-const { messageSendChannel } = require("../../functions/messagefunctions")
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getGag, assignGag, deleteGag} = require("../../functions/gagfunctions.js");
-const { getPronouns } = require("../../functions/pronounfunctions.js");
+const { getPronouns } = require("../../functions/getters/config/getPronouns");
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
+const { getGag } = require("../../functions/getters/gag/getGag");
+const { messageSendChannel } = require("../../functions/messagefunctions");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
+const { assignGag } = require("../../functions/setters/gag/assignGag");
+const { removeGag } = require("../../functions/setters/gag/removeGag");
 
 const DISSOLVE_RATE_MS = 60000;
 
@@ -24,7 +26,7 @@ async function tick(userID, data) {
         else {
             // Clear Gag and Dissolve Timer
             setUserVar(userID, "confectionaryDissolveTimer", undefined)
-            deleteGag(userID, "chocolate")
+            removeGag(userID, "chocolate")
             messageSendChannel(`<@${userID}>'s Chocolate Gag has dissolved away!`, process.recentmessages[userID])
         }
     }

@@ -1,6 +1,6 @@
 const { ContextMenuCommandBuilder, ApplicationCommandType } = require('discord.js');
 const { inspectModal } = require('../../functions/outfitfunctions');
-const { getAllSelectedOption } = require('../../functions/configfunctions');
+const { getAllSelectedOption } = require('../../functions/getters/config/getAllSelectedOption');
 
 module.exports = {
     data: new ContextMenuCommandBuilder()

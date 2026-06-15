@@ -1,19 +1,22 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getCollar, assignCollar, collartypes, getCollarName, getBaseCollar, canAccessCollar } = require("./../functions/collarfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
+const { collartypes } = require("./../functions/collarfunctions.js");
+const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
-const { getOption } = require("../functions/configfunctions.js");
-const { getUserTags } = require("../functions/configfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
+const { getBaseCollar } = require("../functions/getters/collar/getBaseCollar.js");
+const { getUserTags } = require("../functions/getters/config/getUserTags.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getCollarName } = require("../functions/getters/collar/getCollarName.js");
+const { getCollar } = require("../functions/getters/collar/getCollar.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { assignCollar } = require("../functions/setters/collar/assignCollar.js");
+const { canAccessCollar } = require("../functions/getters/collar/canAccessCollar.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("collar")
 		.setDescription(`Put a collar on, allowing others to /chastity, /heavy and /mitten you`)
-		//.addUserOption((opt) => opt.setName("keyholder").setDescription("Who can do anything to you?"))
-		//.addBooleanOption((opt) => opt.setName("freeuse").setDescription("Allow public access (Free Use?"))
 		.addStringOption((opt) => opt.setName("type").setDescription("What kind of collar to wear...").setAutocomplete(true)),
 	async autoComplete(interaction) {
 		try {
@@ -232,7 +235,7 @@ module.exports = {
 -# Restricted if not holding the device's key or in heavy bondage
 ${restrictedtext}
 Opens a window to configure settings for a collar for options your **keyholder** can do to you using the **/collarequip** command. These settings include permissions to **Mitten, Chastity, Heavy Bondage** and to **Mask**. **Freeuse** (if configured in **/config**) will allow everyone to do these permissions to you. Once selected, you will put on the collar. Please note, **/uncollar** requires arms and cannot be done if in **Heavy Bondage**.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

@@ -1,14 +1,19 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, PermissionsBitField, ApplicationCommandOptionChannelTypesMixin } = require("discord.js");
-const { mittentypes } = require("./../functions/gagfunctions.js");
-const { heavytypes } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, timelockChastityModalnew } = require("./../functions/interactivefunctions.js");
-const { generateConfigModal, configoptions, getOption, setOption, getServerOption, setServerOption, initializeOptions } = require("./../functions/configfunctions.js");
+const { generateConfigModal, } = require("./../functions/configfunctions.js");
 const { removeAllCommands } = require("../functions/configfunctions.js");
-const { initializeServerOptions } = require("../functions/configfunctions.js");
-const { setCommands, setBotOption, getBotOption, leaveServerOptions, createWebhook, deleteWebhook, generateTextEntryModal } = require("../functions/configfunctions.js");
+const { setCommands, generateTextEntryModal } = require("../functions/configfunctions.js");
 const { processTimedEvents } = require("../functions/timefunctions.js");
 const { generateUserEntryModal } = require("../functions/configfunctions.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { getServerOption } = require("../functions/getters/config/getServerOption.js");
+const { getBotOption } = require("../functions/getters/config/getBotOption.js");
+const { setServerOption } = require("../functions/setters/config/setServerOption.js");
+const { createWebhook } = require("../functions/setters/config/createWebhook.js");
+const { deleteWebhook } = require("../functions/setters/config/deleteWebhook.js");
+const { leaveServerOptions } = require("../functions/setters/config/leaveServerOptions.js");
+const { setOption } = require("../functions/setters/config/setOption.js");
+const { configoptions } = require("../lists/configoptions.js");
+const { initializeServerOptions } = require("../functions/other/initializeServerOptions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("config").setDescription(`Configure settings...`),

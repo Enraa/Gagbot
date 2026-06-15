@@ -1,5 +1,6 @@
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
-const { setUserVar, getUserVar } = require("../../functions/usercontext");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 function msgfunction(userid, data) {
     const honorifictitles = [

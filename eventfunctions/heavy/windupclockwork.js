@@ -1,6 +1,8 @@
-const { getBotOption, getOption } = require("../../functions/configfunctions");
+const { getBotOption } = require("../../functions/getters/config/getBotOption");
+const { getOption } = require("../../functions/getters/config/getOption");
+const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
-const { getUserVar, setUserVar } = require("../../functions/usercontext");
+const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 // Successful headpats will increase the windup on the wearer by 15 minutes, up to 3 hours. This is 1/12th of the charge, or 8.33%. 
 function headpatfunction(recipient, data) {

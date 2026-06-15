@@ -1,8 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getMitten, deleteMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, timelockChastityModal } = require("./../functions/interactivefunctions.js");
+const { handleConsent, timelockChastityModal } = require("./../functions/interactivefunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("testdollregex").setDescription(`Testing Doll Regex`),

@@ -1,28 +1,44 @@
-const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
-const { generateConfigModal, configoptions, getOption, setOption, config } = require("./../functions/configfunctions.js");
-const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require("./../functions/headwearfunctions.js");
-const { canAccessCollar, promptCloneCollarKey, cloneCollarKey, revokeCollarKey, getClonedCollarKeysOwned, getOtherKeysCollar, getCollar, transferCollarKey, promptTransferCollarKey, collartypes, getCollarName, getBaseCollar, addAdditionalCollarEffect, removeAdditionalCollarEffect } = require("./../functions/collarfunctions.js");
-const { canAccessChastity, promptCloneChastityKey, cloneChastityKey, revokeChastityKey, getClonedChastityKeysOwned, getOtherKeysChastity, getChastity, transferChastityKey, promptTransferChastityKey } = require("./../functions/vibefunctions.js");
+const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
+const { config } = require("./../functions/configfunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
-const { getPronouns } = require("../functions/pronounfunctions.js");
-const { getChastityBra } = require("../functions/vibefunctions.js");
-const { canAccessChastityBra } = require("../functions/vibefunctions.js");
-const { getClonedChastityBraKeysOwned } = require("../functions/vibefunctions.js");
-const { getOtherKeysChastityBra } = require("../functions/vibefunctions.js");
-const { cloneChastityBraKey } = require("../functions/vibefunctions.js");
-const { promptCloneChastityBraKey } = require("../functions/vibefunctions.js");
-const { revokeChastityBraKey } = require("../functions/vibefunctions.js");
-const { transferChastityBraKey } = require("../functions/vibefunctions.js");
-const { promptTransferChastityBraKey } = require("../functions/vibefunctions.js");
-const { getChastityName } = require("../functions/vibefunctions.js");
-const { getChastityBraName } = require("../functions/vibefunctions.js");
-const { swapChastity, swapChastityBra } = require("../functions/vibefunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
-const { getUserTags } = require("../functions/configfunctions.js");
-const { getBaseChastity } = require("../functions/chastityfunctions.js");
-const { discardKey } = require("../functions/keyfindingfunctions.js");
-const { modalexecute } = require("./config.js");
 const { generateKeyGivingModal, handleExtremeRestraint } = require("../functions/interactivefunctions.js");
+const { getCollar } = require("../functions/getters/collar/getCollar.js");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { getChastityBra } = require("../functions/getters/chastity/getChastityBra.js");
+const { canAccessCollar } = require("../functions/getters/collar/canAccessCollar.js");
+const { canAccessChastity } = require("../functions/getters/chastity/canAccessChastity.js");
+const { canAccessChastityBra } = require("../functions/getters/chastity/canAccessChastityBra.js");
+const { getClonedChastityKeysOwned } = require("../functions/getters/chastity/getClonedChastityKeysOwned.js");
+const { getClonedChastityBraKeysOwned } = require("../functions/getters/chastity/getClonedChastityBraKeysOwned.js");
+const { getClonedCollarKeysOwned } = require("../functions/getters/collar/getClonedCollarKeysOwned.js");
+const { getOtherKeysChastity } = require("../functions/getters/chastity/getOtherKeysChastity.js");
+const { getOtherKeysChastityBra } = require("../functions/getters/chastity/getOtherKeysChastityBra.js");
+const { getOtherKeysCollar } = require("../functions/getters/collar/getOtherKeysCollar.js");
+const { getBaseCollar } = require("../functions/getters/collar/getBaseCollar.js");
+const { getBaseChastity } = require("../functions/getters/chastity/getBaseChastity.js");
+const { getUserTags } = require("../functions/getters/config/getUserTags.js");
+const { getCollarName } = require("../functions/getters/collar/getCollarName.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { cloneCollarKey } = require("../functions/setters/collar/cloneCollarKey.js");
+const { cloneChastityKey } = require("../functions/setters/chastity/cloneChastityKey.js");
+const { cloneChastityBraKey } = require("../functions/setters/chastity/cloneChastityBraKey.js");
+const { promptCloneCollarKey, promptTransferCollarKey } = require("../functions/collarfunctions.js");
+const { promptCloneChastityKey, promptCloneChastityBraKey, promptTransferChastityKey } = require("../functions/vibefunctions.js");
+const { getPronouns } = require("../functions/getters/config/getPronouns.js");
+const { revokeCollarKey } = require("../functions/setters/collar/revokeCollarKey.js");
+const { revokeChastityKey } = require("../functions/setters/chastity/revokeChastityKey.js");
+const { revokeChastityBraKey } = require("../functions/setters/chastity/revokeChastityBraKey.js");
+const { transferCollarKey } = require("../functions/setters/collar/transferCollarKey.js");
+const { transferChastityKey } = require("../functions/setters/chastity/transferChastityKey.js");
+const { transferChastityBraKey } = require("../functions/setters/chastity/transferChastityBraKey.js");
+const { getChastityName } = require("../functions/getters/chastity/getChastityName.js");
+const { getChastityBraName } = require("../functions/getters/chastity/getChastityBraName.js");
+const { swapChastity } = require("../functions/setters/chastity/swapChastity.js");
+const { swapChastityBra } = require("../functions/setters/chastity/swapChastityBra.js");
+const { discardKey } = require("../functions/keyfindingfunctions.js");
+const { addAdditionalCollarEffect } = require("../functions/setters/collar/addAdditionalCollarEffect.js");
+const { removeAdditionalCollarEffect } = require("../functions/setters/collar/removeAdditionalCollarEffect.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -742,7 +758,7 @@ module.exports = {
 
 					if (confirmation.customId === "agreetogivebutton") {
 						// Skip the DM if the wearer is the giver or receiver, or if they have auto accepting enabled
-						if (wearer == interaction.user || wearer == newKeyholder || config.getKeyGivingAuto(wearer.id)) {
+						if (wearer == interaction.user || wearer == newKeyholder || (getOption(wearer, "keygiving") == "auto")) {
 							let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 							data.give = true;
 							if (wearer == interaction.user) {

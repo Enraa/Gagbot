@@ -1,7 +1,15 @@
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { generateConfigModal, configoptions, getOption, setOption } = require("./../functions/configfunctions.js");
-const { getHeadwear, getHeadwearName, getLockedHeadgear, addLockedHeadgear, removeLockedHeadgear } = require("./../functions/headwearfunctions.js");
-const { getWearable, getLockedWearable, addLockedWearable, getWearableName, removeLockedWearable } = require("../functions/wearablefunctions.js");
+const { generateConfigModal } = require("./../functions/configfunctions.js");
+const { getHeadwear } = require("../functions/getters/headwear/getHeadwear.js");
+const { getLockedHeadgear } = require("../functions/getters/headwear/getLockedHeadgear.js");
+const { getWearable } = require("../functions/getters/wearable/getWearable.js");
+const { getLockedWearable } = require("../functions/getters/wearable/getLockedWearable.js");
+const { getHeadwearName } = require("../functions/getters/headwear/getHeadwearName.js");
+const { getWearableName } = require("../functions/getters/wearable/getWearableName.js");
+const { addLockedHeadgear } = require("../functions/setters/headwear/addLockedHeadgear.js");
+const { addLockedWearable } = require("../functions/setters/wearable/addLockedWearable.js");
+const { removeLockedHeadgear } = require("../functions/setters/headwear/removeLockedHeadgear.js");
+const { removeLockedWearable } = require("../functions/setters/wearable/removeLockedWearable.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -141,7 +149,7 @@ module.exports = {
 ### Remove:  /item unprotect (type)
 
 Binds an item to you, which will prevent it's removal via the **/unwear** command from you or anyone, as well as preventing removal by certain **Restraint** effects.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

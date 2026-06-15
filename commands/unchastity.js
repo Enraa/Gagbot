@@ -1,17 +1,18 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getChastity, removeChastity, canAccessChastity } = require("./../functions/vibefunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { rollKeyFumble } = require("../functions/keyfindingfunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { config } = require("../functions/configfunctions.js");
-const { getChastityBra } = require("../functions/vibefunctions.js");
-const { canAccessChastityBra } = require("../functions/vibefunctions.js");
-const { removeChastityBra } = require("../functions/vibefunctions.js");
-const { discardChastityBraKey } = require("../functions/vibefunctions.js");
-const { getBaseChastity } = require("../functions/chastityfunctions.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { getBaseChastity } = require("../functions/getters/chastity/getBaseChastity.js");
+const { removeChastity } = require("../functions/setters/chastity/removeChastity.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { getChastityBra } = require("../functions/getters/chastity/getChastityBra.js");
+const { removeChastityBra } = require("../functions/setters/chastity/removeChastityBra.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -86,7 +87,7 @@ module.exports = {
 								if (fumbleResult > 0) {
 									// We fumbled
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
+									if ((getOption(chastitywearer.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = getBaseChastity(getChastity(chastitywearer.id).chastitytype ?? "belt_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })
@@ -125,7 +126,7 @@ module.exports = {
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
+									if ((getOption(chastitywearer.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = getBaseChastity(getChastity(chastitywearer.id).chastitytype ?? "belt_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })
@@ -200,7 +201,7 @@ module.exports = {
 								if (fumbleResult > 0) {
 									// We fumbled
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
+									if ((getOption(chastitywearer.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })
@@ -239,7 +240,7 @@ module.exports = {
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if (config.getKeyLoss(chastitywearer.id) && fumbleResult > 1) {
+									if ((getOption(chastitywearer.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key
 										data.discard = true;
 										let discardresult = getBaseChastity(getChastityBra(chastitywearer.id).chastitytype ?? "bra_silver").discard({ userID: chastitywearer.id, keyholderID: interaction.user.id })

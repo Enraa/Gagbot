@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { getOption } = require("./configfunctions");
 
 // We want to move all the chastity stuff eventually anyway lol
 // Moving all of the instances of assignChastity and whatnot will require a bit of work
@@ -46,9 +45,4 @@ function setUpChastity() {
     })
 }
 
-function getBaseChastity(chastitytype) {
-    return process.chastitytypes[chastitytype];
-}
-
 exports.setUpChastity = setUpChastity;
-exports.getBaseChastity = getBaseChastity;

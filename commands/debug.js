@@ -1,8 +1,4 @@
-const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, PermissionFlagsBits } = require("discord.js");
-const { getMitten, deleteMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy, commandsheavy } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent, timelockChastityModal } = require("./../functions/interactivefunctions.js");
+const { SlashCommandBuilder, MessageFlags, PermissionFlagsBits } = require("discord.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

@@ -4,7 +4,6 @@
  ***************************/
 
 // Character maps stored in an array in a separate file for code cleanliness
-const { setUserVar } = require("../functions/usercontext.js");
 const { ballGagCharMaps } = require("./ball/ballCharMap.js");
 
 const isAllCaps = (text) => {

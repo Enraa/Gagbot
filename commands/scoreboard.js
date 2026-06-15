@@ -3,7 +3,7 @@ const { ButtonBuilder } = require("discord.js");
 const { ActionRowBuilder } = require("discord.js");
 const { StringSelectMenuOptionBuilder } = require("discord.js");
 const { StringSelectMenuBuilder } = require("discord.js");
-const { statsGetAllStat } = require("../functions/statsfunctions");
+const { statsGetAllStat } = require("../functions/getters/config/statsGetAllStat");
 
 const PAGE_SIZE = 20;
 
@@ -93,7 +93,7 @@ module.exports = {
 ### Usage: /scoreboard
 
 Displays a leaderboard for the top people in a select number of stats.`
-        overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
+        let overviewtextdisplay = new TextDisplayBuilder().setContent(overviewtext)
         return overviewtextdisplay;
     }
 };

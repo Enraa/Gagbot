@@ -1,79 +1,5 @@
+const { statsGetCounter } = require("./getters/config/statsGetCounter");
 const { parseDuration } = require("./timefunctions");
-
-
-
-
-/**********
- * Adds a point to a counter by name in user's stats. Specify amount for custom amount.
- * 
- * - (user id) user - User to increment for
- * - (string) countername - ID of the counter to increment
- * - (number) amount - Amount to increment the counter by. Default to 1
- **********/
-function statsAddCounter(user, countername, amount = 1) {
-    if (process.userstats == undefined) { process.userstats = {} }
-    if (process.userstats[user] == undefined) { process.userstats[user] = {} }
-    let newcount = (process.userstats[user][countername] ?? 0) + amount;
-    process.userstats[user][countername] = newcount;
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.userstats = true;
-}
-
-/**********
- * Get the counter for a user by name.
- * 
- * - (user id) user - User to increment for
- * - (string) countername - ID of the counter to increment
- **********/
-function statsGetCounter(user, countername) {
-    if (process.userstats == undefined) { process.userstats = {} }
-    if (process.userstats[user] == undefined) { process.userstats[user] = {} }
-    return process.userstats[user][countername];
-}
-
-/**********
- * Set the counter for a user by name. Specify Value
- * 
- * - (user id) user - User to increment for
- * - (string) countername - ID of the counter to increment
- * - (any) value - Value to store in countername
- **********/
-function statsSetCounter(user, countername, value) {
-    if (process.userstats == undefined) { process.userstats = {} }
-    if (process.userstats[user] == undefined) { process.userstats[user] = {} }
-    process.userstats[user][countername] = value;
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.userstats = true;
-}
-
-/*********
- * Generates an array with users mapped to their count in a stat. This is not sorted, presented as [userid, stat]. Sort with .sort((a,b) => { return a[1] - b[1]})
- * 
- * - (string) stat - The stat to pull all of. 
- *********/
-function statsGetAllStat(stat) {
-    let selectedoption = [];
-    if (process.userstats) {
-        Object.keys(process.userstats).forEach((user) => {
-            if ((process.userstats[user] && process.userstats[user][stat])) {
-                if ((typeof process.userstats[user][stat] == "number")) {
-                    if (process.userstats[user][stat] > 0) {
-                        selectedoption.push([user, process.userstats[user][stat]])
-                    }
-                }
-                else {
-                    selectedoption.push([user, process.userstats[user][stat]])
-                }
-            }
-        })
-    }
-    return selectedoption;
-}
-
 
 /*********
  * Generates a text list for the Inspect window display with all of the tracked stats. 
@@ -228,8 +154,4 @@ function statsGeneratePage(user) {
     return outtext;
 }
 
-exports.statsAddCounter = statsAddCounter;
-exports.statsGetCounter = statsGetCounter;
-exports.statsSetCounter = statsSetCounter;
-exports.statsGetAllStat = statsGetAllStat;
 exports.statsGeneratePage = statsGeneratePage;

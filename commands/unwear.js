@@ -1,10 +1,13 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
-const { getMitten } = require("./../functions/gagfunctions.js");
-const { getHeavy, getHeavyBound } = require("./../functions/heavyfunctions.js");
-const { getPronouns } = require("./../functions/pronounfunctions.js");
-const { getConsent, handleConsent } = require("./../functions/interactivefunctions.js");
-const { getWearable, getWearableName, deleteWearable, getLockedWearable } = require("../functions/wearablefunctions.js");
+const { handleConsent } = require("./../functions/interactivefunctions.js");
 const { getText, getTextGeneric } = require("./../functions/textfunctions.js");
+const { getWearable } = require("../functions/getters/wearable/getWearable.js");
+const { getLockedWearable } = require("../functions/getters/wearable/getLockedWearable.js");
+const { getConsent } = require("../functions/getters/config/getConsent.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { deleteWearable } = require("../functions/setters/wearable/removeWearable.js");
+const { getWearableName } = require("../functions/getters/wearable/getWearableName.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
