@@ -5475,7 +5475,7 @@ const getTextGeneric = (type, data_in) => {
             },
         ],
         remotecontrolshock_other_playful: [
-            `TARGET_TAG is suddenly interrupted as USER_TAG presses a button, causing TARGET_THEM to tear up slightly, even though the shock really didn't hurt that much...`,
+            `TARGET_TAG is suddenly interrupted as USER_TAG presses a button, giving TARGET_THEM a tingly sensation!`,
             `USER_TAG pulls out a remote and presses the flashing red button on it, causing TARGET_TAG to "eep!" as it buzzes a small shock to TARGET_THEM!`,
         ],
         remotecontrolshock_other_painful: [
