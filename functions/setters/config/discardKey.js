@@ -1,3 +1,4 @@
+const { markForSave } = require("../../other/markForSave");
 const { statsAddCounter } = require("./statsAddCounter");
 
 /*******
@@ -35,10 +36,7 @@ function discardKey(userid, keyholderid, device) {
             typelocked = "clone";
         }
     }
-    if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-    process.readytosave[processvar] = true;
+    markForSave(processvar);
     return typelocked;
 }
 

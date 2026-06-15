@@ -1,5 +1,6 @@
 const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { getChastity } = require("../../getters/chastity/getChastity");
+const { markForSave } = require("../../other/markForSave");
 
 /***********
  * Changes a chastity belt on the user in place
@@ -20,10 +21,7 @@ function swapChastity(user, keyholder, namedchastity) {
 	process.chastity[user].chastitytype = namedchastity;
 	let newchastitybase = getBaseChastity(namedchastity)
 	newchastitybase.onEquip({ userID: user });
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.chastity = true;
+	markForSave("chastity");
 	return true;
 }
 

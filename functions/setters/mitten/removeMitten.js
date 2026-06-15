@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Removes mittens from the user.
  * 
@@ -10,10 +12,7 @@ function deleteMitten(userID) {
 		process.mitten = {};
 	}
 	delete process.mitten[userID];
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.mitten = true;
+	markForSave("mitten");
 };
 
 exports.deleteMitten = deleteMitten;

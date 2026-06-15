@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**************
  * Adds a wearable clothing item to a user. 
  * 
@@ -15,10 +17,7 @@ function assignWearable(user, wearable) {
 	} else {
 		process.wearable[user] = { wornwearable: [wearable] };
 	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.wearable = true;
+	markForSave("wearable");
 };
 
 exports.assignWearable = assignWearable;

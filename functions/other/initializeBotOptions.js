@@ -1,4 +1,5 @@
 const { configoptions } = require("../../lists/configoptions");
+const { markForSave } = require("./markForSave");
 
 /**********
  * Sets all options to the defaults for the bot.
@@ -16,10 +17,7 @@ function initializeBotOptions() {
     Object.keys(configoptions["Bot"]).forEach((k) => {
         process.configs.botglobal[k] = configoptions["Bot"][k].default;
     });
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.configs = true;
+    markForSave("configs");
 }
 
 exports.initializeBotOptions = initializeBotOptions;

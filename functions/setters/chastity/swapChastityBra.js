@@ -1,5 +1,6 @@
 const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { getChastityBra } = require("../../getters/chastity/getChastityBra");
+const { markForSave } = require("../../other/markForSave");
 
 /***********
  * Changes a chastity bra on the user in place
@@ -20,10 +21,7 @@ function swapChastityBra(user, keyholder, namedchastity) {
 	process.chastitybra[user].chastitytype = namedchastity;
 	let newchastitybase = getBaseChastity(namedchastity)
 	newchastitybase.onEquip({ userID: user });
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.chastitybra = true; // I will need to merge all those readytosave flags into their own functions. this is a hazard to write - NBS
+	markForSave("chastitybra");
 	return true;
 }
 

@@ -1,5 +1,6 @@
 const axios = require("axios");
 const sharp = require("sharp");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Get the combined profile picture of the user, if their original one matches the one we have on file
@@ -114,10 +115,7 @@ async function getPFP(member, mods = []) {
                 link: imgururl
             }
 
-            if (process.readytosave == undefined) {
-                process.readytosave = {};
-            }
-            process.readytosave.memberavatars = true;
+            markForSave("memberavatars");
 
             return imgururl;
         }

@@ -1,4 +1,5 @@
 const { getChastityBra } = require("../../getters/chastity/getChastityBra");
+const { markForSave } = require("../../other/markForSave");
 
 /********
  * Changes the primary keyholder for a user's chastity bra. Removes cloned keys.
@@ -13,10 +14,7 @@ function transferChastityBraKey(lockedUser, newKeyholder) {
 		if (getChastityBra(lockedUser).keyholder != newKeyholder) {
 			getChastityBra(lockedUser).keyholder = newKeyholder;
 			getChastityBra(lockedUser).clonedKeyholders = [];
-			if (process.readytosave == undefined) {
-				process.readytosave = {};
-			}
-			process.readytosave.chastitybra = true;
+			markForSave("chastitybra");
 			return true;
 		}
 	}

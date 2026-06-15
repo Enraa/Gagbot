@@ -1,5 +1,6 @@
 const { configoptions } = require("../../../lists/configoptions");
 const { initializeServerOptions } = require("../../other/initializeServerOptions");
+const { markForSave } = require("../../other/markForSave");
 
 
 /*********
@@ -28,10 +29,7 @@ function getServerOption(serverID, option) {
                 process.configs.servers[serverID][k] = configoptions["Server"][k].default;
             }
         });
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.configs = true;
+        markForSave("configs");
     }
     return process.configs.servers[serverID][option];
 }

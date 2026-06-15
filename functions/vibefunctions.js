@@ -19,6 +19,7 @@ const { getChastity } = require("./getters/chastity/getChastity.js");
 const { getHeavy } = require("./getters/heavy/getHeavy.js");
 const { heavyDenialCoefficient } = require("./getters/heavy/getHeavyDenialCoefficient.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
+const { markForSave } = require("./other/markForSave.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -550,10 +551,7 @@ function updateArousalValues() {
 			arousal.arousal = next < RESET_LIMIT ? 0 : next;
 			traits.afterArousalChange({ userID: user, prevArousal: arousal.prev, currArousal: arousal.arousal });
 		}
-		if (process.readytosave == undefined) {
-			process.readytosave = {};
-		}
-		process.readytosave.arousal = true;
+		markForSave("arousal");
 	} catch (err) {
 		console.log(err);
 	}
@@ -636,17 +634,11 @@ function tryOrgasm(user) {
         if (process.userstats[user].highestdenial == undefined) { process.userstats[user].highestdenial = 0 }
         process.userstats[user].highestdenial = Math.round(Math.max(process.userstats[user].highestdenial, orgasmLimit * denialCoefficient));
 
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.userstats = true;
+        markForSave("userstats");
 		setArousalCooldown(user, traits.orgasmCooldown, traits.orgasmArousalLeft);
 		if (chastity) {
 			chastity.timestamp = (chastity.timestamp + now) / 2;
-			if (process.readytosave == undefined) {
-				process.readytosave = {};
-			}
-			process.readytosave.chastity = true;
+			markForSave("chastity");
 		}
 		traits.onOrgasm({ userID: user, prevArousal: arousal });
 		return true;

@@ -1,5 +1,6 @@
 const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { getChastityBra } = require("../../getters/chastity/getChastityBra");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Adds or modifies a chastity bra on the user.
@@ -32,10 +33,7 @@ function assignChastityBra(user, keyholder, namedchastity, force = false) {
     // Call the on equip for the new chastity belt!
     newchastitybase.onEquip({ userID: user, keyholderID: keyholder })
 
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.chastitybra = true;
+    markForSave("chastitybra");
 	return true;
 };
 

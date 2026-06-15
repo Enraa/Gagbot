@@ -1,4 +1,5 @@
 const { configoptions } = require("../../lists/configoptions");
+const { markForSave } = require("./markForSave");
 
 /**********
  * Sets all options to the defaults for a user. 
@@ -19,10 +20,7 @@ function initializeOptions(userID) {
             }
         });
     });
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.configs = true;
+    markForSave("configs");
 }
 
 exports.initializeOptions = initializeOptions;

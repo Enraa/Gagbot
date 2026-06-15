@@ -1,5 +1,6 @@
 const { getCurrentFloor } = require("../../getters/delve/getCurrentFloor");
 const { getDelvePlayerStats } = require("../../getters/delve/getDelvePlayerStats");
+const { markForSave } = require("../../other/markForSave");
 
 /*********
  * Sets the next Delve room by choice. If choice is not specified, the user is starting a new delve. This will always default to the delveentrance room.
@@ -18,10 +19,7 @@ function setNextDelveRoom(user, choice) {
             tempbuffs: [],
             resolve: 10 + Math.round(getDelvePlayerStats(user).stamina / 2)
         }
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.delveuserdata = true;
+        markForSave("delveuserdata");
     }
     else {
         process.delveuserdata[user].floorarr.push(choice);

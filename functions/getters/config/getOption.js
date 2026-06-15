@@ -1,5 +1,6 @@
 const { configoptions } = require("../../../lists/configoptions");
 const { initializeOptions } = require("../../other/initializeOptions");
+const { markForSave } = require("../../other/markForSave");
 
 /********
  * Gets the configured option for the user ID as set in /config
@@ -34,10 +35,7 @@ function getOption(userID, option) {
                 }
             });
         });
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.configs = true;
+        markForSave("configs");
     }
     return process.configs.users[userID][option];
 }

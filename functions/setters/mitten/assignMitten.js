@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Adds or modifies mittens on the user.
  * 
@@ -22,11 +24,8 @@ function assignMitten(userID, mittentype, origbinder) {
 
     process.userstats[userID].wornmittens = (process.userstats[userID].wornmittens ?? 0) + 1;
     
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.mitten = true;
-    process.readytosave.usersdata = true;
+	markForSave("mitten");
+    markForSave("userstats");
 };
 
 exports.assignMitten = assignMitten;

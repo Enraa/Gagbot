@@ -1,4 +1,5 @@
 const { getCollar } = require("../../getters/collar/getCollar");
+const { markForSave } = require("../../other/markForSave");
 
 /*******
  * Removes an additional Collar effect from the user's collar, if they are wearing a collar. 
@@ -17,10 +18,7 @@ function removeAdditionalCollarEffect(user, type) {
             if (getCollar(user).additionalcollars && getCollar(user).additionalcollars.length == 0) {
                 delete getCollar(user).additionalcollars;
             }
-            if (process.readytosave == undefined) {
-                process.readytosave = {};
-            }
-            process.readytosave.collar = true;
+            markForSave("collar");
         }
     }
     catch (err) {

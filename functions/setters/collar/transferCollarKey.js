@@ -1,4 +1,5 @@
 const { getCollar } = require("../../getters/collar/getCollar");
+const { markForSave } = require("../../other/markForSave");
 
 /********
  * Changes the primary keyholder for a user's collar. Removes cloned keys.
@@ -14,10 +15,7 @@ function transferCollarKey(lockedUser, newKeyholder) {
 			getCollar(lockedUser).keyholder = newKeyholder;
 			// Erase cloned keys in this process!
 			getCollar(lockedUser).clonedKeyholders = [];
-			if (process.readytosave == undefined) {
-				process.readytosave = {};
-			}
-			process.readytosave.collar = true;
+			markForSave("collar");
 			return true;
 		}
 	}

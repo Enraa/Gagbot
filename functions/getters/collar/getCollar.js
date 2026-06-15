@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /*********
  * Gets the worn collar for a user. Returns the collar if it exists, or undefined if not.
  * 
@@ -20,10 +22,7 @@ function getCollar(user) {
 	}
     if (process.collar[user] && !process.collar[user].timestamp) {
         process.collar[user].timestamp = Date.now();
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.collar = true;
+        markForSave("collar");
     }
 	return process.collar[user];
 };

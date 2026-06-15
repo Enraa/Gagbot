@@ -14,6 +14,7 @@ const { leaveServerOptions } = require("../functions/setters/config/leaveServerO
 const { setOption } = require("../functions/setters/config/setOption.js");
 const { configoptions } = require("../lists/configoptions.js");
 const { initializeServerOptions } = require("../functions/other/initializeServerOptions.js");
+const { markForSave } = require("../functions/other/markForSave.js");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("config").setDescription(`Configure settings...`),
@@ -217,7 +218,7 @@ module.exports = {
 				// Revoke that CONSENT
 				if (process.consented[interaction.user.id]) {
 					delete process.consented[interaction.user.id];
-					process.readytosave.consented = true;
+					markForSave("consented");
 				}
 				// Finally, reprompt the user, now with the new choice set.
 				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));

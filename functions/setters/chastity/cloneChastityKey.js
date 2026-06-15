@@ -1,4 +1,5 @@
 const { getChastity } = require("../../getters/chastity/getChastity");
+const { markForSave } = require("../../other/markForSave");
 
 /********
  * Adds a user as a cloned keyholder for the chastity belt
@@ -13,11 +14,7 @@ function cloneChastityKey(chastityuser, newKeyholder) {
     if (!chastity.clonedKeyholders) {
         chastity.clonedKeyholders = [];
     }
-    chastity.clonedKeyholders.push(newKeyholder);
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.chastity = true;
+    markForSave("chastity");
 };
 
 exports.cloneChastityKey = cloneChastityKey;

@@ -3,6 +3,7 @@ const { splitMessage } = require(`./../functions/messagefunctions.js`);
 const garble = require("garble");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getOption } = require("./getters/config/getOption.js");
+const { markForSave } = require("./other/markForSave.js");
 
 // Regex to capture the user's intended text segments post-corset and post-vibrator.
 // NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.
@@ -191,10 +192,7 @@ function checkDollification(userID) {
 		if (!process.dolls[userID]) {
 			process.dolls[userID] = { violations: 0, punishmentLevel: 0, goodDollStreak: 0 };
 			// Save the doll to the database.
-			if (process.readytosave == undefined) {
-				process.readytosave = {};
-			}
-			process.readytosave.dolls = true;
+			markForSave("dolls");
 		}
 		isDoll = true;
 		// Undollify if needed
@@ -202,10 +200,7 @@ function checkDollification(userID) {
 		if (process.dolls[userID]) {
 			delete process.dolls[userID];
 			// Save the doll to the database.
-			if (process.readytosave == undefined) {
-				process.readytosave = {};
-			}
-			process.readytosave.dolls = true;
+			markForSave("dolls");
 		}
 	}
 	return isDoll;
@@ -245,10 +240,7 @@ function rewardDoll(userID) {
 				return "punishlevel";
 			}
 		}
-		if (process.readytosave == undefined) {
-			process.readytosave = {};
-		}
-		process.readytosave.dolls = true;
+		markForSave("dolls");
 	}
 }
 

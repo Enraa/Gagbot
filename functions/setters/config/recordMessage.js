@@ -1,4 +1,5 @@
 const { getOption } = require("../../getters/config/getOption")
+const { markForSave } = require("../../other/markForSave")
 
 /*********
  * Records a message for Edit Message app command
@@ -23,10 +24,7 @@ function recordMessage (msg, modifiedmsg, reply) {
             process.recordedmessages[modifiedmsg.id].replymessageid = reply.replymessageid
         }
     } 
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.recordedmessages = true;
+    markForSave("recordedmessages");
 }
 
 exports.recordMessage = recordMessage;

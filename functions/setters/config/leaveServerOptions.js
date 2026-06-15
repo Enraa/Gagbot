@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /***********
  * Removes all configs for a server
  * 
@@ -13,10 +15,7 @@ function leaveServerOptions(serverID) {
 		process.configs.servers = {};
 	}
 	delete process.configs.servers[serverID];
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.configs = true;
+	markForSave("configs");
 }
 
 exports.leaveServerOptions = leaveServerOptions;

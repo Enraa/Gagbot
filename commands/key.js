@@ -39,6 +39,7 @@ const { swapChastityBra } = require("../functions/setters/chastity/swapChastityB
 const { discardKey } = require("../functions/keyfindingfunctions.js");
 const { addAdditionalCollarEffect } = require("../functions/setters/collar/addAdditionalCollarEffect.js");
 const { removeAdditionalCollarEffect } = require("../functions/setters/collar/removeAdditionalCollarEffect.js");
+const { markForSave } = require("../functions/other/markForSave.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -901,10 +902,7 @@ module.exports = {
                                 await interaction.followUp({ content: `Swapping your collar to the ${data.textdata.c2}.`, flags: MessageFlags.Ephemeral })
                                 await interaction.followUp({ content: getText(data) })
                                 getCollar(wearer.id).collartype = newrestraint;
-                                if (process.readytosave == undefined) {
-                                    process.readytosave = {};
-                                }
-                                process.readytosave.collar = true;
+                                markForSave("collar");
                             },
                             async (reject) => {
                                 await interaction.followUp({ content: `The ${data.textdata.c2} swap was rejected.`, flags: MessageFlags.Ephemeral })
@@ -934,10 +932,7 @@ module.exports = {
                                 await interaction.followUp({ content: `Swapping ${wearer}'s collar to the ${data.textdata.c2}.`, flags: MessageFlags.Ephemeral })
                                 await interaction.followUp({ content: getText(data) })
                                 getCollar(wearer.id).collartype = newrestraint;
-                                if (process.readytosave == undefined) {
-                                    process.readytosave = {};
-                                }
-                                process.readytosave.collar = true;
+                                markForSave("collar");
                             },
                             async (reject) => {
                                 await interaction.followUp({ content: `The ${data.textdata.c2} swap was rejected.`, flags: MessageFlags.Ephemeral })
@@ -947,19 +942,13 @@ module.exports = {
 						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
 						data.textdata.c2 = newrestraintname;
 						if(!swapChastity(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; } // I'm gonna leave this like this for now. Maybe once we have belts that can fail to unlock we can improve this.
-						if (process.readytosave == undefined) {
-							process.readytosave = {};
-						}
-						process.readytosave.chastity = true;
+						markForSave("chastity");
 						interaction.reply(getText(data));
 					} else if (restrainttype == "chastitybra") {
 						data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
 						data.textdata.c2 = newrestraintname;
 						if(!swapChastityBra(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
-						if (process.readytosave == undefined) {
-							process.readytosave = {};
-						}
-						process.readytosave.chastitybra = true;
+						markForSave("chastitybra");
 						interaction.reply(getText(data));
 					}
 				}

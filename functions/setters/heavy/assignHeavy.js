@@ -1,4 +1,5 @@
 const { getHeavyName } = require("../../getters/heavy/getHeavyName");
+const { markForSave } = require("../../other/markForSave");
 
 /**************
  * Adds a heavy bondage to a user. 
@@ -52,11 +53,8 @@ function assignHeavy(user, type, origbinder, customname) {
 
     process.userstats[user].wornheavy = (process.userstats[user].wornheavy ?? 0) + 1;
     
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.heavy = true;
-    process.readytosave.userstats = true;
+    markForSave("heavy");
+    markForSave("userstats");
 };
 
 exports.assignHeavy = assignHeavy;

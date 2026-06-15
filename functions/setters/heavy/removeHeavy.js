@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /*********
  * Remove Heavy Bondage from user. If **type** is not specified, will remove the first heavy bondage in the list. 
  * 
@@ -32,10 +34,7 @@ const removeHeavy = (user, type, force) => {
     if ((process.heavy[user]?.length == 0) || force) {
         delete process.heavy[user]
     }
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.heavy = true;
+	markForSave("heavy");
 };
 
 exports.removeHeavy = removeHeavy;

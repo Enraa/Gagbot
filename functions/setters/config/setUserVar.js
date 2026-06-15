@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Set a temporary user variable by key
  * 
@@ -15,10 +17,7 @@ function setUserVar(user, key, value) {
 		process.usercontext[user] = {};
 	}
 	process.usercontext[user][key] = value;
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.usercontext = true;
+	markForSave("usercontext");
 }
 
 exports.setUserVar = setUserVar;

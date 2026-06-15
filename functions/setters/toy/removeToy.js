@@ -1,4 +1,5 @@
 const getBaseChastity = require("../../getters/chastity/getBaseChastity");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Removes a toy from the user.
@@ -25,10 +26,7 @@ function removeToy(user, keyholder, toytype, force = false) {
         process.toys[user].splice(index, 1);
     }
     if (force) { delete process.toys[user] }
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.toys = true;
+    markForSave("toys");
 }
 
 exports.removeToy = removeToy;

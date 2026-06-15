@@ -1,5 +1,6 @@
 const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { getOption } = require("../../getters/config/getOption");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Adds or modifies a toy on the user.
@@ -31,10 +32,7 @@ function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbin
                 getBaseChastity(vibe.blocker({ userID: user }).chastitytype).onToyChange({ userID: user, keyholderID: keyholder ?? user, currentToys: process.toys[user], newToy: { type: toytype, intensity: intensity, origbinder: origbinder }, action: "modify" })
             } 
             toy.intensity = intensity
-            if (process.readytosave == undefined) {
-                process.readytosave = {};
-            }
-            process.readytosave.toys = true;
+            markForSave("toys");
             return "Success"
         }
         else {
@@ -53,10 +51,7 @@ function assignToy (user, keyholder, intensity, toytype = "vibe_bullet", origbin
                 origbinder: origbinder
             })
             vibe.onEquip({ userID: user, intensity: intensity })
-            if (process.readytosave == undefined) {
-                process.readytosave = {};
-            }
-            process.readytosave.toys = true;
+            markForSave("toys");
             return "Success"
         }
         else {

@@ -5,6 +5,8 @@ const nlpSpeech = require("compromise-speech");
 const { getBaseCorset } = require("./getters/corset/getBaseCorset");
 const { getCorset } = require("./getters/corset/getCorset");
 const { getHeadwear } = require("./getters/headwear/getHeadwear");
+const { markForSave } = require("./other/markForSave");
+
 nlp.extend(nlpSpeech);
 
 const TRAITS = ["name", "maxBreath", "minBreath", "breathRecovery", "gaspCoefficient", "gaspLimit", "silenceLimit", "minWords", "afterUsingBreath"];
@@ -235,10 +237,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 
 	let outtext = (silence ? chars.slice(0, silenceIdx + 1) : chars).join("");
 
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.corset = true;
+	markForSave("corset");
 	if (outtext.length == 0) {
 		msgModified.modified = true;
 		return "";
@@ -289,10 +288,7 @@ function tryExpendBreath(user, exertion) {
 	const basecorset = getBaseCorset(corset.type ?? "corset_leather");
 	corset.breath -= exertion;
 	basecorset.afterUsingBreath({ userID: user, corset: corset });
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.corset = true;
+	markForSave("corset");
 	return corset.breath > 0;
 }
 

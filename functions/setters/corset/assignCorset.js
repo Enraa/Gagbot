@@ -2,6 +2,7 @@ const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { getChastity } = require("../../getters/chastity/getChastity");
 const { getBaseCorset } = require("../../getters/corset/getBaseCorset");
 const { getBreath } = require("../../getters/corset/getBreath");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Adds or modifies a corset on the user.
@@ -45,11 +46,8 @@ function assignCorset(user, type, tightness, origbinder) {
 
     process.userstats[user].worncorsets = (process.userstats[user].worncorsets ?? 0) + 1;
 
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.corset = true;
-    process.readytosave.userstats = true;
+    markForSave("corset");
+    markForSave("userstats");
 };
 
 exports.assignCorset = assignCorset;

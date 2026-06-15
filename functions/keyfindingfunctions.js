@@ -17,6 +17,7 @@ const { getBaseChastity } = require("./getters/chastity/getBaseChastity");
 const { getBaseCollar } = require("./getters/collar/getBaseCollar");
 const { statsAddCounter } = require("./setters/config/statsAddCounter");
 const { getTextGeneric } = require("./textfunctions");
+const { markForSave } = require("./other/markForSave");
 
 const MAX_FUMBLE_CHANCE = 0.95;
 
@@ -68,12 +69,9 @@ function rollKeyFumble(keyholder, locked) {
             penalties.push({ timestamp: Date.now(), value: 15, decay: 2 });
             frustrationPenalties.set(keyholder, penalties);
 
-            if (process.readytosave == undefined) {
-                process.readytosave = {};
-            }
-            process.readytosave.collar = true;
-            process.readytosave.chastity = true;
-            process.readytosave.chastitybra = true;
+            markForSave("collar");
+            markForSave("chastity");
+            markForSave("chastitybra");
 
             return 2; // They dropped the key.
         }
@@ -178,12 +176,9 @@ async function handleKeyFinding(message) {
                                 delete process[pv][en[0]].fumbled;
 
                                 statsAddCounter(message.member.id, "fumbledkeysrecovered")
-                                if (process.readytosave == undefined) {
-                                    process.readytosave = {};
-                                }
-                                process.readytosave.collar = true;
-                                process.readytosave.chastity = true;
-                                process.readytosave.chastitybra = true;
+                                markForSave("collar");
+                                markForSave("chastity");
+                                markForSave("chastitybra");
                             }
                             else {
                                 // Fumbled finding the key lol
@@ -222,12 +217,9 @@ async function handleKeyFinding(message) {
                                     process[pv][en[0]].temporarykeyholdertime = (Date.now() + getOption(en[0], "ownrestraintfindkeymode"))
                                 }
                                 statsAddCounter(message.member.id, "fumbledkeysrecovered")
-                                if (process.readytosave == undefined) {
-                                    process.readytosave = {};
-                                }
-                                process.readytosave.collar = true;
-                                process.readytosave.chastity = true;
-                                process.readytosave.chastitybra = true;
+                                markForSave("collar");
+                                markForSave("chastity");
+                                markForSave("chastitybra");
                             }
                             else {
                                 // Fumbled finding the key lol
@@ -274,10 +266,7 @@ function discardKey(userid, keyholderid, device) {
             typelocked = "clone";
         }
     }
-    if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-    process.readytosave[processvar] = true;
+    markForSave(processvar)
     return typelocked;
 }
 

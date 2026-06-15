@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Removes a locked headwear item from the user.
  * 
@@ -22,10 +24,7 @@ function removeLockedHeadgear(userID, headwear) {
 			}
 		}
 	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.headwear = true;
+	markForSave("headwear");
 };
 
 exports.removeLockedHeadgear = removeLockedHeadgear;

@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Removes a gag from the user.
  * 
@@ -48,10 +50,7 @@ function deleteGag(userID, specificgag, force = false) {
 			delete process.gags[userID];
 		}
 	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.gags = true;
+	markForSave("gags");
 };
 
 exports.deleteGag = deleteGag;

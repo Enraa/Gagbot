@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /********
  * Removes a corset from a user
  * 
@@ -8,10 +10,7 @@
 function removeCorset(user) {
 	if (process.corset == undefined) process.corset = {};
 	delete process.corset[user];
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.corset = true;
+	markForSave("corset");
 };
 
 exports.removeCorset = removeCorset;

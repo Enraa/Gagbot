@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Removes a locked clothing item from the user.
  * 
@@ -22,10 +24,7 @@ function removeLockedWearable(userID, wearable) {
 			}
 		}
 	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.wearable = true;
+	markForSave("wearable");
 };
 
 exports.removeLockedWearable = removeLockedWearable;

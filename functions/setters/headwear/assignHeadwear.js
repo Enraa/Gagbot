@@ -1,4 +1,5 @@
 const { getBaseHeadwear } = require("../../getters/headwear/getBaseHeadwear");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Adds or modifies a headwear on the user.
@@ -30,11 +31,8 @@ function assignHeadwear(userID, headwear, origbinder) {
 
     process.userstats[userID].wornmasks = (process.userstats[userID].wornmasks ?? 0) + 1;
     
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.headwear = true;
-    process.readytosave.userstats = true;
+    markForSave("headwear");
+    markForSave("userstats");
 };
 
 exports.assignHeadwear = assignHeadwear;

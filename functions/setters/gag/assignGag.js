@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Adds or modifies a gag on the user.
  * 
@@ -29,11 +31,8 @@ function assignGag(userID, gagtype = "ball", intensity = 5, origbinder) {
 
     process.userstats[userID].worngags = (process.userstats[userID].worngags ?? 0) + 1;
     
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.gags = true;
-    process.readytosave.userstats = true;
+    markForSave("gags");
+    markForSave("userstats");
 };
 
 exports.assignGag = assignGag;

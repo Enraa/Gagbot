@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /*******
  * Set a floor prop on the floordata array. This is data only used by the floor itself. 
  * 
@@ -15,10 +17,7 @@ function setDelveFloorState(user, floor, prop, value) {
         if (process.delveuserdata[user].floordata == undefined) { process.delveuserdata[user].floordata = [] }
         if (process.delveuserdata[user].floordata[floor] == undefined) { process.delveuserdata[user].floordata[floor] = {} }
         process.delveuserdata[user].floordata[floor][prop] = value;
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.delveuserdata = true;
+        markForSave("delveuserdata");
     }
 }
 

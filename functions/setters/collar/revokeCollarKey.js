@@ -1,4 +1,5 @@
 const { getCollar } = require("../../getters/collar/getCollar");
+const { markForSave } = require("../../other/markForSave");
 
 /*******
  * Removes a cloned key from a collar
@@ -16,10 +17,7 @@ function revokeCollarKey(collarUser, newKeyholder) {
     if (collar.clonedKeyholders.includes(newKeyholder)) {
         collar.clonedKeyholders.splice(collar.clonedKeyholders.indexOf(newKeyholder), 1);
     }
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.collar = true;
+    markForSave("collar");
 };
 
 exports.revokeCollarKey = revokeCollarKey;

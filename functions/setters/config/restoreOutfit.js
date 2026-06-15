@@ -11,6 +11,7 @@ const { getHeavy } = require("../../getters/heavy/getHeavy");
 const { getMitten } = require("../../getters/mitten/getMitten");
 const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
 const { getWearable } = require("../../getters/wearable/getWearable");
+const { markForSave } = require("../../other/markForSave");
 
 /*********
  * Retrieves an outfit and attempts to apply it to the user. 
@@ -29,50 +30,35 @@ function restoreOutfit(userID, storedobject) {
 			getLockedWearable(userID);
 			if (!getHeavy(userID)) {
 				process.wearable[userID] = { wornwearable: storedobject.wearable, locked: storedobject.lockedwearable };
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.wearable = true;
+				markForSave("wearable");
 			}
 		}
 		if (k == "gag") {
 			getGags(userID);
 			if (!getHeavy(userID) && !getMitten(userID)) {
 				process.gags[userID] = storedobject.gag;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.gags = true;
+				markForSave("gags");
 			}
 		}
 		if (k == "mitten") {
 			getMitten(userID);
 			if (!getHeavy(userID) && !getMitten(userID)) {
 				process.mitten[userID] = storedobject.mitten;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.mitten = true;
+				markForSave("mitten");
 			}
 		}
 		if (k == "headwear") {
 			getHeadwear(userID);
 			if (!getHeavy(userID) && !getMitten(userID)) {
 				process.headwear[userID] = storedobject.headwear;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.headwear = true;
+				markForSave("headwear");
 			}
 		}
 		if (k == "collar") {
 			getCollar(userID);
 			if (!getHeavy(userID) && (canAccessCollar(userID, userID, true).access || !canAccessCollar(userID, userID, true).hascollar)) {
 				process.collar[userID] = storedobject.collar;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.collar = true;
+				markForSave("collar");
 			}
 		}
 		if (k == "heavy") {
@@ -86,20 +72,14 @@ function restoreOutfit(userID, storedobject) {
                 else {
                     process.heavy[userID] = storedobject.heavy;
                 }
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.heavy = true;
+				markForSave("heavy");
 			}
 		}
 		if (k == "corset") {
 			getCorset(userID);
 			if (!getHeavy(userID) && (canAccessChastity(userID, userID, true).access || !canAccessChastity(userID, userID, true).hasbelt)) {
 				process.corset[userID] = storedobject.corset;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.corset = true;
+				markForSave("corset");
 			}
 		}
 		if (k == "chastity") {
@@ -109,10 +89,7 @@ function restoreOutfit(userID, storedobject) {
                 if (process.chastity[userID].stateligible) {
                     process.chastity[userID].stateligible = false;
                 }
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.chastity = true;
+				markForSave("chastity");
 			}
 		}
 		if (k == "chastitybra") {
@@ -122,22 +99,9 @@ function restoreOutfit(userID, storedobject) {
                 if (process.chastitybra[userID].stateligible) {
                     process.chastitybra[userID].stateligible = false;
                 }
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.chastitybra = true;
+				markForSave("chastitybra");
 			}
 		}
-		/*if (k == "vibe") { // Disabling toys since now there are multiple different conditions that can apply. 
-			getToys(userID);
-			if (!getHeavy(userID) && (canAccessChastity(userID, userID, true).access || !canAccessChastity(userID, userID, true).hasbelt)) {
-				process.vibe[userID] = storedobject.vibe;
-				if (process.readytosave == undefined) {
-					process.readytosave = {};
-				}
-				process.readytosave.vibe = true;
-			}
-		}*/
 	});
 }
 

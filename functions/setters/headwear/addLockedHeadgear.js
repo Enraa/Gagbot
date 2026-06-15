@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Adds a locked headwear item on the user.
  * 
@@ -17,10 +19,7 @@ function addLockedHeadgear(userID, headwear) {
 			process.headwear[userID].locked.push(headwear);
 		}
 	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.headwear = true;
+	markForSave("headwear");
 };
 
 exports.addLockedHeadgear = addLockedHeadgear;

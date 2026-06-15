@@ -1,5 +1,6 @@
 const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { getChastity } = require("../../getters/chastity/getChastity");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Removes a chastity belt from the user.
@@ -24,17 +25,11 @@ function removeChastity(user, keyholder, force = false) {
         if (process.userstats == undefined) { process.userstats = {} }
         if (process.userstats[user] == undefined) { process.userstats[user] = {} }
         process.userstats[user].chastitywornduration = (Date.now() - process.chastity[user].timestamp)
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.userstats = true;
+        markForSave("userstats");
     }
 
 	delete process.chastity[user];
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.chastity = true;
+	markForSave("chastity");
 
 	return true;
 };

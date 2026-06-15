@@ -1,3 +1,4 @@
+const { markForSave } = require("../../other/markForSave");
 const { setOption } = require("./setOption");
 
 /*********
@@ -16,10 +17,7 @@ function setPronouns(user, pronouns) {
 	process.pronouns[user] = pronounsMap.get(pronouns);
     setOption(user, "pronouns", (pronouns.split("/")[0]))
 
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.pronouns = true;
+	markForSave("pronouns");
 };
 
 exports.setPronouns = setPronouns;

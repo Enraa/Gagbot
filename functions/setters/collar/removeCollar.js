@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /********
  * Removes a collar from a user
  * 
@@ -10,10 +12,7 @@ function removeCollar(user) {
 		process.collar = {};
 	}
 	delete process.collar[user];
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.collar = true;
+	markForSave("collar");
 }
 
 exports.removeCollar = removeCollar;

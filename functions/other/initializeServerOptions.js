@@ -1,4 +1,5 @@
 const { configoptions } = require("../../lists/configoptions");
+const { markForSave } = require("./markForSave");
 
 /**********
  * Sets all options to the defaults for a server. 
@@ -20,10 +21,7 @@ function initializeServerOptions(serverID) {
     Object.keys(configoptions["Server"]).forEach((k) => {
         process.configs.servers[serverID][k] = configoptions["Server"][k].default;
     });
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.configs = true;
+    markForSave("configs");
 }
 
 exports.initializeServerOptions = initializeServerOptions;

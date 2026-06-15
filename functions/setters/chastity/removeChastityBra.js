@@ -1,5 +1,6 @@
 const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { getChastityBra } = require("../../getters/chastity/getChastityBra");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Removes a chastity bra from the user.
@@ -24,17 +25,11 @@ function removeChastityBra(user, keyholder, force = false) {
         if (process.userstats == undefined) { process.userstats = {} }
         if (process.userstats[user] == undefined) { process.userstats[user] = {} }
         process.userstats[user].chastitybrawornduration = (Date.now() - process.chastitybra[user].timestamp)
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.userstats = true;
+        markForSave("userstats");
     }
 
 	delete process.chastitybra[user];
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.chastitybra = true;
+	markForSave("chastitybra");
 
 	return true;
 };

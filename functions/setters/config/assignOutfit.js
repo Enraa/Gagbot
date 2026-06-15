@@ -8,6 +8,7 @@ const { getMitten } = require("../../getters/mitten/getMitten");
 const { getToys } = require("../../getters/toy/getToys");
 const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
 const { getWearable } = require("../../getters/wearable/getWearable");
+const { markForSave } = require("../../other/markForSave");
 
 /*********
  * Assigns an outfit to a slot for a user
@@ -71,10 +72,7 @@ function assignOutfit(userID, slot, options) {
 		}
 		if (Object.keys(storedobject).length > 0) {
 			process.outfits[userID][slot] = JSON.parse(JSON.stringify(storedobject));
-			if (process.readytosave == undefined) {
-				process.readytosave = {};
-			}
-			process.readytosave.outfits = true;
+			markForSave("outfits");
 		}
 	}
 }

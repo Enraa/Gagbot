@@ -18,6 +18,7 @@ const { getHeavyList } = require("./getters/heavy/getHeavyList.js");
 const { getMitten } = require("./getters/mitten/getMitten.js");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getGags } = require("./getters/gag/getGags.js");
+const { markForSave } = require("./other/markForSave.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
@@ -129,7 +130,6 @@ const saveFiles = () => {
 		if (process.readytosave == undefined) {
 			process.readytosave = {};
 		}
-		console.log(process.readytosave);
 		Object.keys(process.readytosave).forEach((k) => {
 			let filepath;
 			let processvar;
@@ -237,7 +237,7 @@ const saveFiles = () => {
 			}
 			if (filepath && processvar) {
 				fs.writeFileSync(filepath, JSON.stringify(process[processvar]));
-				console.log(`----> Successfully Saved file ${filepath}`);
+				console.log(`${(new Date()).toLocaleTimeString()}: Successfully Saved file ${filepath}`);
 			}
 		});
 		process.readytosave = {};
@@ -451,12 +451,9 @@ function checkFumbledTemporaryKeys() {
                         console.log("No suitable channel found for returning temp key.")
                     }
                     
-                    if (process.readytosave == undefined) {
-                        process.readytosave = {};
-                    }
-                    process.readytosave.collar = true;
-                    process.readytosave.chastity = true;
-                    process.readytosave.chastitybra = true;
+                    markForSave("collar");
+                    markForSave("chastity");
+                    markForSave("chastitybra");
                 }
             }
             catch (err) {

@@ -1,4 +1,5 @@
 const { getCollar } = require("../../getters/collar/getCollar");
+const { markForSave } = require("../../other/markForSave");
 
 /********
  * Adds a user as a cloned keyholder for the collar
@@ -14,10 +15,7 @@ function cloneCollarKey(collarUser, newKeyholder) {
 		collar.clonedKeyholders = [];
 	}
 	collar.clonedKeyholders.push(newKeyholder);
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.collar = true;
+	markForSave("collar");
 };
 
 exports.cloneCollarKey = cloneCollarKey;

@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /********
  * Sets the configured option for the server ID as set in /config
  *
@@ -18,10 +20,7 @@ function setServerOption(serverID, option, choice) {
 		process.configs.servers[serverID] = {};
 	}
 	process.configs.servers[serverID][option] = choice;
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.configs = true;
+	markForSave("configs");
 }
 
 exports.setServerOption = setServerOption;

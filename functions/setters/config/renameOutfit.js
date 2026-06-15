@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /********
  * Renames an outfit for a user
  * 
@@ -17,10 +19,7 @@ function renameOutfit(userID, slot, newname) {
 	if (process.outfits[userID][slot]) {
 		process.outfits[userID][slot].outfitname = newname;
 	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.outfits = true;
+	markForSave("outfits");
 }
 
 exports.renameOutfit = renameOutfit;

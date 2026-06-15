@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /********
  * Sets the global option for the bot
  *
@@ -14,10 +16,7 @@ function setBotOption(option, choice) {
 		process.configs.botglobal = {};
 	}
 	process.configs.botglobal[option] = choice;
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.configs = true;
+	markForSave("configs");
 }
 
 exports.setBotOption = setBotOption;

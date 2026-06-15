@@ -1,7 +1,8 @@
 const { clearArousal } = require("../functions/setters/arousal/clearArousal")
 const { removeToy } = require("../functions/setters/toy/removeToy")
 const { setOption } = require("../functions/setters/config/setOption")
-const { ButtonStyle } = require("discord.js")
+const { ButtonStyle } = require("discord.js");
+const { markForSave } = require("../functions/other/markForSave");
 
 
 /***********
@@ -139,10 +140,7 @@ const configoptions = {
                             process.pronouns = {};
                         }
                         process.pronouns[userID] = { subject: "she", object: "her", possessive: "hers", possessiveDeterminer: "her", reflexive: "herself", subjectIs: "she's", subjectWill: "she'll" }
-                        if (process.readytosave == undefined) {
-                            process.readytosave = {};
-                        }
-                        process.readytosave.pronouns = true;
+                        markForSave("pronouns");
                     },
 					value: "she",
 					style: ButtonStyle.Secondary,
@@ -155,10 +153,7 @@ const configoptions = {
                             process.pronouns = {};
                         }
                         process.pronouns[userID] = { subject: "he", object: "him", possessive: "his", possessiveDeterminer: "his", reflexive: "himself", subjectIs: "he's", subjectWill: "he'll" }
-                        if (process.readytosave == undefined) {
-                            process.readytosave = {};
-                        }
-                        process.readytosave.pronouns = true;
+                        markForSave("pronouns");
                     },
 					value: "he",
 					style: ButtonStyle.Secondary,
@@ -171,10 +166,7 @@ const configoptions = {
                             process.pronouns = {};
                         }
                         process.pronouns[userID] = { subject: "they", object: "them", possessive: "theirs", possessiveDeterminer: "their", reflexive: "themself", subjectIs: "they're", subjectWill: "they'll" }
-                        if (process.readytosave == undefined) {
-                            process.readytosave = {};
-                        }
-                        process.readytosave.pronouns = true;
+                        markForSave("pronouns");
                     },
 					value: "they",
 					style: ButtonStyle.Secondary,
@@ -187,10 +179,7 @@ const configoptions = {
                             process.pronouns = {};
                         }
                         process.pronouns[userID] = { subject: "it", object: "it", possessive: "its", possessiveDeterminer: "its", reflexive: "itself", subjectIs: "it's", subjectWill: "it'll" }
-                        if (process.readytosave == undefined) {
-                            process.readytosave = {};
-                        }
-                        process.readytosave.pronouns = true;
+                        markForSave("pronouns");
                     },
 					value: "it",
 					style: ButtonStyle.Secondary,
@@ -204,10 +193,7 @@ const configoptions = {
                             process.pronouns = {};
                         }
                         process.pronouns[userID] = { subject: "she", object: "her", possessive: "hers", possessiveDeterminer: "her", reflexive: "herself", subjectIs: "she's", subjectWill: "she'll" }
-                        if (process.readytosave == undefined) {
-                            process.readytosave = {};
-                        }
-                        process.readytosave.pronouns = true;
+                        markForSave("pronouns");
                     },
 					value: "notset",
 					style: ButtonStyle.Secondary,

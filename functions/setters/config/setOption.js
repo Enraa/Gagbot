@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /********
  * Sets the configured option for the user ID as set in /config
  *
@@ -18,10 +20,7 @@ function setOption(userID, option, choice) {
 		process.configs.users[userID] = {};
 	}
 	process.configs.users[userID][option] = choice;
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.configs = true;
+	markForSave("configs");
 }
 
 exports.setOption = setOption;

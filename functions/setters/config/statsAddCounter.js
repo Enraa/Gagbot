@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Adds a point to a counter by name in user's stats. Specify amount for custom amount.
  * 
@@ -12,10 +14,7 @@ function statsAddCounter(user, countername, amount = 1) {
     if (process.userstats[user] == undefined) { process.userstats[user] = {} }
     let newcount = (process.userstats[user][countername] ?? 0) + amount;
     process.userstats[user][countername] = newcount;
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.userstats = true;
+    markForSave("userstats");
 }
 
 exports.statsAddCounter = statsAddCounter

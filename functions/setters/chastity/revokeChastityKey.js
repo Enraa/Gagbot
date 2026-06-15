@@ -1,4 +1,5 @@
 const { getChastity } = require("../../getters/chastity/getChastity");
+const { markForSave } = require("../../other/markForSave");
 
 /*******
  * Removes a cloned key from a chastity belt
@@ -16,10 +17,7 @@ function revokeChastityKey(chastityuser, newKeyholder) {
     if (chastity.clonedKeyholders.includes(newKeyholder)) {
         chastity.clonedKeyholders.splice(chastity.clonedKeyholders.indexOf(newKeyholder), 1);
     }
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.chastity = true;
+    markForSave("chastity");
 };
 
 exports.revokeChastityKey = revokeChastityKey;

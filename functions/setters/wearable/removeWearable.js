@@ -1,4 +1,5 @@
 const { getLockedWearable } = require("../../getters/wearable/getLockedWearable");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Removes a clothing from the user.
@@ -33,11 +34,8 @@ function deleteWearable(userID, wearable) {
             delete process.wearable[userID];
         }
     }
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.wearable = true;
-};
+    markForSave("wearable");
+}
 
 exports.deleteWearable = deleteWearable;
 exports.removeWearable = deleteWearable;

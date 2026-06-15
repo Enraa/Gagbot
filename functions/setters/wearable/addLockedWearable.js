@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Adds a locked clothing item on the user.
  * 
@@ -17,10 +19,7 @@ function addLockedWearable(userID, wearable) {
 			process.wearable[userID].locked.push(wearable);
 		}
 	}
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.wearable = true;
+	markForSave("wearable");
 };
 
 exports.addLockedWearable = addLockedWearable;

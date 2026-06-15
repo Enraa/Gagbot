@@ -1,4 +1,5 @@
 const { getLockedHeadgear } = require("../../getters/headwear/getLockedHeadgear");
+const { markForSave } = require("../../other/markForSave");
 
 /**********
  * Removes a headwear from the user.
@@ -48,10 +49,7 @@ function deleteHeadwear(userID, headwear, force = true) {
         }
     }
     if (force) { delete process.headwear[userID] }
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.headwear = true;
+    markForSave("headwear");
 };
 
 exports.deleteHeadwear = deleteHeadwear;

@@ -24,6 +24,7 @@ const { getUserVar } = require("./getters/config/getUserVar.js");
 const { getPFP } = require("./getters/config/getPFP.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
 const { getAlternateName } = require("./getters/config/getAlternateName.js");
+const { markForSave } = require("./other/markForSave.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -139,11 +140,7 @@ function punishDoll(userID, amount) {
 					break;
 			}
 		}
-
-		if (process.readytosave == undefined) {
-			process.readytosave = {};
-		}
-		process.readytosave.dolls = true;
+        markForSave("dolls");
 		return { punish: punishments > 0 ? true : false, punishmentLevel: doll.punishmentLevel, skipped: skipped };
 	}
 }
@@ -455,10 +452,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
         if (process.userstats[msg.member.id] == undefined) { process.userstats[msg.member.id] = {} }
         let newcount = (process.userstats[msg.member.id]["timesshocked"] ?? 0) + 1;
         process.userstats[msg.member.id]["timesshocked"] = newcount;
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.userstats = true;
+        markForSave("userstats");
         try {
             if (getOption(msg.member.id, "pishockusername") && (typeof getOption(msg.member.id, "pishockusername") == "string") &&
                 getOption(msg.member.id, "pishockname") && (typeof getOption(msg.member.id, "pishockname") == "string") &&
@@ -608,10 +602,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
         if (process.userstats == undefined) { process.userstats = {} }
         if (process.userstats[msg.author.id] == undefined) { process.userstats[msg.author.id] = {} }
         process.userstats[msg.author.id].gaggedmessages = (process.userstats[msg.author.id].gaggedmessages ?? 0) + 1;
-        if (process.readytosave == undefined) {
-            process.readytosave = {};
-        }
-        process.readytosave.userstats = true;
+        markForSave("userstats");
 
 		// Determine if an attachment was posted in the original message.
 		if (msg.attachments.size > 0) {

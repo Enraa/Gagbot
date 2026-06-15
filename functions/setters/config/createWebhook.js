@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /********
  * (async) Creates a webhook for a channel. 
  * 
@@ -51,10 +53,7 @@ async function createWebhook(interaction, channel) {
 		}
 		process.webhook[channel.id] = { human: webhook, bot: botwebhook };
 		process.webhookstoload[channel.id] = { human: webhook.id, bot: botwebhook.id };
-		if (process.readytosave == undefined) {
-			process.readytosave = {};
-		}
-		process.readytosave.webhooks = true;
+		markForSave("webhooks");
 		console.log(process.webhookstoload);
 		return { humanwebhook: humanwebhook };
 	} catch (err) {

@@ -1,4 +1,5 @@
 const { calcBreath } = require("../../corsetfunctions");
+const { markForSave } = require("../../other/markForSave");
 
 
 /*********
@@ -10,10 +11,7 @@ const { calcBreath } = require("../../corsetfunctions");
  *********/
 function getBreath(user) {
     const corset = calcBreath(user);
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.corset = true;
+    markForSave("corset");
     return corset.breath;
 }
 

@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Adds or modifies a collar on the user.
  * 
@@ -23,10 +25,7 @@ function assignCollar(user, keyholder, restraints, only, customcollar) {
         collartype: customcollar,
         timestamp: Date.now()
     };
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.collar = true;
+	markForSave("collar");
 }
 
 exports.assignCollar = assignCollar;

@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /*********
  * Assigns a main consent type to the user
  * ### This should ONLY be called ***after*** accepting it when prompted!!!
@@ -11,10 +13,7 @@ function assignConsent (user) {
 		process.consented = {};
 	}
 	process.consented[user] = { mainconsent: true };
-	if (process.readytosave == undefined) {
-		process.readytosave = {};
-	}
-	process.readytosave.consented = true;
+	markForSave("consented");
 };
 
 exports.assignConsent = assignConsent;

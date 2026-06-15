@@ -17,6 +17,7 @@ const { assignHeavy } = require("./setters/heavy/assignHeavy")
 const { assignMitten } = require("./setters/mitten/assignMitten")
 const { modifyResolve } = require("./setters/delve/setResolve")
 const { getDelveFloorState } = require("./getters/delve/getDelveFloorState")
+const { markForSave } = require("./other/markForSave")
 
 /*****************
  * Players will utilize their condition as returned by gags, masks, heavy bondage and the like. 
@@ -697,10 +698,7 @@ async function handleDelveSlashCommand(interaction) {
  ******/
 async function handleDelveInteraction(interaction) {
     await interaction.deferUpdate();
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.delveuserdata = true;
+    markForSave("delveuserdata");
     let buttonparts = interaction.customId.split("_")
 
     // If this isn't the user that is doing the delve, stop here. 

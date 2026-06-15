@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+
 /**********
  * Set the counter for a user by name. Specify Value
  * 
@@ -9,10 +11,7 @@ function statsSetCounter(user, countername, value) {
     if (process.userstats == undefined) { process.userstats = {} }
     if (process.userstats[user] == undefined) { process.userstats[user] = {} }
     process.userstats[user][countername] = value;
-    if (process.readytosave == undefined) {
-        process.readytosave = {};
-    }
-    process.readytosave.userstats = true;
+    markForSave("userstats");
 }
 
 exports.statsSetCounter = statsSetCounter;
