@@ -1,4 +1,5 @@
-const { serUserVar } = require("../functions/setters/config/setUserVar.js")
+const { setUserVar } = require("../functions/setters/config/setUserVar.js")
+const { ballGagCharMaps } = require("./ball/ballCharMap.js");
 
 /***************************
  * Chocolate Gag for Gagbot
@@ -6,8 +7,6 @@ const { serUserVar } = require("../functions/setters/config/setUserVar.js")
  ***************************/
 
 // Character maps stored in an array in a separate file for code cleanliness
-const { ballGagCharMaps } = require("./ball/ballCharMap.js");
-
 const isAllCaps = (text) => {
 	//(words[x].match(/[A-Z]/) && !words[x].match(/[a-z]/)) ? true : false;
 	return text == text.toLowerCase().toUpperCase() && /[A-Z]/g.test(text);
