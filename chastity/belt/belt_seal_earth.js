@@ -11,27 +11,26 @@ exports.orgasmCooldown = (data) => { return 2 }
 exports.denialCoefficient = (data) => { return 1 }
 
 // Set Min Arousal to be equal to the base Arousal + 5% when equipped
-exports.minArousal = function(data) { return getUserVar(data.userID, "base_arousal") * 0.90}
-exports.maxArousal = function(data) { return getUserVar(data.userID, "base_arousal") * 1.10}
+exports.minArousal = function(data) { return getUserVar(data.serverID, data.userID, "base_arousal") * 0.90}
+exports.maxArousal = function(data) { return getUserVar(data.serverID, data.userID, "base_arousal") * 1.10}
 
 // Events
 exports.onOrgasm = (data) => {
     // Maintain Arousal level and Increase Base Arousal to raise cap as the 'rock' jolts slightly forwards
-    addArousal(data.userID, getUserVar(data.userID, "base_arousal"));
-    setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 1.1)
-    console.log(getUserVar(data.userID, "base_arousal"))
+    addArousal(data.serverID, data.userID, getUserVar(data.serverID, data.userID, "base_arousal"));
+    setUserVar(data.serverID, data.userID, "base_arousal", getUserVar(data.serverID, data.userID, "base_arousal") * 1.1)
 }
 exports.afterArousalChange = (data) => {
     // Earth only allows slow shifts in the arousal values regardless of vibe strength
-    if(getArousal(data.userID) > getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", Math.max(getUserVar(data.userID, "base_arousal") * 1.02, getUserVar(data.userID, "base_arousal") + 0.01))
-    else if(getArousal(data.userID) < getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", Math.max(Math.min(getUserVar(data.userID, "base_arousal") * 0.98, getUserVar(data.userID, "base_arousal") - 0.01), 0))
+    if(getArousal(data.serverID, data.userID) > getUserVar(data.serverID, data.userID, "base_arousal")) setUserVar(data.serverID, data.userID, "base_arousal", Math.max(getUserVar(data.serverID, data.userID, "base_arousal") * 1.02, getUserVar(data.serverID, data.userID, "base_arousal") + 0.01))
+    else if(getArousal(data.serverID, data.userID) < getUserVar(data.serverID, data.userID, "base_arousal")) setUserVar(data.serverID, data.userID, "base_arousal", Math.max(Math.min(getUserVar(data.serverID, data.userID, "base_arousal") * 0.98, getUserVar(data.serverID, data.userID, "base_arousal") - 0.01), 0))
 }
 exports.onEquip = (data) => {
     // Configure base arousal value
-    if (!getUserVar(data.userID, "base_arousal") || getUserVar(data.userID, "base_arousal") == undefined) setUserVar(data.userID, "base_arousal", getArousal(data.userID));
+    if (!getUserVar(data.serverID, data.userID, "base_arousal") || getUserVar(data.serverID, data.userID, "base_arousal") == undefined) setUserVar(data.serverID, data.userID, "base_arousal", getArousal(data.serverID, data.userID));
 }
 exports.onUnequip = (data) => {
-    setUserVar(data.userID, "base_arousal", undefined);
+    setUserVar(data.serverID, data.userID, "base_arousal", undefined);
 }
 
 // Tags

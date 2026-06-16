@@ -1,19 +1,21 @@
 const { arousedtexts } = require("../../../vibes/aroused/aroused_texts");
 const { calcStaticVibeIntensity } = require("../../vibefunctions");
 const { getOption } = require("../config/getOption");
+const { getProcessVariable } = require("../config/getProcessVariable");
 
 /*********
  * Returns valid arousal texts to be used when stuttering during speech
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The user that is aroused
  * ---
  * ##### Returns an array of strings with aroused texts
  *********/
-function getArousedTexts(user) {
+function getArousedTexts(serverID, user) {
 	const texts = [];
 
 	if (getOption(user, "arousalsystem") == 2) {
-		const arousal = process.arousal[user];
+		const arousal = getProcessVariable(serverID, user, "arousal");
 		const current = arousal.arousal;
 		const change = arousal.arousal - arousal.prev;
 		for (const [min, max, minChange, maxChange, text] of arousedtexts) {

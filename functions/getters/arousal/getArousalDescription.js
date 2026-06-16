@@ -10,14 +10,15 @@ const RESET_LIMIT = 0.1;
 /**********
  * Gets a description representing the user's arousal
  * 
+ * - (server id) serverID - The server this is on
  * - (user id) user - The user who is aroused
  * ---
  * ##### Returns a string representing their arousal
  **********/
-function getArousalDescription(user) {
+function getArousalDescription(serverID, user) {
 	if (getOption(user, "arousalsystem") === 0) return null; // Disabled Arousal system
 
-	const arousal = getArousal(user);
+	const arousal = getArousal(serverID, user);
 	const denialCoefficient = calcDenialCoefficient(user);
 	const orgasmLimit = ORGASM_LIMIT * denialCoefficient;
 	const orgasmProgress = arousal / orgasmLimit;

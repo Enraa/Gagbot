@@ -13,14 +13,14 @@ exports.denialCoefficient = (data) => { return 1 }
 // Events
 exports.onEquip = (data) => {
     // Configure base arousal value
-    if (!getUserVar(data.userID, "base_arousal") || getUserVar(data.userID, "base_arousal") == undefined) setUserVar(data.userID, "base_arousal", getArousal(data.userID) ?? 0);
+    if (!getUserVar(data.serverID, data.userID, "base_arousal") || getUserVar(data.serverID, data.userID, "base_arousal") == undefined) setUserVar(data.serverID, data.userID, "base_arousal", getArousal(data.serverID, data.userID) ?? 0);
 
     // Add a timer which will reset the arousal every 3 mins
     let chastityinterval = setInterval(() => {
-        if ((getChastity(data.userID)?.chastitytype == "belt_seal_cyclical") && getUserVar(data.userID, "base_arousal")) {
+        if ((getChastity(data.serverID, data.userID)?.chastitytype == "belt_seal_cyclical") && getUserVar(data.serverID, data.userID, "base_arousal")) {
             try {
-                clearArousal(data.userID);
-                addArousal(data.userID, getUserVar(data.userID, "base_arousal"));
+                clearArousal(data.serverID, data.userID);
+                addArousal(data.serverID, data.userID, getUserVar(data.serverID, data.userID, "base_arousal"));
             }
             catch (err) {
                 console.log(err)
@@ -30,7 +30,7 @@ exports.onEquip = (data) => {
             // They're somehow not wearing the belt anymore or something else broke. 
             try {
                 clearInterval(chastityinterval);
-                setUserVar(data.userID, "base_arousal", undefined);
+                setUserVar(data.serverID, data.userID, "base_arousal", undefined);
             }
             catch (err) {
                 console.log(err)
@@ -41,9 +41,9 @@ exports.onEquip = (data) => {
 
 exports.onUnequip = (data) => {
     //  Add All Stored Arousal at once
-    clearArousal(data.userID);
-    addArousal(data.userID, getUserVar(data.userID, "base_arousal"));
-    setUserVar(data.userID, "base_arousal", undefined);
+    clearArousal(data.serverID, data.userID);
+    addArousal(data.serverID, data.userID, getUserVar(data.serverID, data.userID, "base_arousal"));
+    setUserVar(data.serverID, data.userID, "base_arousal", undefined);
 }
 
 // Tags

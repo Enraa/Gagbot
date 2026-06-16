@@ -25,7 +25,7 @@ const { getText } = require("../../functions/textfunctions")
 function calculatecapture(serverID, userid, ballbonusnum = 1.0) {
     // The user's "health" will be based off of 50 arousal.
     let maxhealth = 50
-    let currhealth = Math.max(50 - getArousal(userid), 0.5) // Always clamp to 0.5 hp left - false swipe range if you will. 
+    let currhealth = Math.max(50 - getArousal(serverID, userid), 0.5) // Always clamp to 0.5 hp left - false swipe range if you will. 
     let darkgrass = 1 // Not used, but formula has this, so we'll add it
 
     // Catch rate will be a base of 150, minus 10 for each held key, down to 3 (the catch rate for Articuno!)

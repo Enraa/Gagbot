@@ -84,7 +84,7 @@ function rollKeyFumble(keyholder, locked) {
     }
 }
 
-function getFumbleChance(keyholder, locked) {
+function getFumbleChance(serverID, keyholder, locked) {
 	// cannot fumble if disabled
 	if (getOption(locked, "fumbling") == "disabled") return 0;
 	// ... or if not using the dynamic arousal system
@@ -100,8 +100,8 @@ function getFumbleChance(keyholder, locked) {
     // Target numbers are 15 arousal = 0, 150 arousal = 100
     // Frustration influences how sharply the curve tilts upwards as well as adding a tiny bit to the start
     // The notable part is that frustration SEVERELY affects higher arousal levels. 
-    console.log((((0.0045 + frustrationaddition * 0.0004) * Math.pow(getArousal(locked), 2) - 1) + (frustrationaddition / 100)))
-	let chance = Math.max(0, (((0.0045 + frustrationaddition * 0.0004) * Math.pow(getArousal(locked), 2) - 1) + (frustrationaddition / 100)))
+    console.log((((0.0045 + frustrationaddition * 0.0004) * Math.pow(getArousal(serverID, locked), 2) - 1) + (frustrationaddition / 100)))
+	let chance = Math.max(0, (((0.0045 + frustrationaddition * 0.0004) * Math.pow(getArousal(serverID, locked), 2) - 1) + (frustrationaddition / 100)))
 
 	// chance is increased if the keyholder is wearing mittens
 	if (getMitten(keyholder)) {

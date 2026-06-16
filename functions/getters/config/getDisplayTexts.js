@@ -11,29 +11,30 @@ const { getUserVar } = require("./getUserVar");
 /*************
  * Get the user's additional display texts, ordered and only viewable if necessary. 
  * 
+ * - (server ID) serverID - The server this interaction is run on
  * - (user id) userID - User ID of the person viewing
  * - (user id) inspectuserID - User ID of the person we're checking
  * ---
  * ##### Returns a string to append to outfit modal with all of the additional widgets
  ************/
-async function getDisplayTexts(userID, inspectuserID) {
+async function getDisplayTexts(serverID, userID, inspectuserID) {
     let bartext = ``;
 
     // ******************** Arousal Display
-    if (getArousal(inspectuserID) > 2.0) {
-        if (getOption(userID, "arousaldisplay") == "bar") {
-            bartext = `\n\n💞 Arousal: ${getArousalBar(inspectuserID).bar} (${getArousalBar(inspectuserID).percentage}%)`
-            if (calcDenialCoefficient(inspectuserID) > 1) {
-                bartext = `${bartext}\n\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(inspectuserID) * 100)}%**)`
+    if (getArousal(serverID, inspectuserID) > 2.0) {
+        if (getOption(serverID, userID, "arousaldisplay") == "bar") {
+            bartext = `\n\n💞 Arousal: ${getArousalBar(serverID, inspectuserID).bar} (${getArousalBar(serverID, inspectuserID).percentage}%)`
+            if (calcDenialCoefficient(serverID, inspectuserID) > 1) {
+                bartext = `${bartext}\n\n-# ‎ (Current Denial: **${Math.round(calcDenialCoefficient(serverID, inspectuserID) * 100)}%**)`
             }
         }
-        if (getOption(userID, "arousaldisplay") == "desc") {
-            let arousaltext = getArousalDescription(inspectuserID);
-            let arousalchangetext = getArousalChangeDescription(inspectuserID)
+        if (getOption(serverID, userID, "arousaldisplay") == "desc") {
+            let arousaltext = getArousalDescription(serverID, inspectuserID);
+            let arousalchangetext = getArousalChangeDescription(serverID, inspectuserID)
             bartext = `\n\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
         }
         if (getOption(userID, "arousaldisplay") == "numbers") {
-            bartext = `\n\n💞 Arousal: **${Math.round(getArousal(inspectuserID) * 10) / 10}** of **${Math.round(calcDenialCoefficient(inspectuserID) * 10)}** (${Math.round((getArousal(inspectuserID) / ((calcDenialCoefficient(inspectuserID) * 10))) * 100) / 1}%)`
+            bartext = `\n\n💞 Arousal: **${Math.round(getArousal(serverID, inspectuserID) * 10) / 10}** of **${Math.round(calcDenialCoefficient(serverID, inspectuserID) * 10)}** (${Math.round((getArousal(serverID, inspectuserID) / ((calcDenialCoefficient(serverID, inspectuserID) * 10))) * 100) / 1}%)`
         }
     }
     // ****************** 
