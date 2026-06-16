@@ -1,0 +1,29 @@
+#include <w0.h>
+#include <w1.h>
+
+char w2[] = "w3";
+
+int get_w2() {
+    int w4 = 0;
+    char w5[16];
+
+    printf("Enter w2: ");
+    scanf("%s", w5);
+
+    if(strcmp(w5, w2) == 0)
+        w4 = 1;
+
+    return w4;
+}
+
+int main(int argc, char** argv) { 
+    int w6 = get_w2();
+
+    if (w6 == 0) {
+        printf("w7\n");
+        return 0;
+    }
+    
+    printf("w8!\n");
+    return 0;
+}

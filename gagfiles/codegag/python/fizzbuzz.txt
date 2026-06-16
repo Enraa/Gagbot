@@ -1,0 +1,23 @@
+def w0(n):
+    w1 = [] 
+
+    for w2 in range(1, n + 1):
+        w3 = "" 
+
+        if w2 % 3 == 0:
+            w3 += "w4"
+            
+        if w2 % 5 == 0:
+            w3 += "w5"
+
+        if not w3:
+            w3 += str(w2)
+		
+        w1.append(w3) 
+    return w1
+
+if __name__ == "__main__":
+    w6 = 30
+    w7 = w0(w6) 
+    for str_ in w7:
+        print(str_, end=" ")

@@ -1,0 +1,15 @@
+import hashlib
+
+def w0(w1):
+   w2 = hashlib.sha256()
+
+   with open(w1,'rb') as w4:
+       w5 = 0
+       while w5 != b'':
+           w5 = w4.read(1024)
+           w2.update(w5)
+
+   return w2.hexdigest()
+
+w6 = w0("w7.exe")
+print(w6)

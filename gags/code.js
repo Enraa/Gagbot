@@ -104,23 +104,38 @@ const fillerwords = [
 	"schema",
 ];
 
-const determineLang = () => {
-	let timepermin = Math.min(performance.now() / 60000, 1) % 3;
-	timepermin = 0; // For testing
+// passing the intensity for selecting the language with 5 being random
+// code looks complicated but its basically to handle adding extra languages 
+// without needing to change the code, apart from just adding to the list
+const determineLang = (intensity) => {
+	let langlist = ["javascript", "bash", "python", "C"]
 	let lang;
-	if (timepermin == 0) {
-		lang = "javascript";
-	} else if (timepermin == 1) {
-		lang = "powershell";
-	} else if (timepermin == 2) {
-		lang = "python";
-	}
+	let langselect;
 
+	// handle random case
+	if (intensity == 5) {
+		langselect = Math.floor(Math.random() * langlist.length)
+	}
+	// handle selected language case
+	else{
+		// check if we need value mapping at all
+		if (langlist.length == 9) {
+			// shift fuckery due to 5 being taken for random 
+			let shift = 1
+			if(intensity > 5){
+				shift = 2
+			}
+			langselect = intensity - shift
+		}
+		else {
+			langselect = Math.floor(((intensity - 1) * langlist.length) / 10) 
+		}
+	}
+	lang = langlist[langselect]
 	return lang;
 };
 
-const codingConstruct = () => {
-	let lang = determineLang();
+const codingConstruct = (lang) => {
 	// Grab all the command files from the commands directory
 	let txtsPath = path.join(__dirname, `./../gagfiles/codegag/${lang}`);
 	let txts = fs.readdirSync(txtsPath).filter((file) => file.endsWith(".txt"));
@@ -133,9 +148,10 @@ const codingConstruct = () => {
 };
 
 const garbleText = (text, parent, intensity) => {
+	let lang = determineLang(intensity);
 	let newtextparts = text.split(" ");
 	let outtext = "";
-	let codingconstruct = codingConstruct();
+	let codingconstruct = codingConstruct(lang);
 	let wrestended = false;
 	let wnum = 0;
 	for (let i = 0; i < 100; i++) {
@@ -155,7 +171,7 @@ const garbleText = (text, parent, intensity) => {
 	}
 	newtextparts.splice(0, wnum); // Slice off the first few elements
 	codingconstruct = codingconstruct.replaceAll(`wrest`, newtextparts.join(" "));
-	return "```" + determineLang() + "\n" + codingconstruct + "```";
+	return "```" + lang + "\n" + codingconstruct + "```";
 };
 
 exports.garbleText = garbleText;
