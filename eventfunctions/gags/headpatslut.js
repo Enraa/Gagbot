@@ -1,4 +1,4 @@
-const { getOption } = require("../../functions/configfunctions");
+const { getOption } = require("../../functions/getters/config/getOption");
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
