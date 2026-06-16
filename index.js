@@ -241,6 +241,7 @@ client.on("clientReady", async () => {
     if (process.recentmessages == undefined) { process.recentmessages = {} }
     try {
         await client.application.fetch();
+        await client.guilds.fetch();
         console.log(`Bot is owned by user ID ${client?.application?.owner.id}`)
         console.log(`Executable Functions: [${Array.from(commands.keys()).join(", ")}]`);
         console.log(`Modals: [${Array.from(modalHandlers.keys()).join(", ")}]`);

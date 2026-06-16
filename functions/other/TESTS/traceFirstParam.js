@@ -12,15 +12,9 @@
  * ##### Returns true if it is a server ID, crashes if it's not. 
  *******/
 function traceFirstParam(serverID) {
-    if (process.serversjoined == undefined) { process.serversjoined = [] }
-    if (!process.serversjoined.includes(serverID)) {
-        process.client.guilds.fetch(serverID).then((g) => {
-            process.serversjoined.push(serverID);
-        })
-        .catch((err) => {
-            console.error(`Invalid server ID ${serverID}!`)
-            throw new Error(err)
-        }) 
+    if (!process.client.guilds.cache.get(serverID)) {
+        console.error(`Invalid server ID ${serverID}!`)
+        throw new Error(err)
     }
 }
 

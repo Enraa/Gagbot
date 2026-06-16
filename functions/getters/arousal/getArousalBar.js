@@ -16,7 +16,7 @@ const ORGASM_LIMIT = 10;
 function getArousalBar(serverID, userID) {
     traceFirstParam(arguments[0]);
     const arousal = getArousal(serverID, userID);
-    const denialCoefficient = calcDenialCoefficient(userID);
+    const denialCoefficient = calcDenialCoefficient(serverID, userID);
     const orgasmLimit = ORGASM_LIMIT;
     const filledbar = "■";
     const unfilled = "□";

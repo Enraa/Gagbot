@@ -21,7 +21,7 @@ function getArousalDescription(serverID, user) {
 	if (getOption(user, "arousalsystem") === 0) return null; // Disabled Arousal system
 
 	const arousal = getArousal(serverID, user);
-	const denialCoefficient = calcDenialCoefficient(user);
+	const denialCoefficient = calcDenialCoefficient(serverID, user);
 	const orgasmLimit = ORGASM_LIMIT * denialCoefficient;
 	const orgasmProgress = arousal / orgasmLimit;
 	// these numbers are mostly arbitrary
