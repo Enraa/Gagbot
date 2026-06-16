@@ -15,6 +15,7 @@ const { getLockedWearable } = require("../../functions/getters/wearable/getLocke
 const { getWearable } = require("../../functions/getters/wearable/getWearable.js");
 const { getWearableName } = require("../../functions/getters/wearable/getWearableName.js");
 const { messageSendChannel } = require("../../functions/messagefunctions.js");
+const { addArousal } = require("../../functions/setters/arousal/addArousal.js");
 const { assignChastity } = require("../../functions/setters/chastity/assignChastity.js");
 const { assignChastityBra } = require("../../functions/setters/chastity/assignChastityBra.js");
 const { assignCollar } = require("../../functions/setters/collar/assignCollar.js");

@@ -1,4 +1,5 @@
-const { convertPronounsText } = require("./../functions/pronounfunctions.js");
+const { convertPronounsText } = require("../functions/other/convertPronounsText");
+
 
 const garbleText = (text, parent, intensity) => {
 	let inputNumber = text.length;
