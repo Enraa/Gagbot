@@ -5508,7 +5508,7 @@ const getTextGeneric = (type, data_in) => {
             `USER_TAG pulls out a remote and presses the flashing red button on it, causing TARGET_TAG to "eep!" as it buzzes a small shock to TARGET_THEM!`,
         ],
         remotecontrolshock_other_painful: [
-            `USER_TAG grins deviously as USER_THEY press a shiny red button on a remote. Immediately, TARGET_TAG yelps in pain as TARGET_THEIR collar delivers a nasty shock!`,
+            `USER_TAG grins deviously as USER_THEY pressUSER_ES a shiny red button on a remote. Immediately, TARGET_TAG yelps in pain as TARGET_THEIR collar delivers a nasty shock!`,
             `The remote's red button starts flashing, so USER_TAG decides to click it as one does with such buttons. TARGET_TAG gasps and a tear falls down TARGET_THEIR cheek as TARGET_THEIR collar shocks TARGET_THEM!`,
             {
                 required: (t) => {
