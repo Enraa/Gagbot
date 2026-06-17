@@ -28,7 +28,7 @@ async function tick(userID, data) {
             addArousal(userID, (0.2 * getUserVar(userID, "aphroCount")))
             setUserVar(userID, "aphroCount", getUserVar(userID, "aphroCount") + 1)
 
-            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(userID, "possessiveDeterminer")} Chocolate Gag a little bit, releasing a little bit of aphrodisiac~!`, process.recentmessages[userID])
+            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(userID, "possessiveDeterminer")} Chocolate Gag a little bit. The chocolate was particularly tasty and makes ${getPronouns(userID, "object")} a little warm inside!`, process.recentmessages[userID])
         }
         else {
             // Clear Gag and Dissolve Timer
@@ -39,7 +39,7 @@ async function tick(userID, data) {
             setUserVar(userID, "aphroCount", undefined)
 
             deleteGag(userID, "chocolate~")
-            messageSendChannel(`<@${userID}>'s Chocolate Gag has dissolved away with a final burst of aphrodisiac!`, process.recentmessages[userID])
+            messageSendChannel(`<@${userID}>'s Chocolate Gag has dissolved away, leaving haunting memories of how good it tasted and how much ${getPronouns(userID, "subject")} want${(getPronouns(userID, "subject") == "they") ? "" : "s"} to touch down there...`, process.recentmessages[userID])
         }
     }
 }

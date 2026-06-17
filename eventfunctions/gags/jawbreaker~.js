@@ -20,7 +20,7 @@ async function tick(userID, data) {
             // Get Intensity and push decremented version
             let oldIntensity = getGag(userID, "jawbreaker~").intensity
             assignGag(userID, "jawbreaker~", oldIntensity - 1)
-            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(userID, "possessiveDeterminer")} Jawbreaker Gag a little bit!`, process.recentmessages[userID])
+            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(userID, "possessiveDeterminer")} Jawbreaker Gag a little bit! The sacchrine flavors remind ${getPronouns(userID, "object")} of wonderful things!`, process.recentmessages[userID])
         }
         else {
             // Clear Gag and Dissolve Timer
@@ -29,7 +29,7 @@ async function tick(userID, data) {
             // Apply Burst of Arousal
             addArousal(userID, 10)
 
-            messageSendChannel(`<@${userID}>'s Jawbreaker Gag dissolves away releasing the sweet aphrodisiac held in its centre!`, process.recentmessages[userID])
+            messageSendChannel(`<@${userID}>'s Jawbreaker Gag dissolves away, but the sweet juices of the candy linger on ${getPronouns(userID, "possessiveDeterminer")} tongue, along with a desire to share them with someone!`, process.recentmessages[userID])
         }
     }
 }

@@ -84,7 +84,8 @@ const garbleText = (text, parent, intensity) => {
 
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
-exports.choicename = "\"Jawbreaker\" Gag";
+exports.choicename = "Sensual Jawbreaker Gag";
+exports.tags = ["drug"];
 
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {
