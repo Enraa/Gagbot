@@ -11,6 +11,8 @@ const collartypes = [
 	{ name: "Hardlight Collar", value: "collar_hardlight" },
 	{ name: "Runic Collar", value: "collar_runic" },
 	{ name: "Tall Posture Collar", value: "collar_posture" },
+    { name: "Latex Posture Collar", value: "collar_posturelatex", tags: ["latex"] },
+    { name: "Latex Neck Corset", value: "collar_neckcorsetlatex", tags: ["latex"] },
 	{ name: "Ruffled Maid Collar", value: "collar_maid" },
 	{ name: "Nevermere Tracking Collar", value: "collar_nevermere", tags: ["leather"] },
 	{ name: "Steel Collar", value: "collar_steel", tags: ["metal"] },
