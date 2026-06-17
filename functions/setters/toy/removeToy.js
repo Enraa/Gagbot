@@ -1,4 +1,4 @@
-const getBaseChastity = require("../../getters/chastity/getBaseChastity");
+const { getBaseChastity } = require("../../getters/chastity/getBaseChastity");
 const { markForSave } = require("../../other/markForSave");
 
 /**********

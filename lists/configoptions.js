@@ -642,8 +642,8 @@ const configoptions = {
 					name: "Off",
 					helptext: "*Arousal disabled*",
 					select_function: (userID) => {
-                        clearArousal(userID)
                         removeToy(userID, userID, undefined, true);
+                        clearArousal(userID)
 					},
 					value: 0,
 					style: ButtonStyle.Danger,
@@ -745,7 +745,7 @@ const configoptions = {
 			menutype: "choice",
 			default: "disabled",
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].fumbling == "disabled")
+                return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			}, // if true, button is greyed out
 		},
 		"blessed-luck": {
@@ -776,7 +776,7 @@ const configoptions = {
 			menutype: "choice",
 			default: "enabled",
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].fumbling == "disabled")
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			},
 		},
 		frustration: {
@@ -857,7 +857,7 @@ const configoptions = {
 			menutype: "choice",
 			default: 0,
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].fumbling == "disabled")
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			},
 		},
         findkeymode: {
@@ -1022,7 +1022,7 @@ const configoptions = {
 			menutype: "choice",
 			default: 1.0,
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].arousalsystem == 0)
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].arousalsystem == 0))
 			},
 		},
         arousaldisplay: {

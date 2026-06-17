@@ -63,7 +63,7 @@ module.exports = {
             let targetuser = interaction.options.getUser("user") ?? interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(targetuser.id)?.mainconsent) {
-				await handleConsent(interaction, headwearuser.id);
+				await handleConsent(interaction, targetuser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
