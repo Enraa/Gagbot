@@ -1,0 +1,14 @@
+#!/bin/bash
+
+w0=90
+
+w1=$(df / | grep / | awk ‘{ print $5 }’ | sed ‘s/%//g’)
+
+if [ “$w1 -gt “$w0 ]; then
+
+  echo "w2: w3"
+
+  echo "w5 ${w1}%."
+
+  mail -s 'w6' w7@w8.com <<< "w9 ${CURRENT_USAGE}%"
+fi

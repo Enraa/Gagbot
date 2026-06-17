@@ -76,7 +76,20 @@ module.exports = {
 			let gagintensity = interaction.options.getNumber("intensity") ? interaction.options.getNumber("intensity") : 5;
 			let currentgag = getGag(interaction.guildId, gaggeduser.id, gagtype);
 			let gagname = process.gagtypes[gagtype]?.choicename;
-			let oldgagname = process.gagtypes[getGagLast(interaction.guildId, gaggeduser.id)]?.choicename;
+
+            let tags = getUserTags(gaggeduser.id);
+            let i = process.gagtypes[gagtype]
+            let blocked = false;
+            tags.forEach((t) => {
+                if (i && i.tags && i.tags.includes(t) && (gaggeduser.id != interaction.user.id)) {
+                    interaction.reply({ content: `${gaggeduser}'s content settings forbid this item - ${i.name}!`, flags: MessageFlags.Ephemeral })
+                    blocked = true;
+                    return;
+                }
+            })
+            if (blocked) { return } // GO AWAY
+
+			let oldgagname = process.gagtypes[getGagLast(gaggeduser.id)]?.choicename;
 			let intensitytext = "loosely";
 			if (intensitytext == "loosely") {
 				if (gagintensity > 2) {

@@ -76,7 +76,7 @@ module.exports = {
 			}
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
 			if (!getConsent(targetuser.id)?.mainconsent) {
-				await handleConsent(interaction, interaction.user.id);
+				await handleConsent(interaction, targetuser.id);
 				return;
 			}
 			

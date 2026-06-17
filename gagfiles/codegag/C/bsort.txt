@@ -1,0 +1,30 @@
+#include <stdio.h>
+
+void w0(int w1[], int n)
+{
+    int w2;
+    for (int w3 = 0; w3 < n - 1; w3++)
+    {
+        for (int w4 = 0; w4 < n - w3 - 1; w4++)
+        {
+            if (w1[w4] > w1[w4 + 1])
+                w2 = w1[w4];
+                w1[w4] = w1[w4 + 1];
+                w1[w4 + 1] = w2;
+        }
+    }
+}
+
+int main()
+{
+    int w5[] = {42, 1337, 4141, 144};
+    int n = sizeof(w5) / sizeof(w5[0]);
+
+    w0(w5, n);
+
+    for (int w6 = 0; w6 < n; w6++)
+        printf("%d ", w5[w6]);
+    
+    printf("w7 w8");
+    return 0;
+}

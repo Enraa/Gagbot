@@ -18,7 +18,17 @@ let wearabletypes = [
     { name: "Eyes", value: "eyes", category: "Body Part", colorable: true, uniqueColors: ["Starry", "Stellar", "Cosmic", "Fiery", "Verdant", "Angelic", "Cybernetic", "Snake", "Cat", "Demon", "Synthetic", "Heart"],  },
     { name: "Shell", value: "wearshell", category: "Body Part", colorable: true, uniqueColors: ["Porcelain", "Cybernetic", "Titanium", "Molten"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
     { name: "Frame", value: "wearframe", category: "Body Part", colorable: true, uniqueColors: ["Porcelain", "Cybernetic", "Titanium", "Molten"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    
+    { name: "Short Hair", value: "hair_short", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "Medium Hair", value: "hair_medium", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "Long Hair", value: "hair_long", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "Shoulder-length Hair", value: "hair_shoulderlength", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "Waist-length Hair", value: "hair_waistlength", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "Tight Hairbun", value: "hair_hairbun", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "Ponytail", value: "hair_ponytail", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "Twintails", value: "hair_twintails", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+    { name: "French-braid", value: "hair_frenchbraid", category: "Body Part", colorable: true, uniqueColors: ["Ombre", "Shimmering", "Iridescent", "Pitch Black", "Amber", "Platinum"] },
+
+
 	// Hats
 	{ name: "Stylish Hat", value: "stylish_hat", category: "Hat", colorable: true },
 	{ name: "Top Hat", value: "top_hat", category: "Hat", colorable: true },

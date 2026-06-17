@@ -1,12 +1,12 @@
-const { setUserVar } = require("../functions/setters/config/setUserVar.js");
-const { ballGagCharMaps } = require("./ball/ballCharMap.js");
-
 /***************************
- * Jawbreaker Gag for Gagbot
+ * Chocolate Gag for Gagbot
  * ~ Pyra - Derived from Ball Gag by DollLia
  ***************************/
 
 // Character maps stored in an array in a separate file for code cleanliness
+const { setUserVar } = require("../functions/setters/config/setUserVar.js");
+const { ballGagCharMaps } = require("./ball/ballCharMap.js");
+
 const isAllCaps = (text) => {
 	//(words[x].match(/[A-Z]/) && !words[x].match(/[a-z]/)) ? true : false;
 	return text == text.toLowerCase().toUpperCase() && /[A-Z]/g.test(text);
@@ -84,7 +84,8 @@ const garbleText = (text, parent, intensity) => {
 
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
-exports.choicename = "Jawbreaker Gag";
+exports.choicename = "Sensual Chocolate Gag";
+exports.tags = ["drug"];
 
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {

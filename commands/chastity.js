@@ -66,7 +66,11 @@ module.exports = {
 			let chastitykeyholder = interaction.user;
 			let braorbelt = interaction.options.getString("braorbelt") ?? "chastitybelt";
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(chastityuser.id)?.mainconsent) {
+				await handleConsent(interaction, chastityuser.id);
+				return;
+			}
+            if (!getConsent(interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}

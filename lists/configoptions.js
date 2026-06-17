@@ -642,8 +642,8 @@ const configoptions = {
 					name: "Off",
 					helptext: "*Arousal disabled*",
 					select_function: (userID) => {
-                        clearArousal(userID)
                         removeToy(userID, userID, undefined, true);
+                        clearArousal(userID)
 					},
 					value: 0,
 					style: ButtonStyle.Danger,
@@ -745,7 +745,7 @@ const configoptions = {
 			menutype: "choice",
 			default: "disabled",
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].fumbling == "disabled")
+                return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			}, // if true, button is greyed out
 		},
 		"blessed-luck": {
@@ -776,7 +776,7 @@ const configoptions = {
 			menutype: "choice",
 			default: "enabled",
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].fumbling == "disabled")
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			},
 		},
 		frustration: {
@@ -857,7 +857,7 @@ const configoptions = {
 			menutype: "choice",
 			default: 0,
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].fumbling == "disabled")
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			},
 		},
         findkeymode: {
@@ -1022,7 +1022,7 @@ const configoptions = {
 			menutype: "choice",
 			default: 1.0,
 			disabled: (userID) => {
-				return (process.configs && process.configs[userID] && process.configs[userID].arousalsystem == 0)
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].arousalsystem == 0))
 			},
 		},
         arousaldisplay: {
@@ -2165,6 +2165,44 @@ const configoptions = {
         "wearabletags-chastity": {
             name: "Chastity",
             desc: "Restraints which restrict access to genitals",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-drug": {
+            name: "Intoxication",
+            desc: "Restraints which may have an intoxicating effect",
             choices: [
 				{
 					name: "None",
