@@ -2,4 +2,4 @@
 // But some are going to use extra properties! 
 exports.name = "Gasmask (Aphrodisiacs)";
 
-exports.tags = ["latex", "gasmask"];
+exports.tags = ["latex", "gasmask", "drug"];
