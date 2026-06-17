@@ -1,9 +1,11 @@
-const { getOption } = require("../../functions/configfunctions")
 const { messageSendChannel } = require("../../functions/messagefunctions")
-const { getUserVar, setUserVar } = require("../../functions/usercontext")
-const { getGag, assignGag, deleteGag} = require("../../functions/gagfunctions.js");
-const { getPronouns } = require("../../functions/pronounfunctions.js");
-const { addArousal, getArousal } = require("../../functions/vibefunctions");
+const { getPronouns } = require("../../functions/getters/config/getPronouns.js");
+const { addArousal } = require("../../functions/setters/arousal/addArousal.js");
+const { getGag } = require("../../functions/getters/gag/getGag.js");
+const { assignGag } = require("../../functions/setters/gag/assignGag.js");
+const { deleteGag } = require("../../functions/setters/gag/removeGag.js");
+const { getUserVar } = require("../../functions/getters/config/getUserVar.js");
+const { setUserVar } = require("../../functions/setters/config/setUserVar.js");
 
 const DISSOLVE_RATE_MS = 60000;
 
