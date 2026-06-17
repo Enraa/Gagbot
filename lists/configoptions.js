@@ -3,7 +3,6 @@ const { removeToy } = require("../functions/setters/toy/removeToy")
 const { setOption } = require("../functions/setters/config/setOption")
 const { ButtonStyle } = require("discord.js");
 const { markForSave } = require("../functions/other/markForSave");
-const { getOption } = require("../functions/getters/config/getOption");
 
 
 /***********
@@ -746,7 +745,7 @@ const configoptions = {
 			menutype: "choice",
 			default: "disabled",
 			disabled: (userID) => {
-                return (getOption(userID, "fumbling") == "disabled")
+                return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			}, // if true, button is greyed out
 		},
 		"blessed-luck": {
@@ -777,7 +776,7 @@ const configoptions = {
 			menutype: "choice",
 			default: "enabled",
 			disabled: (userID) => {
-				return (getOption(userID, "fumbling") == "disabled")
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			},
 		},
 		frustration: {
@@ -858,7 +857,7 @@ const configoptions = {
 			menutype: "choice",
 			default: 0,
 			disabled: (userID) => {
-				return (getOption(userID, "fumbling") == "disabled")
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].fumbling == "disabled"))
 			},
 		},
         findkeymode: {
@@ -1023,7 +1022,7 @@ const configoptions = {
 			menutype: "choice",
 			default: 1.0,
 			disabled: (userID) => {
-				return (getOption(userID, "arousalsystem") == 0)
+				return (process.configs && process.configs.users && process.configs.users[userID] && (process.configs.users[userID].arousalsystem == 0))
 			},
 		},
         arousaldisplay: {

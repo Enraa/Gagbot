@@ -1,4 +1,5 @@
 const { getUserVar } = require("../functions/getters/config/getUserVar");
+const { setUserVar } = require("../functions/setters/config/setUserVar");
 
 const honorifictitles = [
 	// Oh god its hard to type these without caps
