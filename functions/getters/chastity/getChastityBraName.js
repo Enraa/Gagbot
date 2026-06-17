@@ -22,7 +22,7 @@ function getChastityBraName(serverID, userID, chastityname) {
 	if (chastityname) {
 		return convertchastityarr[chastityname];
 	} else {
-        return getProcessVariable(serverID, userID, "chastitybra").chastitytype;
+        return convertchastityarr[getProcessVariable(serverID, userID, "chastitybra").chastitytype];
     }
 }
 

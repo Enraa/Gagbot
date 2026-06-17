@@ -16,10 +16,10 @@ const STUTTER_LIMIT = 1;
  ***********/
 function getVibeEquivalent(serverID, user) {
     traceFirstParam(arguments[0]);
-	if (getOption(user, "arousalsystem") != 2) return calcStaticVibeIntensity(user) * 2;
+	if (getOption(serverID, user, "arousalsystem") != 2) return calcStaticVibeIntensity(serverID, user) * 2;
 
 	let intensity = getArousal(serverID, user);
-	if (intensity >= STUTTER_LIMIT) intensity += calcFrustration(user) / 20;
+	if (intensity >= STUTTER_LIMIT) intensity += calcFrustration(serverID, user) / 20;
 	return intensity;
 }
 

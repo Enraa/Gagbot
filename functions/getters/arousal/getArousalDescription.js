@@ -18,7 +18,7 @@ const RESET_LIMIT = 0.1;
  **********/
 function getArousalDescription(serverID, user) {
     traceFirstParam(arguments[0]);
-	if (getOption(user, "arousalsystem") === 0) return null; // Disabled Arousal system
+	if (getOption(serverID, user, "arousalsystem") === 0) return null; // Disabled Arousal system
 
 	const arousal = getArousal(serverID, user);
 	const denialCoefficient = calcDenialCoefficient(serverID, user);

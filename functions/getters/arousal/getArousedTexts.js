@@ -16,7 +16,7 @@ function getArousedTexts(serverID, user) {
     traceFirstParam(arguments[0]);
 	const texts = [];
 
-	if (getOption(user, "arousalsystem") == 2) {
+	if (getOption(serverID, user, "arousalsystem") == 2) {
 		const arousal = getProcessVariable(serverID, user, "arousal");
 		const current = arousal.arousal;
 		const change = arousal.arousal - arousal.prev;
@@ -24,7 +24,7 @@ function getArousedTexts(serverID, user) {
 			if ((min < 0 || min <= current) && (max < 0 || max >= current) && (minChange < 0 || minChange <= change) && (maxChange < 0 || maxChange >= change)) texts.push(text);
 		}
 	} else {
-		const arousal = calcStaticVibeIntensity(user);
+		const arousal = calcStaticVibeIntensity(serverID, user);
 
 		for (const [min, max, _0, _1, text] of arousedtexts) {
 			if ((min < 0 || min <= arousal) && (max < 0 || max >= arousal)) texts.push(text);

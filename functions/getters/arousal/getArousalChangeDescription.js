@@ -16,7 +16,7 @@ const ORGASM_LIMIT = 10;
  **********/
 function getArousalChangeDescription(serverID, user) {
     traceFirstParam(arguments[0]);
-	if (getOption(user, "arousalsystem") != 2) return null;
+	if (getOption(serverID, user, "arousalsystem") != 2) return null;
 
 	const arousal = getProcessVariable(serverID, user, "arousal");
 	if (!arousal) return null;
