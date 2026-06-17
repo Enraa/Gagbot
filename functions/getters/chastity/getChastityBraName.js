@@ -1,5 +1,5 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
-const { getProcessVariable } = require("../config/getProcessVariable");
+const { getChastityBra } = require("./getChastityBra");
 
 /************
  * Gets the full chastity bra name of the User ID. Optionally will get the full chastity bra name of a chastity bra by ID.
@@ -22,7 +22,7 @@ function getChastityBraName(serverID, userID, chastityname) {
 	if (chastityname) {
 		return convertchastityarr[chastityname];
 	} else {
-        return convertchastityarr[getProcessVariable(serverID, userID, "chastitybra").chastitytype];
+        return convertchastityarr[getChastityBra(serverID, userID)?.chastitytype];
     }
 }
 

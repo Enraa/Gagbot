@@ -1,5 +1,5 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
-const { getProcessVariable } = require("../config/getProcessVariable");
+const { getChastity } = require("./getChastity");
 
 /************
  * Gets the full chastity belt name of the User ID. Optionally will get the full chastity belt name of a chastity belt by ID.
@@ -15,9 +15,6 @@ const { getProcessVariable } = require("../config/getProcessVariable");
  ************/
 function getChastityName(serverID, userID, chastityname) {
     traceFirstParam(arguments[0]);
-    if (process.chastity == undefined) {
-		process.chastity = {};
-	}
 	let convertchastityarr = {};
 	for (let i = 0; i < process.autocompletes.chastitybelt.length; i++) {
 		convertchastityarr[process.autocompletes.chastitybelt[i].value] = process.autocompletes.chastitybelt[i].name;
@@ -25,7 +22,7 @@ function getChastityName(serverID, userID, chastityname) {
 	if (chastityname) {
 		return convertchastityarr[chastityname];
 	} else {
-        return convertchastityarr[getProcessVariable(serverID, userID, "chastitybra").chastitytype];
+        return convertchastityarr[getChastity(serverID, userID)?.chastitytype];
     }
 }
 
