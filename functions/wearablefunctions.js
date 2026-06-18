@@ -295,7 +295,7 @@ let wearabletypes = [
 	{ name: "Pumps", value: "pumps", colorable: true, category: "Footwear" },
 	{ name: "Anklets", value: "anklets", colorable: true, category: "Footwear", uniqueColors: ["Silver", "Gold", "Platinum", "Cobalt", "Black", "Floral", "Leafy"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Greaves", value: "greaves", colorable: true, category: "Footwear", uniqueColors: ["Steel", "Cobalt", "Black"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-    { name: "Fluffy Paw Socks", value: "socks_fluffypaw", colorable: true, category: "Footwear" },
+    { name: "Fluffy Paw Socks", value: "socks_fluffypaw", colorable: true, category: "Footwear", uniqueColors: ["Oversized"] },
     { name: "Socks", value: "socks", colorable: true, category: "Footwear" },
     { name: "Latex Socks", value: "socks_latex", colorable: true, category: "Footwear" },
     { name: "Satin Socks", value: "socks_satin", colorable: true, category: "Footwear" },
