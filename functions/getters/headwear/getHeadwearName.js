@@ -4,6 +4,7 @@ const { getBaseHeadwear } = require("./getBaseHeadwear");
 /**********
  * Gets the full name of a piece of headwear
  * 
+ * - (server ID) serverID - The server this is running on
  * - (user ID) userID - The user wearing the headgear
  * - (string) headnname - The string ID of the headgear
  * ---
@@ -11,7 +12,7 @@ const { getBaseHeadwear } = require("./getBaseHeadwear");
  * ---
  * #### This needs cleanup to remove the userID param as it is not used!
  **********/
-function getHeadwearName(userID, headnname) {
+function getHeadwearName(serverID, userID, headnname) {
     traceFirstParam(arguments[0]);
     if (process.headwear == undefined) {
         process.headwear = {};

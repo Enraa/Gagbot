@@ -1,4 +1,5 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getProcessVariable } = require("../config/getProcessVariable");
 
 /*******
  * Gets the protected headgear (/item protect) for the user.
@@ -9,10 +10,7 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  *******/
 function getLockedHeadgear(userID) {
     traceFirstParam(arguments[0]);
-    if (process.headwear == undefined) {
-		process.headwear = {};
-	}
-	return process.headwear[userID]?.locked ? process.headwear[userID]?.locked : [];
+    return getProcessVariable(serverID, userID, "headwear")?.locked ?? []
 }
 
 exports.getLockedHeadgear = getLockedHeadgear;

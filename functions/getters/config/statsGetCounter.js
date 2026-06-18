@@ -12,7 +12,7 @@ const { getProcessVariable } = require("./getProcessVariable");
  **********/
 function statsGetCounter(serverID, user, countername) {
     traceFirstParam(arguments[0]);
-    return getProcessVariable(serverID, user, "userstats")[countername];
+    return (getProcessVariable(serverID, user, "userstats") && getProcessVariable(serverID, user, "userstats")[countername]);
 }
 
 exports.statsGetCounter = statsGetCounter;

@@ -12,7 +12,7 @@ const { getProcessVariable } = require("./getProcessVariable");
  **********/
 function getUserVar(serverID, user, key) {
     traceFirstParam(arguments[0]);
-	return getProcessVariable(serverID, user, "usercontext")[key];
+	return (getProcessVariable(serverID, user, "usercontext") && getProcessVariable(serverID, user, "usercontext")[key]);
 }
 
 exports.getUserVar = getUserVar;
