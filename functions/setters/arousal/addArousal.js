@@ -23,10 +23,10 @@ function addArousal(serverID, user, change) {
         console.log(`ERROR - Attempting to add a NaN arousal to user ID ${user}`)
         change = 0; // set it to 0
     }
-    process.arousal[user].arousal += change;
+    process.arousal[serverID][user].arousal += change;
     if (isNaN(getArousal(serverID, user))) {
         console.log(`ERROR - ${user} is somehow not a number!`)
-        process.arousal[user].arousal = 0;
+        process.arousal[serverID][user].arousal = 0;
     }
     getCombinedTraits(serverID, user).afterArousalChange({ userID: user, prevArousal: (getArousal(serverID, user) - change), currArousal: getArousal(serverID, user) });
     return getArousal(serverID, user);

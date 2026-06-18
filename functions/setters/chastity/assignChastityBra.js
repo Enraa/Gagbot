@@ -6,6 +6,7 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 /**********
  * Adds or modifies a chastity bra on the user.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The person wearing the chastity bra
  * - (user id) keyholder - The person putting the chastity bra on them
  * - (string) namedchastity? - The chastity item ID, if any
@@ -13,13 +14,16 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  * ---
  * ##### Returns true if successful, false if failed to put it on
  **********/
-function assignChastityBra(user, keyholder, namedchastity, force = false) {
+function assignChastityBra(serverID, user, keyholder, namedchastity, force = false) {
     traceFirstParam(arguments[0]);
 	if (process.chastitybra == undefined) {
 		process.chastitybra = {};
 	}
+    if (process.chastitybra[serverID] == undefined) {
+		process.chastitybra[serverID] = {};
+	}
     // Get the current and new bases to reference
-    let oldchastitybase = getChastityBra(user) ? getBaseChastity(getChastityBra(user).chastitytype) : undefined
+    let oldchastitybase = getChastityBra(serverID, user) ? getBaseChastity(getChastityBra(serverID, user).chastitytype) : undefined
     let newchastitybase = getBaseChastity(namedchastity ?? "bra_silver")
 
     // Stop this function immediately if the current chastity belt can't be removed. 
@@ -30,7 +34,7 @@ function assignChastityBra(user, keyholder, namedchastity, force = false) {
     if (oldchastitybase) { oldchastitybase.onUnequip({ userID: user, keyholderID: keyholder }) }
 
     // Assign the new chastity belt to the user
-	process.chastitybra[user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity, stateligible: true };
+	process.chastitybra[serverID][user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity, stateligible: true };
 
     // Call the on equip for the new chastity belt!
     newchastitybase.onEquip({ userID: user, keyholderID: keyholder })

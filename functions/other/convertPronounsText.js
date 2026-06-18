@@ -39,18 +39,18 @@ const convertPronounsText = (text, data) => {
         outtext = ``;
     }
 
-	let user = { subject: getPronouns(interactionuser.id, "subject"), object: getPronouns(interactionuser.id, "object"), possessive: getPronouns(interactionuser.id, "possessive"), possessiveDeterminer: getPronouns(interactionuser.id, "possessiveDeterminer"), reflexive: getPronouns(interactionuser.id, "reflexive"), subjectIs: getPronouns(interactionuser.id, "subjectIs"), subjectWill: getPronouns(interactionuser.id, "subjectWill") };
+	let user = { subject: getPronouns(data.serverID, interactionuser.id, "subject"), object: getPronouns(data.serverID, interactionuser.id, "object"), possessive: getPronouns(data.serverID, interactionuser.id, "possessive"), possessiveDeterminer: getPronouns(data.serverID, interactionuser.id, "possessiveDeterminer"), reflexive: getPronouns(data.serverID, interactionuser.id, "reflexive"), subjectIs: getPronouns(data.serverID, interactionuser.id, "subjectIs"), subjectWill: getPronouns(data.serverID, interactionuser.id, "subjectWill") };
 
 	let isDoll = false;
-	if ((getOption(interactionuser.id, "dollforcedit") == "enabled" && getHeadwear(interactionuser.id).find((headwear) => DOLLVISORS.includes(headwear))) || getHeadwear(interactionuser.id).find((headwear) => headwear === "dollmaker_visor")) {
+	if ((getOption(data.serverID, interactionuser.id, "dollforcedit") == "enabled" && getHeadwear(data.serverID, interactionuser.id).find((headwear) => DOLLVISORS.includes(headwear))) || getHeadwear(data.serverID, interactionuser.id).find((headwear) => headwear === "dollmaker_visor")) {
 		((user.subject = "it"), (user.object = "it"), (user.possessive = "its"), (user.possessiveDeterminer = "its"), (user.reflexive = "itself"), (user.subjectIs = "it's"), (user.subjectWill = "it'll"));
 		isDoll = true;
 	}
 
-	let target = { subject: getPronouns(targetuser.id, "subject"), object: getPronouns(targetuser.id, "object"), possessive: getPronouns(targetuser.id, "possessive"), possessiveDeterminer: getPronouns(targetuser.id, "possessiveDeterminer"), reflexive: getPronouns(targetuser.id, "reflexive"), subjectIs: getPronouns(targetuser.id, "subjectIs"), subjectWill: getPronouns(targetuser.id, "subjectWill") };
+	let target = { subject: getPronouns(data.serverID, targetuser.id, "subject"), object: getPronouns(data.serverID, targetuser.id, "object"), possessive: getPronouns(data.serverID, targetuser.id, "possessive"), possessiveDeterminer: getPronouns(data.serverID, targetuser.id, "possessiveDeterminer"), reflexive: getPronouns(data.serverID, targetuser.id, "reflexive"), subjectIs: getPronouns(data.serverID, targetuser.id, "subjectIs"), subjectWill: getPronouns(data.serverID, targetuser.id, "subjectWill") };
 
 	let targetDoll = false;
-	if (getOption(targetuser.id, "dollforcedit") == "enabled" && getHeadwear(targetuser.id).find((headwear) => DOLLVISORS.includes(headwear))) {
+	if (getOption(data.serverID, targetuser.id, "dollforcedit") == "enabled" && getHeadwear(data.serverID, targetuser.id).find((headwear) => DOLLVISORS.includes(headwear))) {
 		((target.subject = "it"), (target.object = "it"), (target.possessive = "its"), (target.possessiveDeterminer = "its"), (target.reflexive = "itself"), (target.subjectIs = "it's"), (target.subjectWill = "it'll"));
 		targetDoll = true;
 	}
@@ -88,8 +88,8 @@ const convertPronounsText = (text, data) => {
         if (isDoll) {
             praiseobject = "doll";
         }
-		if (getOption(data.interactionuser.id, "praiseobject") != "follow") {
-            praiseobject = getOption(data.interactionuser.id, "praiseobject");
+		if (getOption(data.serverID, data.interactionuser.id, "praiseobject") != "follow") {
+            praiseobject = getOption(data.serverID, data.interactionuser.id, "praiseobject");
         }
         return praiseobject;
 	});
@@ -155,8 +155,8 @@ const convertPronounsText = (text, data) => {
         if (targetDoll) {
             praiseobject = "doll";
         }
-		if (getOption(data.targetuser.id, "praiseobject") != "follow") {
-            praiseobject = getOption(data.targetuser.id, "praiseobject");
+		if (getOption(data.serverID, data.targetuser.id, "praiseobject") != "follow") {
+            praiseobject = getOption(data.serverID, data.targetuser.id, "praiseobject");
         }
         return praiseobject;
 	});
@@ -199,10 +199,10 @@ const convertPronounsText = (text, data) => {
 };
 
 exports.convertPronounsText = convertPronounsText;
-exports.they = (user, capitalise = false) => getPronouns(user, "subject", capitalise);
-exports.them = (user, capitalise = false) => getPronouns(user, "object", capitalise);
-exports.theirs = (user, capitalise = false) => getPronouns(user, "possessive", capitalise);
-exports.their = (user, capitalise = false) => getPronouns(user, "possessiveDeterminer", capitalise);
-exports.themself = (user, capitalise = false) => getPronouns(user, "reflexive", capitalise);
-exports.theyre = (user, capitalise = false) => getPronouns(user, "subjectIs", capitalise);
-exports.theyll = (user, capitalise = false) => getPronouns(user, "subjectWill", capitalise);
+exports.they = (serverID, user, capitalise = false) => getPronouns(serverID, user, "subject", capitalise);
+exports.them = (serverID, user, capitalise = false) => getPronouns(serverID, user, "object", capitalise);
+exports.theirs = (serverID, user, capitalise = false) => getPronouns(serverID, user, "possessive", capitalise);
+exports.their = (serverID, user, capitalise = false) => getPronouns(serverID, user, "possessiveDeterminer", capitalise);
+exports.themself = (serverID, user, capitalise = false) => getPronouns(serverID, user, "reflexive", capitalise);
+exports.theyre = (serverID, user, capitalise = false) => getPronouns(serverID, user, "subjectIs", capitalise);
+exports.theyll = (serverID, user, capitalise = false) => getPronouns(serverID, user, "subjectWill", capitalise);

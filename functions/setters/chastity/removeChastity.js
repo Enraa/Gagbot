@@ -6,18 +6,19 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 /**********
  * Removes a chastity belt from the user.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The person wearing the chastity belt
  * - (user id) keyholder - The person removing the chastity belt from them
  * - (boolean) force - If true, forcibly removes this chastity belt
  * ---
  * ##### Returns true if successful, false if failed to remove
  **********/
-function removeChastity(user, keyholder, force = false) {
+function removeChastity(serverID, user, keyholder, force = false) {
     traceFirstParam(arguments[0]);
 	if (process.chastity == undefined) {
 		process.chastity = {};
     }
-    let chastitybase = getBaseChastity(getChastity(user)?.chastitytype ?? "belt_silver")
+    let chastitybase = getBaseChastity(getChastity(serverID, user)?.chastitytype ?? "belt_silver")
 
 	if ((chastitybase && !chastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) return false;
 

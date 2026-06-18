@@ -1,4 +1,5 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getProcessVariable } = require("./getProcessVariable");
 
 /********************************************
  * Get a user's pronouns in typical slash format - Ex: "she/her"

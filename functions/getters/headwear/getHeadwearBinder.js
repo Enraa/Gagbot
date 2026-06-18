@@ -1,4 +1,5 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getProcessVariable } = require("../config/getProcessVariable");
 
 /********
  * Gets the person who put a piece of headwear on the user

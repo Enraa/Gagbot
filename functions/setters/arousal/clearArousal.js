@@ -4,13 +4,14 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 /*********
  * Sets the user's arousal to 0
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The person to remove arousal from
  * ---
  * ##### *No return value*
  *********/
-function clearArousal(user) {
+function clearArousal(serverID, user) {
     traceFirstParam(arguments[0]);
-	process.arousal[user] = { arousal: 0, prev: 0, timestamp: Date.now() };
+	process.arousal[serverID][user] = { arousal: 0, prev: 0, timestamp: Date.now() };
 	markForSave("arousal");
 }
 
