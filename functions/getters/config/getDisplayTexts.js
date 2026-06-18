@@ -45,7 +45,8 @@ async function getDisplayTexts(serverID, userID, inspectuserID) {
     let lappeople = [];
     // Attempt to get the current guild member object for the user. This might have unintended consequences
     // however I'd have to retool the main function to narrow down to one guild. Too much work currently. 
-    let inspectusername = (process.client.guilds.cache.map(guild => guild.members.cache.get(inspectuserID)).find(m => m !== undefined))?.displayName;
+    let guild = process.client.guilds.cache.get(serverID);
+    let inspectusername = 
     Object.keys(process.heavy).forEach((k) => {
         let lapped = false;
         if (!Array.isArray(process.heavy[k])) {
