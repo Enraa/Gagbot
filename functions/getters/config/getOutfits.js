@@ -1,19 +1,15 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getProcessVariable } = require("./getProcessVariable");
 
 /*******
  * Gets all of the outfits for the user.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) userID - The user whose outfits to retrieve
  *******/
-function getOutfits(userID) {
+function getOutfits(serverID, userID) {
     traceFirstParam(arguments[0]);
-	if (process.outfits == undefined) {
-		process.outfits = {};
-	}
-	if (process.outfits[userID] == undefined) {
-		process.outfits[userID] = [];
-	}
-	return process.outfits[userID];
+	return getProcessVariable(serverID, userID, "outfits");
 }
 
 exports.getOutfits = getOutfits;

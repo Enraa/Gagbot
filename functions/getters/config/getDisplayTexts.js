@@ -7,6 +7,7 @@ const { getArousalDescription } = require("../arousal/getArousalDescription");
 const { getHeavy } = require("../heavy/getHeavy");
 const { getToys } = require("../toy/getToys");
 const { getOption } = require("./getOption");
+const { getProcessVariable } = require("./getProcessVariable");
 const { getUserVar } = require("./getUserVar");
 
 /*************
@@ -46,42 +47,43 @@ async function getDisplayTexts(serverID, userID, inspectuserID) {
     // Attempt to get the current guild member object for the user. This might have unintended consequences
     // however I'd have to retool the main function to narrow down to one guild. Too much work currently. 
     let guild = process.client.guilds.cache.get(serverID);
-    let inspectusername = 
-    Object.keys(process.heavy).forEach((k) => {
-        let lapped = false;
-        if (!Array.isArray(process.heavy[k])) {
-            console.log("Not an array")
-            console.log(process.heavy[k])
-        }
-        else {
-            process.heavy[k].forEach((h) => {
-                // If its a lap and starts with the inspect user's name, then it's OURS
-                if ((h.type === "dominants_lap") && (h.displayname.startsWith(inspectusername ?? "undefined"))) {
-                    lappeople.push(k)
-                }
-            })
-        }
-    })
+    let inspectusername = guild.members.get(inspectuserID).displayname
+    if (process.heavy && process.heavy[serverID]) {
+        Object.keys(process.heavy[serverID]).forEach((k) => {
+            if (!Array.isArray(process.heavy[serverID][k])) {
+                console.log("Not an array")
+                console.log(process.heavy[serverID][k])
+            }
+            else {
+                process.heavy[serverID][k].forEach((h) => {
+                    // If its a lap and starts with the inspect user's name, then it's OURS
+                    if ((h.type === "dominants_lap") && (h.displayname.startsWith(inspectusername ?? "undefined"))) {
+                        lappeople.push(k)
+                    }
+                })
+            }
+        })  
+    }
     if (lappeople.length > 0) {
         bartext = `${bartext}\n\n🫂 Subs in Lap: ${lappeople.map((m) => `<@${m}>`).join(", ")}`
     }
     // ****************** 
 
     // ****************** Shared Gasmask --- Can't currently test this because linked was disabled for now. 
-    if (process.headwear && process.headwear[inspectuserID] && process.headwear[inspectuserID].sharedbreathhose) {
-        bartext = `${bartext}\n\n${process.emojis.gasmask} Sharing Breath with: <@${process.headwear[inspectuserID].sharedbreathhose}>`
+    if (getProcessVariable(serverID, inspectuserID, "headwear").sharedbreathhose) {
+        bartext = `${bartext}\n\n${process.emojis.gasmask} Sharing Breath with: <@${getProcessVariable(serverID, inspectuserID, "headwear").sharedbreathhose}>`
     } 
     // ****************** 
 
     // ****************** Headpat Battery
-    if (getToys(inspectuserID).find((t) => t.type == "vibe_headpatbattery")) {
-        bartext = `${bartext}\n\n🔋 Headpat Vibrator Battery: **${Math.round(getUserVar(inspectuserID, "headpatvibecharge") * 100)}%**`
+    if (getToys(serverID, inspectuserID).find((t) => t.type == "vibe_headpatbattery")) {
+        bartext = `${bartext}\n\n🔋 Headpat Vibrator Battery: **${Math.round(getUserVar(serverID, inspectuserID, "headpatvibecharge") * 100)}%**`
     }
     // ******************
 
-    // ****************** Headpat Battery
-    if (getHeavy(inspectuserID, "windupclockwork")) {
-        bartext = `${bartext}\n\n🕰️ Wind-up Key Tension: **${Math.round(getUserVar(inspectuserID, "windupcharge") * 100)}%**`
+    // ****************** Windup Clockwork
+    if (getHeavy(serverID, inspectuserID, "windupclockwork")) {
+        bartext = `${bartext}\n\n🕰️ Wind-up Key Tension: **${Math.round(getUserVar(serverID, inspectuserID, "windupcharge") * 100)}%**`
     }
     // ******************
 
