@@ -1,8 +1,10 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getProcessVariable } = require("../config/getProcessVariable");
 
 /**********
  * Gets all of the toys that a user is wearing
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The user wearing the toys
  * ---
  * ##### Returns an array of toy objects. All toys have the following:
@@ -10,11 +12,9 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  * - intensity: The intensity of the toy 1-20
  * - origbinder: The user ID who put the toy on the user
  **********/
-function getToys(user) {
+function getToys(serverID, user) {
     traceFirstParam(arguments[0]);
-    if (process.toys == undefined) { process.toys = {} }
-    if (process.toys[user] == undefined) { process.toys[user] = [] }
-    return process.toys[user];
+    return getProcessVariable(serverID, user, "toys");
 }
 
 exports.getToys = getToys;

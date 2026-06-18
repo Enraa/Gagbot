@@ -4,11 +4,12 @@ const { getProcessVariable } = require("../config/getProcessVariable");
 /*******
  * Gets the protected headgear (/item protect) for the user.
  * 
+ * - (server id) serverID - The server this is running on 
  * - (user id) userID - The person with protected headgear
  * ---
  * ##### Returns an array of string item IDs designated as protected with /item protect
  *******/
-function getLockedHeadgear(userID) {
+function getLockedHeadgear(serverID, userID) {
     traceFirstParam(arguments[0]);
     return getProcessVariable(serverID, userID, "headwear")?.locked ?? []
 }

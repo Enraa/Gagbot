@@ -4,6 +4,7 @@ const { getToys } = require("./getToys");
 /**********
  * Gets a specific toy that a user is wearing
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The user wearing the toys
  * - (string) toytype - The item ID of the toy to get
  * ---
@@ -14,7 +15,7 @@ const { getToys } = require("./getToys");
  **********/
 function getSpecificToy(user, toytype) {
     traceFirstParam(arguments[0]);
-    return getToys(user).find((toy) => toy.type == toytype);
+    return getToys(serverID, user).find((toy) => toy.type == toytype);
 }
 
 exports.getSpecificToy = getSpecificToy;
