@@ -694,7 +694,7 @@ async function handleExtremeRestraint(serverID, user, target, type, restraint) {
         let origrestraint = restraint
         let extrahelptextoverride;
         // Gag Harness
-        if (restraint.startsWith("gagharness")) { 
+        if (restraint && restraint.startsWith("gagharness")) { 
             extrahelptextoverride = configoptions["Extreme"][`extreme-mask-gagharness`]?.prompttext
             restraint = "gagharness"
         }
