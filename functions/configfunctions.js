@@ -27,31 +27,18 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 		keys.forEach(async (k) => {
 			if (configoptions[menuset][k].menutype == "choice") {
 				let buttonsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.helptext}`))
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.guildId, interaction.user.id, k))?.helptext}`))
 					.setButtonAccessory((button) =>
 						button
 							.setCustomId(`config_pageopt_${menuset}_${page}_${k}`)
-							.setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.name ?? "Undefined")
-							.setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.style ?? ButtonStyle.Danger)
-							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),
+							.setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.guildId, interaction.user.id, k))?.name ?? "Undefined")
+							.setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.guildId, interaction.user.id, k))?.style ?? ButtonStyle.Danger)
+							.setDisabled(configoptions[menuset][k].disabled(interaction.guildId, interaction.user.id)),
 					);
 				pagecomponents.push(buttonsection);
 			} else if (configoptions[menuset][k].menutype == "choice_textentry") {
-				/*else if (configoptions[menuset][k].menutype == "choice_extreme") {
-                let buttonsection = new SectionBuilder()
-                    .addTextDisplayComponents(
-                        (textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.helptext}`)
-                    )
-                    .setButtonAccessory((button) =>
-                        button.setCustomId(`config_pageopt_${menuset}_${k}`)
-                            .setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.name ?? "Undefined")
-                            .setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id,k))?.style ?? ButtonStyle.Danger)
-                            .setDisabled(configoptions[menuset][k].disabled(interaction.user.id))
-                    )
-                pagecomponents.push(buttonsection)
-            }*/
-				let helpertext = `${configoptions[menuset][k].choices[0].helptext}${configoptions[menuset][k].textvaluedisplay(getOption(interaction.user.id, k))}`;
-				if (getOption(interaction.user.id, k) == undefined) {
+				let helpertext = `${configoptions[menuset][k].choices[0].helptext}${configoptions[menuset][k].textvaluedisplay(getOption(interaction.guildId, interaction.user.id, k))}`;
+				if (getOption(interaction.guildId, interaction.user.id, k) == undefined) {
 					helpertext = `${configoptions[menuset][k].choices[0].helptextnone}`;
 				}
 				let buttonsection = new SectionBuilder()
@@ -61,16 +48,16 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 							.setCustomId(`config_tentrypageopt_${menuset}_${k}_${page}`)
 							.setLabel(configoptions[menuset][k].choices[0].name ?? "Undefined")
 							.setStyle(configoptions[menuset][k].choices[0].style ?? ButtonStyle.Danger)
-							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),
+							.setDisabled(configoptions[menuset][k].disabled(interaction.guildId, interaction.user.id)),
 					);
 				pagecomponents.push(buttonsection);
             } else if (configoptions[menuset][k].menutype == "choice_userentry") {
-                let userarr = getOption(interaction.user.id, k) ?? [];
+                let userarr = getOption(interaction.guildId, interaction.user.id, k) ?? [];
 				let helpertext = `No Users`
                 if (userarr.length > 0) {
                     helpertext = `${userarr.map((u) => `<@${u}>`).join(", ")}`;
                 }
-				if (getOption(interaction.user.id, k) == undefined) {
+				if (getOption(interaction.guildId, interaction.user.id, k) == undefined) {
 					helpertext = `${configoptions[menuset][k].choices[0].helptextnone}`;
 				}
 				let buttonsection = new SectionBuilder()
@@ -80,19 +67,19 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 							.setCustomId(`config_uentrypageopt_${menuset}_${k}_${page}`)
 							.setLabel(configoptions[menuset][k].choices[0].name ?? "Undefined")
 							.setStyle(configoptions[menuset][k].choices[0].style ?? ButtonStyle.Danger)
-							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),
+							.setDisabled(configoptions[menuset][k].disabled(interaction.guildId, interaction.user.id)),
 					);
 				pagecomponents.push(buttonsection);
 			}
 			if (configoptions[menuset][k].menutype == "choice_dollcolor") {
 				let buttonsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\`\`\`ansi\n[1;${getOption(interaction.user.id, k)}m${getOption(interaction.user.id, "dollvisorname")}: [0mIt is speaking.\`\`\``))
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\`\`\`ansi\n[1;${getOption(interaction.guildId, interaction.user.id, k)}m${getOption(interaction.guildId, interaction.user.id, "dollvisorname")}: [0mIt is speaking.\`\`\``))
 					.setButtonAccessory((button) =>
 						button
 							.setCustomId(`config_pageopt_${menuset}_${page}_${k}`)
-							.setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.name ?? "Undefined")
-							.setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.user.id, k))?.style ?? ButtonStyle.Danger)
-							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),
+							.setLabel(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.guildId, interaction.user.id, k))?.name ?? "Undefined")
+							.setStyle(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.guildId, interaction.user.id, k))?.style ?? ButtonStyle.Danger)
+							.setDisabled(configoptions[menuset][k].disabled(interaction.guildId, interaction.user.id)),
 					);
 				pagecomponents.push(buttonsection);
 			} else if (configoptions[menuset][k].menutype == "choice_server_refreshcmd") {
@@ -264,7 +251,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 		Object.keys(configoptions).forEach((k) => {
 			if ((k != "Server") && (k != "Bot")) {
                 if (k == "Pishock Config") {
-                    if ((getOption(interaction.user.id, "shockermodel") == "pishock")) {
+                    if ((getOption(interaction.guildId, interaction.user.id, "shockermodel") == "pishock")) {
                         let opt = new StringSelectMenuOptionBuilder().setLabel(k).setValue(`menuopt_${k}`);
 				        menupageoptionsarr.push(opt);
                     }
