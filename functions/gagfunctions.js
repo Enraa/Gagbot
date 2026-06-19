@@ -25,7 +25,7 @@ const { getPFP } = require("./getters/config/getPFP.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
 const { getAlternateName } = require("./getters/config/getAlternateName.js");
 const { markForSave } = require("./other/markForSave.js");
-const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { setUserVar } = require("./setters/config/setUserVar.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];

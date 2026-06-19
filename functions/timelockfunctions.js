@@ -237,9 +237,18 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
             }
             messageSendChannel(getTextGeneric(`return_key_${type}`, data), process.recentmessages[wearerid]) // process.recentmessages will *always* exist. 
             if (process[type] && process[type][wearerid] && process[type][wearerid].keyholder == process.client.user.id) {
-                if (type == "collar") { transferCollarKey(wearerid, wearerid) }
-                if (type == "chastity") { transferChastityKey(wearerid, wearerid) }
-                if (type == "chastitybra") { transferChastityBraKey(wearerid, wearerid) }
+                if (type == "collar") { 
+                    transferCollarKey(wearerid, wearerid) 
+                    markForSave("collar");
+                }
+                if (type == "chastity") { 
+                    transferChastityKey(wearerid, wearerid) 
+                    markForSave("chastity");
+                }
+                if (type == "chastitybra") { 
+                    transferChastityBraKey(wearerid, wearerid) 
+                    markForSave("chastitybra");
+                }
             }
             delete process.heldkeytimers[`${wearerid}_${type}`]
         }

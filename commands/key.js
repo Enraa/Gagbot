@@ -1174,7 +1174,15 @@ module.exports = {
                     discardKey(wearertodiscard.id, interaction.user.id, "chastity bra");
                 }
                 else if (chosenrestrainttoclone == "collar") {
-                    data.textdata.c1 = getBaseCollar(getCollar(wearertodiscard.id)?.collartype ?? `collar_leather`).name
+                    // Why the fuck is .collartype ever storing a string value named "null"!?
+                    let collartype = getCollar(wearertodiscard.id).collartype
+                    if (collartype == "null") {
+                        collartype = `collar_leather`
+                        data.textdata.c1 = `collar`
+                    }
+                    else {
+                        data.textdata.c1 = getBaseCollar(collartype).name
+                    }
                     discardKey(wearertodiscard.id, interaction.user.id, "collar");
                 }
 

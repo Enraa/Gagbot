@@ -34,6 +34,7 @@ const { getGags } = require("./getters/gag/getGags.js");
 const { getWearable } = require("./getters/wearable/getWearable.js");
 const { getToys } = require("./getters/toy/getToys.js");
 const { configoptions } = require("../lists/configoptions.js");
+const { getChastityName } = require("./getters/chastity/getChastityName.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 
 // Generates a consent button which the user will have to agree to.

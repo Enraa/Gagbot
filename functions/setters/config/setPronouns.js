@@ -1,4 +1,5 @@
 const { markForSave } = require("../../other/markForSave");
+const { pronounsMap } = require("../../pronounfunctions");
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { setOption } = require("./setOption");
 
