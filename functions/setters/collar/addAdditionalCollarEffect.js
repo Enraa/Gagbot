@@ -5,17 +5,18 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 /******
  * Adds an additional Collar effect to the user's collar, if they are wearing a collar. 
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The user wearing the collar.
  * - (string) type - The collar effect to add
  * ---
  * ##### *No return value*
  *******/
-function addAdditionalCollarEffect(user, type) {
+function addAdditionalCollarEffect(serverID, user, type) {
     traceFirstParam(arguments[0]);
     try {
-        if (getCollar(user)) {
-            if (!getCollar(user).additionalcollars) { getCollar(user).additionalcollars = [] }
-            getCollar(user).additionalcollars.push(type)
+        if (getCollar(serverID, user)) {
+            if (!getCollar(serverID, user).additionalcollars) { getCollar(serverID, user).additionalcollars = [] }
+            getCollar(serverID, user).additionalcollars.push(type)
             markForSave("collar");
         }
     }

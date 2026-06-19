@@ -12,26 +12,32 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  * - (boolean) force - If true, forcibly removes this chastity belt
  * ---
  * ##### Returns true if successful, false if failed to remove
+ * ---
+ * ##### Fix the timestamp so that it determines the longer timestamp when recording longest chastity!
  **********/
 function removeChastity(serverID, user, keyholder, force = false) {
     traceFirstParam(arguments[0]);
 	if (process.chastity == undefined) {
 		process.chastity = {};
     }
+    if (process.chastity[serverID] == undefined) {
+		process.chastity[serverID] = {};
+    }
     let chastitybase = getBaseChastity(getChastity(serverID, user)?.chastitytype ?? "belt_silver")
 
-	if ((chastitybase && !chastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) return false;
+	if ((chastitybase && !chastitybase.canUnequip({ serverID: serverID, userID: user, keyholderID: keyholder })) && !force) return false;
 
-	chastitybase.onUnequip({ userID: user });
+	chastitybase.onUnequip({ serverID: serverID, userID: user });
 
-    if (process.chastity[user]?.stateligible) {
+    if (process.chastity[serverID][user]?.stateligible) {
         if (process.userstats == undefined) { process.userstats = {} }
-        if (process.userstats[user] == undefined) { process.userstats[user] = {} }
-        process.userstats[user].chastitywornduration = (Date.now() - process.chastity[user].timestamp)
+        if (process.userstats[serverID] == undefined) { process.userstats = {} }
+        if (process.userstats[serverID][user] == undefined) { process.userstats[serverID][user] = {} }
+        process.userstats[serverID][user].chastitywornduration = (Date.now() - process.chastity[serverID][user].timestamp)
         markForSave("userstats");
     }
 
-	delete process.chastity[user];
+	delete process.chastity[serverID][user];
 	markForSave("chastity");
 
 	return true;
