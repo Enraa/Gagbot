@@ -5,18 +5,19 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 /********
  * Changes the primary keyholder for a user's collar. Removes cloned keys.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) lockedUser - The person wearing the collar
  * - (user id) newKeyholder - The next person to hold the key
  * ---
  * ##### Returns true if successful, false if lockedUser is not wearing a collar
  ********/
-function transferCollarKey(lockedUser, newKeyholder) {
+function transferCollarKey(serverID, lockedUser, newKeyholder) {
     traceFirstParam(arguments[0]);
-	if (getCollar(lockedUser)) {
-		if (getCollar(lockedUser).keyholder != newKeyholder) {
-			getCollar(lockedUser).keyholder = newKeyholder;
+	if (getCollar(serverID, lockedUser)) {
+		if (getCollar(serverID, lockedUser).keyholder != newKeyholder) {
+			getCollar(serverID, lockedUser).keyholder = newKeyholder;
 			// Erase cloned keys in this process!
-			getCollar(lockedUser).clonedKeyholders = [];
+			getCollar(serverID, lockedUser).clonedKeyholders = [];
 			markForSave("collar");
 			return true;
 		}

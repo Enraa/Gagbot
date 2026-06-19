@@ -5,6 +5,7 @@ const { statsAddCounter } = require("../config/statsAddCounter");
 /**********
  * Adds or modifies a gag on the user.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) userID - The person wearing the gag
  * - (string) gagtype - The type of gag applied to the wearer
  * - (integer) intensity - How tight the gag is applied to the wearer
@@ -32,7 +33,7 @@ function assignGag(serverID, userID, gagtype = "ball", intensity = 5, origbinder
 	}
 	process.gags[serverID][userID].push({ gagtype: gagtype, intensity: intensity, origbinder: originalbinder });
 
-    statsAddCounter(userID, "worngags")
+    statsAddCounter(serverID, userID, "worngags")
     
     markForSave("gags");
     markForSave("userstats");

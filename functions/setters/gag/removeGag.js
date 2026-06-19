@@ -4,13 +4,14 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 /**********
  * Removes a gag from the user.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) userID - The person wearing the gag
  * - (string) specificgag - The type of gag to remove
  * - (boolean) force - If true, forcibly removes the gag even past the headgear
  * ---
  * ##### *No return value*
  **********/
-function deleteGag(userID, specificgag, force = false) {
+function deleteGag(serverID, userID, specificgag, force = false) {
     traceFirstParam(arguments[0]);
 	if (process.gags == undefined) {
 		process.gags = {};
@@ -18,7 +19,7 @@ function deleteGag(userID, specificgag, force = false) {
 	// Remove all gags if none is specified.
 	if (!specificgag && process.gags[serverID] && process.gags[serverID][userID]) {
         let lockedheadgears = [];
-        if (process.headwear[serverID] && process.headwear[serverID][userID]) { lockedheadgears = Object.keys(process.headwear[userID]) }
+        if (process.headwear[serverID] && process.headwear[serverID][userID]) { lockedheadgears = Object.keys(process.headwear[serverID][userID]) }
         if ((lockedheadgears.length <= 1) || force) {
             // They dont have anything locked on their head, business as usual. 
             process.gags[serverID][userID].forEach((g) => {

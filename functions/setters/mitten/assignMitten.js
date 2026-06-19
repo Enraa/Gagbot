@@ -4,27 +4,32 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 /**********
  * Adds or modifies mittens on the user.
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) userID - The person wearing the mittens
  * - (string) mittentype - The type of mittens applied to the wearer
  * - (user id) origbinder - Who's adding/modifying the mittens
  * ---
  * ##### *No return value*
  **********/
-function assignMitten(userID, mittentype, origbinder) {
+function assignMitten(serverID, userID, mittentype, origbinder) {
     traceFirstParam(arguments[0]);
 	if (process.mitten == undefined) {
 		process.mitten = {};
 	}
-	let originalbinder = process.mitten[userID]?.origbinder;
-	process.mitten[userID] = {
+    if (process.mitten[serverID] == undefined) {
+		process.mitten[serverID] = {};
+	}
+	let originalbinder = process.mitten[serverID][userID]?.origbinder;
+	process.mitten[serverID][userID] = {
 		mittenname: mittentype,
 		origbinder: originalbinder ?? origbinder, // Preserve original binder until it is removed.
 	};
 
     if (process.userstats == undefined) { process.userstats = {} }
-    if (process.userstats[userID] == undefined) { process.userstats[userID] = {} }
+    if (process.userstats[serverID] == undefined) { process.userstats[serverID] = {} }
+    if (process.userstats[serverID][userID] == undefined) { process.userstats[serverID][userID] = {} }
 
-    process.userstats[userID].wornmittens = (process.userstats[userID].wornmittens ?? 0) + 1;
+    process.userstats[serverID][userID].wornmittens = (process.userstats[serverID][userID].wornmittens ?? 0) + 1;
     
 	markForSave("mitten");
     markForSave("userstats");
