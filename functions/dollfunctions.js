@@ -189,18 +189,19 @@ function checkDollification(serverID, userID) {
 	}
 	let isDoll = false;
 	// Dollify a valid doll if needed
-	if (isValidDoll(userID)) {
+	if (isValidDoll(serverID, userID)) {
 		// If user is NOT a doll, make them a doll.
-		if (!process.dolls[userID]) {
-			process.dolls[userID] = { violations: 0, punishmentLevel: 0, goodDollStreak: 0 };
+        if (process.dolls[serverID] == undefined) { process.dolls[serverID] = {} }
+		if (!process.dolls[serverID][userID]) {
+			process.dolls[serverID][userID] = { violations: 0, punishmentLevel: 0, goodDollStreak: 0 };
 			// Save the doll to the database.
 			markForSave("dolls");
 		}
 		isDoll = true;
 		// Undollify if needed
 	} else {
-		if (process.dolls[userID]) {
-			delete process.dolls[userID];
+		if (process.dolls[serverID][userID]) {
+			delete process.dolls[serverID][userID];
 			// Save the doll to the database.
 			markForSave("dolls");
 		}
@@ -215,7 +216,7 @@ function isValidDoll(serverID, userID) {
     traceFirstParam(arguments[0]);
 	// TODO - Control harness + collar required for dollification?
 
-	return getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear));
+	return getHeadwear(serverID, userID).find((headwear) => DOLLVISORS.includes(headwear));
 }
 
 /**********************************************
@@ -227,7 +228,10 @@ function rewardDoll(serverID, userID) {
 	if (process.dolls == undefined) {
 		process.dolls = {};
 	}
-	let doll = process.dolls[userID];
+    if (process.dolls[serverID] == undefined) {
+		process.dolls[serverID] = {};
+	}
+	let doll = process.dolls[serverID][userID];
 	if (doll) {
 		doll.goodDollStreak++;
 		// Reward the doll
@@ -255,15 +259,15 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 	// Handle Dollification
 	let modified = modifiedmessage;
 	let outtext = outtextin;
-	let dollified = checkDollification(msg.author.id);
+	let dollified = checkDollification(msg.guild.id, msg.author.id);
 	let dollIDDisplay;
 	let dollID = ``;
-	let dollIDOverride = getOption(msg.author.id, "dollvisorname");
-	let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34;
-	let dollProtocol = !(getOption(msg.author.id, "dollforcedprotocol") == "disabled"); // Enabled for any level that isn't disabled
-    let dollProtocolLevel = getOption(msg.author.id, "dollforcedprotocol");
-    let dollPunishThresh = getOption(msg.author.id, "dollpunishthresh");
-    let dollmaker = getHeadwear(msg.member.id).find((headwear) => headwear === "dollmaker_visor");
+	let dollIDOverride = getOption(msg.guild.id, msg.author.id, "dollvisorname");
+	let dollIDColor = getOption(msg.guild.id, msg.author.id, "dollvisorcolor") ?? 34;
+	let dollProtocol = !(getOption(msg.guild.id, msg.author.id, "dollforcedprotocol") == "disabled"); // Enabled for any level that isn't disabled
+    let dollProtocolLevel = getOption(msg.guild.id, msg.author.id, "dollforcedprotocol");
+    let dollPunishThresh = getOption(msg.guild.id, msg.author.id, "dollpunishthresh");
+    let dollmaker = getHeadwear(msg.guild.id, msg.member.id).find((headwear) => headwear === "dollmaker_visor");
     // This creates a circular, so, access the variable directly. Oh well. 
     let eldritchcorrupted = getGags(msg.guild.id, msg.member.id).find((gag) => gag === "eldritch");
 	let dollProtocolViolations = 0;
@@ -513,9 +517,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 }
 
 function textGarbleDrone(text, parent, msg, msgTreeMods) {
-    if (getHeadwear(msg.member.id).includes("drone_visor")) {
+    if (getHeadwear(msg.guild.id, msg.member.id).includes("drone_visor")) {
         //let supplieddronespeech = (text.startsWith(`${getOption(msg.member.id, "dronevisorname")}`))
-        let outtext = `${getOption(msg.member.id, "dronevisorname")} :: Code ${(msg.type == "19") ? "250" : "050"} :: ${(msg.type == "19") ? "Response" : "Statement"}, ${text}`
+        let outtext = `${getOption(msg.guild.id, msg.member.id, "dronevisorname")} :: Code ${(msg.type == "19") ? "250" : "050"} :: ${(msg.type == "19") ? "Response" : "Statement"}, ${text}`
         msgTreeMods.modified = true;
         return ("`" + outtext + "`")
     }
