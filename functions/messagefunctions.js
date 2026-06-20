@@ -206,6 +206,7 @@ const splitMessage = (text, inputRegex = null) => {
 	return output;
 };
 
+// Im MOSTLY sure this function can be retired now.
 function runMessageEvents(data) {
 	// Gags
 	if (process.gags) {
@@ -288,5 +289,3 @@ exports.loadEmoji = loadEmoji;
 exports.splitMessage = splitMessage;
 
 exports.messageSendChannel = messageSendChannel;
-
-exports.runMessageEvents = runMessageEvents;
