@@ -143,7 +143,7 @@ function corsetLimitWords(text, parent, user, msgModified, serverID) {
 
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
 	let globalMultiplier = scriptLevel > 0 ? 2 : 1;
-	const corset = calcBreath(user);
+	const corset = calcBreath(serverID, user);
 	const basecorset = getBaseCorset(corset.type);
 
 	// Tightlaced bottoms must only whisper
@@ -234,7 +234,7 @@ function corsetLimitWords(text, parent, user, msgModified, serverID) {
 		}
 	}
 
-	basecorset.afterUsingBreath({ userID: user, corset: corset });
+	basecorset.afterUsingBreath({ serverID: serverID, userID: user, corset: corset });
 
 	let outtext = (silence ? chars.slice(0, silenceIdx + 1) : chars).join("");
 
@@ -254,21 +254,22 @@ function corsetLimitWords(text, parent, user, msgModified, serverID) {
 // calculates current breath and returns corset. Does not save to file. (server id, user id)
 function calcBreath(serverID, user) {
     traceFirstParam(arguments[0]);
-	const corset = getCorset(user);
+	const corset = getCorset(serverID, user);
 	const basecorset = getBaseCorset(corset.type);
 	if (!corset) return null;
 	if (corset.breath < basecorset.getMinBreath({ tightness: corset.tightness })) corset.breath = basecorset.getMinBreath({ tightness: corset.tightness });
 	const now = Date.now();
 	let recoveryCoefficient = 1;
 	if (process.gags == undefined) process.gags = {};
-	if (process.gags[user] && process.gags[user].length > 0) {
-        process.gags[user].forEach((g) => {
+    if (process.gags[serverID] == undefined) process.gags[serverID] = {};
+	if (process.gags[serverID][user] && process.gags[serverID][user].length > 0) {
+        process.gags[serverID][user].forEach((g) => {
             if (process.gagtypes && process.gagtypes[g.gagtype]?.breathRecovery) {
                 recoveryCoefficient *= process.gagtypes[g.gagtype]?.breathRecovery(user, g.intensity ?? 5)
             }
         })
 	}
-    let userheadwear = getHeadwear(user);
+    let userheadwear = getHeadwear(serverID, user);
     if (userheadwear.includes("gasmask") || userheadwear.includes("gasmasklinked") || userheadwear.includes("gasmask_hornygas") || userheadwear.includes("gasmask_truthgas")) {
         // It is harder to breathe in a gasmask or share air
         recoveryCoefficient = recoveryCoefficient * 0.7 
@@ -290,7 +291,7 @@ function tryExpendBreath(serverID, user, exertion) {
 	const corset = calcBreath(serverID, user);
 	const basecorset = getBaseCorset(corset.type ?? "corset_leather");
 	corset.breath -= exertion;
-	basecorset.afterUsingBreath({ userID: user, corset: corset });
+	basecorset.afterUsingBreath({ serverID: serverID, userID: user, corset: corset });
 	markForSave("corset");
 	return corset.breath > 0;
 }
