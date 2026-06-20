@@ -1,6 +1,8 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
-const { remindPronouns, pronounsMap } = require("../../pronounfunctions");
+const { pronounsMap } = require("../../../lists/pronounsMap");
+const { remindPronouns } = require("../../pronounfunctions");
 const { getProcessVariable } = require("./getProcessVariable");
+
 
 /********************************************
  * Get a userID's pronoun of the necessary form.
