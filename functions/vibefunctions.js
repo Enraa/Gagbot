@@ -21,6 +21,10 @@ const { heavyDenialCoefficient } = require("./getters/heavy/getHeavyDenialCoeffi
 const { convertPronounsText } = require("./other/convertPronounsText.js");
 const { markForSave } = require("./other/markForSave.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { statsAddCounter } = require("./setters/config/statsAddCounter.js");
+const { statsGetCounter } = require("./getters/config/statsGetCounter.js");
+const { statsSetCounter } = require("./setters/config/statsSetCounter.js");
+const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -367,9 +371,9 @@ function stutterText(msg, text, intensity, arousedtexts) {
 	let newtextparts = text.split(" ");
 	let outtext = "";
 	let stuttered = false;
-	let usermod = getOption(msg.author.id, "arousaleffectpotency") ?? 1.0;
+	let usermod = getOption(msg.guild.id, msg.author.id, "arousaleffectpotency") ?? 1.0;
 	let overcorrected = 3;
-    let shockable = (process.collar && process.collar[msg.author.id] && ((process.collar[msg.author.id].collartype == "hornyshockcollar") || (process.collar[msg.author.id].additionalcollars && process.collar[msg.author.id].additionalcollars.includes("hornyshockcollar"))))
+    let shockable = (process.collar && process.collar[msg.guild.id] && process.collar[msg.guild.id][msg.author.id] && ((process.collar[msg.guild.id][msg.author.id].collartype == "hornyshockcollar") || (process.collar[msg.guild.id][msg.author.id].additionalcollars && process.collar[msg.guild.id][msg.author.id].additionalcollars.includes("hornyshockcollar"))))
 	let shocked = false;
     let shockchance = (getArousal(msg.guild.id, msg.author.id) / 100) * 0.25
 	// js is a disaster sometimes. And Im a terrible coder.
@@ -503,7 +507,7 @@ function stutterText(msg, text, intensity, arousedtexts) {
         ]
         let texts = [];
         shocks.forEach((t) => {
-            if (typeof t != "string" && t.required({ interactionuser: msg.member, targetuser: msg.member })) {
+            if (typeof t != "string" && t.required({ serverID: msg.guild.id, interactionuser: msg.member, targetuser: msg.member })) {
                 texts.push(t.text)
             }
             else {
@@ -513,8 +517,8 @@ function stutterText(msg, text, intensity, arousedtexts) {
         let chosentext = texts[Math.floor(texts.length * Math.random())];
         console.log(texts)
         console.log(chosentext);
-        addArousal(msg.author.id, 4.0);
-        outtext = `${outtext}${convertPronounsText(chosentext, { interactionuser: msg.member, targetuser: msg.member })}`
+        addArousal(msg.guild.id, msg.author.id, 4.0);
+        outtext = `${outtext}${convertPronounsText(chosentext, { serverID: msg.guild.id, interactionuser: msg.member, targetuser: msg.member })}`
     }
 
 	return { text: outtext.slice(1), stuttered: stuttered, shocked: shocked }; // Remove starting space;
@@ -525,36 +529,51 @@ function updateArousalValues() {
 		const now = Date.now();
 		const time = now * (getBotOption("bot-timetickrate") / 60000);
 		// for users in vibe or chastity, make sure they have a value in arousal
-		for (const user in process.vibe) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
-		for (const user in process.chastity) if (!process.arousal[user]) process.arousal[user] = { arousal: 0, prev: 0, timestamp: now };
-		for (const user in process.arousal) {
-			const arousal = process.arousal[user];
-			// if the timestamp is in the future the user is cooling off from an orgasm or similar and should be skipped
-			if (arousal.timestamp > now) continue;
-			const traits = getCombinedTraits(user);
-			const vibes = getToys(user);
-			// if no vibe effect, growth coefficient will be 0
-			// otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
-            let vibegains = vibes.reduce((prev, currVibe) => { 
-                let vibedata = { intensity: currVibe.intensity, userID: user }
-                return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
-            }, 0)
-            // Calculate any arousal gain purely from the chastity devices worn. Add to vibearousal change. 
-            let chastityvibegains = traits.calcVibeEffect({ userID: user });
-            let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0
-            // I want to pull away from using VIBE_SCALING here, may need to change this later. 
-            let minvibegain = traits.minVibe ? (traits.minVibe * VIBE_SCALING) : -9999
-            let maxvibegain = traits.maxVibe ? (traits.maxVibe * VIBE_SCALING) : 9999
-			let vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
-            // If the wearer is wearing Gasmask aphrodisiac, amplify the gain by 2x.
-            if (getHeadwear(user).includes("gasmask_hornygas")) { vibearousalchange = vibearousalchange * 2 }
-			const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, vibearousalchange, traits.decayCoefficient * UNBELTED_DECAY);
-			// set the values to the new ones
-			arousal.timestamp = now;
-			arousal.prev = arousal.arousal;
-			// mathematically it would never reach 0 so reset it to 0 if low enough here
-			arousal.arousal = next < RESET_LIMIT ? 0 : next;
-			traits.afterArousalChange({ userID: user, prevArousal: arousal.prev, currArousal: arousal.arousal });
+		//for (const server in process.vibe) if (!process.arousal[server]) process.arousal[server] = { arousal: 0, prev: 0, timestamp: now };
+		for (const server in process.chastity) {
+            for (const user in process.chastity[server]) {
+                if (process.arousal == undefined) { process.arousal = {} }
+                if (process.arousal[server] == undefined) { process.arousal[server] = {} };
+                if (process.arousal[server][user] == undefined) { process.arousal[server][user] = { arousal: 0, prev: 0, timestamp: now } }
+            }
+        }
+        for (const server in process.chastitybra) {
+            for (const user in process.chastitybra[server]) {
+                if (process.arousal == undefined) { process.arousal = {} }
+                if (process.arousal[server] == undefined) { process.arousal[server] = {} };
+                if (process.arousal[server][user] == undefined) { process.arousal[server][user] = { arousal: 0, prev: 0, timestamp: now } }
+            }
+        }
+		for (const server in process.arousal) {
+            for (const user in process.arousal[server]) {
+                const arousal = process.arousal[server][user];
+                // if the timestamp is in the future the user is cooling off from an orgasm or similar and should be skipped
+                if (arousal.timestamp > now) continue;
+                const traits = getCombinedTraits(server, user);
+                const vibes = getToys(server, user);
+                // if no vibe effect, growth coefficient will be 0
+                // otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
+                let vibegains = vibes.reduce((prev, currVibe) => { 
+                    let vibedata = { intensity: currVibe.intensity, userID: user, serverID: server }
+                    return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
+                }, 0)
+                // Calculate any arousal gain purely from the chastity devices worn. Add to vibearousal change. 
+                let chastityvibegains = traits.calcVibeEffect({ serverID: server, userID: user });
+                let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0
+                // I want to pull away from using VIBE_SCALING here, may need to change this later. 
+                let minvibegain = traits.minVibe ? (traits.minVibe * VIBE_SCALING) : -9999
+                let maxvibegain = traits.maxVibe ? (traits.maxVibe * VIBE_SCALING) : 9999
+                let vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
+                // If the wearer is wearing Gasmask aphrodisiac, amplify the gain by 2x.
+                if (getHeadwear(server, user).includes("gasmask_hornygas")) { vibearousalchange = vibearousalchange * 2 }
+                const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, vibearousalchange, traits.decayCoefficient * UNBELTED_DECAY);
+                // set the values to the new ones
+                arousal.timestamp = now;
+                arousal.prev = arousal.arousal;
+                // mathematically it would never reach 0 so reset it to 0 if low enough here
+                arousal.arousal = next < RESET_LIMIT ? 0 : next;
+                traits.afterArousalChange({ serverID: server, userID: user, prevArousal: arousal.prev, currArousal: arousal.arousal });
+            }
 		}
 		markForSave("arousal");
 	} catch (err) {
@@ -573,7 +592,7 @@ function updateSharedBreath() {
                     //console.log(`Adjusting horniness for ${user} to ${process.headwear[user].sharedbreathhose}`)
                     // If both people are wearing the linked gasmask AND have each other designated to share breath...
                     if (getHeadwear(serverID, user).includes("gasmasklinked") && getHeadwear(serverID, process.headwear[user].sharedbreathhose).includes("gasmasklinked") && 
-                        (user == process.headwear[process.headwear[user].sharedbreathhose].sharedbreathhose)) {  
+                        (user == process.headwear[serverID][process.headwear[user].sharedbreathhose].sharedbreathhose)) {  
                         let personA = getArousal(serverID, user)
                         let personB = getArousal(serverID, process.headwear[user].sharedbreathhose)
                         let diff = personA - personB;
@@ -581,17 +600,17 @@ function updateSharedBreath() {
                         if (diff < 0) {
                             // Person B is hornier, so person A should gain, person B should lose. 
                             addArousal(serverID, user, delta);
-                            addArousal(serverID, process.headwear[user].sharedbreathhose, -delta)
-                            console.log(`${process.headwear[user].sharedbreathhose} sharing ${delta} arousal to ${user}`)
+                            addArousal(serverID, process.headwear[serverID][user].sharedbreathhose, -delta)
+                            console.log(`${process.headwear[serverID][user].sharedbreathhose} sharing ${delta} arousal to ${user}`)
                         }
                         else {
                             // Person A is hornier, so person B should gain, person A should lose. 
-                            addArousal(serverID, process.headwear[user].sharedbreathhose, delta);
+                            addArousal(serverID, process.headwear[serverID][user].sharedbreathhose, delta);
                             addArousal(serverID, user, -delta)
-                            console.log(`${user} sharing ${delta} arousal to ${process.headwear[user].sharedbreathhose}`)
+                            console.log(`${user} sharing ${delta} arousal to ${process.headwear[serverID][user].sharedbreathhose}`)
                         }
                         processed.push(user)
-                        processed.push(process.headwear[user].sharedbreathhose)
+                        processed.push(process.headwear[serverID][user].sharedbreathhose)
                     }
                 }
             }
@@ -619,44 +638,42 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
 function tryOrgasm(serverID, user) {
     traceFirstParam(arguments[0]);
 	// always succeed if user isnt using the system
-	if (getOption(user, "arousalsystem") != 2) return true;
+	if (getOption(serverID, user, "arousalsystem") != 2) return true;
 
 	const now = Date.now();
-	const arousal = getArousal(user);
-	const denialCoefficient = calcDenialCoefficient(user);
-	const chastity = getChastity(user);
-	const traits = getCombinedTraits(user);
+	const arousal = getArousal(serverID, user);
+	const denialCoefficient = calcDenialCoefficient(serverID, user);
+	const chastity = getChastity(serverID, user);
+	const traits = getCombinedTraits(serverID, user);
 	const orgasmLimit = ORGASM_LIMIT;
 
 	if ((arousal * (RANDOM_BIAS + Math.random())) / (RANDOM_BIAS + 1) >= orgasmLimit * denialCoefficient) {
         // Increment the arousal counter
         // and also register the highest arousal, if it is higher. 
-        if (process.userstats == undefined) { process.userstats = {} }
-        if (process.userstats[user] == undefined) { process.userstats[user] = {} }
+        statsAddCounter(serverID, user, "orgasms");
 
-        process.userstats[user].orgasms = (process.userstats[user].orgasms ?? 0) + 1;
+        if ((statsGetCounter(serverID, user, "highestarousal") < arousal) || (statsGetCounter(serverID, user, "highestarousal") == undefined)) {
+            statsSetCounter(serverID, user, "highestarousal", arousal)
+        };
 
-        if (process.userstats[user].highestarousal == undefined) { process.userstats[user].highestarousal = 0 }
-        process.userstats[user].highestarousal = Math.round(Math.max(process.userstats[user].highestarousal, arousal))
+        if ((statsGetCounter(serverID, user, "highestdenial") < arousal) || (statsGetCounter(serverID, user, "highestdenial") == undefined)) {
+            statsSetCounter(serverID, user, "highestdenial", orgasmLimit * denialCoefficient)
+        };
 
-        if (process.userstats[user].highestdenial == undefined) { process.userstats[user].highestdenial = 0 }
-        process.userstats[user].highestdenial = Math.round(Math.max(process.userstats[user].highestdenial, orgasmLimit * denialCoefficient));
-
-        markForSave("userstats");
-		setArousalCooldown(user, traits.orgasmCooldown, traits.orgasmArousalLeft);
+		setArousalCooldown(serverID, user, traits.orgasmCooldown, traits.orgasmArousalLeft);
 		if (chastity) {
 			chastity.timestamp = (chastity.timestamp + now) / 2;
 			markForSave("chastity");
 		}
-		traits.onOrgasm({ userID: user, prevArousal: arousal });
+		traits.onOrgasm({ serverID: serverID, userID: user, prevArousal: arousal });
 		return true;
 	}
 
 	// failing to orgasm is frustrating
-	const penalties = frustrationPenalties.get(user) ?? [];
+	const penalties = frustrationPenalties.get(`${serverID}_${user}`) ?? [];
 	penalties.push({ timestamp: now, value: 10, decay: 1 });
-	frustrationPenalties.set(user, penalties);
-	traits.onFailedOrgasm({ userID: user, arousal: arousal });
+	frustrationPenalties.set(`${serverID}_${user}`, penalties);
+	traits.onFailedOrgasm({ serverID: serverID, userID: user, arousal: arousal });
 
 	return false;
 }
@@ -664,16 +681,16 @@ function tryOrgasm(serverID, user) {
 function setArousalCooldown(serverID, user, cooldownModifier = 1, arousalLeft = 0) {
     traceFirstParam(arguments[0]);
 	const now = Date.now();
-	process.arousal[user].timestamp = now + ORGASM_COOLDOWN * cooldownModifier;
-	const old = process.arousal[user].arousal;
-	process.arousal[user].arousal *= arousalLeft;
-	getCombinedTraits(user).afterArousalChange({ userID: user, prevArousal: old, currArousal: process.arousal[user].arousal });
+	process.arousal[serverID][user].timestamp = now + ORGASM_COOLDOWN * cooldownModifier;
+	const old = process.arousal[serverID][user].arousal;
+	process.arousal[serverID][user].arousal *= arousalLeft;
+	getCombinedTraits(serverID, user).afterArousalChange({ serverID: serverID, userID: user, prevArousal: old, currArousal: process.arousal[serverID][user].arousal });
 }
 
 // modify when more things affect it
 function calcStaticVibeIntensity(serverID, user) {
     traceFirstParam(arguments[0]);
-	const vibes = getToys(user);
+	const vibes = getToys(serverID, user);
 	if (!vibes) return 0;
 	return vibes.reduce((prev, currVibe) => {
         let vibedata = { intensity: currVibe.intensity }
@@ -684,19 +701,19 @@ function calcStaticVibeIntensity(serverID, user) {
 // modify when more things affect it
 function calcDenialCoefficient(serverID, user) {
     traceFirstParam(arguments[0]);
-	const heavy = getHeavy(user);
-	const chastity = getChastity(user);
-	if (chastity) return (heavy ? heavyDenialCoefficient(heavy.type) : 0) / 2 + getCombinedTraits(user).denialCoefficient;
+	const heavy = getHeavy(serverID, user);
+	const chastity = getChastity(serverID, user);
+	if (chastity) return (heavy ? heavyDenialCoefficient(heavy.type) : 0) / 2 + getCombinedTraits(serverID, user).denialCoefficient;
 	return heavy ? heavyDenialCoefficient(heavy.type) : 1;
 }
 
 function calcFrustration(serverID, user) {
     traceFirstParam(arguments[0]);
-	let frustrationmult = getOption(user, "frustration");
+	let frustrationmult = getOption(serverID, user, "frustration");
 	if (frustrationmult == 0) {
 		return 0;
 	}
-	const chastity = getChastity(user);
+	const chastity = getChastity(serverID, user);
 	if (!chastity) return 0;
 	const now = Date.now();
 	const hoursBelted = ((now - chastity.timestamp) / (60 * 60 * 1000)) * frustrationmult;

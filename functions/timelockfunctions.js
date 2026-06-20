@@ -237,7 +237,7 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
             interactionuser: process.client.user,
             targetuser: { id: wearerid },
         }
-        messageSendChannel(getTextGeneric("given_key", data), process.recentmessages[wearerid])
+        messageSendChannel(getTextGeneric("given_key", data), process.recentmessages[serverID][wearerid])
         let addedtime = Math.floor(Math.max(Math.random(), 0.4) * getOption(serverID, wearerid, "gagbotholdtimer")); // 40-100% of the time
         process.heldkeytimers[`${serverID}_${wearerid}_${type}`] = {
             releasetime: Date.now() + addedtime
