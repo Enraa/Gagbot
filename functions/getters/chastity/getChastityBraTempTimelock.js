@@ -12,7 +12,7 @@ function getChastityBraTempTimelock(user, UNIXTimestring) {
 	if (!UNIXTimestring) {
 		return getChastityBra(user)?.fumbled;
 	} else {
-		if (getChastityBra(user)?.unlockTime) {
+		if (getChastityBra(user)?.fumbled) {
 			return `<t:${Math.floor(getChastityBra(user)?.fumbled / 1000)}:R>`;
 		} else {
 			return null;

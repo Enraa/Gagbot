@@ -12,7 +12,7 @@ function getCollarTempTimelock(user, UNIXTimestring) {
 	if (!UNIXTimestring) {
 		return getCollar(user)?.fumbled;
 	} else {
-		if (getCollar(user)?.unlockTime) {
+		if (getCollar(user)?.fumbled) {
 			return `<t:${Math.floor(getCollar(user)?.fumbled / 1000)}:R>`;
 		} else {
 			return null;

@@ -12,7 +12,7 @@ function getChastityTempTimelock(user, UNIXTimestring) {
 	if (!UNIXTimestring) {
 		return getChastity(user)?.fumbled;
 	} else {
-		if (getChastity(user)?.unlockTime) {
+		if (getChastity(user)?.fumbled) {
 			return `<t:${Math.floor(getChastity(user)?.fumbled / 1000)}:R>`;
 		} else {
 			return null;
