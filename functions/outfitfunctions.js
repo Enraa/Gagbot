@@ -763,7 +763,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
         pagecomponents.push(new TextDisplayBuilder().setContent(collated))
     }
     else if (menu == "restraints") {
-        let headwearrestrictions = getHeadwearRestrictions(userID);
+        let headwearrestrictions = getHeadwearRestrictions(serverID, userID);
         let wearingtext = `## Regular Worn Restraints:`;
         // Gags
         if (getGag(serverID, inspectuserID)) {
@@ -771,42 +771,42 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
         }
         // Headwear
         if (getHeadwear(inspectuserID).length > 0) {
-            wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(inspectuserID).map((h) => (!getLockedHeadgear(inspectuserID).includes(h) ? getHeadwearName(undefined, h) : `*${getHeadwearName(undefined, h)}*`)).join(", ")}**`
+            wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(serverID, inspectuserID).map((h) => (!getLockedHeadgear(serverID, inspectuserID).includes(h) ? getHeadwearName(serverID, undefined, h) : `*${getHeadwearName(serverID, undefined, h)}*`)).join(", ")}**`
             let lockedheadgears = [];
-            if (process.headwear[inspectuserID]) { lockedheadgears = Object.keys(process.headwear[inspectuserID]) }
+            if (process.headwear[serverID][inspectuserID]) { lockedheadgears = Object.keys(process.headwear[serverID][inspectuserID]) }
             lockedheadgears.forEach((lh) => {
-                if (process.headwear[inspectuserID][lh] && process.headwear[inspectuserID][lh]?.lockable && process.headwear[inspectuserID][lh]?.origbinder) {
+                if (process.headwear[serverID][inspectuserID][lh] && process.headwear[serverID][inspectuserID][lh]?.lockable && process.headwear[serverID][inspectuserID][lh]?.origbinder) {
                     wearingtext = `${wearingtext}\n-# ‎   - **${process.headtypes[lh].name}** key held by <@${process.headwear[inspectuserID][lh].origbinder}>`
                 }
             })
         }
         // Mittens
-        if (getMitten(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.mitten} Mittens: **${getMittenName(inspectuserID) ?? "Standard Mittens"}**`
+        if (getMitten(serverID, inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.mitten} Mittens: **${getMittenName(serverID, inspectuserID) ?? "Standard Mittens"}**`
         }
         // Corset
-        if (getCorset(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **${getBaseCorset(getCorset(inspectuserID).type).name} laced with strings at length ${getCorset(inspectuserID).tightness}**`
+        if (getCorset(serverID, inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **${getBaseCorset(getCorset(serverID, inspectuserID).type).name} laced with strings at length ${getCorset(serverID, inspectuserID).tightness}**`
         }
         // Vibe
-        if (getToys(inspectuserID).length > 0) {
-            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getToys(inspectuserID).map((vibe) => `${getBaseToy(vibe.type).toyname} (${vibe.intensity})`).join(", ")}**`
+        if (getToys(serverID, inspectuserID).length > 0) {
+            wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getToys(serverID, inspectuserID).map((vibe) => `${getBaseToy(vibe.type).toyname} (${vibe.intensity})`).join(", ")}**`
         }
         // Heavy Bondage
-        if (getHeavy(inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
-            let heavyrestrictions = getHeavyRestrictions(inspectuserID);
+        if (getHeavy(serverID, inspectuserID)) {
+            wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(serverID, inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
+            let heavyrestrictions = getHeavyRestrictions(serverID, inspectuserID);
             wearingtext = `${wearingtext}\n-# ‎   ⤷ ⛓️ Restrictions - **Touch Self: ${heavyrestrictions.touchself ? "✅" : "⛔"}, Touch Others: ${heavyrestrictions.touchothers ? "✅" : "⛔"}, Container: ${!heavyrestrictions.touchlist ? "✅" : "⛔"}**`
         }
 
         let keyedrestraints = `## Keyed Restraints:`
         // Chastity Belt
-        if (getChastity(inspectuserID)) {
-            let chastitylockemoji = canAccessChastity(inspectuserID, userID).access ? "🔑" : "🔒";
+        if (getChastity(serverID, inspectuserID)) {
+            let chastitylockemoji = canAccessChastity(serverID, inspectuserID, userID).access ? "🔑" : "🔒";
             if (!headwearrestrictions.canInspect) { chastitylockemoji = "❓" }
-            let currentchastitybelt = getChastityName(inspectuserID) ?? "Standard Chastity Belt"
-            let chastitykeyholderinfo = getChastity(inspectuserID).keyholder
-            let chastitykeyaccess = getChastity(inspectuserID)?.access;
+            let currentchastitybelt = getChastityName(serverID, inspectuserID) ?? "Standard Chastity Belt"
+            let chastitykeyholderinfo = getChastity(serverID, inspectuserID).keyholder
+            let chastitykeyaccess = getChastity(serverID, inspectuserID)?.access;
             let chastitytimelockedtext = "Timelocked (Open)";
             if (chastitykeyaccess == 1) {
                 chastitytimelockedtext = "Timelocked (Keyed)";
@@ -819,37 +819,37 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            else if (getChastity(inspectuserID)?.fumbled) {
-                if (getChastity(inspectuserID)?.temporarykeyholder) {
-                    keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Temporarily held by <@${getChastity(inspectuserID)?.temporarykeyholder}>, returning ${getChastityTempTimelock(inspectuserID, true)}**`
+            else if (getChastity(serverID, inspectuserID)?.fumbled) {
+                if (getChastity(serverID, inspectuserID)?.temporarykeyholder) {
+                    keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Temporarily held by <@${getChastity(serverID, inspectuserID)?.temporarykeyholder}>, returning ${getChastityTempTimelock(serverID, inspectuserID, true)}**`
                 }
                 else {
                     keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Keys are Missing!**`
                 }
             }
-            else if (getChastityTimelock(inspectuserID)) {
-                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **${chastitytimelockedtext} until ${getChastityTimelock(inspectuserID, true)}**`
+            else if (getChastityTimelock(serverID, inspectuserID)) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **${chastitytimelockedtext} until ${getChastityTimelock(serverID, inspectuserID, true)}**`
             }
-            else if (getChastity(inspectuserID).keyholder == inspectuserID) {
+            else if (getChastity(serverID, inspectuserID).keyholder == inspectuserID) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Self-bound!**`
             }
             else {
-                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Key held by <@${getChastity(inspectuserID).keyholder}>**`
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitylockemoji} **Key held by <@${getChastity(serverID, inspectuserID).keyholder}>**`
             }
-            if (headwearrestrictions.canInspect && getChastity(inspectuserID).clonedKeyholders && (getChastity(inspectuserID).clonedKeyholders.length > 0)) {
-                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.chastity} held by ${getChastity(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+            if (headwearrestrictions.canInspect && getChastity(serverID, inspectuserID).clonedKeyholders && (getChastity(serverID, inspectuserID).clonedKeyholders.length > 0)) {
+                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.chastity} held by ${getChastity(serverID, inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
             }
-            if (getChastity(inspectuserID).timestamp) {
-                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getChastity(inspectuserID).timestamp / 1000)}:f>`
+            if (getChastity(serverID, inspectuserID).timestamp) {
+                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getChastity(serverID, inspectuserID).timestamp / 1000)}:f>`
             }
         }
         // Chastity Bra
-        if (getChastityBra(inspectuserID)) {
-            let chastitybralockemoji = canAccessChastityBra(inspectuserID, userID).access ? "🔑" : "🔒";
+        if (getChastityBra(serverID, inspectuserID)) {
+            let chastitybralockemoji = canAccessChastityBra(serverID, inspectuserID, userID).access ? "🔑" : "🔒";
             if (!headwearrestrictions.canInspect) { chastitybralockemoji = "❓" }
-            let currentbrachastitybelt = getChastityBraName(inspectuserID, getChastityBra(inspectuserID).chastitytype) ?? "Standard Chastity Bra"
-            let chastitybrakeyholderinfo = getChastityBra(inspectuserID).keyholder
-            let chastitybrakeyaccess = getChastityBra(inspectuserID)?.access;
+            let currentbrachastitybelt = getChastityBraName(serverID, inspectuserID, getChastityBra(serverID, inspectuserID).chastitytype) ?? "Standard Chastity Bra"
+            let chastitybrakeyholderinfo = getChastityBra(serverID, inspectuserID).keyholder
+            let chastitybrakeyaccess = getChastityBra(serverID, inspectuserID)?.access;
             let chastitybratimelockedtext = "Timelocked (Open)";
             if (chastitybrakeyaccess == 1) {
                 chastitybratimelockedtext = "Timelocked (Keyed)";
@@ -862,37 +862,37 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            else if (getChastityBra(inspectuserID)?.fumbled) {
-                if (getChastityBra(inspectuserID)?.temporarykeyholder) {
-                    keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Temporarily held by <@${getChastityBra(inspectuserID)?.temporarykeyholder}>, returning ${getChastityBraTempTimelock(inspectuserID, true)}**`
+            else if (getChastityBra(serverID, inspectuserID)?.fumbled) {
+                if (getChastityBra(serverID, inspectuserID)?.temporarykeyholder) {
+                    keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Temporarily held by <@${getChastityBra(serverID, inspectuserID)?.temporarykeyholder}>, returning ${getChastityBraTempTimelock(serverID, inspectuserID, true)}**`
                 }
                 else {
                     keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Keys are Missing!**`
                 }
             }
-            else if (getChastityBraTimelock(inspectuserID)) {
-                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **${chastitybratimelockedtext} until ${getChastityBraTimelock(inspectuserID, true)}**`
+            else if (getChastityBraTimelock(serverID, inspectuserID)) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **${chastitybratimelockedtext} until ${getChastityBraTimelock(serverID, inspectuserID, true)}**`
             }
-            else if (getChastityBra(inspectuserID).keyholder == inspectuserID) {
+            else if (getChastityBra(serverID, inspectuserID).keyholder == inspectuserID) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Self-bound!**`
             }
             else {
-                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Key held by <@${getChastityBra(inspectuserID).keyholder}>**`
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${chastitybralockemoji} **Key held by <@${getChastityBra(serverID, inspectuserID).keyholder}>**`
             }
-            if (headwearrestrictions.canInspect && getChastityBra(inspectuserID).clonedKeyholders && (getChastityBra(inspectuserID).clonedKeyholders.length > 0)) {
-                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.chastitybra} held by ${getChastityBra(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+            if (headwearrestrictions.canInspect && getChastityBra(serverID, inspectuserID).clonedKeyholders && (getChastityBra(serverID, inspectuserID).clonedKeyholders.length > 0)) {
+                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.chastitybra} held by ${getChastityBra(serverID, inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
             }
-            if (getChastityBra(inspectuserID).timestamp) {
-                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getChastityBra(inspectuserID).timestamp / 1000)}:f>`
+            if (getChastityBra(serverID, inspectuserID).timestamp) {
+                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getChastityBra(serverID, inspectuserID).timestamp / 1000)}:f>`
             }
         }
         // Collar
-        if (getCollar(inspectuserID)) {
-            let collarlockemoji = canAccessCollar(inspectuserID, userID).access ? "🔑" : "🔒";
+        if (getCollar(serverID, inspectuserID)) {
+            let collarlockemoji = canAccessCollar(serverID, inspectuserID, userID).access ? "🔑" : "🔒";
             if (!headwearrestrictions.canInspect) { collarlockemoji = "❓" }
-            let collarname = getCollarName(inspectuserID) ?? "Standard Collar"
-            let collarkeyholderinfo = getCollar(inspectuserID).keyholder
-            let collarkeyaccess = getCollar(inspectuserID)?.access;
+            let collarname = getCollarName(serverID, inspectuserID) ?? "Standard Collar"
+            let collarkeyholderinfo = getCollar(serverID, inspectuserID).keyholder
+            let collarkeyaccess = getCollar(serverID, inspectuserID)?.access;
             let collartimelockedtext = "Timelocked (Open)";
             if (collarkeyaccess == 1) {
                 collartimelockedtext = "Timelocked (Keyed)";
@@ -901,49 +901,49 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
                 collartimelockedtext = "Timelocked (Sealed)";
             }
             let addlcollartext = ``;
-            if (getCollar(inspectuserID) && getCollar(inspectuserID).additionalcollars) {
+            if (getCollar(serverID, inspectuserID) && getCollar(serverID, inspectuserID).additionalcollars) {
                 addlcollartext = `\n-# ‎   |--- Additional Effects: `
-                getCollar(inspectuserID).additionalcollars.forEach((ac) => {
-                    addlcollartext = `${addlcollartext}**${getCollarName(undefined, ac)}**, `
+                getCollar(serverID, inspectuserID).additionalcollars.forEach((ac) => {
+                    addlcollartext = `${addlcollartext}**${getCollarName(serverID, undefined, ac)}**, `
                 })
                 addlcollartext = addlcollartext.slice(0,-2);
             }
-            keyedrestraints = `${keyedrestraints}\n\n${process.emojis.collar} ${(getCollar(inspectuserID)?.collartype === "handcuffamulet") ? "Neck Ornament" : "Collar"}: **${collarname}**`
+            keyedrestraints = `${keyedrestraints}\n\n${process.emojis.collar} ${(getCollar(serverID, inspectuserID)?.collartype === "handcuffamulet") ? "Neck Ornament" : "Collar"}: **${collarname}**`
             keyedrestraints = `${keyedrestraints}${addlcollartext}`;
             if (!headwearrestrictions.canInspect) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Blind!**`
             }
             // Lost keys from fumble
-            else if (getCollar(inspectuserID)?.fumbled) {
-                if (getCollar(inspectuserID)?.temporarykeyholder) {
-                    keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Temporarily held by <@${getCollar(inspectuserID)?.temporarykeyholder}>, returning ${getCollarTempTimelock(inspectuserID, true)}**`
+            else if (getCollar(serverID, inspectuserID)?.fumbled) {
+                if (getCollar(serverID, inspectuserID)?.temporarykeyholder) {
+                    keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Temporarily held by <@${getCollar(serverID, inspectuserID)?.temporarykeyholder}>, returning ${getCollarTempTimelock(serverID, inspectuserID, true)}**`
                 }
                 else {
                     keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Keys are Missing!**`
                 }
             }
-            else if (getCollarTimelock(inspectuserID)) {
-                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **${collartimelockedtext} until ${getCollarTimelock(inspectuserID, true)}**`
+            else if (getCollarTimelock(serverID, inspectuserID)) {
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **${collartimelockedtext} until ${getCollarTimelock(serverID, inspectuserID, true)}**`
             }
-            else if (getCollar(inspectuserID).keyholder == inspectuserID) {
+            else if (getCollar(serverID, inspectuserID).keyholder == inspectuserID) {
                 keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Self-bound!**`
             }
             else {
-                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Key held by <@${getCollar(inspectuserID).keyholder}>**`
+                keyedrestraints = `${keyedrestraints}\n-# ‎   ⤷ ${collarlockemoji} **Key held by <@${getCollar(serverID, inspectuserID).keyholder}>**`
             }
-            if (!getCollar(inspectuserID).keyholder_only) {
+            if (!getCollar(serverID, inspectuserID).keyholder_only) {
                 keyedrestraints = `${keyedrestraints}, **Free Use!**`
             }
-            if (getCollar(inspectuserID).headpatvulnerable) {
+            if (getCollar(serverID, inspectuserID).headpatvulnerable) {
                 keyedrestraints = `${keyedrestraints}, **Vulnerable from Headpat!**`
             }
-            if (headwearrestrictions.canInspect && getCollar(inspectuserID).clonedKeyholders && (getCollar(inspectuserID).clonedKeyholders.length > 0)) {
-                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.collar} held by ${getCollar(inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
+            if (headwearrestrictions.canInspect && getCollar(serverID, inspectuserID).clonedKeyholders && (getCollar(serverID, inspectuserID).clonedKeyholders.length > 0)) {
+                keyedrestraints = `${keyedrestraints}\n-# Cloned keys for ${process.emojis.collar} held by ${getCollar(serverID, inspectuserID).clonedKeyholders.map((c) => `<@${c}>`).join(", ")}`
             }
-            if (getCollar(inspectuserID).timestamp) {
-                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getCollar(inspectuserID).timestamp / 1000)}:f>`
+            if (getCollar(serverID, inspectuserID).timestamp) {
+                keyedrestraints = `${keyedrestraints}\n-# Worn since <t:${Math.floor(getCollar(serverID, inspectuserID).timestamp / 1000)}:f>`
             }
-            keyedrestraints = `${keyedrestraints}\n-# Mittens: ${getCollarPerm(inspectuserID, "mitten") ? "✅" : "⛔"}, Chastity: ${getCollarPerm(inspectuserID, "chastity") ? "✅" : "⛔"}, Heavy: ${getCollarPerm(inspectuserID, "heavy") ? "✅" : "⛔"}, Masks: ${getCollarPerm(inspectuserID, "mask") ? "✅" : "⛔"}`
+            keyedrestraints = `${keyedrestraints}\n-# Mittens: ${getCollarPerm(serverID, inspectuserID, "mitten") ? "✅" : "⛔"}, Chastity: ${getCollarPerm(serverID, inspectuserID, "chastity") ? "✅" : "⛔"}, Heavy: ${getCollarPerm(serverID, inspectuserID, "heavy") ? "✅" : "⛔"}, Masks: ${getCollarPerm(serverID, inspectuserID, "mask") ? "✅" : "⛔"}`
         }
 
         if (wearingtext === `## Regular Worn Restraints:`) { 
@@ -965,9 +965,9 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
         pagecomponents.push(new TextDisplayBuilder().setContent(collated))
     }
     else if (menu == "wearable") {
-        let headwearrestrictions = getHeadwearRestrictions(userID);
+        let headwearrestrictions = getHeadwearRestrictions(serverID, userID);
         let clothingtext = `## Worn Apparel:`;
-        if (getWearable(inspectuserID).length > 0) {
+        if (getWearable(serverID, inspectuserID).length > 0) {
             let wearablescategories = {
                 Hat: [],
                 "Head/Hair Accessories": [],
@@ -986,7 +986,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
                 "Body Part": [],
                 Other: []
             }
-            getWearable(inspectuserID).map((w) => { return { base: getBaseWearable(w), item: w } }).forEach((basewearable) => {
+            getWearable(serverID, inspectuserID).map((w) => { return { base: getBaseWearable(w), item: w } }).forEach((basewearable) => {
                 if (basewearable?.base?.category && Object.keys(wearablescategories).includes(basewearable?.base?.category)) {
                     wearablescategories[basewearable?.base?.category].push(basewearable.item)
                 }
@@ -1000,7 +1000,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
                     let newtexttoadd = `\n### ${category}\n`;
                     wearablescategories[category].sort().forEach((w) => {
                         if (newtexttoadd.length < remaininglength) {
-                            newtexttoadd = `${newtexttoadd}${!getLockedWearable(inspectuserID).includes(w) ? getWearableName(undefined, w) : `*${getWearableName(undefined, w)}*`}, `
+                            newtexttoadd = `${newtexttoadd}${!getLockedWearable(serverID, inspectuserID).includes(w) ? getWearableName(undefined, w) : `*${getWearableName(undefined, w)}*`}, `
                         }
                     })
                     if (newtexttoadd != `\n### ${category}`) {
@@ -1027,42 +1027,42 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
         pagecomponents.push(new TextDisplayBuilder().setContent(collated))
     }
     else if (menu == "keys") {
-        let headwearrestrictions = getHeadwearRestrictions(userID);
+        let headwearrestrictions = getHeadwearRestrictions(serverID, userID);
         // Keys Held
         let keysheldtext = "";
         // Held Primary Keys
-        let keysheldchastity = getChastityKeys(inspectuserID);
+        let keysheldchastity = getChastityKeys(serverID, inspectuserID);
         if (keysheldchastity.length > 0) {
             keysheldchastity = keysheldchastity.map((k) => `<@${k}>`);
             let keysstring = keysheldchastity.join(", ");
             keysheldtext = `- ${process.emojis.chastity} Chastity belt keys: ${keysstring}\n`;
         }
-        let keysheldchastitybra = getChastityBraKeys(inspectuserID);
+        let keysheldchastitybra = getChastityBraKeys(serverID, inspectuserID);
         if (keysheldchastitybra.length > 0) {
             keysheldchastitybra = keysheldchastitybra.map((k) => `<@${k}>`);
             let keysstring = keysheldchastitybra.join(", ");
             keysheldtext = `${keysheldtext}- ${process.emojis.chastitybra} Chastity bra keys: ${keysstring}\n`;
         }
-        let keysheldcollar = getCollarKeys(inspectuserID);
+        let keysheldcollar = getCollarKeys(serverID, inspectuserID);
         if (keysheldcollar.length > 0) {
             keysheldcollar = keysheldcollar.map((k) => `<@${k}>`);
             let keysstring = keysheldcollar.join(", ");
             keysheldtext = `${keysheldtext}- ${process.emojis.collar} Collar keys: ${keysstring}\n`;
         }
         // Held Cloned Keys
-        let keysheldclonedchastity = getClonedChastityKeysOwned(inspectuserID);
+        let keysheldclonedchastity = getClonedChastityKeysOwned(serverID, inspectuserID);
         if (keysheldclonedchastity.length > 0) {
             keysheldclonedchastity = keysheldclonedchastity.map((k) => `<@${k.split("_")[0]}>`);
             let keysstring = keysheldclonedchastity.join(", ");
             keysheldtext = `${keysheldtext}- ${process.emojis.chastityclone} Cloned chastity belt keys: ${keysstring}\n`;
         }
-        let keysheldclonedchastitybra = getClonedChastityBraKeysOwned(inspectuserID);
+        let keysheldclonedchastitybra = getClonedChastityBraKeysOwned(serverID, inspectuserID);
         if (keysheldclonedchastitybra.length > 0) {
             keysheldclonedchastitybra = keysheldclonedchastitybra.map((k) => `<@${k.split("_")[0]}>`);
             let keysstring = keysheldclonedchastitybra.join(", ");
             keysheldtext = `${keysheldtext}- ${process.emojis.chastitybraclone} Cloned chastity bra keys: ${keysstring}\n`;
         }
-        let keysheldclonedcollar = getClonedCollarKeysOwned(inspectuserID);
+        let keysheldclonedcollar = getClonedCollarKeysOwned(serverID, inspectuserID);
         if (keysheldclonedcollar.length > 0) {
             keysheldclonedcollar = keysheldclonedcollar.map((k) => `<@${k.split("_")[0]}>`);
             let keysstring = keysheldclonedcollar.join(", ");
@@ -1084,7 +1084,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
         pagecomponents.push(new TextDisplayBuilder().setContent(collated))
     }
     else if (menu == "stats") {
-        pagecomponents.push(new TextDisplayBuilder().setContent(statsGeneratePage(inspectuserID)))
+        pagecomponents.push(new TextDisplayBuilder().setContent(statsGeneratePage(serverID, inspectuserID)))
     }
 
     return { components: pagecomponents, flags: [MessageFlags.IsComponentsV2, MessageFlags.Ephemeral] };
