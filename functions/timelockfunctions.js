@@ -14,6 +14,9 @@ const { transferChastityKey } = require("./setters/chastity/transferChastityKey.
 const { transferChastityBraKey } = require("./setters/chastity/transferChastityBraKey.js");
 const { markForSave } = require("./other/markForSave.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { getChastity } = require("./getters/chastity/getChastity.js");
+const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
+const { getCollar } = require("./getters/collar/getCollar.js");
 
 // returns whether the locking was successful
 function timelockChastity(serverID, client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
@@ -21,7 +24,8 @@ function timelockChastity(serverID, client, wearer, keyholder, unlockTime, acces
 	const now = Date.now();
 	if (now >= unlockTime) return false;
 	if (process.chastity == undefined) process.chastity = {};
-	const chastity = process.chastity[wearer];
+    if (process.chastity[serverID] == undefined) process.chastity[serverID] = {};
+	const chastity = getChastity(serverID, wearer);
 	chastity.keyholder = keyholder;
 	if (!chastity) return false;
 	if (chastity.keyholder == wearer) {
@@ -34,7 +38,7 @@ function timelockChastity(serverID, client, wearer, keyholder, unlockTime, acces
 	chastity.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
 	setTimeout(() => {
-		unlockTimelockChastity(client, wearer);
+		unlockTimelockChastity(serverID, client, wearer);
 	}, unlockTime - now);
     markForSave("chastity");
 	return true;
@@ -44,14 +48,15 @@ function timelockChastity(serverID, client, wearer, keyholder, unlockTime, acces
 function unlockTimelockChastity(serverID, client, wearer, skipWrite = false) {
     traceFirstParam(arguments[0]);
 	if (process.chastity == undefined) process.chastity = {};
-	const chastity = process.chastity[wearer];
+    if (process.chastity[serverID] == undefined) process.chastity[serverID] = {};
+	const chastity = getChastity(serverID, wearer);
 	if (!chastity || !chastity.unlockTime) return false;
 	chastity.keyholder = chastity.keyholderAfter;
 	chastity.keyholderAfter = null;
 	chastity.unlockTime = null;
 	chastity.access = null;
-	sendTimelockChastityUnlockMessage(client, wearer, chastity.keyholder);
-	if (!chastity.keyholder) removeChastity(wearer, undefined, true);
+	sendTimelockChastityUnlockMessage(serverID, client, wearer, chastity.keyholder);
+	if (!chastity.keyholder) removeChastity(serverID, wearer, undefined, true);
 	else if (!skipWrite) {
 		markForSave("chastity");
 	}
@@ -60,13 +65,13 @@ function unlockTimelockChastity(serverID, client, wearer, skipWrite = false) {
 
 async function sendTimelockChastityUnlockMessage(serverID, client, wearer, keyholder) {
     traceFirstParam(arguments[0]);
-	if (process.recentmessages && process.recentmessages[wearer]) {
+	if (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][wearer]) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`, process.recentmessages[serverID][wearer]);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, process.recentmessages[serverID][wearer]);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[serverID][wearer]);
 		}
 	}
     else {
@@ -80,7 +85,8 @@ function timelockChastityBra(serverID, client, wearer, keyholder, unlockTime, ac
 	const now = Date.now();
 	if (now >= unlockTime) return false;
 	if (process.chastitybra == undefined) process.chastitybra = {};
-	const chastitybra = process.chastitybra[wearer];
+    if (process.chastitybra[serverID] == undefined) process.chastitybra[serverID] = {};
+	const chastitybra = getChastityBra(serverID, wearer)
 	chastitybra.keyholder = keyholder;
 	if (!chastitybra) return false;
 	if (chastitybra.keyholder == wearer) {
@@ -93,7 +99,7 @@ function timelockChastityBra(serverID, client, wearer, keyholder, unlockTime, ac
 	chastitybra.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
 	setTimeout(() => {
-		unlockTimelockChastity(client, wearer);
+		unlockTimelockChastityBra(serverID, client, wearer);
 	}, unlockTime - now);
 	markForSave("chastitybra");
 	return true;
@@ -103,14 +109,15 @@ function timelockChastityBra(serverID, client, wearer, keyholder, unlockTime, ac
 function unlockTimelockChastityBra(serverID, client, wearer, skipWrite = false) {
     traceFirstParam(arguments[0]);
 	if (process.chastitybra == undefined) process.chastitybra = {};
-	const chastitybra = process.chastitybra[wearer];
+    if (process.chastitybra[serverID] == undefined) process.chastitybra[serverID] = {};
+	const chastitybra = getChastityBra(serverID, wearer)
 	if (!chastitybra || !chastitybra.unlockTime) return false;
 	chastitybra.keyholder = chastitybra.keyholderAfter;
 	chastitybra.keyholderAfter = null;
 	chastitybra.unlockTime = null;
 	chastitybra.access = null;
-	sendTimelockChastityBraUnlockMessage(client, wearer, chastitybra.keyholder);
-	if (!chastitybra.keyholder) removeChastityBra(wearer, undefined, true);
+	sendTimelockChastityBraUnlockMessage(serverID, client, wearer, chastitybra.keyholder);
+	if (!chastitybra.keyholder) removeChastityBra(serverID, wearer, undefined, true);
 	else if (!skipWrite) {
 		markForSave("chastitybra");
 	}
@@ -119,13 +126,13 @@ function unlockTimelockChastityBra(serverID, client, wearer, skipWrite = false) 
 
 async function sendTimelockChastityBraUnlockMessage(serverID, client, wearer, keyholder) {
     traceFirstParam(arguments[0]);
-	if (process.recentmessages && process.recentmessages[wearer]) {
+	if (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][wearer]) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, process.recentmessages[serverID][wearer]);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, process.recentmessages[serverID][wearer]);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[serverID][wearer]);
 		}
 	}
     else {
@@ -139,7 +146,8 @@ function timelockCollar(serverID, client, wearer, keyholder, unlockTime, access,
 	const now = Date.now();
 	if (now >= unlockTime) return false;
 	if (process.collar == undefined) process.collar = {};
-	const collar = process.collar[wearer];
+    if (process.collar[serverID] == undefined) process.collar[serverID] = {};
+	const collar = getCollar(serverID, wearer);
 	collar.keyholder = keyholder;
 	if (!collar) return false;
 	if (collar.keyholder == wearer) {
@@ -152,7 +160,7 @@ function timelockCollar(serverID, client, wearer, keyholder, unlockTime, access,
 	collar.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
 	setTimeout(() => {
-		unlockTimelockChastity(client, wearer);
+		unlockTimelockCollar(serverID, client, wearer);
 	}, unlockTime - now);
 	markForSave("collar");
 	return true;
@@ -162,14 +170,15 @@ function timelockCollar(serverID, client, wearer, keyholder, unlockTime, access,
 function unlockTimelockCollar(serverID, client, wearer, skipWrite = false) {
     traceFirstParam(arguments[0]);
 	if (process.collar == undefined) process.collar = {};
-	const collar = process.collar[wearer];
+    if (process.collar[serverID] == undefined) process.collar[serverID] = {};
+	const collar = getCollar(serverID, wearer);
 	if (!collar || !collar.unlockTime) return false;
 	collar.keyholder = collar.keyholderAfter;
 	collar.keyholderAfter = null;
 	collar.unlockTime = null;
 	collar.access = null;
-	sendTimelockCollarUnlockMessage(client, wearer, collar.keyholder);
-	if (!collar.keyholder) removeCollar(wearer);
+	sendTimelockCollarUnlockMessage(serverID, client, wearer, collar.keyholder);
+	if (!collar.keyholder) removeCollar(serverID, wearer);
 	else if (!skipWrite) {
 		markForSave("collar");
 	}
@@ -178,13 +187,13 @@ function unlockTimelockCollar(serverID, client, wearer, skipWrite = false) {
 
 async function sendTimelockCollarUnlockMessage(serverID, client, wearer, keyholder) {
     traceFirstParam(arguments[0]);
-	if (process.recentmessages && process.recentmessages[wearer]) {
+	if (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][wearer]) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, process.recentmessages[serverID][wearer]);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(wearer, "object")} holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, process.recentmessages[serverID][wearer]);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[serverID][wearer]);
 		}
 	}
     else {
@@ -193,15 +202,24 @@ async function sendTimelockCollarUnlockMessage(serverID, client, wearer, keyhold
 }
 
 function checkGagbotKeys() {
-    getCollarKeys(process.client.user.id).forEach((k) => {
-        gagbotHeldKeyTime(k, "collar");
+    Object.keys(process.collar).forEach((server) => {
+        getCollarKeys(server, process.client.user.id).forEach((k) => {
+            gagbotHeldKeyTime(server, k, "collar");
+        })
     })
-    getChastityKeys(process.client.user.id).forEach((k) => {
-        gagbotHeldKeyTime(k, "chastity");
+    
+    Object.keys(process.chastity).forEach((server) => {
+        getChastityKeys(server, process.client.user.id).forEach((k) => {
+            gagbotHeldKeyTime(server, k, "chastity");
+        })
     })
-    getChastityBraKeys(process.client.user.id).forEach((k) => {
-        gagbotHeldKeyTime(k, "chastitybra");
+    
+    Object.keys(process.chastitybra).forEach((server) => {
+        getChastityBraKeys(server, process.client.user.id).forEach((k) => {
+            gagbotHeldKeyTime(server, k, "chastitybra");
+        })
     })
+    
     if (process.heldkeytimers) {
         Object.keys(process.heldkeytimers).forEach((k) => {
             gagbotHeldKeyTime(...k.split("_"));
@@ -212,45 +230,46 @@ function checkGagbotKeys() {
 function gagbotHeldKeyTime(serverID, wearerid, type) {
     traceFirstParam(arguments[0]);
     if (process.heldkeytimers == undefined) { process.heldkeytimers = {} }
-    if (!process.recentmessages[wearerid]) { return }
-    if (!process.heldkeytimers[`${wearerid}_${type}`]) {
+    if (!process.recentmessages[serverID][wearerid]) { return }
+    if (!process.heldkeytimers[`${serverID}_${wearerid}_${type}`]) {
         let data = {
+            serverID: serverID,
             interactionuser: process.client.user,
             targetuser: { id: wearerid },
         }
         messageSendChannel(getTextGeneric("given_key", data), process.recentmessages[wearerid])
-        let addedtime = Math.floor(Math.max(Math.random(), 0.4) * getOption(wearerid, "gagbotholdtimer")); // 40-100% of the time
-        process.heldkeytimers[`${wearerid}_${type}`] = {
+        let addedtime = Math.floor(Math.max(Math.random(), 0.4) * getOption(serverID, wearerid, "gagbotholdtimer")); // 40-100% of the time
+        process.heldkeytimers[`${serverID}_${wearerid}_${type}`] = {
             releasetime: Date.now() + addedtime
         }
         markForSave("heldkeytimers");
     }
     else {
-        if (process[type] && process[type][wearerid] && process[type][wearerid].keyholder != process.client.user.id) { // Key somehow returned to the wearer, or the device was removed
-            delete process.heldkeytimers[`${wearerid}_${type}`]
+        if (process[type] && process[type][serverID] && process[type][serverID][wearerid] && process[type][serverID][wearerid].keyholder != process.client.user.id) { // Key somehow returned to the wearer, or the device was removed
+            delete process.heldkeytimers[`${serverID}_${wearerid}_${type}`]
             return;
         }
-        if (process.heldkeytimers[`${wearerid}_${type}`].releasetime < Date.now()) {
+        if (process.heldkeytimers[`${serverID}_${wearerid}_${type}`].releasetime < Date.now()) {
             let data = {
                 interactionuser: process.client.user,
                 targetuser: { id: wearerid },
             }
-            messageSendChannel(getTextGeneric(`return_key_${type}`, data), process.recentmessages[wearerid]) // process.recentmessages will *always* exist. 
-            if (process[type] && process[type][wearerid] && process[type][wearerid].keyholder == process.client.user.id) {
+            messageSendChannel(getTextGeneric(`return_key_${type}`, data), process.recentmessages[serverID][wearerid]) // process.recentmessages will *always* exist. 
+            if (process[type] && process[type][serverID] && process[type][serverID][wearerid] && process[type][serverID][wearerid].keyholder == process.client.user.id) {
                 if (type == "collar") { 
-                    transferCollarKey(wearerid, wearerid) 
+                    transferCollarKey(serverID, wearerid, wearerid) 
                     markForSave("collar");
                 }
                 if (type == "chastity") { 
-                    transferChastityKey(wearerid, wearerid) 
+                    transferChastityKey(serverID, wearerid, wearerid) 
                     markForSave("chastity");
                 }
                 if (type == "chastitybra") { 
-                    transferChastityBraKey(wearerid, wearerid) 
+                    transferChastityBraKey(serverID, wearerid, wearerid) 
                     markForSave("chastitybra");
                 }
             }
-            delete process.heldkeytimers[`${wearerid}_${type}`]
+            delete process.heldkeytimers[`${serverID}_${wearerid}_${type}`]
         }
     }
 }

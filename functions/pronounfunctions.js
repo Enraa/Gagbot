@@ -25,19 +25,19 @@ const remindPronouns = async (serverID, user) => {
                     collector.on("collect", async (i) => {
                         console.log(i);
                         if (i.customId == "sheher") {
-                            setPronouns(user, "she/her")
+                            setPronouns(serverID, user, "she/her")
                             await i.update({ content: 'Set your pronouns to She/Hers!', components: [] })
                         }
                         else if (i.customId == "hehim") {
-                            setPronouns(user, "he/him")
+                            setPronouns(serverID, user, "he/him")
                             await i.update({ content: 'Set your pronouns to He/Him!', components: [] })
                         }
                         else if (i.customId == "theythem") {
-                            setPronouns(user, "they/them")
+                            setPronouns(serverID, user, "they/them")
                             await i.update({ content: 'Set your pronouns to They/Them!', components: [] })
                         }
                         else if (i.customId == "itits") {
-                            setPronouns(user, "it/its")
+                            setPronouns(serverID, user, "it/its")
                             await i.update({ content: 'Set your pronouns to It/Its!', components: [] })
                         }
                     });
