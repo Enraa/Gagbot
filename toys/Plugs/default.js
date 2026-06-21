@@ -15,37 +15,37 @@ exports.intensitychange = (data) => { return 0 }
 exports.postLetGo = (data) => { return false }
 
 // Condition for allowing equip
-exports.canEquip = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
+exports.canEquip = (data) => { return (!getChastity(data.serverID, data.userID) || getBaseChastity(getChastity(data.serverID, data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
 
 // Condition for allowing unequip
-exports.canUnequip = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
+exports.canUnequip = (data) => { return (!getChastity(data.serverID, data.userID) || getBaseChastity(getChastity(data.serverID, data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) }
 
 // Condition to force unequip on refresh
 exports.forceUnequip = (data) => { return false }
 
 // Condition to check if wearer is wearing a potential blocker
-exports.blocker = (data) => { return getChastity(data.userID) }
+exports.blocker = (data) => { return getChastity(data.serverID, data.userID) }
 
 // Condition to allow modification
-exports.canModify = (data) => { return (!getChastity(data.userID) || getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) };
+exports.canModify = (data) => { return (!getChastity(data.serverID, data.userID) || getBaseChastity(getChastity(data.serverID, data.userID).chastitytype ?? "belt_silver").canAccessToys(data)) };
 
 // Condition that rolls a fumble function from the blocking device, returning it's results
 // 0 = Success, 1 = Fail, no loss, 2 = Fail, loss
 exports.fumble = (data) => {
-    return getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").fumble(data);
+    return getBaseChastity(getChastity(data.serverID, data.userID).chastitytype ?? "belt_silver").fumble(data);
 };
 
 // Discard function if the .fumble causes it
 exports.discard = (data) => {
-    return getBaseChastity(getChastity(data.userID).chastitytype ?? "belt_silver").discard(data);
+    return getBaseChastity(getChastity(data.serverID, data.userID).chastitytype ?? "belt_silver").discard(data);
 }
 
 // Action when equipping
-exports.onEquip = (data) => { addArousal(data.userID, data.intensity) };
+exports.onEquip = (data) => { addArousal(data.serverID, data.userID, data.intensity) };
 
 // Action when unequipping - The relief is so good, arouse them again. 
 // Since data.intensity is gone, lets just add a flat 5
-exports.onUnequip = (data) => { addArousal(data.userID, 5) };
+exports.onUnequip = (data) => { addArousal(data.serverID, data.userID, 5) };
 
 // Calculation for effective arousal
 // Note, this should be used for checks more focused around the plug - it will be

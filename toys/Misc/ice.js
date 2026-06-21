@@ -5,7 +5,7 @@ const { getChastity } = require("../../functions/getters/chastity/getChastity")
 // This reduces the arousal of the wearer by a proportion of their current arousal
 exports.vibescale = (data) => { return (Math.max(Math.min(getArousal(data.serverID, data.userID) / 10, 10), 1) * -1) }
 exports.calcVibeEffect = function (data) { 
-    if (getChastity(data.userID)) {
+    if (getChastity(data.serverID, data.userID)) {
         return data.intensity * 0.4 * (this.vibescale(data) * 0.40) // 40% effectiveness if in chastity
     }
     else {

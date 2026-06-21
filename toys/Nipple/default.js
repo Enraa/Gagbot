@@ -13,33 +13,33 @@ exports.intensitychange = (data) => { return 0 }
 exports.postLetGo = (data) => { return false }
 
 // Condition for allowing equip
-exports.canEquip = (data) => { return (!getChastityBra(data.userID) || getBaseChastity(getChastityBra(data.userID).chastitytype ?? "bra_silver").canAccessToys(data)) }
+exports.canEquip = (data) => { return (!getChastityBra(data.serverID, data.userID) || getBaseChastity(getChastityBra(data.serverID, data.userID).chastitytype ?? "bra_silver").canAccessToys(data)) }
 
 // Condition for allowing unequip
-exports.canUnequip = (data) => { return (!getChastityBra(data.userID) || getBaseChastity(getChastityBra(data.userID).chastitytype ?? "bra_silver").canAccessToys(data)) }
+exports.canUnequip = (data) => { return (!getChastityBra(data.serverID, data.userID) || getBaseChastity(getChastityBra(data.serverID, data.userID).chastitytype ?? "bra_silver").canAccessToys(data)) }
 
 // Condition to force unequip on refresh
 exports.forceUnequip = (data) => { return false }
 
 // Condition to check if wearer is wearing a potential blocker
-exports.blocker = (data) => { return getChastityBra(data.userID) }
+exports.blocker = (data) => { return getChastityBra(data.serverID, data.userID) }
 
 // Condition to allow modification
-exports.canModify = (data) => { return (!getChastityBra(data.userID) || getBaseChastity(getChastityBra(data.userID).chastitytype ?? "bra_silver").canAccessToys(data)) };
+exports.canModify = (data) => { return (!getChastityBra(data.serverID, data.userID) || getBaseChastity(getChastityBra(data.serverID, data.userID).chastitytype ?? "bra_silver").canAccessToys(data)) };
 
 // Condition that rolls a fumble function, returning it's results
 // 0 = Success, 1 = Fail, no loss, 2 = Fail, loss
 exports.fumble = (data) => {
-    return getBaseChastity(getChastityBra(data.userID).chastitytype ?? "bra_silver").fumble(data);
+    return getBaseChastity(getChastityBra(data.serverID, data.userID).chastitytype ?? "bra_silver").fumble(data);
 };
 
 // Discard function if the .fumble causes it
 exports.discard = (data) => {
-    return getBaseChastity(getChastityBra(data.userID).chastitytype ?? "bra_silver").discard(data);
+    return getBaseChastity(getChastityBra(data.serverID, data.userID).chastitytype ?? "bra_silver").discard(data);
 };
 
 // Action when equipping
-exports.onEquip = (data) => { addArousal(data.userID, data.intensity / 4) };
+exports.onEquip = (data) => { addArousal(data.serverID, data.userID, data.intensity / 4) };
 
 // Calculation for effective arousal
 // Note, this should be used for checks more focused around the vibe - it will be

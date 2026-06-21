@@ -8,7 +8,7 @@ const { getChastity } = require("../../functions/getters/chastity/getChastity")
 
 // the exact timespan. 
 exports.calcVibeEffect = function (data) { 
-    if (getChastity(data.userID)) {
+    if (getChastity(data.serverID, data.userID)) {
         // 25% effectiveness if in chastity
         return (data.intensity * (this.vibescale() * 0.25) * 3.0 * ((performance.now() % 300000) / 300000))
     }
