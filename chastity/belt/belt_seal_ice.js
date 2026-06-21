@@ -28,7 +28,7 @@ exports.afterArousalChange = (data) => {
 }
 exports.onEquip = (data) => {
     // Configure base arousal value
-    if (!getUserVar(data.serverID, data.userID, "base_arousal") || getUserVar(data.serverID, data.userID, "base_arousal") == undefined) setUserVar(data.userID, "base_arousal", getArousal(data.serverID, data.userID) ?? 5);
+    if (!getUserVar(data.serverID, data.userID, "base_arousal") || getUserVar(data.serverID, data.userID, "base_arousal") == undefined) setUserVar(data.serverID, data.userID, "base_arousal", getArousal(data.serverID, data.userID) ?? 5);
 }
 exports.onUnequip = (data) => {
     setUserVar(data.serverID, data.userID, "base_arousal", undefined);
