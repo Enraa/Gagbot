@@ -554,6 +554,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 `Cassandra's Secret - Witch by Day, Obedient Doll by Night`,
                 `Sponsorship Collar - Put me on. Advertise our corporate overlords like a good little subbie drone you are!`,
                 `DommeDash - Feeding Subs, One Door at a Time!`,
+                `Toast - The single piece that carries a hungry cat`
             ]
             appendmessages.push(`-# Sponsored by ${sponsors[Math.floor(sponsors.length * Math.random())]}`);
             setUserVar(msg.guild.id, msg.author.id, "sponsorcollartrigger", Date.now());
