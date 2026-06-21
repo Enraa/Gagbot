@@ -22,7 +22,8 @@ const { loadCollarTypes } = require('./functions/collarfunctions.js');
 const { buttonboard } = require('./contextcommands/message/Button Board.js');
 const { setUpEventFunctions } = require('./functions/eventhandling.js');
 const { getBotOption } = require('./functions/getters/config/getBotOption.js');
-const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js")
+const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js");
+const { logConsole } = require('./functions/logfunctions.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -79,30 +80,30 @@ let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAG
 process.GagbotSavedFileDirectory = GagbotSavedFileDirectory // Because honestly, I dont know WHY global stuff in index.js can't be accessble everywhere
 
 let processdatatoload = [
-    { textname: "gaggedusers.txt", processvar: "gags", default: {} },
-    { textname: "mittenedusers.txt", processvar: "mitten", default: {} },
-    { textname: "chastityusers.txt", processvar: "chastity", default: {} },
-    { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {} },
-    { textname: "toyusers.txt", processvar: "toys", default: {} },
-    { textname: "collarusers.txt", processvar: "collar", default: {} },
-    { textname: "heavyusers.txt", processvar: "heavy", default: {} },
-    { textname: "pronounsusers.txt", processvar: "pronouns", default: {} },
-    { textname: "usersdata.txt", processvar: "usercontext", default: {} },
+    { textname: "gaggedusers.txt", processvar: "gags", default: {}, hasusers: true },
+    { textname: "mittenedusers.txt", processvar: "mitten", default: {}, hasusers: true },
+    { textname: "chastityusers.txt", processvar: "chastity", default: {}, hasusers: true },
+    { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {}, hasusers: true },
+    { textname: "toyusers.txt", processvar: "toys", default: {}, hasusers: true },
+    { textname: "collarusers.txt", processvar: "collar", default: {}, hasusers: true },
+    { textname: "heavyusers.txt", processvar: "heavy", default: {}, hasusers: true },
+    { textname: "pronounsusers.txt", processvar: "pronouns", default: {}, hasusers: true },
+    { textname: "usersdata.txt", processvar: "usercontext", default: {}, hasusers: true },
     { textname: "consentusers.txt", processvar: "consented", default: {} },
-    { textname: "corsetusers.txt", processvar: "corset", default: {} },
-    { textname: "arousal.txt", processvar: "arousal", default: {} },
-    { textname: "headwearusers.txt", processvar: "headwear", default: {} },
+    { textname: "corsetusers.txt", processvar: "corset", default: {}, hasusers: true },
+    { textname: "arousal.txt", processvar: "arousal", default: {}, hasusers: true },
+    { textname: "headwearusers.txt", processvar: "headwear", default: {}, hasusers: true },
     { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
-    { textname: "configs.txt", processvar: "configs", default: {}},
-    { textname: "outfits.txt", processvar: "outfits", default: {}},
-    { textname: "dollusers.txt", processvar: "dolls", default: {}},
-    { textname: "wearables.txt", processvar: "wearable", default: {}},
-    { textname: "webhooks.txt", processvar: "webhookstoload", default: {}},
-    { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {}},
-    { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}},
-    { textname: "userstats.txt", processvar: "userstats", default: {}},
-    { textname: "memberavatars.txt", processvar: "memberavatars", default: {}},
-    { textname: "heldkeytimers.txt", processvar: "heldkeytimers", default: {}},
+    { textname: "configs.txt", processvar: "configs", default: {} },
+    { textname: "outfits.txt", processvar: "outfits", default: {} },
+    { textname: "dollusers.txt", processvar: "dolls", default: {}, hasusers: true },
+    { textname: "wearables.txt", processvar: "wearable", default: {}, hasusers: true },
+    { textname: "webhooks.txt", processvar: "webhookstoload", default: {} },
+    { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {} },
+    { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}, hasusers: true },
+    { textname: "userstats.txt", processvar: "userstats", default: {}, hasusers: true },
+    { textname: "memberavatars.txt", processvar: "memberavatars", default: {}, hasusers: true },
+    { textname: "heldkeytimers.txt", processvar: "heldkeytimers", default: {}, hasusers: true },
 ]
 
 processdatatoload.forEach((s) => {
@@ -262,6 +263,45 @@ client.on("clientReady", async () => {
 
         generateListTexts();
 
+        // This code will be removed in a later update!
+        let guilds = process.client.guilds.cache.map(guild => guild.id)
+        processdatatoload.forEach(async (pd) => {
+            try {
+                if (pd.processvar) {
+                    Object.keys(pd.processvar).forEach((user) => {
+                        let useringuilds = [];
+                        if (!guilds.includes(user) && pd.hasusers) { // This is a USER object! 
+                            let inaguild = false;
+                            for (const guildID of guilds) {
+                                let guild = process.client.guilds.cache.get(guildID);
+                                try {
+                                    let founduser = await guild.members.fetch(user)
+                                    if (founduser) {
+                                        if (process[pd.processvar][guildID] == undefined) { process[pd.processvar][guildID] = {} }
+                                        process[pd.processvar][guildID][user] = Object.assign({}, process[pd.processvar][user])
+                                        inaguild = true;
+                                    }
+                                }
+                                catch (err) {
+                                    // Not in the guild
+                                    logConsole(`User ${user} is not in ${guildID}`, 4)
+                                }
+                            }
+                            if (inaguild) {
+                                delete process[pd.processvar][user]
+                            }
+                            else {
+                                console.log(`User ${user} is not in ANY guild, leaving in place`)
+                            }
+                        }
+                    })
+                }
+            }
+            catch (err) {
+                console.log(err);
+            }
+        })
+
         scavengeUsers(client);
         setInterval(() => {
             try {
@@ -306,7 +346,7 @@ client.on("messageCreate", async (msg) => {
             process.recentmessages[msg.author.id] = msg.channel.id;
             modifymessage(msg, thread ? msg.channelId : null);
         }
-        if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
+        if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first()) || (message.flags && message.flags.has(discord.MessageFlags.HasSnapshot)) || (message.flags && message.flags.has(discord.MessageFlags.IsCrosspost))) { return }
     }
     catch (err) {
         console.log(err);
@@ -335,8 +375,6 @@ client.on('interactionCreate', async (interaction) => {
                     process.recentmessages[message.author.id] = interaction.channelId;
                 }
             }
-            
-            //process.recentmessages[interaction.targetId] = interaction.channelId;
         }
         if (interaction.isUserContextMenuCommand()) {
             usercontextcommands.get(`${interaction.commandName}`)?.execute(interaction)
