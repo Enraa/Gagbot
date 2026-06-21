@@ -1,4 +1,11 @@
-// Pronoun types
+/********
+ * Pronoun Types
+ * 
+ * - she/her
+ * - he/him
+ * - they/them
+ * - it/its
+ ********/
 const pronounsMap = new Map([
 	["she/her", { subject: "she", object: "her", possessive: "hers", possessiveDeterminer: "her", reflexive: "herself", subjectIs: "she's", subjectWill: "she'll" }],
 	["he/him", { subject: "he", object: "him", possessive: "his", possessiveDeterminer: "his", reflexive: "himself", subjectIs: "he's", subjectWill: "he'll" }],

@@ -110,10 +110,10 @@ module.exports = {
 				let buttonpressed = configoptions[optionparts[2]][optionparts[3]];
 				let data = { title: buttonpressed.name, desctext: buttonpressed.descmodal, placeholder: buttonpressed.placeholder, page: optionparts[2], pagenum: optionparts[4] };
 				if (typeof buttonpressed.customtext == "function") {
-					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.user.id));
+					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.guildId, interaction.user.id));
 				}
 				if (typeof buttonpressed.placeholder == "function") {
-					data.placeholder = buttonpressed.placeholder(interaction.user.id);
+					data.placeholder = buttonpressed.placeholder(interaction.guildId, interaction.user.id);
 				}
                 if (!data.pagenum) { data.pagenum = 1 };
 
@@ -125,7 +125,7 @@ module.exports = {
 				let buttonpressed = configoptions[optionparts[2]][optionparts[3]];
 				let data = { title: buttonpressed.name, desctext: buttonpressed.descmodal, placeholder: buttonpressed.placeholder, page: optionparts[2], pagenum: optionparts[4] };
 				if (typeof buttonpressed.customtext == "function") {
-					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.user.id));
+					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.guildId, interaction.user.id));
 				}
 				if (typeof buttonpressed.placeholder == "function") {
 					data.placeholder = buttonpressed.placeholder(interaction.user.id);

@@ -15,7 +15,7 @@ function initializeOptions(serverID, userID) {
         let optionspages = Object.keys(configoptions[p]);
         optionspages.forEach((k) => {
             if (typeof configoptions[p][k].default == "function") {
-                process.configs.users[serverID][userID][k] = configoptions[p][k].default(userID);
+                process.configs.users[serverID][userID][k] = configoptions[p][k].default(serverID, userID);
             } else {
                 process.configs.users[serverID][userID][k] = configoptions[p][k].default;
             }

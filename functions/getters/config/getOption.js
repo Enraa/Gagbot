@@ -34,7 +34,7 @@ function getOption(serverID, userID, option) {
             optionspages.forEach((k) => {
                 if (k == option) {
                     if (typeof configoptions[p][k].default == "function") {
-                        process.configs.users[serverID][userID][k] = configoptions[p][k].default(userID);
+                        process.configs.users[serverID][userID][k] = configoptions[p][k].default(serverID, userID);
                     } else {
                         process.configs.users[serverID][userID][k] = configoptions[p][k].default;
                     }
