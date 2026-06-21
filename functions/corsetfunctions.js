@@ -265,7 +265,7 @@ function calcBreath(serverID, user) {
 	if (process.gags[serverID][user] && process.gags[serverID][user].length > 0) {
         process.gags[serverID][user].forEach((g) => {
             if (process.gagtypes && process.gagtypes[g.gagtype]?.breathRecovery) {
-                recoveryCoefficient *= process.gagtypes[g.gagtype]?.breathRecovery(user, g.intensity ?? 5)
+                recoveryCoefficient *= process.gagtypes[g.gagtype]?.breathRecovery(user, g.intensity ?? 5, serverID)
             }
         })
 	}
