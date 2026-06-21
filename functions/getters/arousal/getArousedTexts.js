@@ -1,4 +1,4 @@
-const { arousedtexts } = require("../../../vibes/aroused/aroused_texts");
+const { arousedtexts } = require("../../../lists/aroused_texts");
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { calcStaticVibeIntensity } = require("../../vibefunctions");
 const { getOption } = require("../config/getOption");
