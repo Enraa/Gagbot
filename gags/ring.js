@@ -8,6 +8,10 @@
 
 // Character map stored in a separate file for code cleanliness/reusability
 const { ringGagCharMap } = require("./ring/ringCharMap.js");
+// Ring gag interrupt messages list stored in separate file
+const { ringGagInterruptList } = require("./ring/ringInterruptMessages.js");
+// Pronouns conversion function import for gag interrupts
+const { convertPronounsText } = require("../functions/other/convertPronounsText");
 
 const isAllCaps = (text) => {
 	return text == text.toUpperCase() && /[A-Z]/g.test(text);
@@ -23,21 +27,66 @@ const totalAlphas = (text) => {
 	return count;
 };
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, intensity, msg) => {
 	let output = "";
 	//splits by regex of any whitespace char so we have word arra
 	let words = text.split(/\s/);
 
-	// custom Ring gag addition - check for word amount and if past certain threshold add a chance to interrupt
-	let doGagInterrupt = false;
+	/* custom Ring gag addition - vars to define interrupt behaviour */
+	let wordsNeededForInterruptReset = 20;
+	let minInterruptWords = 8;
+	let wordGracePeriodAfterFirst = 5;
+	
 	let gagInterruptUsed = false;
-	if (words.length > 8) {
+	let doGagInterrupt = false;
+	let interruptPosition = 0;
+
+	let interruptIntensityRNGWeightPercent = 3;
+	let interruptWordRNGWeightPercent = 1;
+	let baselineChanceToInterrupt = intensity * interruptIntensityRNGWeightPercent;
+	// initial check to enable gag interrupt for sentences with enough words in them
+	if (words.length >= minInterruptWords) {
 		doGagInterrupt = true;
+
+		/* 
+		Feel like I should explain this one - basically takes a portion of intensity or raw intensity value
+		and uses that to randomly determine message interrupt location from the end of the message 
+		with the intent being that higher intensity means higher chance to encounter the interrupt sooner in the message
+		 */
+		let wordsInFirstPart = words.length % wordsNeededForInterruptReset;
+		if (words.length >= wordsNeededForInterruptReset){
+			wordsInFirstPart = wordsNeededForInterruptReset;
+		}
+		interruptPosition = wordsInFirstPart - Math.min(Math.floor(Math.random() * intensity) + 1, wordsInFirstPart - 1);
 	}
 
+	//console.log("interruptMinPosition: " + interruptPosition); // informative logging for dev purposes
 	for (let x = 0; x < words.length; x++) {
-		/* Gag interrupt message */
-		// TODO: implement gag interrupt with user pronoun respective messages
+		/* Gag interrupt message handling */
+		// does the reset every predetermined amount of words so interrupt messages can show up more than once in long sentences
+		if (gagInterruptUsed && x % wordsNeededForInterruptReset == 0) {
+			gagInterruptUsed = false;
+			interruptPosition = x + wordGracePeriodAfterFirst;
+		}
+
+		// check if can do interrupt, interrupt has not been used within this word interval and current word is past initial position for interrupt
+		//console.log("interruptPosition: " + interruptPosition + " gagInterruptUsed: " + gagInterruptUsed + " x: " + x); // informative logging for dev purposes
+		if (doGagInterrupt && !gagInterruptUsed && x >= interruptPosition) {
+			// do rng based on intensity to proc the message
+			let chanceToInterrupt = baselineChanceToInterrupt + (x % wordsNeededForInterruptReset) * interruptWordRNGWeightPercent;
+			let roll = Math.floor(Math.random() * 100) + 1;
+			//console.log("roll: " + roll + " chanceToInterrupt: " + chanceToInterrupt); // informative logging for dev purposes
+			if(roll <= chanceToInterrupt) {
+				gagInterruptUsed = true;
+				
+				//randomly choose interruption message
+				let msgIndex = Math.floor(Math.random() * ringGagInterruptList.length);
+				// convert and add the message to interrupt
+				output += convertPronounsText(ringGagInterruptList[msgIndex], { interactionuser: msg.member });
+				output += " ";
+			}
+			
+		}
 		
 		/* gag garble code - quick adaptation from DollLia's ball gag one */
 		let allCaps = isAllCaps(words[x]);
