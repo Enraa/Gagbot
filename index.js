@@ -89,7 +89,7 @@ let processdatatoload = [
     { textname: "heavyusers.txt", processvar: "heavy", default: {}, hasusers: true },
     { textname: "pronounsusers.txt", processvar: "pronouns", default: {}, hasusers: true },
     { textname: "usersdata.txt", processvar: "usercontext", default: {}, hasusers: true },
-    { textname: "consentusers.txt", processvar: "consented", default: {} },
+    { textname: "consentusers.txt", processvar: "consented", default: {}, hasusers: true },
     { textname: "corsetusers.txt", processvar: "corset", default: {}, hasusers: true },
     { textname: "arousal.txt", processvar: "arousal", default: {}, hasusers: true },
     { textname: "headwearusers.txt", processvar: "headwear", default: {}, hasusers: true },
