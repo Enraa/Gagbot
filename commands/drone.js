@@ -63,12 +63,13 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			// Build data tree:
 			let data = {
+                serverID: interaction.guildId, 
                 interactionuser: { id: interaction.user.id },
                 targetuser: { id: interaction.user.id },
             }
@@ -78,7 +79,7 @@ module.exports = {
             if (additional == null) { additional = ``};
 
             await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-            let dronetext = `${getOption(interaction.user.id, "dronevisorname")} :: Code ${dronecodes[chosencode].code} :: ${dronecodes[chosencode].message}`
+            let dronetext = `${getOption(interaction.guildId, interaction.user.id, "dronevisorname")} :: Code ${dronecodes[chosencode].code} :: ${dronecodes[chosencode].message}`
             if (additional.length > 0) {
                 if (dronetext.endsWith(".")) {
                     dronetext = `${dronetext} ${additional}`
@@ -87,7 +88,7 @@ module.exports = {
                     dronetext = `${dronetext}, ${additional}`
                 }
             }
-            messageSend({ channel: interaction.channel }, ("`" + dronetext + "`"), await getPFP(interaction.member), await getAlternateName(interaction.member), interaction.channel.parentId ? undefined : interaction.channel.id, true)
+            messageSend({ channel: interaction.channel }, ("`" + dronetext + "`"), await getPFP(interaction.guildId, interaction.member), await getAlternateName(interaction.guildId, interaction.member), interaction.channel.parentId ? undefined : interaction.channel.id, true)
             await interaction.editReply({ content: `Status code ${chosencode} sent!`})
 		} catch (err) {
 			console.log(err);

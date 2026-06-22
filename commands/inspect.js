@@ -10,7 +10,7 @@ module.exports = {
     async execute(interaction) {
         try {
             let inspectuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
-            interaction.reply(await inspectModal(interaction.user.id, inspectuser.id, "overview", 1))
+            interaction.reply(await inspectModal(interaction.guildId, interaction.user.id, inspectuser.id, "overview", 1))
         }
         catch (err) {
             console.log(err)
@@ -25,10 +25,10 @@ module.exports = {
         if ((interaction.customId == `inspect_overview_newuser_1`) && interaction.values) {
             choiceinput = interaction.values[0]
         }
-        interaction.update(await inspectModal(interaction.user.id, choiceinput, menu, page))
+        interaction.update(await inspectModal(interaction.guildId, interaction.user.id, choiceinput, menu, page))
     },
     async help(userid, page) {
-        let restrictedtext = (!getHeadwearRestrictions(userid).canInspect) ? `***You cannot see others currently***\n` : ""
+        let restrictedtext = (!getHeadwearRestrictions(interaction.guildId, userid).canInspect) ? `***You cannot see others currently***\n` : ""
         let overviewtext = `## Inspect
 ### Usage: /inspect (user)
 ### Additionally, right click a message or user, Apps -> Inspect User
