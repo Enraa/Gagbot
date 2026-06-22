@@ -4,6 +4,7 @@ const { getClonedChastityBraKey } = require("../../functions/getters/chastity/ge
 const { getClonedChastityKey } = require("../../functions/getters/chastity/getClonedChastityKey")
 const { getClonedCollarKey } = require("../../functions/getters/collar/getClonedCollarKey")
 const { getCollar } = require("../../functions/getters/collar/getCollar")
+const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js")
 const { getUserVar } = require("../../functions/getters/config/getUserVar")
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy")
 const { messageSendChannel } = require("../../functions/messagefunctions")
@@ -12,10 +13,11 @@ const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy")
 const { getText } = require("../../functions/textfunctions")
 const { calculatecapture } = require("./capture_sphere.js") // reuse the calculation!
 
-let tick = async (userID, datain) => {
-    if (process.userevents == undefined) { process.userevents = {} }
-    if (process.userevents[userID] == undefined) { process.userevents[userID] = {} }
-    if (process.userevents[userID].capturesphere == undefined) { 
+let tick = async (serverID, userID, datain) => {
+    if (getProcessVariable(serverID, userID, "userevents") == undefined) {
+        setProcessVariable(serverID, userID, "userevents", {});
+    }
+    if (getProcessVariable(serverID, userID, "userevents").capturesphere == undefined) {
         let capturerate = 1.0;
         let origbinder = getHeavy(userID)?.origbinder ?? 0;
         // If the person who bound this person has a key to the target, do the original
@@ -29,29 +31,29 @@ let tick = async (userID, datain) => {
             if (getClonedChastityBraKey(userID).includes(origbinder)) { capturerate = 8.0 }
             if (getClonedCollarKey(userID).includes(origbinder)) { capturerate = 8.0 }
         }
-        process.userevents[userID].capturesphere = { 
-            capture: calculatecapture(userID, capturerate), 
+        getProcessVariable(serverID, userID, "userevents").capturesphere = { 
+            capture: calculatecapture(serverID, userID, capturerate), 
             ballname: "Love Sphere",
             captureprogress: -1,
             nextupdate: Date.now() + 2000
         } 
     }
     // If the last update was over 2 minutes ago, this was probably an orphaned ball. 
-    if ((process.userevents[userID].capturesphere.nextupdate + 120000 ?? 0) < Date.now()) {
-        delete process.userevents[userID].capturesphere
+    if ((getProcessVariable(serverID, userID, "userevents").capturesphere.nextupdate + 120000 ?? 0) < Date.now()) {
+        delete getProcessVariable(serverID, userID, "userevents").capturesphere
         return;
     }
     // Only update every 5 seconds
-    if ((process.userevents[userID].capturesphere.nextupdate ?? 0) < Date.now()) {
-        process.userevents[userID].capturesphere.nextupdate = Date.now() + 2000;
+    if ((getProcessVariable(serverID, userID, "userevents").capturesphere.nextupdate ?? 0) < Date.now()) {
+        getProcessVariable(serverID, userID, "userevents").capturesphere.nextupdate = Date.now() + 2000;
     }
     else { return };
 
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person that's been captured!
-    let targetobject = await process.client.users.fetch(getHeavy(userID).origbinder ?? userID); // The cruel person who threw the pokeball!
+    let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw the pokeball!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID]) || getUserVar(userID, "captureSphereCaptured")) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID][userID]) || getUserVar(serverID, userID, "captureSphereCaptured")) {
         return;
     }
     // Build data tree:
@@ -60,50 +62,50 @@ let tick = async (userID, datain) => {
         textdata: {
             interactionuser: userobject,
             targetuser: targetobject,
-            c1: process.userevents[userID].capturesphere.ballname
+            c1: getProcessVariable(serverID, userID, "userevents").capturesphere.ballname
         }
     }
     data.heavy = true;
     data.capturesphere = true;
 
     // -1 to force an initial delay after equipping the sphere. 
-    if (process.userevents[userID].capturesphere.captureprogress == -1) {
-        process.userevents[userID].capturesphere.captureprogress++;
+    if (getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress == -1) {
+        getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress++;
         return;
     }
-    else if (process.userevents[userID].capturesphere.captureprogress < 2) {
-        if (process.userevents[userID].capturesphere.capture) {
-            if (process.userevents[userID].capturesphere.capture[process.userevents[userID].capturesphere.captureprogress]) {
+    else if (getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress < 2) {
+        if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture) {
+            if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture[getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress]) {
                 // Successful wiggle!
-                messageSendChannel(`*wiggle...*`, process.recentmessages[userID]);
+                messageSendChannel(`*wiggle...*`, process.recentmessages[serverID][userID]);
             }
             else {
-                data[`wigglefail${process.userevents[userID].capturesphere.captureprogress}`] = true
-                messageSendChannel(getText(data), process.recentmessages[userID])
-                removeHeavy(userID, "capture_sphere_love");
+                data[`wigglefail${getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress}`] = true
+                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                removeHeavy(serverID, userID, "capture_sphere");
                 return;
             }
         }
-        process.userevents[userID].capturesphere.captureprogress++;
+        getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress++;
         return;
     }
     // Last wiggle! Note, if the third check fails, we still wiggle for it and then break free on captureprogress 3.
     // Yes this could have been an if/else clause above, but this was broken down here for readability. 
-    else if (process.userevents[userID].capturesphere.captureprogress == 2) {
-        if (process.userevents[userID].capturesphere.capture) {
-            if (process.userevents[userID].capturesphere.capture[process.userevents[userID].capturesphere.captureprogress]) {
-                messageSendChannel(`*wiggle...*`, process.recentmessages[userID]);
+    else if (getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress == 2) {
+        if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture) {
+            if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture[getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress]) {
+                messageSendChannel(`*wiggle...*`, process.recentmessages[serverID][userID]);
             }
             else {
-                messageSendChannel(`*wiggle...*`, process.recentmessages[userID])
+                messageSendChannel(`*wiggle...*`, process.recentmessages[serverID][userID])
             }
         }
-        process.userevents[userID].capturesphere.captureprogress++
+        getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress++
         return;
     }
-    else if (process.userevents[userID].capturesphere.captureprogress == 3) {
-        if (process.userevents[userID].capturesphere.capture) {
-            if (process.userevents[userID].capturesphere.capture[process.userevents[userID].capturesphere.captureprogress - 1]) {
+    else if (getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress == 3) {
+        if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture) {
+            if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture[getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress - 1]) {
                 // This was a successful capture! 
                 if (userobject.id == targetobject.id) {
                     data.capturesuccess_self = true
@@ -111,29 +113,29 @@ let tick = async (userID, datain) => {
                 else {
                     data.capturesuccess_other = true
                 }
-                messageSendChannel(getText(data), process.recentmessages[userID]);
+                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
             }
             else {
                 // This broke free on the third wiggle. 
                 data.wigglefail2 = true;
-                messageSendChannel(getText(data), process.recentmessages[userID]);
-                removeHeavy(userID, "capture_sphere_love");
+                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                removeHeavy(serverID, userID, "capture_sphere");
                 return;
             }
         }
-        process.userevents[userID].capturesphere.captureprogress++
+        getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress++
         return;
     }
-    else if (process.userevents[userID].capturesphere.captureprogress == 4) {
-        setUserVar(userID, "captureSphereCaptured", true)
+    else if (getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress == 4) {
+        setUserVar(serverID, userID, "captureSphereCaptured", true)
     }
 }
 
 // Called when the item is removed. Only implemented for heavy bondage presently.
 // This should be used to clear any lingering data from above. 
-let functiononremove = async (userID) => {
-    setUserVar(userID, "captureSphereCaptured", undefined)
-    delete process.userevents[userID].capturesphere;
+let functiononremove = async (serverID, userID) => {
+    setUserVar(serverID, userID, "captureSphereCaptured", undefined)
+    delete getProcessVariable(serverID, userID, "userevents").capturesphere;
 }
 
 exports.tick = tick;

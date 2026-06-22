@@ -10,24 +10,24 @@ const DISSOLVE_RATE_MS = 60000;
 
 async function tick(serverID, userID, data) {
     // Init Countdown Variable on First Run if not already present
-    if (getUserVar(userID, "confectionaryDissolveTimer") == undefined) {
-        setUserVar(userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
+    if (getUserVar(serverID, userID, "confectionaryDissolveTimer") == undefined) {
+        setUserVar(serverID, userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
     }
 
     // Decrement Intensity every timer interval
-    if (getUserVar(userID, "confectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "chocolate") && process.recentmessages[userID]) {
+    if (getUserVar(serverID, userID, "confectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "chocolate") && process.recentmessages[serverID][userID]) {
         if(getGag(serverID, userID, "chocolate").intensity > 1){
-            setUserVar(userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
+            setUserVar(serverID, userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
             // Get Intensity and push decremented version
             let oldIntensity = getGag(serverID, userID, "chocolate").intensity
-            assignGag(userID, "chocolate", oldIntensity - 1)
-            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(userID, "possessiveDeterminer")} Chocolate Gag a little bit!`, process.recentmessages[userID])
+            assignGag(serverID, userID, "chocolate", oldIntensity - 1)
+            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(serverID, userID, "possessiveDeterminer")} Chocolate Gag a little bit!`, process.recentmessages[serverID][userID])
         }
         else {
             // Clear Gag and Dissolve Timer
-            setUserVar(userID, "confectionaryDissolveTimer", undefined)
-            removeGag(userID, "chocolate")
-            messageSendChannel(`<@${userID}>'s Chocolate Gag has dissolved away!`, process.recentmessages[userID])
+            setUserVar(serverID, userID, "confectionaryDissolveTimer", undefined)
+            removeGag(serverID, userID, "chocolate")
+            messageSendChannel(`<@${userID}>'s Chocolate Gag has dissolved away!`, process.recentmessages[serverID][userID])
         }
     }
 }

@@ -19,17 +19,17 @@ const { getText } = require("../../functions/textfunctions");
 exports.tick = async (serverID, userID, data) => {
     try {
         // Cancel until the user has said AT LEAST three things or has waited long enough. 
-        if (getUserVar(userID, "struggleCollarMsgs") < 5) { return }
-        if (getUserVar(userID, "struggleCollarDelay") >= Date.now()) { return }
+        if (getUserVar(serverID, userID, "struggleCollarMsgs") < 5) { return }
+        if (getUserVar(serverID, userID, "struggleCollarDelay") >= Date.now()) { return }
 
-        let heavybondage = getHeavy(userID)?.displayname;
+        let heavybondage = getHeavy(serverID, userID)?.displayname;
         let gagbondage = getGagLast(serverID, userID);
-        let mittenbondage = getMitten(userID);
-        let chastitybondage = getChastity(userID);
-        let chastitybrabondage = getChastityBra(userID)
-        let headbondage = getHeadwear(userID);
-        let corsetbondage = getCorset(userID);
-        let collarbondage = getCollar(userID);
+        let mittenbondage = getMitten(serverID, userID);
+        let chastitybondage = getChastity(serverID, userID);
+        let chastitybrabondage = getChastityBra(serverID, userID)
+        let headbondage = getHeadwear(serverID, userID);
+        let corsetbondage = getCorset(serverID, userID);
+        let collarbondage = getCollar(serverID, userID);
 
         let chooseopts = [];
         if (heavybondage) { chooseopts.push("heavy") }
@@ -45,14 +45,15 @@ exports.tick = async (serverID, userID, data) => {
         let data = {
             textarray: "texts_struggle",
             textdata: {
+                serverID: serverID,
                 interactionuser: { id: userID },
                 targetuser: { id: userID }, // Doesn't really matter but we're adding to avoid a crash
-                c1: getHeavy(userID)?.displayname, // heavy bondage type
-                c2: convertGagText(getGagLast(interaction.guildId, userID)),
-                c3: getMittenName(userID) ?? "mittens",
-                c4: getChastityName(userID) ?? "chastity belt",
-                c5: getCollarName(userID) ?? "collar",
-                c6: getChastityBraName(userID) ?? "chastity bra"
+                c1: getHeavy(serverID, userID)?.displayname, // heavy bondage type
+                c2: convertGagText(getGagLast(serverID, userID)),
+                c3: getMittenName(serverID, userID) ?? "mittens",
+                c4: getChastityName(serverID, userID) ?? "chastity belt",
+                c5: getCollarName(serverID, userID) ?? "collar",
+                c6: getChastityBraName(serverID, userID) ?? "chastity bra"
             },
         };
 
@@ -245,13 +246,13 @@ exports.tick = async (serverID, userID, data) => {
         }
 
         // Wait between 4 and 14 minutes for another struggle. 
-        setUserVar(userID, "struggleCollarDelay", Date.now() + 240000 + Math.floor(Math.random() * 600000))
-        setUserVar(userID, "struggleCollarMsgs", 0); 
+        setUserVar(serverID, userID, "struggleCollarDelay", Date.now() + 240000 + Math.floor(Math.random() * 600000))
+        setUserVar(serverID, userID, "struggleCollarMsgs", 0); 
     } catch (err) {
         console.log(err);
     }
 }
 
-exports.msgfunction = (userid, data) => {
-    setUserVar(userid, "struggleCollarMsgs", (getUserVar(userid, "struggleCollarMsgs") ?? 1) + 1); 
+exports.msgfunction = (serverID, userid, data) => {
+    setUserVar(serverID, userid, "struggleCollarMsgs", (getUserVar(userid, "struggleCollarMsgs") ?? 1) + 1); 
 }
