@@ -47,7 +47,7 @@ async function getDisplayTexts(serverID, userID, inspectuserID) {
     // Attempt to get the current guild member object for the user. This might have unintended consequences
     // however I'd have to retool the main function to narrow down to one guild. Too much work currently. 
     let guild = process.client.guilds.cache.get(serverID);
-    let inspectusername = guild.members.get(inspectuserID).displayname
+    let inspectusername = guild.members.cache.get(inspectuserID).displayname
     if (process.heavy && process.heavy[serverID]) {
         Object.keys(process.heavy[serverID]).forEach((k) => {
             if (!Array.isArray(process.heavy[serverID][k])) {
@@ -70,7 +70,7 @@ async function getDisplayTexts(serverID, userID, inspectuserID) {
     // ****************** 
 
     // ****************** Shared Gasmask --- Can't currently test this because linked was disabled for now. 
-    if (getProcessVariable(serverID, inspectuserID, "headwear").sharedbreathhose) {
+    if (getProcessVariable(serverID, inspectuserID, "headwear")?.sharedbreathhose) {
         bartext = `${bartext}\n\n${process.emojis.gasmask} Sharing Breath with: <@${getProcessVariable(serverID, inspectuserID, "headwear").sharedbreathhose}>`
     } 
     // ****************** 

@@ -51,6 +51,7 @@ const { getCollarKeys } = require("./getters/collar/getCollarKeys");
 const { getClonedChastityKeysOwned } = require("./getters/chastity/getClonedChastityKeysOwned");
 const { getClonedChastityBraKeysOwned } = require("./getters/chastity/getClonedChastityBraKeysOwned");
 const { getClonedCollarKeysOwned } = require("./getters/collar/getClonedCollarKeysOwned");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
 
 async function generateOutfitModal(serverID, userID, menu, page, options) {
     traceFirstParam(arguments[0]);
@@ -579,7 +580,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(serverID, inspectuserID).map((g) => { return `${convertGagText(g.gagtype)} (${g.intensity})`}).join(", ")}**`
         }
         // Headwear
-        if (getHeadwear(inspectuserID).length > 0) {
+        if (getHeadwear(serverID, inspectuserID).length > 0) {
             wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(serverID, inspectuserID).map((h) => (!getLockedHeadgear(serverID, inspectuserID).includes(h) ? getHeadwearName(serverID, undefined, h) : `*${getHeadwearName(serverID, undefined, h)}*`)).join(", ")}**`
             let lockedheadgears = [];
             if (process.headwear[serverID][inspectuserID]) { lockedheadgears = Object.keys(process.headwear[serverID][inspectuserID]) }
@@ -770,7 +771,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             wearingtext = `${wearingtext}\n${process.emojis.gag} Gags: **${getGags(serverID, inspectuserID).map((g) => { return `${convertGagText(g.gagtype)} (${g.intensity})`}).join(", ")}**`
         }
         // Headwear
-        if (getHeadwear(inspectuserID).length > 0) {
+        if (getHeadwear(serverID, inspectuserID).length > 0) {
             wearingtext = `${wearingtext}\n${process.emojis.gasmask} Masks: **${getHeadwear(serverID, inspectuserID).map((h) => (!getLockedHeadgear(serverID, inspectuserID).includes(h) ? getHeadwearName(serverID, undefined, h) : `*${getHeadwearName(serverID, undefined, h)}*`)).join(", ")}**`
             let lockedheadgears = [];
             if (process.headwear[serverID][inspectuserID]) { lockedheadgears = Object.keys(process.headwear[serverID][inspectuserID]) }
