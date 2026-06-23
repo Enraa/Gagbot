@@ -36,7 +36,7 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(interaction.user.id);
+            let tags = getUserTags(interaction.guildId, interaction.user.id);
             let newsorted = [];
             matches.forEach((f) => {
                 let tagged = false;

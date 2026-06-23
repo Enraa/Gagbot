@@ -30,7 +30,7 @@ module.exports = {
 					interactionuser: interaction.user,
 					targetuser: mitteneduser,
 					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
-                    c2: getMittenName(getMitten(interaction.guildId, mitteneduser.id)?.mittenname) ?? "mittens"
+                    c2: getMittenName(interaction.guildId, getMitten(interaction.guildId, mitteneduser.id)?.mittenname) ?? "mittens"
 				},
 			};
 			if (!getHeavyBound(interaction.guildId, interaction.user.id, mitteneduser.id)) {

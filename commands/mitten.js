@@ -78,8 +78,8 @@ module.exports = {
                     serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: targetuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: getMittenName(interaction.user.id, chosenmittens) ?? "Standard Mittens",
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+					c2: getMittenName(interaction.guildId, interaction.user.id, chosenmittens) ?? "Standard Mittens",
 				},
 			};
 

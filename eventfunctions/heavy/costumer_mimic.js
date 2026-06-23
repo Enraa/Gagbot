@@ -384,11 +384,11 @@ let tick = async (serverID, userID, datain) => {
     if (getProcessVariable(serverID, userID, "userevents") == undefined) { setProcessVariable(serverID, userID, "userevents", {}) }
     if (getProcessVariable(serverID, userID, "userevents").costumermimic == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic = { stage: 0 } }
     if (getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx = 0 }
-    if (getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder = getHeavy(userID).origbinder }
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder = getHeavy(serverID, userID).origbinder }
 
     // Randomly select an outfit from mimicCostumes.js
     if (getProcessVariable(serverID, userID, "userevents").costumermimic.outfit == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.outfit = Object.keys(mimicCostumes)[Math.floor(Math.random() * Object.keys(mimicCostumes).length)]; }
-    let currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))); // Current clothes that can be removed
+    let currclothes = getWearable(serverID, userID).filter((f) => (!getLockedWearable(serverID, userID).includes(f))); // Current clothes that can be removed
     let shuffledclothes = shuffleWearables(currclothes); // I admittedly dont think a big shuffler's necessary but its fine
     // Capture length of initial Removable Wearables array
     if (getProcessVariable(serverID, userID, "userevents").costumermimic.removableclothes == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.removableclothes = shuffledclothes.length }
@@ -396,9 +396,9 @@ let tick = async (serverID, userID, datain) => {
 
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
-    let targetobject = await process.client.users.fetch(getHeavy(userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
+    let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID][userID])) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
         return;
     }
 
@@ -420,7 +420,7 @@ let tick = async (serverID, userID, datain) => {
     }
 
     // The Mimic is teasing the Victim during the entire event~ (Arousal Gain can be increased or decreased as desired)
-    addArousal(userID, 1);
+    addArousal(serverID, userID, 1);
 
     console.log(getProcessVariable(serverID, userID, "userevents").costumermimic)
 
@@ -538,7 +538,7 @@ let tick = async (serverID, userID, datain) => {
             case "headwear":
                 if (!getHeadwear(serverID, userID) || (getHeadwear(serverID, userID) && (getHeadwear(serverID, userID).getHeadwearName != nextitem.itemtowear))) {
                     data.headwear = true;
-                    data.textdata.c1 = getHeadwearName(undefined, nextitem.itemtowear), // headwear name
+                    data.textdata.c1 = getHeadwearName(serverID, undefined, nextitem.itemtowear), // headwear name
 
                         // Apply the headwear    
                         assignHeadwear(serverID, userID, nextitem.itemtowear, targetobject.id)

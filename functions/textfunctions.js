@@ -5586,9 +5586,12 @@ function getText(data) {
 	try {
 		let textarray = data.textarray;
 		let data_in = data.textdata;
+        if (data_in.serverID == undefined) {
+            data_in.serverID = data.serverID;
+        }
 		let props = [];
 		for (k in data) {
-			if (k != "textarray" && k != "textdata") {
+			if (k != "textarray" && k != "textdata" && k != "serverID") {
 				props.push(k); // Should create the same order.
 			}
 		}

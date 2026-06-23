@@ -1,5 +1,6 @@
 const { getArousal } = require("../../getters/arousal/getArousal");
 const { getCombinedTraits } = require("../../getters/chastity/getCombinedTraits");
+const { getOption } = require("../../getters/config/getOption");
 const { getProcessVariable } = require("../../getters/config/getProcessVariable");
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 
@@ -28,7 +29,7 @@ function addArousal(serverID, user, change) {
         console.log(`ERROR - ${user} is somehow not a number!`)
         process.arousal[serverID][user].arousal = 0;
     }
-    getCombinedTraits(serverID, user).afterArousalChange({ userID: user, prevArousal: (getArousal(serverID, user) - change), currArousal: getArousal(serverID, user) });
+    getCombinedTraits(serverID, user).afterArousalChange({ serverID: serverID, userID: user, prevArousal: (getArousal(serverID, user) - change), currArousal: getArousal(serverID, user) });
     return getArousal(serverID, user);
 }
 

@@ -27,7 +27,7 @@ function getMittenName(serverID, userID, mittenname) {
     }
     if (mittenname) {
         return convertmittenarr[mittenname];
-    } else if (process.mitte[serverID][userID]?.mittenname) {
+    } else if (process.mitten[serverID][userID]?.mittenname) {
         return convertmittenarr[process.mitten[serverID][userID]?.mittenname];
     } else {
         return undefined;

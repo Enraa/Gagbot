@@ -12,7 +12,6 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  * ###### Note: Needs rework to remove the first param and just use wearablename
  ************/
 function getWearableName(userID, wearablename) {
-    traceFirstParam(arguments[0]);
     if (process.wearable == undefined) {
 		process.wearable = {};
 	}

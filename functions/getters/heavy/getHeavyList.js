@@ -15,7 +15,7 @@ const { getProcessVariable } = require("../config/getProcessVariable");
  *********/
 function getHeavyList(serverID, user) {
     traceFirstParam(arguments[0]);
-    return getProcessVariable(serverID, user, "heavy");
+    return getProcessVariable(serverID, user, "heavy") ?? [];
 }
 
 exports.getHeavyList = getHeavyList;

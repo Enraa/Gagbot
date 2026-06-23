@@ -85,7 +85,7 @@ module.exports = {
 					targetuser: chastityuser,
 					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: (braorbelt == "chastitybelt" ? getChastityName(interaction.guildId, chastityuser.id, bondagetype) : getChastityBraName(interaction.guildId, chastityuser.id, bondagetype)) ?? (braorbelt == "chastitybelt" ? "chastity belt" : "chastity bra"),
-                    c3: `<@${braorbelt == "chastitybelt" ? getChastity(interaction.guildId, chastityuser.id)?.keyholder : getChastityBra(chastityuser.id)?.keyholder}>`
+                    c3: `<@${braorbelt == "chastitybelt" ? getChastity(interaction.guildId, chastityuser.id)?.keyholder : getChastityBra(interaction.guildId, chastityuser.id)?.keyholder}>`
 				},
 			};
             if (braorbelt == "chastitybelt") {

@@ -31,6 +31,7 @@ module.exports = {
 			}
 			// Build data tree:
 			let data = {
+                serverID: interaction.guildId,
 				textarray: "texts_unchastity",
 				textdata: {
 					interactionuser: interaction.user,
