@@ -20,7 +20,7 @@ module.exports = {
 	async autoComplete(interaction) {
         try {
             let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-            let itemsworn = getWearable(chosenuserid);
+            let itemsworn = getWearable(interaction.guildId, chosenuserid);
 
             // Remove anything we're already wearing from the list
             const focusedValue = interaction.options.getFocused();
@@ -33,7 +33,7 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes.slice(0,25);
             }
-            let tags = getUserTags(chosenuserid);
+            let tags = getUserTags(interaction.guildId, chosenuserid);
             let newsorted = [];
             matches.forEach((f) => {
                 let tagged = false;
@@ -60,21 +60,22 @@ module.exports = {
 			let wearableuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			let wearablechoice = interaction.options.getString("type") ? interaction.options.getString("type") : "catsuit_latex";
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(wearableuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, wearableuser.id)?.mainconsent) {
 				await handleConsent(interaction, wearableuser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let data = {
+                serverID: interaction.guildId, 
 				textarray: "texts_wear",
 				textdata: {
 					interactionuser: interaction.user,
 					targetuser: wearableuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: getWearableName(wearableuser.id, wearablechoice),
 				},
 			};
@@ -87,7 +88,7 @@ module.exports = {
 
             let blocked = false;
             if (wearablechoice) {
-                let tags = getUserTags(wearableuser.id);
+                let tags = getUserTags(interaction.guildId, wearableuser.id);
                 let i = getBaseWearable(wearablechoice)
                 tags.forEach((t) => {
                     if (i && i.tags && i.tags[t] && (wearableuser != interaction.user)) {
@@ -101,13 +102,13 @@ module.exports = {
                 return;
             }
 
-			if (!getHeavyBound(interaction.user.id, wearableuser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, wearableuser.id)) {
 				// target is in heavy bondage
 				data.heavy = true;
 				if (wearableuser.id == interaction.user.id) {
 					// ourselves
 					data.self = true;
-					if (getWearable(wearableuser.id).includes(wearablechoice)) {
+					if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 						// Wearing the headgear already, Ephemeral
 						data.worn = true;
 						interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
@@ -119,7 +120,7 @@ module.exports = {
 				} else {
 					// Them
 					data.other = true;
-					if (getWearable(wearableuser.id).includes(wearablechoice)) {
+					if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 						// Wearing the headgear already, Ephemeral
 						data.worn = true;
 						interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
@@ -135,27 +136,27 @@ module.exports = {
 				if (wearableuser.id == interaction.user.id) {
 					// ourselves
 					data.self = true;
-					if (getWearable(wearableuser.id).includes(wearablechoice)) {
+					if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 						// Wearing the headgear already, Ephemeral
 						data.worn = true;
 						interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
 					} else {
 						// Not wearing it!
 						data.noworn = true;
-						assignWearable(wearableuser.id, wearablechoice);
+						assignWearable(interaction.guildId, wearableuser.id, wearablechoice);
 						interaction.reply(getText(data));
 					}
 				} else {
 					// Them
 					data.other = true;
-					if (getWearable(wearableuser.id).includes(wearablechoice)) {
+					if (getWearable(interaction.guildId, wearableuser.id).includes(wearablechoice)) {
 						// Wearing the headgear already, Ephemeral
 						data.worn = true;
 						interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
 					} else {
 						// Not wearing it!
 						data.noworn = true;
-						assignWearable(wearableuser.id, wearablechoice);
+						assignWearable(interaction.guildId, wearableuser.id, wearablechoice);
 						interaction.reply(getText(data));
 					}
 				}

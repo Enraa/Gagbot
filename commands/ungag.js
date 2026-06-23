@@ -60,22 +60,23 @@ module.exports = {
 				gagtoremove = getGags(interaction.guildId, gaggeduser.id)[0].gagtype;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let data = {
 				textarray: "texts_ungag",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: gaggeduser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: process.gagtypes.find((t) => t.value == gagtoremove)?.name ?? "gag",
 				},
 			};
 
 			// Fuck it, I'm just gonna redo the code path because I've been redoing all the removals anyway.
-			if (!getHeavyBound(interaction.user.id, gaggeduser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, gaggeduser.id)) {
 				// We are in heavy bondage
 				data.heavy = true;
 				if (gaggeduser == interaction.user) {
@@ -106,7 +107,7 @@ module.exports = {
 			} else {
 				// Not in heavy bondage
 				data.noheavy = true;
-				if (getMitten(interaction.user.id)) {
+				if (getMitten(interaction.guildId, interaction.user.id)) {
 					// We are wearing mittens!
 					data.mitten = true;
 					if (gaggeduser == interaction.user) {
@@ -145,23 +146,23 @@ module.exports = {
 							data.gag = true;
                             // Now check if we have any gags that are locked on!
                             let lockedheadgears = [];
-                            if (process.headwear[gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[gaggeduser.id]) }
-                            if (gagtoremove && process.headwear[gaggeduser.id] && process.headwear[gaggeduser.id][`gagharness_${gagtoremove}`]) {
+                            if (process.headwear[interaction.guildId][gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[interaction.guildId][gaggeduser.id]) }
+                            if (gagtoremove && process.headwear[interaction.guildId][gaggeduser.id] && process.headwear[interaction.guildId][gaggeduser.id][`gagharness_${gagtoremove}`]) {
                                 data.failed = true
                                 interaction.reply(getText(data));
                             }
 							else if (gagtoremove) {
 								data.single = true;
 								interaction.reply(getText(data));
-								deleteGag(gaggeduser.id, gagtoremove);
+								deleteGag(interaction.guildId, gaggeduser.id, gagtoremove);
 							} else if (lockedheadgears.find((h) => h.startsWith(`gagharness`))) {
 								data.multipleharnessed = true;
 								interaction.reply(getText(data));
-								deleteGag(gaggeduser.id);
+								deleteGag(interaction.guildId, gaggeduser.id);
 							} else {
                                 data.multiple = true;
 								interaction.reply(getText(data));
-								deleteGag(gaggeduser.id);
+								deleteGag(interaction.guildId, gaggeduser.id);
                             }
 						} else {
 							// Not gagged! Ephemeral
@@ -176,19 +177,19 @@ module.exports = {
 							data.gag = true;
                             // Now check if we have any gags that are locked on!
                             let lockedheadgears = [];
-                            if (process.headwear[gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[gaggeduser.id]) }
-                            if (gagtoremove && process.headwear[gaggeduser.id] && process.headwear[gaggeduser.id][`gagharness_${gagtoremove}`]) {
+                            if (process.headwear[interaction.guildId][gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[interaction.guildId][gaggeduser.id]) }
+                            if (gagtoremove && process.headwear[interaction.guildId][gaggeduser.id] && process.headwear[interaction.guildId][gaggeduser.id][`gagharness_${gagtoremove}`]) {
                                 data.failed = true
                                 interaction.reply(getText(data));
                                 return;
                             }
 							// Now lets make sure the wearer wants that.
-							if (checkBondageRemoval(interaction.user.id, gaggeduser.id, "gag") == true) {
+							if (checkBondageRemoval(interaction.guildId, interaction.user.id, gaggeduser.id, "gag") == true) {
 								// Allowed immediately, lets go
 								if (gagtoremove) {
 									data.single = true;
 									interaction.reply(getText(data));
-									deleteGag(gaggeduser.id, gagtoremove);
+									deleteGag(interaction.guildId, gaggeduser.id, gagtoremove);
 								} else {
                                     if (lockedheadgears.find((h) => h.startsWith(`gagharness`))) {
                                         data.multipleharnessed = true;
@@ -197,20 +198,20 @@ module.exports = {
                                         data.multiple = true;
                                     }
 									interaction.reply(getText(data));
-									deleteGag(gaggeduser.id);
+									deleteGag(interaction.guildId, gaggeduser.id);
 								}
 							} else {
 								// We need to ask first.
 								let datatogeneric = Object.assign({}, data.textdata);
 								datatogeneric.c1 = "gag";
 								interaction.reply({ content: getTextGeneric("unbind", datatogeneric), flags: MessageFlags.Ephemeral });
-								let canRemove = await handleBondageRemoval(interaction.user, gaggeduser, "gag").then(
+								let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, gaggeduser, "gag").then(
 									async (res) => {
 										await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 										if (gagtoremove) {
 											data.single = true;
 											await interaction.followUp(getText(data));
-											deleteGag(gaggeduser.id, gagtoremove);
+											deleteGag(interaction.guildId, gaggeduser.id, gagtoremove);
 										} else {
 											if (lockedheadgears.find((h) => h.startsWith(`gagharness`))) {
                                                 data.multipleharnessed = true;
@@ -219,7 +220,7 @@ module.exports = {
                                                 data.multiple = true;
                                             }
 											await interaction.followUp(getText(data));
-											deleteGag(gaggeduser.id);
+											deleteGag(interaction.guildId, gaggeduser.id);
 										}
 									},
 									async (rej) => {

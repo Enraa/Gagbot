@@ -26,7 +26,7 @@ module.exports = {
         try {
             const focusedValue = interaction.options.getFocused();
             let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-            let autocompletes = getHeavyList(chosenuserid).map((h) => { return { name: getBaseHeavy(h.type).name, value: h.type }})
+            let autocompletes = getHeavyList(interaction.guildId, chosenuserid).map((h) => { return { name: getBaseHeavy(h.type).name, value: h.type }})
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
@@ -48,21 +48,22 @@ module.exports = {
 			let heavyuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
             let heavytype = interaction.options.getString("type") ?? getHeavy(heavyuser.id)?.type;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let data = {
 				textarray: "texts_unheavy",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: heavyuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: getHeavy(heavyuser.id, heavytype)?.displayname ?? getBaseHeavy(heavytype)?.name
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+					c2: getHeavy(interaction.guildId, heavyuser.id, heavytype)?.displayname ?? getBaseHeavy(heavytype)?.name
 				},
 			};
 
-			if (!getHeavy(heavyuser.id, heavytype)) {
+			if (!getHeavy(interaction.guildId, heavyuser.id, heavytype)) {
 				// They aren't bound lol.
 				data.noheavy = true;
 				data.noheavyequipped = true;
@@ -71,7 +72,7 @@ module.exports = {
 				return;
 			}
 
-			if (!getHeavyBound(interaction.user.id, heavyuser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, heavyuser.id)) {
 				// user IS in heavy bondage
 				data.heavy = true;
 				if (interaction.user == heavyuser) {
@@ -86,7 +87,7 @@ module.exports = {
 			} else {
 				// Not in heavy bondage
 				data.noheavy = true;
-				if (getHeavy(heavyuser.id, heavytype)) {
+				if (getHeavy(interaction.guildId, heavyuser.id, heavytype)) {
 					data.heavyequipped = true;
                     if (interaction.user == heavyuser) {
                         data.self = true;
@@ -95,20 +96,20 @@ module.exports = {
                         data.other = true;
                     }
 					// Now lets make sure the wearer wants that.
-					if (checkBondageRemoval(interaction.user.id, heavyuser.id, "heavy") == true) {
+					if (checkBondageRemoval(interaction.guildId, interaction.user.id, heavyuser.id, "heavy") == true) {
 						// Allowed immediately, lets go
 						interaction.reply(getText(data));
-						removeHeavy(heavyuser.id, heavytype);
+						removeHeavy(interaction.guildId, heavyuser.id, heavytype);
 					} else {
 						// We need to ask first.
 						let datatogeneric = Object.assign({}, data.textdata);
 						datatogeneric.c1 = "heavy bondage";
 						interaction.reply({ content: getTextGeneric("unbind", datatogeneric), flags: MessageFlags.Ephemeral });
-						let canRemove = await handleBondageRemoval(interaction.user, heavyuser, getHeavy(heavyuser.id, heavytype)?.displayname ?? "heavy bondage").then(
+						let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, heavyuser, getHeavy(interaction.guildId, heavyuser.id, heavytype)?.displayname ?? "heavy bondage").then(
 							async (res) => {
 								await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 								await interaction.followUp(getText(data));
-								removeHeavy(heavyuser.id, heavytype);
+								removeHeavy(interaction.guildId, heavyuser.id, heavytype);
 							},
 							async (rej) => {
 								await interaction.editReply(getTextGeneric("unbind_decline", datatogeneric));

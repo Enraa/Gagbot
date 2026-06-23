@@ -33,7 +33,7 @@ module.exports = {
         let choices = [
             { name: "No Outfit to Select", value: -1 }
         ];
-        let outfits = getOutfits(interaction.user.id)
+        let outfits = getOutfits(interaction.guildId, interaction.user.id)
         if (outfits.length > 0) {
             choices = [];
             for (let i = 0; i < outfits.length; i++) {
@@ -48,12 +48,12 @@ module.exports = {
 		try {
             let subcommand = interaction.options.getSubcommand();
             if (subcommand == "menu") {
-                await interaction.reply(await generateOutfitModal(interaction.user.id, "restore", 1, "0000000000"));
+                await interaction.reply(await generateOutfitModal(interaction.guildId, interaction.user.id, "restore", 1, "0000000000"));
             }
             else if (subcommand == "restore") {
                 let outfitslot = interaction.options.getInteger("slot")
                 if ((outfitslot > -1) && (outfitslot < 20)) {
-                    restoreOutfit(interaction.user.id, getOutfits(interaction.user.id)[outfitslot]);
+                    restoreOutfit(interaction.guildId, interaction.user.id, getOutfits(interaction.guildId, interaction.user.id)[outfitslot]);
                     await interaction.reply({ content: `Reloading Outfit in slot ${outfitslot + 1}...`, flags: MessageFlags.Ephemeral })
                 }
             }
@@ -67,26 +67,26 @@ module.exports = {
 			// We changed page, new page!
 			if (optionparts[1] == "save" || optionparts[1] == "restore" || optionparts[1] == "rename") {
 				if (optionparts[4]) {
-					await interaction.update(await generateOutfitModal(interaction.user.id, optionparts[1], optionparts[2], optionparts[4]));
+					await interaction.update(await generateOutfitModal(interaction.guildId, interaction.user.id, optionparts[1], optionparts[2], optionparts[4]));
 				} else {
-					await interaction.update(await generateOutfitModal(interaction.user.id, optionparts[1], optionparts[2], "0000000000"));
+					await interaction.update(await generateOutfitModal(interaction.guildId, interaction.user.id, optionparts[1], optionparts[2], "0000000000"));
 				}
 			}
 			// Changing an option!
 			else if (optionparts[1] == "outfitopt") {
 				let optionbits = optionparts[4];
 				optionbits = `${optionbits.slice(0, optionparts[3])}${optionbits.charAt(optionparts[3]) == 0 ? `1` : `0`}${optionbits.slice(parseInt(optionparts[3]) + 1)}`;
-				await interaction.update(await generateOutfitModal(interaction.user.id, "save", optionparts[2], optionbits));
+				await interaction.update(await generateOutfitModal(interaction.guildId, interaction.user.id, "save", optionparts[2], optionbits));
 			}
 			// Equipping an outfit!
 			else if (optionparts[1] == "restoreoutfit") {
-				restoreOutfit(interaction.user.id, getOutfits(interaction.user.id)[optionparts[3]]);
-				await interaction.update(await generateOutfitModal(interaction.user.id, "restore", optionparts[2], optionparts[4]));
+				restoreOutfit(interaction.guildId, interaction.user.id, getOutfits(interaction.user.id)[optionparts[3]]);
+				await interaction.update(await generateOutfitModal(interaction.guildId, interaction.user.id, "restore", optionparts[2], optionparts[4]));
 			}
 			// Equipping an outfit!
 			else if (optionparts[1] == "saveoutfit") {
-				assignOutfit(interaction.user.id, parseInt(optionparts[2]) - 1, optionparts[4]);
-				await interaction.update(await generateOutfitModal(interaction.user.id, "save", optionparts[2], optionparts[4]));
+				assignOutfit(interaction.guildId, interaction.user.id, parseInt(optionparts[2]) - 1, optionparts[4]);
+				await interaction.update(await generateOutfitModal(interaction.guildId, interaction.user.id, "save", optionparts[2], optionparts[4]));
 			}
 			// Renaming an outfit!
 			else if (optionparts[1] == "renameoutfit") {
@@ -100,11 +100,11 @@ module.exports = {
 		console.log(interaction);
 		let choiceinput = interaction.fields.getTextInputValue("choiceinput");
 		let optionparts = interaction.customId.split("_");
-		renameOutfit(interaction.user.id, parseInt(optionparts[2]), `${choiceinput.slice(0, 50)}`);
+		renameOutfit(interaction.guildId, interaction.user.id, parseInt(optionparts[2]), `${choiceinput.slice(0, 50)}`);
 		await interaction.reply({ content: `Updated name for Outfit in slot ${parseInt(optionparts[2]) + 1} to **${choiceinput.slice(0, 50)}**`, flags: MessageFlags.Ephemeral });
 		if (process.recentinteraction) {
 			if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
-				await process.recentinteraction[interaction.user.id].interaction.editReply(await generateOutfitModal(interaction.user.id, "rename", Math.ceil(optionparts[2] / 5), "0000000000"));
+				await process.recentinteraction[interaction.user.id].interaction.editReply(await generateOutfitModal(interaction.guildId, interaction.user.id, "rename", Math.ceil(optionparts[2] / 5), "0000000000"));
 			}
 			delete process.recentinteraction[interaction.user.id];
 		}

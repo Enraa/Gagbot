@@ -19,20 +19,21 @@ module.exports = {
 		try {
 			let mitteneduser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let data = {
 				textarray: "texts_unmitten",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: mitteneduser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-                    c2: getMittenName(getMitten(mitteneduser.id)?.mittenname) ?? "mittens"
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+                    c2: getMittenName(getMitten(interaction.guildId, mitteneduser.id)?.mittenname) ?? "mittens"
 				},
 			};
-			if (!getHeavyBound(interaction.user.id, mitteneduser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, mitteneduser.id)) {
 				data.heavy = true;
 				if (interaction.options.getUser("user") == interaction.user) {
 					data.self = true;
@@ -41,27 +42,27 @@ module.exports = {
 					data.other = true;
 					interaction.reply(getText(data));
 				}
-			} else if (getMitten(mitteneduser.id)) {
+			} else if (getMitten(interaction.guildId, mitteneduser.id)) {
 				data.noheavy = true;
 				if (mitteneduser != interaction.user) {
 					data.other = true;
 					if (getGag(interaction.guildId, mitteneduser.id)) {
 						data.gag = true;
 						// Now lets make sure the wearer wants that.
-						if (checkBondageRemoval(interaction.user.id, mitteneduser.id, "mitten") == true) {
+						if (checkBondageRemoval(interaction.guildId, interaction.user.id, mitteneduser.id, "mitten") == true) {
 							// Allowed immediately, lets go
 							interaction.reply(getText(data));
-							deleteMitten(mitteneduser.id);
+							deleteMitten(interaction.guildId, mitteneduser.id);
 						} else {
 							// We need to ask first.
 							let datatogeneric = Object.assign({}, data.textdata);
 							datatogeneric.c1 = "mittens";
 							interaction.reply({ content: getTextGeneric("unbind", datatogeneric), flags: MessageFlags.Ephemeral });
-							let canRemove = await handleBondageRemoval(interaction.user, mitteneduser, "mittens").then(
+							let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, mitteneduser, "mittens").then(
 								async (res) => {
 									await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 									await interaction.followUp(getText(data));
-									deleteMitten(mitteneduser.id);
+									deleteMitten(interaction.guildId, mitteneduser.id);
 								},
 								async (rej) => {
 									await interaction.editReply(getTextGeneric("unbind_decline", datatogeneric));
@@ -71,20 +72,20 @@ module.exports = {
 					} else {
 						data.nogag = true;
 						// Now lets make sure the wearer wants that.
-						if (checkBondageRemoval(interaction.user.id, mitteneduser.id, "mitten") == true) {
+						if (checkBondageRemoval(interaction.guildId, interaction.user.id, mitteneduser.id, "mitten") == true) {
 							// Allowed immediately, lets go
 							interaction.reply(getText(data));
-							deleteMitten(mitteneduser.id);
+							deleteMitten(interaction.guildId, mitteneduser.id);
 						} else {
 							// We need to ask first.
 							let datatogeneric = Object.assign({}, data.textdata);
 							datatogeneric.c1 = "mittens";
 							interaction.reply({ content: getTextGeneric("unbind", datatogeneric), flags: MessageFlags.Ephemeral });
-							let canRemove = await handleBondageRemoval(interaction.user, mitteneduser, "mittens").then(
+							let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, mitteneduser, "mittens").then(
 								async (res) => {
 									await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 									await interaction.followUp(getText(data));
-									deleteMitten(mitteneduser.id);
+									deleteMitten(interaction.guildId, mitteneduser.id);
 								},
 								async (rej) => {
 									await interaction.editReply(getTextGeneric("unbind_decline", datatogeneric));

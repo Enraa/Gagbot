@@ -26,7 +26,7 @@ async function generateList(menuchoice) {
     let placements = ["1st", "2nd", "3rd", "4th", "5th", "6th", "7th", "8th", "9th", "10th"]
 
 	let fulltext = `## Scoreboard - **${menus.find((t) => t.useroption == menuchoice).name}**\n`;
-    let stats = statsGetAllStat(menuchoice).sort((a,b) => { return b[1] - a[1]})
+    let stats = statsGetAllStat(interaction.guildId, menuchoice).sort((a,b) => { return b[1] - a[1]})
     if (stats.length == 0) {
         fulltext = `${fulltext}*No Leaderboard Data*`
     }

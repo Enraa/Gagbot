@@ -20,23 +20,24 @@ module.exports = {
 		try {
             let targetuser = interaction.options.getUser("user") ?? interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(targetuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, targetuser.id)?.mainconsent) {
 				await handleConsent(interaction, targetuser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			// Build data tree:
 			let data = {
+                serverID: interaction.guildId, 
                 interactionuser: { id: interaction.user.id },
                 targetuser: { id: targetuser.id },
-                c1: getCollarName(targetuser.id, getCollar(targetuser.id)?.collartype) ?? "collar"
+                c1: getCollarName(interaction.guildId, targetuser.id, getCollar(interaction.guildId, targetuser.id)?.collartype) ?? "collar"
             }
             // Figure out the tone to shock the user with
-            let tone = getOption(targetuser.id, "shocktone") ?? "playful";
+            let tone = getOption(interaction.guildId, targetuser.id, "shocktone") ?? "playful";
             if (tone == "both") {
                 if (Math.random() > 0.5) { 
                     tone = "playful" 
@@ -47,20 +48,20 @@ module.exports = {
             }
 
             if (targetuser.id != interaction.user.id) {
-                if (!getCollar(targetuser.id)) {
+                if (!getCollar(interaction.guildId, targetuser.id)) {
                     await interaction.reply({ content: `<@${targetuser.id}> isn't wearing a collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                if ((getCollar(targetuser.id)?.collartype != "remoteshockcollar") && !(getCollar(targetuser.id)?.additionalcollars?.includes("remoteshockcollar"))) {
+                if ((getCollar(interaction.guildId, targetuser.id)?.collartype != "remoteshockcollar") && !(getCollar(interaction.guildId, targetuser.id)?.additionalcollars?.includes("remoteshockcollar"))) {
                     await interaction.reply({ content: `<@${targetuser.id}> isn't wearing a remote controlled shock collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                await handleTouchEvent(interaction.user, targetuser, "shock", true).then(
+                await handleTouchEvent(interaction.guildId, interaction.user, targetuser, "shock", true).then(
                     async (success) => {
-                        addArousal(targetuser.id, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
+                        addArousal(interaction.guildId, targetuser.id, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                         await interaction.reply({ content: getTextGeneric(`remotecontrolshock_other_${tone}`, data) })
-                        statsAddCounter(targetuser.id, "timesshocked");
-                        shockUser(targetuser.id)
+                        statsAddCounter(interaction.guildId, targetuser.id, "timesshocked");
+                        shockUser(interaction.guildId, targetuser.id)
                     },
                     async (failure) => {
                         await interaction.reply({ content: `You don't have access to <@${targetuser.id}>'s collar remote control!`, flags: MessageFlags.Ephemeral })
@@ -68,23 +69,23 @@ module.exports = {
                 )
             }
             else {
-                if (!getCollar(targetuser.id)) {
+                if (!getCollar(interaction.guildId, targetuser.id)) {
                     await interaction.reply({ content: `You aren't wearing a collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                if ((getCollar(targetuser.id)?.collartype != "remoteshockcollar") && !(getCollar(targetuser.id)?.additionalcollars?.includes("remoteshockcollar"))) {
+                if ((getCollar(interaction.guildId, targetuser.id)?.collartype != "remoteshockcollar") && !(getCollar(interaction.guildId, targetuser.id)?.additionalcollars?.includes("remoteshockcollar"))) {
                     await interaction.reply({ content: `You aren't wearing a remote controlled shock collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                if (!canAccessCollar(targetuser.id, interaction.user.id).access) {
+                if (!canAccessCollar(interaction.guildId, targetuser.id, interaction.user.id).access) {
                     await interaction.reply({ content: `You don't have access to your collar's remote control!`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                addArousal(targetuser.id, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
+                addArousal(interaction.guildId, targetuser.id, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                 await interaction.reply({ content: getTextGeneric(`remotecontrolshock_self_${tone}`, data) })
-                statsAddCounter(targetuser.id, "timesshocked");
-                statsAddCounter(targetuser.id, "timesshockedself");
-                shockUser(targetuser.id)
+                statsAddCounter(interaction.guildId, targetuser.id, "timesshocked");
+                statsAddCounter(interaction.guildId, targetuser.id, "timesshockedself");
+                shockUser(interaction.guildId, targetuser.id)
             }
 		} catch (err) {
 			console.log(err);

@@ -15,6 +15,8 @@ const honorifictitles = [
 	"maam",
     "madame",
     "madam",
+    "milady",
+    "milord",
 	"lady",
 	"ladies",
 	"lord",

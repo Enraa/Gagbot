@@ -48,16 +48,16 @@ module.exports = {
             let toytype = interaction.options.getString("type") ?? "vibe_bullet"
             let toybase = getBaseToy(toytype);
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(toyuser.id)?.mainconsent) {
+            if (!getConsent(interaction.guildId, toyuser.id)?.mainconsent) {
                 await handleConsent(interaction, toyuser.id);
                 return;
             }
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(interaction.user.id)?.mainconsent) {
+            if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
-            if (userBlockArousingToy(toyuser.id, toytype)) {
+            if (userBlockArousingToy(interaction.guildId, toyuser.id, toytype)) {
                 if (toyuser.id == interaction.user.id) {
                     interaction.reply({ content: `You have disabled the Arousal System in **/config** and would not be affected by this toy. Please review the Arousal System setting and enable it to use arousing toys.`, flags: MessageFlags.Ephemeral });
                 } else {
@@ -69,9 +69,10 @@ module.exports = {
             let data = {
 				textarray: "texts_toy",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: toyuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: getBaseToy(toytype).toyname, // the chosen vibe type
 					c3: toyintensity,
 				},
@@ -86,13 +87,13 @@ module.exports = {
                 return;
             }
 
-            if (!getHeavyBound(interaction.user.id, toyuser.id)) {
+            if (!getHeavyBound(interaction.guildId, interaction.user.id, toyuser.id)) {
 				// We are in heavy bondage
 				data.heavy = true;
 				if (toyuser == interaction.user) {
 					// ourselves
 					data.self = true;
-					if (toybase.canEquip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+					if (toybase.canEquip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
 						// can equip
 						data.access = true;
                         data[toybase.category] = true;
@@ -106,7 +107,7 @@ module.exports = {
 				} else {
 					// someone else
 					data.other = true;
-					if (toybase.canEquip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+					if (toybase.canEquip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
 						// cannot equip
 						data.access = true;
                         data[toybase.category] = true;
@@ -128,20 +129,20 @@ module.exports = {
                     if (getSpecificToy(toyuser.id, toytype)) {
                         // toy already on wearer
                         data.toy = true;
-                        if (toybase.blocker({ userID: toyuser.id })) {
+                        if (toybase.blocker({ serverID: interaction.guildId, userID: toyuser.id })) {
                             data.blocker = true
-                            if (toybase.canModify({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+                            if (toybase.canModify({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
                                 // can access the toy
                                 data.access = true;
                                 data[toybase.category] = true;
-                                let fumble = toybase.fumble({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                let fumble = toybase.fumble({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                 if (fumble > 0) {
                                     // We fumbled the key
                                     data.fumble = true;
                                     if (fumble > 1) {
                                         // We lost the key
                                         data.keyloss = true;
-                                        let discardresult = toybase.discard({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                        let discardresult = toybase.discard({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                         if (discardresult) { data[discardresult] = true }
                                         interaction.reply(getText(data))
                                     }
@@ -154,7 +155,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                                    assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -169,27 +170,27 @@ module.exports = {
                             // Not wearing chastity or anything
                             data.noblocker = true
                             data[toybase.category] = true;
-                            assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                            assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                             interaction.reply(getText(data))
                         }
                     }
                     else {
                         // Toy is not already worn!
                         data.notoy = true;
-                        if (toybase.blocker({ userID: toyuser.id })) {
+                        if (toybase.blocker({ serverID: interaction.guildId, userID: toyuser.id })) {
                             data.blocker = true
-                            if (toybase.canEquip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+                            if (toybase.canEquip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
                                 // can put the toy on them
                                 data.access = true;
                                 data[toybase.category] = true;
-                                let fumble = toybase.fumble({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                let fumble = toybase.fumble({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                 if (fumble > 0) {
                                     // We fumbled the key
                                     data.fumble = true;
                                     if (fumble > 1) {
                                         // We lost the key
                                         data.keyloss = true;
-                                        let discardresult = toybase.discard({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                        let discardresult = toybase.discard({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                         if (discardresult) { data[discardresult] = true }
                                         interaction.reply(getText(data))
                                     }
@@ -202,7 +203,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                                    assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -217,7 +218,7 @@ module.exports = {
                             // Not wearing chastity or anything
                             data.noblocker = true
                             data[toybase.category] = true;
-                            assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                            assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                             interaction.reply(getText(data))
                         }
                     }
@@ -228,20 +229,20 @@ module.exports = {
                     if (getSpecificToy(toyuser.id, toytype)) {
                         // toy already on wearer
                         data.toy = true;
-                        if (toybase.blocker({ userID: toyuser.id })) {
+                        if (toybase.blocker({ serverID: interaction.guildId, userID: toyuser.id })) {
                             data.blocker = true;
-                            if (toybase.canModify({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+                            if (toybase.canModify({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
                                 // can access the toy
                                 data.access = true;
                                 data[toybase.category] = true;
-                                let fumble = toybase.fumble({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                let fumble = toybase.fumble({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                 if (fumble > 0) {
                                     // We fumbled the key
                                     data.fumble = true;
                                     if (fumble > 1) {
                                         // We lost the key
                                         data.keyloss = true;
-                                        let discardresult = toybase.discard({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                        let discardresult = toybase.discard({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                         if (discardresult) { data[discardresult] = true }
                                         interaction.reply(getText(data))
                                     }
@@ -254,7 +255,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                                    assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -269,7 +270,7 @@ module.exports = {
                             // Not wearing chastity or anything
                             data.noblocker = true
                             data[toybase.category] = true;
-                            assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                            assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                             interaction.reply(getText(data))
                         }
                     }
@@ -278,18 +279,18 @@ module.exports = {
                         data.notoy = true;
                         if (toybase.blocker({ userID: toyuser.id })) {
                             data.blocker = true;
-                            if (toybase.canEquip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+                            if (toybase.canEquip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
                                 // can put the toy on them
                                 data.access = true;
                                 data[toybase.category] = true;
-                                let fumble = toybase.fumble({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                let fumble = toybase.fumble({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                 if (fumble > 0) {
                                     // We fumbled the key
                                     data.fumble = true;
                                     if (fumble > 1) {
                                         // We lost the key
                                         data.keyloss = true;
-                                        let discardresult = toybase.discard({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                        let discardresult = toybase.discard({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                         if (discardresult) { data[discardresult] = true }
                                         interaction.reply(getText(data))
                                     }
@@ -302,7 +303,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                                    assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -317,7 +318,7 @@ module.exports = {
                             // Not wearing chastity or anything
                             data.noblocker = true
                             data[toybase.category] = true;
-                            assignToy(toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
+                            assignToy(interaction.guildId, toyuser.id, interaction.user.id, toyintensity, toytype, interaction.user.id);
                             interaction.reply(getText(data))
                         }
                     }

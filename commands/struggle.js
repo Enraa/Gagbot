@@ -26,30 +26,30 @@ module.exports = {
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
 		try {
-			let heavybondage = getHeavy(interaction.user.id);
+			let heavybondage = getHeavy(interaction.guildId, interaction.user.id);
 			let gagbondage = getGagLast(interaction.guildId, interaction.user.id);
-			let mittenbondage = getMitten(interaction.user.id);
-			let chastitybondage = getChastity(interaction.user.id);
-            let chastitybrabondage = getChastityBra(interaction.user.id)
-			let headbondage = getHeadwear(interaction.user.id);
-			let corsetbondage = getCorset(interaction.user.id);
-			let collarbondage = getCollar(interaction.user.id);
+			let mittenbondage = getMitten(interaction.guildId, interaction.user.id);
+			let chastitybondage = getChastity(interaction.guildId, interaction.user.id);
+            let chastitybrabondage = getChastityBra(interaction.guildId, interaction.user.id)
+			let headbondage = getHeadwear(interaction.guildId, interaction.user.id);
+			let corsetbondage = getCorset(interaction.guildId, interaction.user.id);
+			let collarbondage = getCollar(interaction.guildId, interaction.user.id);
 
 			let outopts = [];
 			if (heavybondage) {
-				outopts.push({ name: `Heavy Bondage: ${getHeavy(interaction.user.id).displayname}`, value: "heavy" });
+				outopts.push({ name: `Heavy Bondage: ${getHeavy(interaction.guildId, interaction.user.id).displayname}`, value: "heavy" });
 			}
 			if (gagbondage) {
 				outopts.push({ name: `Gag: ${convertGagText(getGagLast(interaction.guildId, interaction.user.id))}`, value: "gag" });
 			}
 			if (mittenbondage) {
-				outopts.push({ name: `Mittens${mittenbondage.mittenname ? `: ${getMittenName(interaction.user.id)}` : ""}`, value: "mitten" });
+				outopts.push({ name: `Mittens${mittenbondage.mittenname ? `: ${getMittenName(interaction.guildId, interaction.user.id)}` : ""}`, value: "mitten" });
 			}
 			if (chastitybondage) {
-				outopts.push({ name: `Chastity${chastitybondage.chastitytype ? `: ${getChastityName(interaction.user.id)}` : " Belt"}`, value: "chastity" });
+				outopts.push({ name: `Chastity${chastitybondage.chastitytype ? `: ${getChastityName(interaction.guildId, interaction.user.id)}` : " Belt"}`, value: "chastity" });
 			}
             if (chastitybrabondage) {
-				outopts.push({ name: `Chastity Bra${chastitybrabondage.chastitytype ? `: ${getChastityBraName(interaction.user.id)}` : " Bra"}`, value: "chastitybra" });
+				outopts.push({ name: `Chastity Bra${chastitybrabondage.chastitytype ? `: ${getChastityBraName(interaction.guildId, interaction.user.id)}` : " Bra"}`, value: "chastitybra" });
 			}
 			if (headbondage.length > 0) {
 				outopts.push({ name: `Head Restraints`, value: "head" });
@@ -58,7 +58,7 @@ module.exports = {
 				outopts.push({ name: `Corset`, value: "corset" });
 			}
 			if (collarbondage) {
-				outopts.push({ name: `Collar${collarbondage.collartype ? `: ${getCollarName(interaction.user.id)}` : ""}`, value: "collar" });
+				outopts.push({ name: `Collar${collarbondage.collartype ? `: ${getCollarName(interaction.guildId, interaction.user.id)}` : ""}`, value: "collar" });
 			}
 
 			if (outopts.length == 0) {
@@ -74,31 +74,32 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
-			let heavybondage = getHeavy(interaction.user.id)?.displayname;
+			let heavybondage = getHeavy(interaction.guildId, interaction.user.id)?.displayname;
 			let gagbondage = getGagLast(interaction.guildId, interaction.user.id);
-			let mittenbondage = getMitten(interaction.user.id);
-			let chastitybondage = getChastity(interaction.user.id);
-            let chastitybrabondage = getChastityBra(interaction.user.id)
-			let headbondage = getHeadwear(interaction.user.id);
-			let corsetbondage = getCorset(interaction.user.id);
-			let collarbondage = getCollar(interaction.user.id);
+			let mittenbondage = getMitten(interaction.guildId, interaction.user.id);
+			let chastitybondage = getChastity(interaction.guildId, interaction.user.id);
+            let chastitybrabondage = getChastityBra(interaction.guildId, interaction.user.id)
+			let headbondage = getHeadwear(interaction.guildId, interaction.user.id);
+			let corsetbondage = getCorset(interaction.guildId, interaction.user.id);
+			let collarbondage = getCollar(interaction.guildId, interaction.user.id);
 
 			// Build data tree:
 			let data = {
 				textarray: "texts_struggle",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: interaction.user, // Doesn't really matter but we're adding to avoid a crash
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: convertGagText(interaction.guildId, getGagLast(interaction.guildId, interaction.user.id)),
-					c3: getMittenName(interaction.user.id) ?? "mittens",
-					c4: getChastityName(interaction.user.id) ?? "chastity belt",
-					c5: getCollarName(interaction.user.id) ?? "collar",
-                    c6: getChastityBraName(interaction.user.id) ?? "chastity bra"
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+					c2: convertGagText(getGagLast(interaction.guildId, interaction.user.id)),
+					c3: getMittenName(interaction.guildId, interaction.user.id) ?? "mittens",
+					c4: getChastityName(interaction.guildId, interaction.user.id) ?? "chastity belt",
+					c5: getCollarName(interaction.guildId, interaction.user.id) ?? "collar",
+                    c6: getChastityBraName(interaction.guildId, interaction.user.id) ?? "chastity bra"
 				},
 			};
 
