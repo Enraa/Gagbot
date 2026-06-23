@@ -23,7 +23,7 @@ module.exports = {
                     else {
                         let founduserid;
                         // Check for engraved pet tag
-                        let engravedpettags = getAllSelectedOption("engravedcollarname")
+                        let engravedpettags = getAllSelectedOption(interaction.guildId, "engravedcollarname")
                         Object.keys(engravedpettags).forEach((k) => {
                             // If the visor matches, then we found our pet!
                             if (message.author.username.startsWith(engravedpettags[k]) && (engravedpettags[k].length > 0)) {
@@ -32,7 +32,7 @@ module.exports = {
                             }
                         })
                         // Doll Visors
-                        let dollvisorids = getAllSelectedOption("dollvisorname")
+                        let dollvisorids = getAllSelectedOption(interaction.guildId, "dollvisorname")
                         Object.keys(dollvisorids).forEach((k) => {
                             // If the visor matches, then we found our doll!
                             if (message.author.username.startsWith(dollvisorids[k])) {
@@ -40,7 +40,7 @@ module.exports = {
                             }
                         })
                         // Drone Visors
-                        let dronevisorids = getAllSelectedOption("dronevisorname")
+                        let dronevisorids = getAllSelectedOption(interaction.guildId, "dronevisorname")
                         Object.keys(dronevisorids).forEach((k) => {
                             // If the visor matches, then we found our drone!
                             if (message.author.username.startsWith(`⬡-Drone ${dronevisorids[k]}`)) {
@@ -80,12 +80,12 @@ module.exports = {
                     }
                     if (targetuser) {
                         // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-                        if (!getConsent(targetuser.id)?.mainconsent) {
+                        if (!getConsent(interaction.guildId, targetuser.id)?.mainconsent) {
                             await handleConsent(interaction, targetuser.id);
                             return;
                         }
                         // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-                        if (!getConsent(interaction.user.id)?.mainconsent) {
+                        if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
                             await handleConsent(interaction, interaction.user.id);
                             return;
                         }
@@ -93,6 +93,7 @@ module.exports = {
                         let data = {
                             textarray: "texts_touch",
                             textdata: {
+                                serverID: interaction.guildId, 
                                 interactionuser: interaction.user,
                                 targetuser: targetuser,
                                 //c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
@@ -100,10 +101,10 @@ module.exports = {
                             },
                         };
                         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                        await handleTouchEvent(interaction.user, targetuser, "headpat").then(
+                        await handleTouchEvent(interaction.guildId, interaction.user, targetuser, "headpat").then(
                             async (success) => {
                                 await interaction.followUp({ content: `Headpatting ${targetuser}`, flags: MessageFlags.Ephemeral })
-                                let headpatattempt = rollPatChance(interaction.user.id, targetuser.id, interaction.guildId)
+                                let headpatattempt = rollPatChance(interaction.guildId, interaction.user.id, targetuser.id, interaction.guildId)
                                 data.headpat = true;
 
                                 if (interaction.user.id == targetuser.id) {
@@ -152,7 +153,7 @@ module.exports = {
                                     nomessage = `Something went wrong - Submit a bug report!`;
                                 }
                                 if (reject == "NoDM") {
-                                    nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(chastityuser.id, "subject")} ${getPronouns(chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent to touch.`;
+                                    nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(interaction.guildId, targetuser.id, "subject")} ${getPronouns(interaction.guildId, targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent to touch.`;
                                 }
                                 await interaction.followUp({ content: nomessage });
                             },

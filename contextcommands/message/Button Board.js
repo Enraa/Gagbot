@@ -23,7 +23,7 @@ module.exports = {
                 [ `BOT|${process.emojis.armbinder}`, `BOT|${process.emojis.collar}`, `BOT|${process.emojis.chastity}`, `BOT|${process.emojis.gag}`, `BOT|${process.emojis.wand}` ],
                 [ `BOT|${process.emojis.happymaid}`, `BOT|${process.emojis.yesh}`, `BOT|${process.emojis.tetowoah}`, `BOT|${process.emojis.miku}`, `BOT|${process.emojis.shyumm}` ],
             ]
-            if (!getHeadwearRestrictions(interaction.user.id).canInspect) {
+            if (!getHeadwearRestrictions(interaction.guildId, interaction.user.id).canInspect) {
                 buttons = buttons.map((ba) => {
                     console.log(ba);
                     return arrayShuffle(ba)
@@ -36,11 +36,11 @@ module.exports = {
                     let b = new ButtonBuilder()
                         .setCustomId(`buttonboard_${bb}`)
                         .setStyle(ButtonStyle.Secondary)
-                    if (getHeadwearRestrictions(interaction.user.id).canInspect && bb.startsWith('BOT|')) {
+                    if (getHeadwearRestrictions(interaction.guildId, interaction.user.id).canInspect && bb.startsWith('BOT|')) {
                         b.setEmoji(bb.split("|")[1])
                     }
                     else {
-                        b.setLabel(!getHeadwearRestrictions(interaction.user.id).canInspect ? "❓" : bb)
+                        b.setLabel(!getHeadwearRestrictions(interaction.guildId, interaction.user.id).canInspect ? "❓" : bb)
                     }
                     return b;
                 })
@@ -60,10 +60,11 @@ module.exports = {
         let buttonemoji = interaction.customId.split("_")[1]
         buttonemoji = buttonemoji.replace("BOT|", "")
         let data_in = {
+            serverID: interaction.guildId, 
             interactionuser: interaction.user,
             targetuser: interaction.user,
             c1: buttonemoji,
-            c2: getHeadwearRestrictions(interaction.user.id).canInspect ? "cansee" : "blind"
+            c2: getHeadwearRestrictions(interaction.guildId, interaction.user.id).canInspect ? "cansee" : "blind"
         }
 
         let channelwithmessage = interaction.client.channels.cache.get(interaction.channelId);
