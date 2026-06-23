@@ -207,7 +207,7 @@ const modifymessage = async (msg, threadId, messageonly) => {
 		let msgTree = new MessageAST(msg.content);					// Build AST from message
 		let msgTreeMods = {"modified":false, "emojiModified":false, "corseted":false}	// Store a boolean in an object to allow pass by reference.
 
-		processHeadwearEmoji(msg.guild.id, msg.author.id, msgTree, msgTreeMods, getOption(msg.guild.id, msg.author.id, "dollvisorname"))
+		processHeadwearEmoji(msg.guildId, msg.author.id, msgTree, msgTreeMods, getOption(msg.guild.id, msg.author.id, "dollvisorname"))
         processHeadwearTruthgas(msg.guild.id, msg.author.id, msgTree, msgTreeMods)
         await processPregarbleGags(msg, msgTree, msgTreeMods)       // Perform early garbles before arousal and corset effects. 
 

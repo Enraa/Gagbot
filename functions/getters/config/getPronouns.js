@@ -20,7 +20,7 @@ const { getProcessVariable } = require("./getProcessVariable");
  * ---
  * ##### Returns a string with the user's pronoun in the appropriate tense
  *******************************************/
-const getPronouns = (serverID, user, form, capitalize = false) => {
+function getPronouns(serverID, user, form, capitalize = false) {
     traceFirstParam(arguments[0]);
     let output = "";
     if (getProcessVariable(serverID, user, "pronouns")) {

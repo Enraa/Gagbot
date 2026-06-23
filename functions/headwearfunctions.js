@@ -103,7 +103,7 @@ const loadHeadwearTypes = () => {
     process.autocompletes.headtypes = headwearautocompletes;
 };
 
-const replaceEmoji = (text, parent, replaceEmoji, msgModified, matchFound) => {
+function replaceEmoji(text, parent, replaceEmoji, msgModified, matchFound) {
 	if(text !== replaceEmoji){
 		msgModified.modified = true;
 		msgModified.emojiModified = true;
@@ -113,7 +113,7 @@ const replaceEmoji = (text, parent, replaceEmoji, msgModified, matchFound) => {
 	}
 }
 // Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
-const processHeadwearEmoji = (serverID, userID, msgTree, msgModified, dollvisoroverride) => {
+function processHeadwearEmoji(serverID, userID, msgTree, msgModified, dollvisoroverride) {
     traceFirstParam(arguments[0]);
 	// Do nothing if no headwear blocks.
 	if (getHeadwearRestrictions(serverID, userID).canEmote) {return;}
@@ -299,7 +299,7 @@ const truthgasopposites = (text, parent, msgModified) => {
     return outtext.slice(1) // Cut the leading space
 }
 // Changes words and negates them
-const processHeadwearTruthgas = (serverID, userID, msgTree, msgModified) => {
+function processHeadwearTruthgas(serverID, userID, msgTree, msgModified) {
     traceFirstParam(arguments[0]);
 	// Do nothing if no headwear blocks.
 	if (!getHeadwear(serverID, userID).includes("gasmask_truthgas")) { return }

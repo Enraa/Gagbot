@@ -13,8 +13,9 @@
  *******/
 function traceFirstParam(serverID) {
     if (!process.client.guilds.cache.get(serverID)) {
+        console.log(serverID)
         console.error(`Invalid server ID ${serverID}!`)
-        throw new Error(err)
+        throw new Error()
     }
 }
 

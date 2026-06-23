@@ -10,7 +10,7 @@ const { getProcessVariable } = require("./getProcessVariable");
  * ---
  * ##### Returns a string with the user's standard pronoun representation
  *******************************************/
-const getPronounsSet = (serverID, user) => {
+function getPronounsSet(serverID, user) {
     traceFirstParam(arguments[0]);
 	if (getProcessVariable(serverID, user, "pronouns")) {
 		return `${getProcessVariable(serverID, user, "pronouns")["subject"]}/${getProcessVariable(serverID, user, "pronouns")["subject"] != "it" ? getProcessVariable(serverID, user, "pronouns")["object"] : getProcessVariable(serverID, user, "pronouns")["possessive"]}`;

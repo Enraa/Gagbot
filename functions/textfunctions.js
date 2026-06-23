@@ -5335,7 +5335,7 @@ const textarrays = {
 };
 
 // Get generic text and spit out a pronoun respecting version YAY
-const getTextGeneric = (type, data_in) => {
+function getTextGeneric(type, data_in) {
 	let generics = {
 		unbind: ["TARGET_TAG has elected to prompt for TARGET_THEIR VAR_C1 to be removed. Please wait as TARGET_THEY confirmTARGET_S (5 minute timeout)."],
 		unbind_decline: ["TARGET_TAG has declined your help with USER_THEIR VAR_C1."],
@@ -5582,7 +5582,7 @@ to get the particular array of texts for that condition.
 
 THE PROPERTY ORDER IS IMPORTANT TO ENSURE THE TEXT RETRIEVAL WORKS AS INTENDED.
 -------------------------------------*/
-const getText = (data) => {
+function getText(data) {
 	try {
 		let textarray = data.textarray;
 		let data_in = data.textdata;

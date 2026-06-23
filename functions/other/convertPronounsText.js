@@ -28,7 +28,7 @@ const { DOLLVISORS } = require("../headwearfunctions");
  * ---
  * ##### Returns a string with appropriate pronouns
  ***********/
-const convertPronounsText = (text, data) => {
+function convertPronounsText(text, data) {
 	let interactionuser = data.interactionuser;
 	let targetuser = data.targetuser ?? data.interactionuser; // If we didnt supply a target, just use interaction user for both. 
 

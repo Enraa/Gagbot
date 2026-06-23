@@ -5,6 +5,7 @@ const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getOption } = require("./getters/config/getOption.js");
 const { markForSave } = require("./other/markForSave.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { getGags } = require("./getters/gag/getGags.js");
 
 // Regex to capture the user's intended text segments post-corset and post-vibrator.
 // NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.
@@ -192,7 +193,7 @@ function checkDollification(serverID, userID) {
 	if (isValidDoll(serverID, userID)) {
 		// If user is NOT a doll, make them a doll.
         if (process.dolls[serverID] == undefined) { process.dolls[serverID] = {} }
-		if (!process.dolls[serverID][userID]) {
+		if (process.dolls[serverID] && !process.dolls[serverID][userID]) {
 			process.dolls[serverID][userID] = { violations: 0, punishmentLevel: 0, goodDollStreak: 0 };
 			// Save the doll to the database.
 			markForSave("dolls");
@@ -200,9 +201,9 @@ function checkDollification(serverID, userID) {
 		isDoll = true;
 		// Undollify if needed
 	} else {
-		if (process.dolls[serverID][userID]) {
+		if (process.dolls[serverID] && process.dolls[serverID][userID]) {
 			delete process.dolls[serverID][userID];
-			// Save the doll to the database.
+			// Remove the doll from the database.
 			markForSave("dolls");
 		}
 	}

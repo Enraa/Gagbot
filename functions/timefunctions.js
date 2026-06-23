@@ -340,92 +340,108 @@ function runTickEvents() {
 	}
 	// Headwear
 	if (process.headwear) {
-		Object.keys(process.headwear).forEach((userid) => {
-			getHeadwear(userid).forEach((h) => {
-				if (process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h].tick) {
-					process.eventfunctions.headwear[h].tick(userid);
-				}
-			});
+		Object.keys(process.headwear).forEach((serverid) => {
+            Object.keys(process.headwear[serverid]).forEach((userid) => {
+                getHeadwear(serverid, userid).forEach((h) => {
+                    if (process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h].tick) {
+                        process.eventfunctions.headwear[h].tick(serverid, userid);
+                    }
+                });
+            });
 		});
 	}
 	// Mittens
 	if (process.mitten) {
-		Object.keys(process.mitten).forEach((userid) => {
-			if (getMitten(userid)) {
-				if (process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(userid).mittenname] && process.eventfunctions.mitten[getMitten(userid).mittenname].tick) {
-					process.eventfunctions.mitten[getMitten(userid).mittenname].tick(userid);
-				}
-			}
+		Object.keys(process.mitten).forEach((serverid) => {
+            Object.keys(process.mitten[serverid]).forEach((userid) => {
+                if (getMitten(serverid, userid)) {
+                    if (process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname] && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname].tick) {
+                        process.eventfunctions.mitten[getMitten(serverid, userid).mittenname].tick(serverid, userid);
+                    }
+                }
+            });
 		});
 	}
 	// Heavy Bondage
 	if (process.heavy) {
-		Object.keys(process.heavy).forEach((userid) => {
-			if (getHeavyList(userid).length > 0) {
-                getHeavyList(userid).forEach((h) => {
-                    if (process.eventfunctions.heavy && process.eventfunctions.heavy[h.type] && process.eventfunctions.heavy[h.type].tick) {
-                        process.eventfunctions.heavy[h.type].tick(userid);
-                    }
-                })
-			}
-		});
-	}
-    // Chastity Belts
-	if (process.chastity) {
-		Object.keys(process.chastity).forEach((userid) => {
-			if (getChastity(userid)) {
-				if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(userid).chastitytype] && process.eventfunctions.chastity[getChastity(userid).chastitytype].tick) {
-					process.eventfunctions.chastity[getChastity(userid).chastitytype].tick(userid);
-				}
-			}
-		});
-	}
-    // Chastity Bras
-	if (process.chastitybra) {
-		Object.keys(process.chastitybra).forEach((userid) => {
-			if (getChastityBra(userid)) {
-				if (process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].tick) {
-					process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].tick(userid);
-				}
-			}
-		});
-	}
-	// Wearables
-	if (process.wearable) {
-		Object.keys(process.wearable).forEach((userid) => {
-			getWearable(userid).forEach((h) => {
-				if (process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h].tick) {
-					process.eventfunctions.wearable[h].tick(userid);
-				}
-			});
-		});
-	}
-    // Toys
-    if (process.toys) {
-		Object.keys(process.toys).forEach((userid) => {
-			getToys(userid).forEach((h) => {
-				if (process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type].tick) {
-					process.eventfunctions.toys[h.type].tick(userid);
-				}
-			});
-		});
-	}
-    // Collars
-    if (process.collar) {
-		Object.keys(process.collar).forEach((userid) => {
-			if (getCollar(userid)) {
-                if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).collartype] && process.eventfunctions.collar[getCollar(userid).collartype].tick) {
-					process.eventfunctions.collar[getCollar(userid).collartype].tick(userid);
-				}
-                if (getCollar(userid).additionalcollars) {
-                    getCollar(userid).additionalcollars.forEach((ac) => {
-                        if (process.eventfunctions.collar && process.eventfunctions.collar[ac] && process.eventfunctions.collar[ac].tick) {
-                            process.eventfunctions.collar[ac].tick(userid);
+		Object.keys(process.heavy).forEach((serverid) => {
+            Object.keys(process.heavy[serverid]).forEach((userid) => {
+                if (getHeavyList(serverid, userid).length > 0) {
+                    getHeavyList(serverid, userid).forEach((h) => {
+                        if (process.eventfunctions.heavy && process.eventfunctions.heavy[h.type] && process.eventfunctions.heavy[h.type].tick) {
+                            process.eventfunctions.heavy[h.type].tick(serverid, userid);
                         }
                     })
                 }
-            }
-		});
+            });
+        });
+	}
+    // Chastity Belts
+	if (process.chastity) {
+		Object.keys(process.chastity).forEach((serverid) => {
+            Object.keys(process.chastity[serverid]).forEach((userid) => {
+                if (getChastity(serverid, userid)) {
+                    if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype] && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype].tick) {
+                        process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype].tick(serverid, userid);
+                    }
+                }
+            });
+        });
+	}
+    // Chastity Bras
+	if (process.chastitybra) {
+		Object.keys(process.chastitybra).forEach((serverid) => {
+            Object.keys(process.chastitybra[serverid]).forEach((userid) => {
+                if (getChastityBra(serverid, userid)) {
+                    if (process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype].tick) {
+                        process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype].tick(serverid, userid);
+                    }
+                }
+            });
+        });
+	}
+	// Wearables
+	if (process.wearable) {
+		Object.keys(process.wearable).forEach((serverid) => {
+            Object.keys(process.wearable[serverid]).forEach((userid) => {
+                getWearable(serverid, userid).forEach((h) => {
+                    if (process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h].tick) {
+                        process.eventfunctions.wearable[h].tick(serverid, userid);
+                    }
+                });
+            });
+        });
+	}
+    // Toys
+    if (process.toys) {
+		Object.keys(process.toys).forEach((serverid) => {
+            Object.keys(process.toys[serverid]).forEach((userid) => {
+                getToys(serverid, userid).forEach((h) => {
+                    if (process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type].tick) {
+                        process.eventfunctions.toys[h.type].tick(serverid, userid);
+                    }
+                });
+            });
+        });
+	}
+    // Collars
+    if (process.collar) {
+		Object.keys(process.collar).forEach((serverid) => {
+            Object.keys(process.collar[serverid]).forEach((userid) => {
+                if (getCollar(serverid, userid)) {
+                    if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(serverid, userid).collartype] && process.eventfunctions.collar[getCollar(serverid, userid).collartype].tick) {
+                        process.eventfunctions.collar[getCollar(serverid, userid).collartype].tick(serverid, userid);
+                    }
+                    if (getCollar(serverid, userid).additionalcollars) {
+                        getCollar(serverid, userid).additionalcollars.forEach((ac) => {
+                            if (process.eventfunctions.collar && process.eventfunctions.collar[ac] && process.eventfunctions.collar[ac].tick) {
+                                process.eventfunctions.collar[ac].tick(serverid, userid);
+                            }
+                        })
+                    }
+                }
+            });
+        });
 	}
 }
 
@@ -486,23 +502,25 @@ async function scavengeUsers(client) {
     processvars.forEach(async (v) => {
         if (process[v] == undefined) { process[v] = {} }
         Object.keys(process[v]).forEach(async (server) => {
-            let guildfetched = await client.guilds.fetch(server)
-            Object.keys(process[v][server]).forEach(async (person) => {
-                if (guildfetched) {
-                    try {
-                        if (!(await guildfetched.members.fetch(person))) {
-                            delete process[v][server][person] // This person did NOT fetch successfully, so get rid of them. 
+            if (process.client.guilds.cache.has(server)) {
+                let guildfetched = await client.guilds.fetch(server)
+                Object.keys(process[v][server]).forEach(async (person) => {
+                    if (guildfetched) {
+                        try {
+                            if (!(await guildfetched.members.fetch(person))) {
+                                delete process[v][server][person] // This person did NOT fetch successfully, so get rid of them. 
+                            }
                         }
+                        catch (err) {
+                            console.log(`Crashed while fetching ${person} lol`);
+                            console.log(err);
+                        }
+                    } 
+                    else {
+                        console.log(`Guild doesn't exist!`)
                     }
-                    catch (err) {
-                        console.log(`Crashed while fetching ${person} lol`);
-                        console.log(err);
-                    }
-                } 
-                else {
-                    console.log(`Guild doesn't exist!`)
-                }
-            })
+                })
+            }
         })
     })
 }
