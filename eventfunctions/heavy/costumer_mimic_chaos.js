@@ -6,6 +6,7 @@ const { getChastityBraName } = require("../../functions/getters/chastity/getChas
 const { getChastityName } = require("../../functions/getters/chastity/getChastityName.js");
 const { getCollar } = require("../../functions/getters/collar/getCollar.js");
 const { getCollarName } = require("../../functions/getters/collar/getCollarName.js");
+const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js");
 const { getUserTags } = require("../../functions/getters/config/getUserTags.js");
 const { getGag } = require("../../functions/getters/gag/getGag.js");
 const { convertGagText } = require("../../functions/getters/gag/getGagName.js");
@@ -23,6 +24,7 @@ const { messageSendChannel } = require("../../functions/messagefunctions.js");
 const { assignChastity } = require("../../functions/setters/chastity/assignChastity.js");
 const { assignChastityBra } = require("../../functions/setters/chastity/assignChastityBra.js");
 const { assignCollar } = require("../../functions/setters/collar/assignCollar.js");
+const { setProcessVariable } = require("../../functions/setters/config/setProcessVariable.js");
 const { assignGag } = require("../../functions/setters/gag/assignGag.js");
 const { assignHeadwear } = require("../../functions/setters/headwear/assignHeadwear.js");
 const { assignHeavy } = require("../../functions/setters/heavy/assignHeavy.js");
@@ -51,10 +53,10 @@ function shuffleWearables(inputArray) {
 // Then it will spit them out and apply a new heavy item at the end!
 
 let tick = async (serverID, userID, datain) => {
-    if (getProcessVariable(serverID, userID, "userevents") == undefined) { getProcessVariable(serverID, userID, "userevents") = {} }
+    if (getProcessVariable(serverID, userID, "userevents") == undefined) { setProcessVariable(serverID, userID, "userevents", {}) }
     if (getProcessVariable(serverID, userID, "userevents").costumermimic == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic = { stage: 0 } }
     if (getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx = 0 }
-    if (getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder = getHeavy(userID).origbinder }
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder = getHeavy(serverID, userID).origbinder }
 
     // Randomly generate an outfit
     if (getProcessVariable(serverID, userID, "userevents").costumermimic.outfit == undefined) { 
@@ -84,7 +86,7 @@ let tick = async (serverID, userID, datain) => {
             }
             else if ((randomchoice == 1) && !blocks.includes("mitten")) {
                 // Mitten
-                arr = mittentypes
+                arr = [...mittentypes]
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
@@ -111,7 +113,7 @@ let tick = async (serverID, userID, datain) => {
                 outfitpieces.push({ category: "mittens", itemtowear: choice.value, color: null })
             } 
             else if ((randomchoice == 2) && !blocks.includes("collar")) {
-                arr = collartypes
+                arr = [...collartypes]
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
@@ -197,7 +199,7 @@ let tick = async (serverID, userID, datain) => {
             }
             else if ((randomchoice == 5) && !blocks.includes("heavy")) {
                 // This one has to go to the end, so it is pushed to the heavyend option.
-                arr = heavytypes
+                arr = [...heavytypes]
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
@@ -224,7 +226,7 @@ let tick = async (serverID, userID, datain) => {
                 heavyend = { category: "heavy", itemtowear: choice.value, color: null }
             }
             else if ((randomchoice == 5) && !blocks.includes("headwear")) {
-                arr = process.headtypes
+                arr = [...process.headtypes]
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
@@ -251,7 +253,7 @@ let tick = async (serverID, userID, datain) => {
                 outfitpieces.push({ category: "headwear", itemtowear: choice.value, color: null })
             }
             else {
-                arr = wearabletypes
+                arr = [...wearabletypes]
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
@@ -290,7 +292,7 @@ let tick = async (serverID, userID, datain) => {
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
     let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID][userID])) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
         return;
     }
 
@@ -507,8 +509,8 @@ let tick = async (serverID, userID, datain) => {
                         data.replace = true;
                     }
                     else {
-                        data.textdata.c2 = getChastityBraName(undefined, nextitem.itemtowear), // chastity bra name
-                            assignChastityBra(userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, nextitem.itemtowear)
+                        data.textdata.c2 = getChastityBraName(serverID, undefined, nextitem.itemtowear), // chastity bra name
+                            assignChastityBra(serverID, userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, nextitem.itemtowear)
                         data.add = true;
                     }
                     messageSendChannel(getText(data), process.recentmessages[serverID][userID]);

@@ -151,7 +151,7 @@ const heavytypes = [
     { name: "Dolly", value: "dolly", tags: ["metal"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined",], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
-    { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+    { name: "Costumer Mimic (Chaos) BROKEN", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"], noself: true, noother: true }, // Currently MASSIVELY broken!
     { name: "Capture Sphere", value: "capture_sphere", tags: ["confined", "dimensional"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Love Sphere", value: "capture_sphere_love", tags: ["confined", "dimensional"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Great Sphere", value: "capture_sphere_great", tags: ["confined", "dimensional"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
