@@ -14,7 +14,7 @@ const { getProcessVariable } = require("../config/getProcessVariable");
  **********/
 function getToys(serverID, user) {
     traceFirstParam(arguments[0]);
-    return getProcessVariable(serverID, user, "toys");
+    return getProcessVariable(serverID, user, "toys") ?? [];
 }
 
 exports.getToys = getToys;

@@ -128,6 +128,10 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
 // Please god don't send to an invalid place I can't take it anymore
 const messageSendChannel = async (str, channel, components = []) => {
 	try {
+        if (channel == undefined) { 
+            throw new Error;
+            return;
+        }
 		let channeltosendto = await process.client.channels.fetch(channel);
 		if (channeltosendto) {
 			if (channeltosendto.isSendable() && !channeltosendto.archived && !channeltosendto.locked) {

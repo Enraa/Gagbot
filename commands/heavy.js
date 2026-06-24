@@ -65,7 +65,7 @@ module.exports = {
 		try {
             let targetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
             let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
-            if ((interaction.user.id == targetuser.id) && (getBaseHeavy(heavychoice).noself)) {
+            if ((interaction.user.id == targetuser.id) && (getBaseHeavy(heavychoice)?.noself)) {
                 interaction.reply({ content: `You can't bind yourself with that item!`, flags: MessageFlags.Ephemeral })
                 return;
             }

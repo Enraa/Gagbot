@@ -18,7 +18,7 @@ function getHeadwearName(serverID, userID, headnname) {
         process.headwear = {};
     }
     if (headnname) {
-        return getBaseHeadwear(headnname).name
+        return getBaseHeadwear(headnname)?.name
     }
     else {
         return undefined;

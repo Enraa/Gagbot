@@ -12,6 +12,7 @@ const { getHeadwearName } = require("../../functions/getters/headwear/getHeadwea
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy.js");
 const { getMitten } = require("../../functions/getters/mitten/getMitten.js");
 const { getMittenName } = require("../../functions/getters/mitten/getMittenName.js");
+const { getToys } = require("../../functions/getters/toy/getToys.js");
 const { getLockedWearable } = require("../../functions/getters/wearable/getLockedWearable.js");
 const { getWearable } = require("../../functions/getters/wearable/getWearable.js");
 const { getWearableName } = require("../../functions/getters/wearable/getWearableName.js");
@@ -26,6 +27,7 @@ const { assignHeadwear } = require("../../functions/setters/headwear/assignHeadw
 const { assignHeavy } = require("../../functions/setters/heavy/assignHeavy.js");
 const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy.js");
 const { assignMitten } = require("../../functions/setters/mitten/assignMitten.js");
+const { assignToy } = require("../../functions/setters/toy/assignToy.js");
 const { assignWearable } = require("../../functions/setters/wearable/assignWearable.js");
 const { deleteWearable } = require("../../functions/setters/wearable/removeWearable.js");
 const { getText } = require("../../functions/textfunctions.js");
@@ -567,9 +569,9 @@ let tick = async (serverID, userID, datain) => {
                 if (!getMitten(serverID, userID) || (getMitten(serverID, userID) && (getMitten(serverID, userID).getMittenName != nextitem.itemtowear))) {
                     data.mitten = true;
                     if (getMitten(serverID, userID)) {
-                        data.textdata.c1 = getMittenName(serverID, undefined, getMitten(userID).mittenname) ?? "mittens", // mitten name
+                        data.textdata.c1 = getMittenName(serverID, undefined, getMitten(serverID, userID).mittenname) ?? "mittens", // mitten name
                             data.textdata.c2 = getMittenName(serverID, undefined, nextitem.itemtowear), // new mitten name
-                            assignMitten(serverID, userID, nextitem.itemtowear, getMitten(userID).origbinder)
+                            assignMitten(serverID, userID, nextitem.itemtowear, getMitten(serverID, userID).origbinder)
 
                         data.replace = true;
                     }
@@ -613,7 +615,7 @@ let tick = async (serverID, userID, datain) => {
                 if (!getChastityBra(serverID, userID) || (getChastityBra(serverID, userID) && (getChastityBra(serverID, userID).getChastityBraName != nextitem.itemtowear))) {
                     data.chastitybra = true;
                     if (getChastityBra(serverID, userID)) {
-                        data.textdata.c1 = getChastityBraName(serverID, undefined, getChastityBra(userID).getChastityBraName) ?? "chastity bra", // chastity bra name
+                        data.textdata.c1 = getChastityBraName(serverID, undefined, getChastityBra(serverID, userID).getChastityBraName) ?? "chastity bra", // chastity bra name
                             data.textdata.c2 = getChastityBraName(serverID, undefined, nextitem.itemtowear), // new chastity bra name
 
                             // Update Chastity Bra Name with new type
@@ -704,8 +706,10 @@ let tick = async (serverID, userID, datain) => {
         if (getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx >= mimicCostumes[getProcessVariable(serverID, userID, "userevents").costumermimic.outfit].length) {
             // Remove Current Heavy (Mimic) if end of Costume Array Reached Without End Marker
             let data = {
+                serverID: serverID,
                 textarray: "texts_eventfunctions",
                 textdata: {
+                    serverID: serverID, 
                     interactionuser: userobject,
                     targetuser: targetobject,
                 }

@@ -28,6 +28,7 @@ const { markForSave } = require("./other/markForSave.js");
 const { setUserVar } = require("./setters/config/setUserVar.js");
 const { getGags } = require("./getters/gag/getGags.js");
 const { statsAddCounter } = require("./setters/config/statsAddCounter.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -105,7 +106,7 @@ function punishDoll(serverID, userID, amount) {
 		console.log("BAD DOLL:");
 		console.log(process.dolls[serverID][userID]);
 		// Compute punishments by dividing violations by punishThresh.
-		let punishThresh = getOption(userID, "dollpunishthresh");
+		let punishThresh = getOption(serverID, userID, "dollpunishthresh");
         if (getHeadwear(serverID, userID).find((headwear) => headwear === "dollmaker_visor")) {
             punishThresh = 2; // Forced to 2 if dollmakers visor
         }

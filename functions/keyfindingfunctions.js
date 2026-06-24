@@ -157,6 +157,7 @@ async function handleKeyFinding(message) {
                             chance = Math.min(chance, 0.25)
                         }
                         let data = {
+                            serverID: message.guild.id, 
                             interactionuser: message.member,
                             targetuser: weareruser
                         }
@@ -218,7 +219,7 @@ async function handleKeyFinding(message) {
                                     process[pv][message.guild.id][en[0]].temporarykeyholder = message.member.id;
                                     process[pv][message.guild.id][en[0]].temporarykeyholdertime = (Date.now() + getOption(message.guild.id, en[0], "ownrestraintfindkeymode"))
                                 }
-                                statsAddCounter(message.member.id, "fumbledkeysrecovered")
+                                statsAddCounter(message.guild.id, message.member.id, "fumbledkeysrecovered")
                                 markForSave("collar");
                                 markForSave("chastity");
                                 markForSave("chastitybra");

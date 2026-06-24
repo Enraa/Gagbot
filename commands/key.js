@@ -1139,7 +1139,7 @@ module.exports = {
 				}
 
 				// If the wearer has disabled key loss from fumbling, tell them to leave.
-				if (getOption(wearertodiscard.id, "keyloss") == "disabled") {
+				if (getOption(interaction.guildId, wearertodiscard.id, "keyloss") == "disabled") {
                     if (wearertodiscard.id === interaction.user.id) {
                         interaction.reply({ content: `You've disabled key loss from fumbling.`, flags: MessageFlags.Ephemeral });
 					    return;

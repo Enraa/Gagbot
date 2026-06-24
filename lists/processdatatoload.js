@@ -18,7 +18,7 @@ const processdatatoload = [
     { textname: "headwearusers.txt", processvar: "headwear", default: {}, rts: "headwear", hasusers: true },
     { textname: "discardedkeys.txt", processvar: "discardedKeys", rts: "discardedKeys", default: [] },
     { textname: "configs.txt", processvar: "configs", default: {}, rts: "configs", },
-    { textname: "outfits.txt", processvar: "outfits", default: {}, rts: "outfits", },
+    { textname: "outfits.txt", processvar: "outfits", default: {}, rts: "outfits", hasusers:true },
     { textname: "dollusers.txt", processvar: "dolls", default: {}, rts: "dolls", hasusers: true },
     { textname: "wearables.txt", processvar: "wearable", default: {}, rts: "wearable", hasusers: true },
     { textname: "webhooks.txt", processvar: "webhookstoload", default: {}, rts: "webhooks", },

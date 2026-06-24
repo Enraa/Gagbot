@@ -35,7 +35,7 @@ module.exports = {
 					interactionuser: interaction.user,
 					targetuser: corsetuser,
 					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
-					c2: getBaseCorset(getCorset(interaction.guildId, corsetuser.id).type)?.name ?? "Leather Corset", // corset type
+					c2: getBaseCorset(getCorset(interaction.guildId, corsetuser.id)?.type)?.name ?? "Leather Corset", // corset type
 				},
 			};
 

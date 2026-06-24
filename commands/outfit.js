@@ -52,9 +52,16 @@ module.exports = {
             }
             else if (subcommand == "restore") {
                 let outfitslot = interaction.options.getInteger("slot")
-                if ((outfitslot > -1) && (outfitslot < 20)) {
+                if (getOutfits(interaction.guildId, interaction.user.id).length == 0) {
+                    await interaction.reply({ content: `Error loading outfits or you have none configured` , flags: MessageFlags.Ephemeral });
+                    return;
+                }
+                else if ((outfitslot > -1) && (outfitslot < 20)) {
                     restoreOutfit(interaction.guildId, interaction.user.id, getOutfits(interaction.guildId, interaction.user.id)[outfitslot]);
                     await interaction.reply({ content: `Reloading Outfit in slot ${outfitslot + 1}...`, flags: MessageFlags.Ephemeral })
+                }
+                else {
+                    console.log(`Invalid outfit slot number`)
                 }
             }
 		} catch (err) {
@@ -80,7 +87,7 @@ module.exports = {
 			}
 			// Equipping an outfit!
 			else if (optionparts[1] == "restoreoutfit") {
-				restoreOutfit(interaction.guildId, interaction.user.id, getOutfits(interaction.user.id)[optionparts[3]]);
+				restoreOutfit(interaction.guildId, interaction.user.id, getOutfits(interaction.guildId, interaction.user.id)[optionparts[3]]);
 				await interaction.update(await generateOutfitModal(interaction.guildId, interaction.user.id, "restore", optionparts[2], optionparts[4]));
 			}
 			// Equipping an outfit!

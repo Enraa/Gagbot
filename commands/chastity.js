@@ -137,7 +137,7 @@ module.exports = {
 				// Check if the wearer is in an armbinder - if they are, block them.
 				if (!getHeavyBound(interaction.guildId, interaction.user.id, chastityuser.id)) {
 					data.heavy = true;
-					if (getChastity(chastityuser.id)) {
+					if (getChastity(interaction.guildId, chastityuser.id)) {
 						// User is in some form of heavy bondage and already has a chastity belt
 						data.chastity = true;
 						interaction.reply(getText(data));

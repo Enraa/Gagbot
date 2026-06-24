@@ -4,7 +4,7 @@ const { messageSendChannel } = require("../../functions/messagefunctions");
 const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 function msgfunction(serverID, userid, data) {
-    if (getUserVar(userid, "motionplugtime") == undefined) {
+    if (getUserVar(serverID, userid, "motionplugtime") == undefined) {
         if (process.recentmessages[serverID] && process.recentmessages[serverID][userid]) {
             try {
                 messageSendChannel(`<@${userid}>'s movement turns on ${getPronouns(serverID, userid, "possessiveDeterminer")} Motion Sensitive Plug!`, process.recentmessages[serverID][userid])

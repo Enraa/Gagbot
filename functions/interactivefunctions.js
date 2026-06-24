@@ -74,7 +74,7 @@ const handleConsent = async (interaction, user) => {
 	try {
 		const confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 300_000 });
 		console.log(confirmation);
-		assignConsent(interaction.guildID, testusertarget);
+		assignConsent(interaction.guildId, testusertarget);
 		await interaction.editReply({ content: `Consent form agreed to by <@${testusertarget}>! Please re-run the command to tie!`, components: [] });
 	} catch (err) {
 		console.log(err);

@@ -444,7 +444,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 				if ((dollProtocolViolations > 0 || warnmodified) && i == lastDollifiedMessage) {
 					let totalViolations = dollProtocolViolations;
 					if (dollProtocolLevel != "warning") {
-						totalViolations = dollProtocolViolations + process.dolls[msg.guild.id, msg.author.id].violations;
+						totalViolations = dollProtocolViolations + (process.dolls[msg.guild.id, msg.author.id]?.violations ?? 0);
 					}
 
 					// WARN if below punishment threshold. ERROR if exceeded.
@@ -473,9 +473,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 					let goodDollReturn = rewardDoll(msg.guild.id, msg.author.id);
 					//console.log(goodDollReturn)
 					if (goodDollReturn == "violation") {
-						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.author.id].violations}/${dollPunishThresh}). It is a Good Doll.`;
+						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.guild.id][msg.author.id].violations}/${dollPunishThresh}). It is a Good Doll.`;
 					} else if (goodDollReturn == "punishlevel") {
-						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${process.dolls[msg.author.id].punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`;
+						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${process.dolls[msg.guild.id][msg.author.id].punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`;
 					}
 				}
 				// Finish the codeblock
