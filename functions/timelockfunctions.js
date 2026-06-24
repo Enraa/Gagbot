@@ -230,7 +230,8 @@ function checkGagbotKeys() {
 function gagbotHeldKeyTime(serverID, wearerid, type) {
     traceFirstParam(arguments[0]);
     if (process.heldkeytimers == undefined) { process.heldkeytimers = {} }
-    if (!process.recentmessages[serverID][wearerid]) { return }
+    if (process.recentmessages[serverID] == undefined) { process.recentmessages[serverID] = {} }
+    if ((process.recentmessages[serverID] && !process.recentmessages[serverID][wearerid])) { return }
     if (!process.heldkeytimers[`${serverID}_${wearerid}_${type}`]) {
         let data = {
             serverID: serverID,

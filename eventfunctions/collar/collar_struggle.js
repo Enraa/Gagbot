@@ -254,5 +254,5 @@ exports.tick = async (serverID, userID, data) => {
 }
 
 exports.msgfunction = (serverID, userid, data) => {
-    setUserVar(serverID, userid, "struggleCollarMsgs", (getUserVar(userid, "struggleCollarMsgs") ?? 1) + 1); 
+    setUserVar(serverID, userid, "struggleCollarMsgs", (getUserVar(serverID, userid, "struggleCollarMsgs") ?? 1) + 1); 
 }

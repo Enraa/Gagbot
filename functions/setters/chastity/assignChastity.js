@@ -28,10 +28,10 @@ function assignChastity(serverID, user, keyholder, namedchastity, force = false)
 
     // Stop this function immediately if the current chastity belt can't be removed. 
     // If there is none worn, no worries! 
-    if ((oldchastitybase && !oldchastitybase.canUnequip({ userID: user, keyholderID: keyholder })) && !force) { return false };
+    if ((oldchastitybase && !oldchastitybase.canUnequip({ serverID: serverID, userID: user, keyholderID: keyholder })) && !force) { return false };
 
     // Call the on unequip for existing chastity if relevant. 
-    if (oldchastitybase) { oldchastitybase.onUnequip({ userID: user, keyholderID: keyholder }) }
+    if (oldchastitybase) { oldchastitybase.onUnequip({ serverID: serverID, userID: user, keyholderID: keyholder }) }
 
     // Assign the new chastity belt to the user
 	process.chastity[serverID][user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity, stateligible: true };

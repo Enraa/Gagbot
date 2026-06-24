@@ -28,7 +28,7 @@ function getPronouns(serverID, user, form, capitalize = false) {
     } else {
         output = pronounsMap.get("they/them")[form];
         // If the user has not set pronouns, we should try to send them a DM to have them do so
-        remindPronouns(user);
+        remindPronouns(serverID, user);
     }
     if (capitalize) {
         output = output.charAt(0).toUpperCase() + output.slice(1);

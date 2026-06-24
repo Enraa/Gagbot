@@ -36,7 +36,7 @@ async function getDisplayTexts(serverID, userID, inspectuserID) {
             let arousalchangetext = getArousalChangeDescription(serverID, inspectuserID)
             bartext = `\n\n💞 Arousal: **${arousaltext}**${arousalchangetext ? `\n-# **...${arousalchangetext}**` : ""}`
         }
-        if (getOption(userID, "arousaldisplay") == "numbers") {
+        if (getOption(serverID, userID, "arousaldisplay") == "numbers") {
             bartext = `\n\n💞 Arousal: **${Math.round(getArousal(serverID, inspectuserID) * 10) / 10}** of **${Math.round(calcDenialCoefficient(serverID, inspectuserID) * 10)}** (${Math.round((getArousal(serverID, inspectuserID) / ((calcDenialCoefficient(serverID, inspectuserID) * 10))) * 100) / 1}%)`
         }
     }

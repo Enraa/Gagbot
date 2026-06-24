@@ -18,6 +18,7 @@ function getAlternateName(serverID, user) {
     let outname = user.displayName // We're putting a member object in here
     // Handle pet collar name
     if ((getCollar(serverID, user.id)?.collartype == "collarengraved") || (getCollar(serverID, user.id) && getCollar(serverID, user.id).additionalcollars && getCollar(serverID, user.id).additionalcollars.includes("collarengraved"))) {
+        console.log(getOption(serverID, user.id, "engravedcollarname"))
         if (getOption(serverID, user.id, "engravedcollarname") && getOption(serverID, user.id, "engravedcollarname").length > 0) {
             outname = getOption(serverID, user.id, "engravedcollarname");
         }

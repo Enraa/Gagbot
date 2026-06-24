@@ -16,10 +16,10 @@ function getChastityBraTimelock(serverID, userID, UNIXTimestring) {
 		process.chastitybra = {};
 	}
 	if (!UNIXTimestring) {
-		return getChastityBra(serverID, user)?.unlockTime;
+		return getChastityBra(serverID, userID)?.unlockTime;
 	} else {
-		if (getChastityBra(serverID, user)?.unlockTime) {
-			return `<t:${Math.floor(getChastityBra(serverID, user)?.unlockTime / 1000)}:f>`;
+		if (getChastityBra(serverID, userID)?.unlockTime) {
+			return `<t:${Math.floor(getChastityBra(serverID, userID)?.unlockTime / 1000)}:f>`;
 		} else {
 			return null;
 		}

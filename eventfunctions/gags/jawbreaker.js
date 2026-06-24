@@ -15,7 +15,7 @@ async function tick(serverID, userID, data) {
     }
 
     // Decrement Intensity every timer interval
-    if (getUserVar(serverID, userID, "confectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "jawbreaker") && process.recentmessages[serverID][userID]) {
+    if (getUserVar(serverID, userID, "confectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "jawbreaker") && (process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
         if(getGag(serverID, userID, "jawbreaker").intensity > 1){
             setUserVar(serverID, userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
             // Get Intensity and push decremented version

@@ -13,8 +13,7 @@ const { getToys } = require("./getToys");
  * - intensity: The intensity of the toy 1-20
  * - origbinder: The user ID who put the toy on the user
  **********/
-function getSpecificToy(user, toytype) {
-    traceFirstParam(arguments[0]);
+function getSpecificToy(serverID, user, toytype) {
     return getToys(serverID, user).find((toy) => toy.type == toytype);
 }
 

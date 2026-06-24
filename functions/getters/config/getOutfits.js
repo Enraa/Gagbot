@@ -9,7 +9,7 @@ const { getProcessVariable } = require("./getProcessVariable");
  *******/
 function getOutfits(serverID, userID) {
     traceFirstParam(arguments[0]);
-	return getProcessVariable(serverID, userID, "outfits");
+	return getProcessVariable(serverID, userID, "outfits") ?? [];
 }
 
 exports.getOutfits = getOutfits;

@@ -138,7 +138,7 @@ module.exports = {
                 let blockertype;
                 getHeavyList(interaction.guildId, targetuser.id).map((h) => getBaseHeavy(h.type)).forEach((h) => {
                     h.heavytags.forEach((t) => {
-                        if (getBaseHeavy(interaction.guildId, heavychoice).heavytags.includes(t)) {
+                        if (getBaseHeavy(heavychoice).heavytags.includes(t)) {
                             canwear = false
                             blocker = h
                             blockertype = t

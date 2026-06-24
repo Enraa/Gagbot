@@ -294,7 +294,7 @@ module.exports = {
 				interaction.reply(getText(data));
 			}
             // Increment the struggle message counter
-            statsAddCounter(interaction.user.id, "strugglemessages", 1)
+            statsAddCounter(interaction.guildId, interaction.user.id, "strugglemessages", 1)
 		} catch (err) {
 			console.log(err);
 		}

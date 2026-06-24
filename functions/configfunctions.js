@@ -6,6 +6,7 @@ const { getServerCmdRefresh } = require("./getters/config/getServerCmdRefresh.js
 const { getServerOption } = require("./getters/config/getServerOption.js");
 const { getBotOption } = require("./getters/config/getBotOption.js");
 const { configoptions } = require("../lists/configoptions.js");
+const { getProcessVariable } = require("./getters/config/getProcessVariable.js");
 
 function generateConfigModal(interaction, menuset = "General", page, statustext) {
 	console.log("Start of generate config modal");
@@ -172,7 +173,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 							.setCustomId(`config_pageoptrevoke_${menuset}`)
 							.setLabel(`Revoke Consent`)
 							.setStyle(ButtonStyle.Danger)
-							.setDisabled(process.consented[interaction.user.id] == undefined),
+							.setDisabled(getProcessVariable(interaction.guildId, interaction.user.id, "consented") == undefined),
 					);
 				pagecomponents.push(buttonsection);
 			} else if (configoptions[menuset][k].menutype == "choice_") {

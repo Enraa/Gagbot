@@ -13,7 +13,7 @@ let tick = async function(serverID, userid, data) {
     {            
         // Calc Impact of Toys and increment Base_Arousal
         getToys(serverID, userid).forEach(toy => {
-            setUserVar(serverID, userid, "base_arousal", getUserVar(serverID, userid, "base_arousal") + (getBaseToy(serverID, toy.type).calcVibeEffect({ serverID: serverID, userID: userid, intensity: toy.intensity }) * tickMod))
+            setUserVar(serverID, userid, "base_arousal", getUserVar(serverID, userid, "base_arousal") + (getBaseToy(toy.type).calcVibeEffect({ serverID: serverID, userID: userid, intensity: toy.intensity }) * tickMod))
         });
     }
     else 

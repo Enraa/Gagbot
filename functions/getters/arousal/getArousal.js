@@ -11,7 +11,7 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  */
 function getArousal(serverID, user) {
     traceFirstParam(arguments[0]);
-	return getProcessVariable(serverID, user, "arousal").arousal ?? 0;
+	return getProcessVariable(serverID, user, "arousal")?.arousal ?? 0;
 }
 
 exports.getArousal = getArousal;

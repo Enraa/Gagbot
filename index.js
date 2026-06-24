@@ -25,6 +25,7 @@ const { getBotOption } = require('./functions/getters/config/getBotOption.js');
 const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js");
 const { logConsole } = require('./functions/logfunctions.js');
 const { markForSave } = require('./functions/other/markForSave.js');
+const { processdatatoload } = require(`./lists/processdatatoload.js`);
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -79,33 +80,6 @@ if (process.env.GAGBOTFILEDIRECTORY === "Z:\\Somewhere\\I\\Belong\\") { process.
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname
 
 process.GagbotSavedFileDirectory = GagbotSavedFileDirectory // Because honestly, I dont know WHY global stuff in index.js can't be accessble everywhere
-
-let processdatatoload = [
-    { textname: "gaggedusers.txt", processvar: "gags", default: {}, rts: "gags", hasusers: true },
-    { textname: "mittenedusers.txt", processvar: "mitten", default: {}, rts: "mitten", hasusers: true },
-    { textname: "chastityusers.txt", processvar: "chastity", default: {}, rts: "chastity", hasusers: true },
-    { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {}, rts: "chastitybra", hasusers: true },
-    { textname: "toyusers.txt", processvar: "toys", default: {}, rts: "toys", hasusers: true },
-    { textname: "collarusers.txt", processvar: "collar", default: {}, rts: "collar", hasusers: true },
-    { textname: "heavyusers.txt", processvar: "heavy", default: {}, rts: "heavy", hasusers: true },
-    { textname: "pronounsusers.txt", processvar: "pronouns", default: {}, rts: "pronouns", hasusers: true },
-    { textname: "usersdata.txt", processvar: "usercontext", default: {}, rts: "usercontext", hasusers: true },
-    { textname: "consentusers.txt", processvar: "consented", default: {}, rts: "consented", hasusers: true },
-    { textname: "corsetusers.txt", processvar: "corset", default: {}, rts: "corset", hasusers: true },
-    { textname: "arousal.txt", processvar: "arousal", default: {}, rts: "arousal", hasusers: true },
-    { textname: "headwearusers.txt", processvar: "headwear", default: {}, rts: "headwear", hasusers: true },
-    { textname: "discardedkeys.txt", processvar: "discardedKeys", rts: "discardedKeys", default: [] },
-    { textname: "configs.txt", processvar: "configs", default: {}, rts: "configs", },
-    { textname: "outfits.txt", processvar: "outfits", default: {}, rts: "outfits", },
-    { textname: "dollusers.txt", processvar: "dolls", default: {}, rts: "dolls", hasusers: true },
-    { textname: "wearables.txt", processvar: "wearable", default: {}, rts: "wearable", hasusers: true },
-    { textname: "webhooks.txt", processvar: "webhookstoload", default: {}, rts: "webhooks", },
-    { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {}, rts: "recordedmessages", },
-    { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}, rts: "delveuserdata", hasusers: true },
-    { textname: "userstats.txt", processvar: "userstats", default: {}, rts: "userstats", hasusers: true },
-    { textname: "memberavatars.txt", processvar: "memberavatars", default: {}, rts: "memberavatars", hasusers: true },
-    { textname: "heldkeytimers.txt", processvar: "heldkeytimers", default: {}, rts: "heldkeytimers", hasusers: true },
-]
 
 processdatatoload.forEach((s) => {
     try {
@@ -262,68 +236,6 @@ client.on("clientReady", async () => {
         //console.log(`Webhook Channels: [${Array.from(process.webhook.keys()).join(", ")}]`)
 
         generateListTexts();
-
-        // This code will be removed in a later update! This is ONLY intended for startup and should be uncommented if needed for updating
-        /*await new Promise((res,rej) => {
-            let guilds = process.client.guilds.cache.map(guild => guild.id)
-            processdatatoload.forEach(async (pd) => {
-                try {
-                    if (pd.processvar) {
-                        Object.keys(process[pd.processvar]).forEach(async (user) => {
-                            console.log(`Checking ${user} in ${pd.processvar}`)
-                            let useringuilds = [];
-                            if (!guilds.includes(user) && pd.hasusers) { // This is a USER object! 
-                                let inaguild = false;
-                                for (const guildID of guilds) {
-                                    let guild = process.client.guilds.cache.get(guildID);
-                                    try {
-                                        let founduser = await guild.members.fetch(user)
-                                        if (founduser) {
-                                            if (process[pd.processvar][guildID] == undefined) { process[pd.processvar][guildID] = {} }
-                                            let newobj = {};
-                                            //Object.keys(process[pd.processvar][user]).forEach((k) => {
-                                            //    if (Array.isArray(k)) {
-                                            //        newobj[k] = [...process[pd.processvar][user][k]]
-                                            //    }
-                                            //    else {
-                                            //    }
-                                            //})
-                                            process[pd.processvar][guildID][user] = structuredClone(process[pd.processvar][user])
-                                            inaguild = true;
-                                            markForSave(pd.rts)
-                                        }
-                                    }
-                                    catch (err) {
-                                        // Not in the guild
-                                        logConsole(err, 4)
-                                        logConsole(`User ${user} is not in ${guildID}`, 4)
-                                    }
-                                }
-                                if (inaguild) {
-                                    delete process[pd.processvar][user]
-                                }
-                                else {
-                                    console.log(`${pd.processvar}: User ${user} is not in ANY guild, leaving in place`)
-                                }
-                            }
-                        })
-                    }
-                }
-                catch (err) {
-                    console.log(err);
-                }
-            })
-            setTimeout(() => {
-                processdatatoload.forEach(async (pd) => {
-                    if (pd.hasusers) {
-                        console.log(process[pd.processvar]);
-                    }
-                })
-            }, 10000)
-            setTimeout(() => {
-                res(true)
-            }, 20000);
-        })*/
 
         scavengeUsers(client);
         setInterval(() => {

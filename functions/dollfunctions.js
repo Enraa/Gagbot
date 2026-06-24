@@ -390,8 +390,8 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 }
 
                 // If the Doll has configured forbidden words, add those to the array. 
-                if (getOption(msg.author.id, "dollpunishwords")) {
-                    getOption(msg.author.id, "dollpunishwords").forEach((r) => {
+                if (getOption(msg.guild.id, msg.author.id, "dollpunishwords")) {
+                    getOption(msg.guild.id, msg.author.id, "dollpunishwords").forEach((r) => {
                         // Each of these is a regexp already, so adding them is easy!
                         uniquedollprotocol.push({ regex: new RegExp(`\\b(${r})\\b`, "gi"), value: 2, type: "redact", string: r } )
                     })
@@ -444,7 +444,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 				if ((dollProtocolViolations > 0 || warnmodified) && i == lastDollifiedMessage) {
 					let totalViolations = dollProtocolViolations;
 					if (dollProtocolLevel != "warning") {
-						totalViolations = dollProtocolViolations + process.dolls[msg.author.id].violations;
+						totalViolations = dollProtocolViolations + process.dolls[msg.guild.id, msg.author.id].violations;
 					}
 
 					// WARN if below punishment threshold. ERROR if exceeded.
@@ -470,7 +470,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     
                     dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation${violationcount} - ${vioMessage}`;
 				} else if (dollProtocolViolations == 0 && i == lastDollifiedMessage) {
-					let goodDollReturn = rewardDoll(msg.author.id);
+					let goodDollReturn = rewardDoll(msg.guild.id, msg.author.id);
 					//console.log(goodDollReturn)
 					if (goodDollReturn == "violation") {
 						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.author.id].violations}/${dollPunishThresh}). It is a Good Doll.`;

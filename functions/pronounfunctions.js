@@ -2,6 +2,7 @@ const { ButtonBuilder } = require("@discordjs/builders");
 const { ButtonStyle, ComponentType } = require("discord.js");
 const { ActionRowBuilder } = require("@discordjs/builders");
 const { setPronouns } = require("./setters/config/setPronouns.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 
 async function remindPronouns(serverID, user) {
     traceFirstParam(arguments[0]);

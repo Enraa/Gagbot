@@ -330,11 +330,16 @@ function runTickEvents() {
 	if (process.gags) {
 		Object.keys(process.gags).forEach((serverid) => {
 			Object.keys(process.gags[serverid]).forEach((userid) => {
-				getGags(serverid, userid).forEach((g) => {
-					if (process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype].tick) {
-						process.eventfunctions.gags[g.gagtype].tick(serverid, userid);
-					}
-				});
+                try {
+                    getGags(serverid, userid).forEach((g) => {
+                        if (process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype].tick) {
+                            process.eventfunctions.gags[g.gagtype].tick(serverid, userid);
+                        }
+                    });
+                }
+                catch (err) {
+                    console.log(err);
+                }
 		    });
         });
 	}

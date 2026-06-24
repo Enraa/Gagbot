@@ -132,7 +132,7 @@ module.exports = {
                 if (toyuser == interaction.user) {
                     // self
                     data.self = true;
-                    if (getSpecificToy(toyuser.id, toytype)) {
+                    if (getSpecificToy(interaction.guild.id, toyuser.id, toytype)) {
                         // toy already on wearer
                         data.toy = true;
                         if (toybase.blocker({ serverID: interaction.guildId, userID: toyuser.id })) {
