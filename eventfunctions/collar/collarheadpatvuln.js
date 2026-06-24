@@ -33,7 +33,7 @@ function headpatfunction(serverID, recipient, data) {
 
 // Clear crit cooldown if we somehow crashed. 
 async function tick(serverID, userid, data) {
-    if (getUserVar(serverID, userid, "headpatvulntimer") && (Date.now() > getUserVar(userid, "headpatvulntimer"))) {
+    if (getUserVar(serverID, userid, "headpatvulntimer") && (Date.now() > getUserVar(serverID, userid, "headpatvulntimer"))) {
         setUserVar(serverID, userid, "headpatvulntimer", undefined);
     }
     if (getCollar(serverID, userid).headpatvulnerable < Date.now()) {
