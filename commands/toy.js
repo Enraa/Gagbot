@@ -9,6 +9,8 @@ const { getHeavy } = require("../functions/getters/heavy/getHeavy");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound");
 const { getSpecificToy } = require("../functions/getters/toy/getSpecificToy");
 const { assignToy } = require("../functions/setters/toy/assignToy");
+const { getOption } = require("../functions/getters/config/getOption");
+const { getTaggedList } = require("../functions/getters/config/getTaggedList");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -24,6 +26,7 @@ module.exports = {
 	async autoComplete(interaction) {
         try {
             const focusedValue = interaction.options.getFocused();
+            let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
             let autocompletes = process.autocompletes.toys;
             console.log(autocompletes)
             let matches = didYouMean(focusedValue, autocompletes, {
@@ -35,6 +38,14 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
+            let hideitem = true;
+            if (getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showeveryone") {
+                hideitem = false;
+            }
+            if ((getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showself") && (chosenuserid == interaction.user.id)) {
+                hideitem = false;
+            }
+            let newsorted = getTaggedList(interaction.guildId, chosenuserid, matches, hideitem);
             interaction.respond(matches.slice(0,25))
         }
         catch (err) {

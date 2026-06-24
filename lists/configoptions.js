@@ -1246,6 +1246,44 @@ const configoptions = {
 				return false;
 			},
 		},
+        forbiddenitemdisplay: {
+            name: "Forbidden Items On You",
+			desc: "How should items you've marked as 'None' on the Content tab be shown when selecting restraints?",
+			choices: [
+				{
+					name: "Show to Everyone",
+					helptext: "Show the options to everyone with 🛇🛇🛇 indicators. The items will be blocked unless you are equipping them.",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "showeveryone",
+					style: ButtonStyle.Primary,
+				},
+				{
+					name: "Show to Me",
+					helptext: "Show the options only to yourself with 🛇🛇🛇 indicators. The items will be allowed from you.",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "showself",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Hide",
+					helptext: "The items will be hidden from the list when searching",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "hide",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "showeveryone",
+			disabled: () => {
+				return false;
+			},
+        },
         recordmessages: {
 			name: "Record Messages",
 			desc: "When modifying messages, can the bot temporarily record the original message contents?",

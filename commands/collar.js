@@ -12,6 +12,8 @@ const { getCollar } = require("../functions/getters/collar/getCollar.js");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
 const { assignCollar } = require("../functions/setters/collar/assignCollar.js");
 const { canAccessCollar } = require("../functions/getters/collar/canAccessCollar.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { getTaggedList } = require("../functions/getters/config/getTaggedList.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -31,21 +33,14 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(interaction.guildId, interaction.user.id);
-            let newsorted = [];
-            matches.forEach((f) => {
-                let tagged = false;
-                let i = getBaseCollar(f.value)
-                tags.forEach((t) => {
-                    if (i.tags && i.tags.includes(t)) { tagged = true }
-                })
-                if (!tagged) {
-                    newsorted.push(f);
-                }
-                else {
-                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
-                }
-            })
+            let hideitem = true;
+            if (getOption(interaction.guildId, interaction.user.id, "forbiddenitemdisplay") == "showeveryone") {
+                hideitem = false;
+            }
+            if ((getOption(interaction.guildId, interaction.user.id, "forbiddenitemdisplay") == "showself") && (interaction.user.id == interaction.user.id)) {
+                hideitem = false;
+            }
+            let newsorted = getTaggedList(interaction.guildId, interaction.user.id, matches, hideitem);
             interaction.respond(newsorted.slice(0,25))
         }
         catch (err) {

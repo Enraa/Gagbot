@@ -13,6 +13,8 @@ const { getHeavyList } = require("../functions/getters/heavy/getHeavyList.js");
 const { assignHeavy } = require("../functions/setters/heavy/assignHeavy.js");
 const { convertheavy } = require("../functions/getters/heavy/getHeavyName.js");
 const { getPronouns } = require("../functions/getters/config/getPronouns.js");
+const { getTaggedList } = require("../functions/getters/config/getTaggedList.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -39,22 +41,14 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(interaction.guildId, chosenuserid);
-            let newsorted = [];
-            matches.forEach((f) => {
-                let tagged = false;
-                let i = getBaseHeavy(f.value)
-                tags.forEach((t) => {
-                    if (i.tags && (Array.isArray(i.tags)) && i.tags.includes(t)) { tagged = true }
-                    else if (i.tags && (i.tags[t])) { tagged = true }
-                })
-                if (!tagged) {
-                    newsorted.push(f);
-                }
-                else {
-                    newsorted.push({ name: `${f.name} (Forbidden due to Content Preferences)`, value: f.value })
-                }
-            })
+            let hideitem = true;
+            if (getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showeveryone") {
+                hideitem = false;
+            }
+            if ((getOption(interaction.guildId, chosenuserid, "forbiddenitemdisplay") == "showself") && (chosenuserid == interaction.user.id)) {
+                hideitem = false;
+            }
+            let newsorted = getTaggedList(interaction.guildId, chosenuserid, matches, hideitem);
             interaction.respond(newsorted.slice(0,25))
         }
 		catch (err) {
