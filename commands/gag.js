@@ -13,6 +13,8 @@ const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
 const { getMitten } = require("../functions/getters/mitten/getMitten.js");
 const { assignGag } = require("../functions/setters/gag/assignGag.js");
+const { getOption } = require("../functions/getters/config/getOption.js");
+const { getTaggedList } = require("../functions/getters/config/getTaggedList.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
