@@ -288,7 +288,7 @@ module.exports = {
                     else {
                         // Toy is not already worn!
                         data.notoy = true;
-                        if (toybase.blocker({ userID: toyuser.id })) {
+                        if (toybase.blocker({ serverID: interaction.guildId, userID: toyuser.id })) {
                             data.blocker = true;
                             if (toybase.canEquip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
                                 // can put the toy on them
