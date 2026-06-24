@@ -7,7 +7,7 @@ const { statsGetAllStat } = require("../functions/getters/config/statsGetAllStat
 
 const PAGE_SIZE = 20;
 
-async function generateList(menuchoice) {
+async function generateList(interaction, menuchoice) {
     let menus = [
         { name: "Headpats Given", useroption: "headpatsgiven" },
         { name: "Headpats Received", useroption: "headpatsreceived" },
@@ -66,7 +66,7 @@ module.exports = {
         .setDescription("View the Leaderboard for Stats!"),
 	async execute(interaction) {
 		try {
-			interaction.reply(await generateList("headpatsgiven"))
+			interaction.reply(await generateList(interaction, "headpatsgiven"))
 		} catch (err) {
 			console.log(err);
 		}
@@ -76,13 +76,13 @@ module.exports = {
 			let optionparts = interaction.customId.split("_");
 			// We changed page, new page!
 			if (optionparts[1] == "menuselector") {
-				interaction.update(await generateList(interaction.values[0].split("_")[2]));
+				interaction.update(await generateList(interaction, interaction.values[0].split("_")[2]));
 			} else if (optionparts[1] == "pagedown") {
-				interaction.update(await generateList(optionparts[2], parseInt(optionparts[3]) - 1, optionparts[4] == "true" ? true : false));
+				interaction.update(await generateList(interaction, optionparts[2], parseInt(optionparts[3]) - 1, optionparts[4] == "true" ? true : false));
 			} else if (optionparts[1] == "none") {
-				interaction.update(await generateList(optionparts[2], parseInt(optionparts[3]), !(optionparts[4] == "true" ? true : false)));
+				interaction.update(await generateList(interaction, optionparts[2], parseInt(optionparts[3]), !(optionparts[4] == "true" ? true : false)));
 			} else if (optionparts[1] == "pageup") {
-				interaction.update(await generateList(optionparts[2], parseInt(optionparts[3]) + 1, optionparts[4] == "true" ? true : false));
+				interaction.update(await generateList(interaction, optionparts[2], parseInt(optionparts[3]) + 1, optionparts[4] == "true" ? true : false));
 			}
 		} catch (err) {
 			console.log(err);
