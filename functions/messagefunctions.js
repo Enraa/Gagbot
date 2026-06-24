@@ -128,6 +128,10 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
 // Please god don't send to an invalid place I can't take it anymore
 const messageSendChannel = async (str, channel, components = []) => {
 	try {
+        if (channel == undefined) { 
+            throw new Error;
+            return;
+        }
 		let channeltosendto = await process.client.channels.fetch(channel);
 		if (channeltosendto) {
 			if (channeltosendto.isSendable() && !channeltosendto.archived && !channeltosendto.locked) {
@@ -206,15 +210,18 @@ const splitMessage = (text, inputRegex = null) => {
 	return output;
 };
 
+// Im MOSTLY sure this function can be retired now.
 function runMessageEvents(data) {
 	// Gags
 	if (process.gags) {
-		Object.keys(process.gags).forEach((userid) => {
-			getGags(userid).forEach((g) => {
-				if (process.msgfunctions.gags && process.msgfunctions.gags[g.gagtype]) {
-					process.msgfunctions.gags[g.gagtype](userid, data);
-				}
-			});
+		Object.keys(process.gags).forEach((serverid) => {
+            Object.keys(process.gags[serverid]).forEach((userid) => {
+                getGags(serverid, userid).forEach((g) => {
+                    if (process.msgfunctions.gags && process.msgfunctions.gags[g.gagtype]) {
+                        process.msgfunctions.gags[g.gagtype](userid, data);
+                    }
+                });
+            })
 		});
 	}
 	// Headwear
@@ -286,5 +293,3 @@ exports.loadEmoji = loadEmoji;
 exports.splitMessage = splitMessage;
 
 exports.messageSendChannel = messageSendChannel;
-
-exports.runMessageEvents = runMessageEvents;

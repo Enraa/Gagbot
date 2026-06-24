@@ -13,7 +13,7 @@ exports.orgasmCooldown = (data) => { return 2 * Math.random() }
 // Events
 // Randomly reduce the level of arousal by a random percentage, then reduce by a further 10%
 exports.onOrgasm = (data) => {
-    addArousal(data.userID, data.prevArousal * Math.random() * 0.9);
+    addArousal(data.serverID, data.userID, data.prevArousal * Math.random() * 0.9);
 }
 
 // Tags

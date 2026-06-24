@@ -11,8 +11,8 @@ const headpatlines = [
 ]
 
 const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
-    if (!getUserVar(msg.author.id, "headpatslutgag")) {
-        let silenced = {"isSilenced": false, id: msg.author.id}
+    if (!getUserVar(msg.guild.id, msg.author.id, "headpatslutgag")) {
+        let silenced = {"isSilenced": false, id: msg.author.id, guildid: msg.guild.id }
         msgTree.callFunc(garble,true,["rawText","moan"],[silenced])	// Run a function on the tree.
         msgTreeMods.modified = true;
     }
@@ -21,7 +21,7 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 const garble = (text, parent, silent) => {
     if (!silent.isSilenced){
         silent.isSilenced = true
-        return convertPronounsText(headpatlines[Math.floor(Math.random() * headpatlines.length)], { interactionuser: { id: silent.id } })
+        return convertPronounsText(headpatlines[Math.floor(Math.random() * headpatlines.length)], { interactionuser: { id: silent.id }, serverID: silent.guildid })
     }
     else {
         return ``;

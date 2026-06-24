@@ -1,3 +1,4 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { calcDenialCoefficient } = require("../../vibefunctions");
 const { getOption } = require("../config/getOption");
 const { getArousal } = require("./getArousal");
@@ -10,15 +11,17 @@ const RESET_LIMIT = 0.1;
 /**********
  * Gets a description representing the user's arousal
  * 
+ * - (server id) serverID - The server this is on
  * - (user id) user - The user who is aroused
  * ---
  * ##### Returns a string representing their arousal
  **********/
-function getArousalDescription(user) {
-	if (getOption(user, "arousalsystem") === 0) return null; // Disabled Arousal system
+function getArousalDescription(serverID, user) {
+    traceFirstParam(arguments[0]);
+	if (getOption(serverID, user, "arousalsystem") === 0) return null; // Disabled Arousal system
 
-	const arousal = getArousal(user);
-	const denialCoefficient = calcDenialCoefficient(user);
+	const arousal = getArousal(serverID, user);
+	const denialCoefficient = calcDenialCoefficient(serverID, user);
 	const orgasmLimit = ORGASM_LIMIT * denialCoefficient;
 	const orgasmProgress = arousal / orgasmLimit;
 	// these numbers are mostly arbitrary

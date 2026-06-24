@@ -18,22 +18,23 @@ module.exports = {
         try {
             let targetuser = await interaction.guild.members.fetch(interaction.targetId)
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(targetuser.id)?.mainconsent) {
+            if (!getConsent(interaction.guildId, targetuser.id)?.mainconsent) {
                 await handleConsent(interaction, targetuser.id);
                 return;
             }
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(interaction.user.id)?.mainconsent) {
+            if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
             let data = {
+                serverID: interaction.guildId, 
                 interactionuser: { id: interaction.user.id },
                 targetuser: { id: interaction.targetId },
-                c1: getCollarName(interaction.targetId, getCollar(interaction.targetId)?.collartype) ?? "collar"
+                c1: getCollarName(interaction.guildId, interaction.targetId, getCollar(interaction.guildId, interaction.targetId)?.collartype) ?? "collar"
             }
             // Figure out the tone to shock the user with
-            let tone = getOption(targetuser.id, "shocktone") ?? "playful";
+            let tone = getOption(interaction.guildId, targetuser.id, "shocktone") ?? "playful";
             if (tone == "both") {
                 if (Math.random() > 0.5) { 
                     tone = "playful" 
@@ -43,20 +44,20 @@ module.exports = {
                 };
             }
             if (interaction.targetId != interaction.user.id) {
-                if (!getCollar(interaction.targetId)) {
+                if (!getCollar(interaction.guildId, interaction.targetId)) {
                     await interaction.reply({ content: `<@${interaction.targetId}> isn't wearing a collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                if ((getCollar(interaction.targetId)?.collartype != "remoteshockcollar") && !(getCollar(interaction.targetId)?.additionalcollars?.includes("remoteshockcollar"))) {
+                if ((getCollar(interaction.guildId, interaction.targetId)?.collartype != "remoteshockcollar") && !(getCollar(interaction.guildId, interaction.targetId)?.additionalcollars?.includes("remoteshockcollar"))) {
                     await interaction.reply({ content: `<@${interaction.targetId}> isn't wearing a remote controlled shock collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                await handleTouchEvent({ id: interaction.user.id }, { id: interaction.targetId }, "shock", true).then(
+                await handleTouchEvent(interaction.guildId, { id: interaction.user.id }, { id: interaction.targetId }, "shock", true).then(
                     async (success) => {
-                        addArousal(interaction.targetId, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
+                        addArousal(interaction.guildId, interaction.targetId, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                         await interaction.reply({ content: getTextGeneric(`remotecontrolshock_other_${tone}`, data) })
-                        statsAddCounter(interaction.targetId, "timesshocked");
-                        shockUser(interaction.targetId);
+                        statsAddCounter(interaction.guildId, interaction.targetId, "timesshocked");
+                        shockUser(interaction.guildId, interaction.targetId);
                     },
                     async (failure) => {
                         await interaction.reply({ content: `You don't have access to <@${interaction.targetId}>'s collar remote control!`, flags: MessageFlags.Ephemeral })
@@ -64,23 +65,23 @@ module.exports = {
                 )
             }
             else {
-                if (!getCollar(interaction.targetId)) {
+                if (!getCollar(interaction.guildId, interaction.targetId)) {
                     await interaction.reply({ content: `You aren't wearing a collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                if ((getCollar(interaction.targetId)?.collartype != "remoteshockcollar") && !(getCollar(interaction.targetId)?.additionalcollars?.includes("remoteshockcollar"))) {
+                if ((getCollar(interaction.guildId, interaction.targetId)?.collartype != "remoteshockcollar") && !(getCollar(interaction.guildId, interaction.targetId)?.additionalcollars?.includes("remoteshockcollar"))) {
                     await interaction.reply({ content: `You aren't wearing a remote controlled shock collar.`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                if (!canAccessCollar(interaction.targetId, interaction.user.id).access) {
+                if (!canAccessCollar(interaction.guildId, interaction.targetId, interaction.user.id).access) {
                     await interaction.reply({ content: `You don't have access to your collar's remote control!`, flags: MessageFlags.Ephemeral })
                     return;
                 }
-                addArousal(interaction.targetId, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
+                addArousal(interaction.guildId, interaction.targetId, (2.0 + Math.random() * 6.0)); // Add 2-8 arousal.
                 await interaction.reply({ content: getTextGeneric(`remotecontrolshock_self_${tone}`, data) })
-                statsAddCounter(interaction.targetId, "timesshocked");
-                statsAddCounter(interaction.targetId, "timesshockedself");
-                shockUser(interaction.targetId);
+                statsAddCounter(interaction.guildId, interaction.targetId, "timesshocked");
+                statsAddCounter(interaction.guildId, interaction.targetId, "timesshockedself");
+                shockUser(interaction.guildId, interaction.targetId);
             }
         } catch (err) {
             console.log(err);

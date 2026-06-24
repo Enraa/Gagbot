@@ -39,7 +39,7 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(chosenuserid);
+            let tags = getUserTags(interaction.guildId, chosenuserid);
             let newsorted = [];
             matches.forEach((f) => {
                 let tagged = false;
@@ -65,22 +65,22 @@ module.exports = {
 		try {
             let targetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
             let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
-            if ((interaction.user.id == targetuser.id) && (getBaseHeavy(heavychoice).noself)) {
+            if ((interaction.user.id == targetuser.id) && (getBaseHeavy(heavychoice)?.noself)) {
                 interaction.reply({ content: `You can't bind yourself with that item!`, flags: MessageFlags.Ephemeral })
                 return;
             }
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(targetuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, targetuser.id)?.mainconsent) {
 				await handleConsent(interaction, targetuser.id);
 				return;
 			}
 			
-            let tags = getUserTags(targetuser.id);
+            let tags = getUserTags(interaction.guildId, targetuser.id);
             let i = getBaseHeavy(heavychoice)
             let blocked = false;
             tags.forEach((t) => {
@@ -95,9 +95,10 @@ module.exports = {
 			let data = {
 				textarray: "texts_heavy",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: targetuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: i.name, // New heavy bondage
                     c3: i.name // Compatibility with original collarequiptexts
 				},
@@ -114,7 +115,7 @@ module.exports = {
 				return;
 			}
 
-			if (!getHeavyBound(interaction.user.id, targetuser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, targetuser.id)) {
 				data.heavy = true;
 				interaction.reply(getText(data));
 			} else {
@@ -130,13 +131,12 @@ module.exports = {
                     }
                     data.reflect = true;
                 }
-                
+
                 // This disaster of a function lol
                 let canwear = true;
                 let blocker;
                 let blockertype;
-                console.log(getHeavyList(targetuser.id).map((h) => getBaseHeavy(h.type)))
-                getHeavyList(targetuser.id).map((h) => getBaseHeavy(h.type)).forEach((h) => {
+                getHeavyList(interaction.guildId, targetuser.id).map((h) => getBaseHeavy(h.type)).forEach((h) => {
                     h.heavytags.forEach((t) => {
                         if (getBaseHeavy(heavychoice).heavytags.includes(t)) {
                             canwear = false
@@ -146,6 +146,7 @@ module.exports = {
                     })
                 })
                 canwear = true; // I'll regret this I'm sure
+                // Update on 06/21/26 - I DID regret my design decisions regarding server IDs, but not this one at least. 
                 await interaction.deferReply({ flags: MessageFlags.Ephemeral });
                 if ((interaction.user.id != targetuser.id) || (data.textdata.interactionuser == process.client.user)) {
                     // Someone else!
@@ -155,12 +156,12 @@ module.exports = {
                         if (getBaseHeavy(heavychoice).heavytags) {
                             data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
                         }
-                        await handleMajorRestraint(interaction.user, targetuser, "heavy", heavychoice).then(async () => {
-                            await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
+                        await handleMajorRestraint(interaction.guildId, interaction.user, targetuser, "heavy", heavychoice).then(async () => {
+                            await handleExtremeRestraint(interaction.guildId, interaction.user, targetuser, "heavy", heavychoice).then(
                                 async (success) => {
                                     await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true, flags: MessageFlags.Ephemeral });
                                     await interaction.followUp(getText(data));
-                                    assignHeavy(targetuser.id, heavychoice, interaction.user.id, data.textdata.c3);
+                                    assignHeavy(interaction.guildId, targetuser.id, heavychoice, interaction.user.id, data.textdata.c3);
                                 },
                                 async (reject) => {
                                     let nomessage = `${targetuser} rejected the ${convertheavy(heavychoice)}.`;
@@ -171,7 +172,7 @@ module.exports = {
                                         nomessage = `Something went wrong - Submit a bug report!`;
                                     }
                                     if (reject == "NoDM") {
-                                        nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                        nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(interaction.guildId, targetuser.id, "subject")} ${getPronouns(interaction.guildId, targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                                     }
                                     await interaction.followUp({ content: nomessage });
                                 },
@@ -186,7 +187,7 @@ module.exports = {
                                 nomessage = `Something went wrong - Submit a bug report!`;
                             }
                             if (reject == "NoDM") {
-                                nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(interaction.guildId, targetuser.id, "subject")} ${getPronouns(interaction.guildId, targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                             }
                             if (reject == "Cooldown") {
                                 nomessage = `${targetuser} has blocked major bondage restraints for now. Please try again in the future.`;
@@ -209,11 +210,11 @@ module.exports = {
                         if (getBaseHeavy(heavychoice).heavytags) {
                             data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
                         }
-                        await handleExtremeRestraint(interaction.user, targetuser, "heavy", heavychoice).then(
+                        await handleExtremeRestraint(interaction.guildId, interaction.user, targetuser, "heavy", heavychoice).then(
                             async (success) => {
                                 await interaction.followUp({ content: `Equipping ${convertheavy(heavychoice)}`, withResponse: true });
                                 await interaction.followUp(getText(data));
-                                assignHeavy(interaction.user.id, heavychoice, interaction.user.id, data.textdata.c3);
+                                assignHeavy(interaction.guildId, interaction.user.id, heavychoice, interaction.user.id, data.textdata.c3);
                             },
                             async (reject) => {
                                 let nomessage = `You rejected the ${convertheavy(heavychoice)}.`;
@@ -244,7 +245,7 @@ module.exports = {
 		}
 	},
     async help(userid, page) {
-        let restrictedtext = (getHeavy(userid)) ? `***You are in heavy bondage***\n` : ""
+        let restrictedtext = (getHeavy(interaction.guildId, userid)) ? `***You are in heavy bondage***\n` : ""
         let overviewtext = `## Heavy
 ### Usage: /heavy (type)
 ### Remove:  /unheavy (user)

@@ -27,6 +27,6 @@ exports.modal = async (interaction, userid) => {
 
 exports.modalexecute = async (interaction) => {
     interaction.deferUpdate();
-    setOption(interaction.user.id, "engravedcollarname", interaction.fields.getTextInputValue("choiceinput").slice(0,30));
-    await interaction.reply({ content: `Updated your engraved pet tag to ${getOption(interaction.user.id, "engravedcollarname")}`, flags: MessageFlags.Ephemeral })
+    setOption(interaction.guildId, interaction.user.id, "engravedcollarname", interaction.fields.getTextInputValue("choiceinput").slice(0,30));
+    await interaction.reply({ content: `Updated your engraved pet tag to ${getOption(interaction.guildId, interaction.user.id, "engravedcollarname")}`, flags: MessageFlags.Ephemeral })
 }

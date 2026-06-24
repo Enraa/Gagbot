@@ -1,4 +1,5 @@
 const { statsGetCounter } = require("./getters/config/statsGetCounter");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
 const { parseDuration } = require("./timefunctions");
 
 /*********
@@ -6,7 +7,8 @@ const { parseDuration } = require("./timefunctions");
  * 
  * - (user id) user - User to generate stats for
  *********/
-function statsGeneratePage(user) {
+function statsGeneratePage(serverID, user) {
+    traceFirstParam(arguments[0]);
     let statstogenerate = {
         Restraints: [
             {
@@ -64,8 +66,8 @@ function statsGeneratePage(user) {
             {
                 name: "Longest Chastity Belt Worn",
                 type: "special",
-                special: (user) => {
-                    let maxduration = Math.max(statsGetCounter(user, "chastitywornduration") ?? 0, ((process.chastity[user]) ? Date.now() - process.chastity[user].timestamp : 0))
+                special: (serverID, user) => {
+                    let maxduration = Math.max(statsGetCounter(serverID, user, "chastitywornduration") ?? 0, ((process.chastity[serverID][user]) ? Date.now() - process.chastity[serverID][user].timestamp : 0))
                     console.log(maxduration);
                     if (maxduration == 0) {
                         return "Never Worn"
@@ -78,8 +80,8 @@ function statsGeneratePage(user) {
             {
                 name: "Longest Chastity Bra Worn",
                 type: "special",
-                special: (user) => {
-                    let maxduration = Math.max(statsGetCounter(user, "chastitybrawornduration") ?? 0, ((process.chastitybra[user]) ? Date.now() - process.chastitybra[user].timestamp : 0))
+                special: (serverID, user) => {
+                    let maxduration = Math.max(statsGetCounter(serverID, user, "chastitybrawornduration") ?? 0, ((process.chastitybra[serverID][user]) ? Date.now() - process.chastitybra[serverID][user].timestamp : 0))
                     console.log(maxduration);
                     if (maxduration == 0) {
                         return "Never Worn"
@@ -143,10 +145,10 @@ function statsGeneratePage(user) {
 
         statstogenerate[statgroup].forEach((textstat) => {
             if (textstat.type == "counter") {
-                outtext = `${outtext}-# • ${textstat.name}: **${statsGetCounter(user, textstat.stat) ?? 0}**\n`
+                outtext = `${outtext}-# • ${textstat.name}: **${statsGetCounter(serverID, user, textstat.stat) ?? 0}**\n`
             }
             else if (textstat.type == "special") {
-                outtext = `${outtext}-# • ${textstat.name}: **${textstat.special(user)}**\n`
+                outtext = `${outtext}-# • ${textstat.name}: **${textstat.special(serverID, user)}**\n`
             }
         })
     })

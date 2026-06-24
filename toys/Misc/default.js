@@ -33,7 +33,7 @@ exports.fumble = (data) => { return 0 };
 exports.discard = (data) => { return () => { return false }}
 
 // Action when equipping
-exports.onEquip = (data) => { addArousal(data.userID, 0.0) }; // hopefully enough to jumpstart, if not oh well
+exports.onEquip = (data) => { addArousal(data.serverID, data.userID, 0.0) }; // hopefully enough to jumpstart, if not oh well
 
 // Calculation for effective arousal
 // Note, this should be used for checks more focused around the vibe - it will be

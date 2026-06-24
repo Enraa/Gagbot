@@ -39,7 +39,7 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(chosenuserid);
+            let tags = getUserTags(interaction.guildId, chosenuserid);
             let newsorted = [];
             matches.forEach((f) => {
                 let tagged = false;
@@ -66,11 +66,11 @@ module.exports = {
 			let chastitykeyholder = interaction.user;
 			let braorbelt = interaction.options.getString("braorbelt") ?? "chastitybelt";
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(chastityuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, chastityuser.id)?.mainconsent) {
 				await handleConsent(interaction, chastityuser.id);
 				return;
 			}
-            if (!getConsent(interaction.user.id)?.mainconsent) {
+            if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
@@ -80,27 +80,28 @@ module.exports = {
 			let data = {
 				textarray: "texts_chastity",
 				textdata: {
+                    serverID: interaction.guildId,
 					interactionuser: interaction.user,
 					targetuser: chastityuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: (braorbelt == "chastitybelt" ? getChastityName(chastityuser.id, bondagetype) : getChastityBraName(chastityuser.id, bondagetype)) ?? (braorbelt == "chastitybelt" ? "chastity belt" : "chastity bra"),
-                    c3: `<@${braorbelt == "chastitybelt" ? getChastity(chastityuser.id)?.keyholder : getChastityBra(chastityuser.id)?.keyholder}>`
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+					c2: (braorbelt == "chastitybelt" ? getChastityName(interaction.guildId, chastityuser.id, bondagetype) : getChastityBraName(interaction.guildId, chastityuser.id, bondagetype)) ?? (braorbelt == "chastitybelt" ? "chastity belt" : "chastity bra"),
+                    c3: `<@${braorbelt == "chastitybelt" ? getChastity(interaction.guildId, chastityuser.id)?.keyholder : getChastityBra(interaction.guildId, chastityuser.id)?.keyholder}>`
 				},
 			};
             if (braorbelt == "chastitybelt") {
-                if (bondagetype && !getChastityName(interaction.user.id, bondagetype)) {
+                if (bondagetype && !getChastityName(interaction.guildId, interaction.user.id, bondagetype)) {
                     bondagetype = undefined; // Just delete it, we got something invalid lol
                 }
             }
 			else {
-                if (bondagetype && !getChastityBraName(interaction.user.id, bondagetype)) {
+                if (bondagetype && !getChastityBraName(interaction.guildId, interaction.user.id, bondagetype)) {
                     bondagetype = undefined; // Just delete it, we got something invalid lol
                 }
             }
 
             let blocked = false;
             if (bondagetype) {
-                let tags = getUserTags(chastityuser.id);
+                let tags = getUserTags(interaction.guildId, chastityuser.id);
                 let i = getBaseChastity(bondagetype)
                 tags.forEach((t) => {
                     if (i && i.tags && i.tags.includes(t) && (chastityuser != interaction.user)) {
@@ -134,9 +135,9 @@ module.exports = {
 			if (braorbelt == "chastitybelt") {
 				// They are trying to put on a chastity belt.
 				// Check if the wearer is in an armbinder - if they are, block them.
-				if (!getHeavyBound(interaction.user.id, chastityuser.id)) {
+				if (!getHeavyBound(interaction.guildId, interaction.user.id, chastityuser.id)) {
 					data.heavy = true;
-					if (getChastity(chastityuser.id)) {
+					if (getChastity(interaction.guildId, chastityuser.id)) {
 						// User is in some form of heavy bondage and already has a chastity belt
 						data.chastity = true;
 						interaction.reply(getText(data));
@@ -145,10 +146,10 @@ module.exports = {
 						data.nochastity = true;
 						interaction.reply(getText(data));
 					}
-				} else if (getChastity(chastityuser.id)?.keyholder) {
+				} else if (getChastity(interaction.guildId, chastityuser.id)?.keyholder) {
 					data.noheavy = true;
 					data.chastity = true;
-					if (getChastity(chastityuser.id)?.keyholder == interaction.user.id) {
+					if (getChastity(interaction.guildId, chastityuser.id)?.keyholder == interaction.user.id) {
 						// User tries to lock another belt on target and they have the key
 						data.key_self = true;
 						interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
@@ -162,8 +163,8 @@ module.exports = {
 					data.nochastity = true;
 					if (chastitykeyholder) {
                         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                        await handleMajorRestraint(interaction.user, chastityuser, "chastity", bondagetype ?? "belt_silver").then(async () => {
-                            await handleExtremeRestraint(interaction.user, chastityuser, "chastity", bondagetype ?? "belt_silver").then(
+                        await handleMajorRestraint(interaction.guildId, interaction.user, chastityuser, "chastity", bondagetype ?? "belt_silver").then(async () => {
+                            await handleExtremeRestraint(interaction.guildId, interaction.user, chastityuser, "chastity", bondagetype ?? "belt_silver").then(
                                 async (success) => {
                                     await interaction.followUp({ content: `Equipping ${bondagetype ? getBaseChastity(bondagetype)?.name : "Standard Chastity Belt"}`, flags: MessageFlags.Ephemeral })
                                     let followupmessage = await generateExtraConfig(interaction, chastityuser.id, bondagetype, true)
@@ -171,7 +172,7 @@ module.exports = {
                                         await interaction.followUp(followupmessage) 
                                     };
                                     await interaction.followUp(getText(data));
-                                    assignChastity(chastityuser.id, chastitykeyholder.id, bondagetype);
+                                    assignChastity(interaction.guildId, chastityuser.id, chastitykeyholder.id, bondagetype);
                                 },
                                 async (reject) => {
                                     let nomessage = `${chastityuser} rejected the ${bondagetype ? getBaseChastity(bondagetype).name : "chastity belt"}.`;
@@ -182,7 +183,7 @@ module.exports = {
                                         nomessage = `Something went wrong - Submit a bug report!`;
                                     }
                                     if (reject == "NoDM") {
-                                        nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(chastityuser.id, "subject")} ${getPronouns(chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                        nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(interaction.guildId, chastityuser.id, "subject")} ${getPronouns(interaction.guildId, chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                                     }
                                     await interaction.followUp({ content: nomessage });
                                 },
@@ -197,7 +198,7 @@ module.exports = {
                                 nomessage = `Something went wrong - Submit a bug report!`;
                             }
                             if (reject == "NoDM") {
-                                nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(chastityuser.id, "subject")} ${getPronouns(chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(interaction.guildId, chastityuser.id, "subject")} ${getPronouns(interaction.guildId, chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                             }
                             if (reject == "Cooldown") {
                                 nomessage = `${chastityuser} has blocked major bondage restraints for now. Please try again in the future.`;
@@ -207,15 +208,15 @@ module.exports = {
 					} else {
 						// Left it unlocked ---- This is currently an unused data path as there will ALWAYS be a keyholder.
 						interaction.reply(`${interaction.user} puts a chastity belt on and clicks a tiny lock on it before stashing the key for safekeeping!`);
-						assignChastity(interaction.user.id, interaction.user.id);
+						assignChastity(interaction.guildId, interaction.user.id, interaction.user.id);
 					}
 				}
 			} else {
 				// They are trying to put on a chastity bra.
 				// Check if the wearer is in an armbinder - if they are, block them.
-				if (!getHeavyBound(interaction.user.id, chastityuser.id)) {
+				if (!getHeavyBound(interaction.guildId, interaction.user.id, chastityuser.id)) {
 					data.heavy = true;
-					if (getChastityBra(chastityuser.id)) {
+					if (getChastityBra(interaction.guildId, chastityuser.id)) {
 						// User is in some form of heavy bondage and already has a chastity belt
 						data.chastity = true;
 						interaction.reply(getText(data));
@@ -224,10 +225,10 @@ module.exports = {
 						data.nochastity = true;
 						interaction.reply(getText(data));
 					}
-				} else if (getChastityBra(chastityuser.id)?.keyholder) {
+				} else if (getChastityBra(interaction.guildId, chastityuser.id)?.keyholder) {
 					data.noheavy = true;
 					data.chastity = true;
-					if (getChastityBra(chastityuser.id)?.keyholder == interaction.user.id) {
+					if (getChastityBra(interaction.guildId, chastityuser.id)?.keyholder == interaction.user.id) {
 						// User tries to lock another belt on themselves and they have the key
 						data.key_self = true;
 						interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
@@ -241,8 +242,8 @@ module.exports = {
 					data.nochastity = true;
 					if (chastitykeyholder) {
                         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                        await handleMajorRestraint(interaction.user, chastityuser, "chastitybra", bondagetype ?? "bra_silver").then(async () => {
-                            await handleExtremeRestraint(interaction.user, chastityuser, "chastitybra", bondagetype ?? "bra_silver").then(
+                        await handleMajorRestraint(interaction.guildId, interaction.user, chastityuser, "chastitybra", bondagetype ?? "bra_silver").then(async () => {
+                            await handleExtremeRestraint(interaction.guildId, interaction.user, chastityuser, "chastitybra", bondagetype ?? "bra_silver").then(
                                 async (success) => {
                                     await interaction.followUp({ content: `Equipping ${bondagetype ? getBaseChastity(bondagetype)?.name : "Standard Chastity Bra"}`, flags: MessageFlags.Ephemeral })
                                     let followupmessage = await generateExtraConfig(interaction, chastityuser.id, bondagetype, true)
@@ -250,7 +251,7 @@ module.exports = {
                                         await interaction.followUp(followupmessage) 
                                     };
                                     await interaction.followUp(getText(data));
-                                    assignChastityBra(chastityuser.id, chastitykeyholder.id, bondagetype);
+                                    assignChastityBra(interaction.guildId, chastityuser.id, chastitykeyholder.id, bondagetype);
                                 },
                                 async (reject) => {
                                     let nomessage = `${chastityuser} rejected the ${bondagetype ? getBaseChastity(bondagetype).name : "chastity bra"}.`;
@@ -261,7 +262,7 @@ module.exports = {
                                         nomessage = `Something went wrong - Submit a bug report!`;
                                     }
                                     if (reject == "NoDM") {
-                                        nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(chastityuser.id, "subject")} ${getPronouns(chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                        nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(interaction.guildId, chastityuser.id, "subject")} ${getPronouns(interaction.guildId, chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                                     }
                                     await interaction.followUp({ content: nomessage });
                                 },
@@ -276,7 +277,7 @@ module.exports = {
                                 nomessage = `Something went wrong - Submit a bug report!`;
                             }
                             if (reject == "NoDM") {
-                                nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(chastityuser.id, "subject")} ${getPronouns(chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
+                                nomessage = `Something went wrong sending a DM to ${chastityuser}, or ${getPronouns(interaction.guildId, chastityuser.id, "subject")} ${getPronouns(interaction.guildId, chastityuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent for this restraint.`;
                             }
                             if (reject == "Cooldown") {
                                 nomessage = `${chastityuser} has blocked major bondage restraints for now. Please try again in the future.`;
@@ -286,7 +287,7 @@ module.exports = {
 					} else {
 						// Left it unlocked ---- This is currently an unused data path as there will ALWAYS be a keyholder.
 						interaction.reply(`${interaction.user} puts a chastity bra on and clicks a tiny lock on it before stashing the key for safekeeping!`);
-						assignChastityBra(interaction.user.id, interaction.user.id);
+						assignChastityBra(interaction.guildId, interaction.user.id, interaction.user.id);
 					}
 				}
 			}
@@ -295,7 +296,7 @@ module.exports = {
 		}
 	},
     async help(userid, page) {
-        let restrictedtext = (getChastity(userid) || getChastityBra(userid)) ? `***You may be unable to use this command due to worn chastity***\n` : ""
+        let restrictedtext = (getChastity(interaction.guildId, userid) || getChastityBra(interaction.guildId, userid)) ? `***You may be unable to use this command due to worn chastity***\n` : ""
         let overviewtext = `## Chastity
 ### Usage: /chastity (keyholder) (braorbelt) (type)
 ### Remove:  /unchastity (user)

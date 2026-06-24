@@ -13,7 +13,7 @@ const garbleText = (text, parent, intensity) => {
 		"Mmmghhh~ more please~",
 		"Mmmmmhmmm~ <3",
 		"Please, dont stop~",
-		"I love Meowstress Enraa!",
+		//"I love Meowstress Enraa!",
 		"I love being bound!",
 		"I need to live in a kinky dungeon cell!",
 		"Please, tie me up!",
@@ -62,7 +62,7 @@ const messageend = (msg, intensity) => {
 
 	// Add "I am a good girl!" to the list
 	if (msg.member) {
-		endsoundList.push(convertPronounsText(`\nI am a good USER_PRAISEOBJECT!`, { interactionuser: msg.member, targetuser: msg.member }));
+		endsoundList.push(convertPronounsText(`\nI am a good USER_PRAISEOBJECT!`, { serverID: msg.guild.id, interactionuser: msg.member, targetuser: msg.member }));
 	}
 
 	if (intensity > 5) {

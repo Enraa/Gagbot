@@ -26,6 +26,9 @@ const { convertPronounsText } = require("./other/convertPronounsText.js");
 const { getAlternateName } = require("./getters/config/getAlternateName.js");
 const { markForSave } = require("./other/markForSave.js");
 const { setUserVar } = require("./setters/config/setUserVar.js");
+const { getGags } = require("./getters/gag/getGags.js");
+const { statsAddCounter } = require("./setters/config/statsAddCounter.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -87,20 +90,24 @@ function loadMittenTypes() {
  * @param userID - The user's discord ID number
  * @param amount - How many violations?
  **********************************************/
-function punishDoll(userID, amount) {
+function punishDoll(serverID, userID, amount) {
+    traceFirstParam(arguments[0]);
 	if (process.dolls == undefined) {
 		process.dolls = {};
 	}
-	let doll = process.dolls[userID];
+    if (process.dolls[serverID] == undefined) {
+		process.dolls[serverID] = {};
+	}
+	let doll = process.dolls[serverID][userID];
 	if (doll) {
 		doll.violations += amount;
 		doll.goodDollStreak = 0; // BAD DOLL
 
 		console.log("BAD DOLL:");
-		console.log(process.dolls[userID]);
+		console.log(process.dolls[serverID][userID]);
 		// Compute punishments by dividing violations by punishThresh.
-		let punishThresh = getOption(userID, "dollpunishthresh");
-        if (getHeadwear(userID).find((headwear) => headwear === "dollmaker_visor")) {
+		let punishThresh = getOption(serverID, userID, "dollpunishthresh");
+        if (getHeadwear(serverID, userID).find((headwear) => headwear === "dollmaker_visor")) {
             punishThresh = 2; // Forced to 2 if dollmakers visor
         }
 		let punishments = Math.floor(doll.violations / punishThresh);
@@ -124,20 +131,20 @@ function punishDoll(userID, amount) {
 					break;
 				case 1:
 					// Gag the Doll
-					assignGag(userID, "ball", 4);
+					assignGag(serverID, userID, "ball", 4);
 					break;
 				case 2:
 					// Gag and Mitten the Doll
-					assignGag(userID, "ball", 6);
-					assignMitten(userID, "mittens_cyberdoll");
+					assignGag(serverID, userID, "ball", 6);
+					assignMitten(serverID, userID, "mittens_cyberdoll");
 					break;
 				// Drop through to highest punishment.
 				default:
 				case 3:
 					// Gag, Mittens, Heavy
-					assignGag(userID, "ball", 8);
-					assignMitten(userID, "mittens_cyberdoll");
-					assignHeavy(userID, "hardlight_looselink");
+					assignGag(serverID, userID, "ball", 8);
+					assignMitten(serverID, userID, "mittens_cyberdoll");
+					assignHeavy(serverID, userID, "hardlight_looselink");
 					break;
 			}
 		}
@@ -147,7 +154,7 @@ function punishDoll(userID, amount) {
 }
 
 const messageReplaceEmojiWithText = async (msg) => {
-    if (!getHeadwearRestrictions(msg.author.id).forcedtextemoji) {return msg.content;}
+    if (!getHeadwearRestrictions(msg.guild.id, msg.author.id).forcedtextemoji) {return msg.content;}
 
     let text = msg.content;
 
@@ -201,8 +208,8 @@ const modifymessage = async (msg, threadId, messageonly) => {
 		let msgTree = new MessageAST(msg.content);					// Build AST from message
 		let msgTreeMods = {"modified":false, "emojiModified":false, "corseted":false}	// Store a boolean in an object to allow pass by reference.
 
-		processHeadwearEmoji(msg.author.id, msgTree, msgTreeMods, getOption(msg.author.id, "dollvisorname"))
-        processHeadwearTruthgas(msg.author.id, msgTree, msgTreeMods)
+		processHeadwearEmoji(msg.guildId, msg.author.id, msgTree, msgTreeMods, getOption(msg.guild.id, msg.author.id, "dollvisorname"))
+        processHeadwearTruthgas(msg.guild.id, msg.author.id, msgTree, msgTreeMods)
         await processPregarbleGags(msg, msgTree, msgTreeMods)       // Perform early garbles before arousal and corset effects. 
 
 		// See if this message can be skipped. Messages containing only emoji do NOT need to be processed,
@@ -243,7 +250,7 @@ const modifymessage = async (msg, threadId, messageonly) => {
         if (appendcollar.msgTreeMods) { msgTreeMods = appendcollar.msgTreeMods }
 
         // Iterate through any speech events in process.msgfunctions
-        emitEvent("msgfunction", msg.author.id, { msg: msg, msgcontent: msg.content, outtext: outtext })
+        emitEvent("msgfunction", msg.author.id, msg.guildId, { msg: msg, msgcontent: msg.content, outtext: outtext })
 
         // If we only wanted to edit the message, just return it at this point and do NOT proceed. 
         if (messageonly) { 
@@ -251,7 +258,7 @@ const modifymessage = async (msg, threadId, messageonly) => {
         }
 
         // Get the user's current display name based on worn restraints
-        let userdisplayName = getAlternateName(msg.member);
+        let userdisplayName = getAlternateName(msg.guild.id, msg.member);
         if (userdisplayName != msg.member.displayName) {
             msgTreeMods.modified = true;
         }
@@ -303,20 +310,20 @@ const replaceStutter = (text, parent, msg, msgModified, intensity, arousedtexts)
 }
 
 function textGarbleVibrator(msg, msgTree, msgModified) {
-	const intensity = getVibeEquivalent(msg.author.id);
+	const intensity = getVibeEquivalent(msg.guild.id, msg.author.id);
 	if (intensity) {
-		const arousedtexts = getArousedTexts(msg.author.id);
+		const arousedtexts = getArousedTexts(msg.guild.id, msg.author.id);
 		msgTree.callFunc(replaceStutter, true, "rawText",[msg, msgModified, intensity, arousedtexts])
 	}
 }
 
 function textGarbleCorset(msg, msgTree, msgModified, threadId) {
 	// Now corset any words, using an amount to start with.
-	let corset = getCorset(msg.author.id)
+	let corset = getCorset(msg.guild.id, msg.author.id)
 	if (corset) {
 
 		const hadParts = msgTree.toString() != ""
-		msgTree.callFunc(corsetLimitWords, true, "rawText", [msg.author.id, msgModified])
+		msgTree.callFunc(corsetLimitWords, true, "rawText", [msg.author.id, msgModified, msg.guild.id])
 
 		if (hadParts && msgTree.toString() == "") {
 			messageSend(msg, silenceMessage(), msg.member.displayAvatarURL(), msg.member.displayName, threadId, msgModified.modified).then(() => msg.delete());
@@ -337,9 +344,9 @@ async function textGarbleGag(msg, msgTree, msgTreeMods) {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
-	if (process.gags[msg.author.id] && process.gags[msg.author.id].length > 0) {
+	if (getGags(msg.guild.id, msg.author.id).length > 0) {
         // Go over each gag and if there's a gag file loaded for it, run the messagebegin, garbletext and messageend functions if they exist.
-		process.gags[msg.author.id].forEach((gag) => {
+		getGags(msg.guild.id, msg.author.id).forEach((gag) => {
             if (process.gagtypes && process.gagtypes[gag.gagtype]) {
                 if (process.gagtypes[gag.gagtype].messagebegin) {
                     let out = process.gagtypes[gag.gagtype].messagebegin(msg, msgTree, msgTreeMods, gag.intensity ?? 5);
@@ -369,10 +376,10 @@ async function processPregarbleGags(msg, msgTree, msgTreeMods) {
 	if (process.gags == undefined) {
 		process.gags = {};
 	}
-    if (process.gags[msg.author.id] && process.gags[msg.author.id].length > 0) {
+    if (getGags(msg.guild.id, msg.author.id).length > 0) {
         let origcontent = msg.content;
         // Go over each gag and if there's a gag file loaded for it, run the messagebegin, garbletext and messageend functions if they exist.
-		process.gags[msg.author.id].forEach(async (gag) => {
+		getGags(msg.guild.id, msg.author.id).forEach(async (gag) => {
             if (process.gagtypes && process.gagtypes[gag.gagtype]) {
                 if (process.gagtypes[gag.gagtype].pregarble) {
                     await msgTree.callFunc(process.gagtypes[gag.gagtype].pregarble,true,"rawText",[gag.intensity ?? 5, msg])		// Run garble on all IC segments.
@@ -396,7 +403,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
     // If they were shocked, then give a shocked message. 
     if (msgTreeMods.shocked) {
         // Figure out the tone to shock the user with
-        let tone = getOption(msg.author.id, "shocktone") ?? "playful";
+        let tone = getOption(msg.guild.id, msg.author.id, "shocktone") ?? "playful";
         if (tone == "both") {
             if (Math.random() > 0.5) { 
                 tone = "playful" 
@@ -412,7 +419,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 `*USER_TAG eeps when the collar gives USER_THEM a tiny shock!*`,
                 {
                     required: (t) => {
-                        return getHeavyRestrictions(t.interactionuser.id).touchself;
+                        return getHeavyRestrictions(msg.guild.id, t.interactionuser.id).touchself;
                     },
                     text: `*USER_TAG tries to slip a finger under USER_THEIR collar as it stings USER_THEM!*`,
                 },
@@ -427,7 +434,7 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 `*USER_TAG's words trail off and USER_THEY squintUSER_S USER_THEIR eyes shut!*`,
                 {
                     required: (t) => {
-                        return getHeavyRestrictions(t.interactionuser.id).touchself;
+                        return getHeavyRestrictions(msg.guild.id, t.interactionuser.id).touchself;
                     },
                     text: `*USER_TAG's grabs USER_THEIR collar with tears as it shocks USER_THEM!*`,
                 },
@@ -444,30 +451,27 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 texts.push(t)
             }
         })
-        appendmessages.push(convertPronounsText(texts[Math.floor(texts.length * Math.random())], { interactionuser: msg.member, targetuser: msg.member }));
+        appendmessages.push(convertPronounsText(texts[Math.floor(texts.length * Math.random())], { serverID: msg.guild.id, interactionuser: msg.member, targetuser: msg.member }));
         /*** This code is ugly because I couldn't call the functions due to circulars. 
          * 
          * This should ideally be refactored in the future. 
         */
-        if (process.userstats == undefined) { process.userstats = {} }
-        if (process.userstats[msg.member.id] == undefined) { process.userstats[msg.member.id] = {} }
-        let newcount = (process.userstats[msg.member.id]["timesshocked"] ?? 0) + 1;
-        process.userstats[msg.member.id]["timesshocked"] = newcount;
+        statsAddCounter(msg.guild.id, msg.member.id, "timesshocked")
         markForSave("userstats");
         try {
-            if (getOption(msg.member.id, "pishockusername") && (typeof getOption(msg.member.id, "pishockusername") == "string") &&
-                getOption(msg.member.id, "pishockname") && (typeof getOption(msg.member.id, "pishockname") == "string") &&
-                getOption(msg.member.id, "pishockcode") && (typeof getOption(msg.member.id, "pishockcode") == "string") &&
-                getOption(msg.member.id, "pishockapikey") && (typeof getOption(msg.member.id, "pishockapikey") == "string")) {
+            if (getOption(msg.guild.id, msg.member.id, "pishockusername") && (typeof getOption(msg.guild.id, msg.member.id, "pishockusername") == "string") &&
+                getOption(msg.guild.id, msg.member.id, "pishockname") && (typeof getOption(msg.guild.id, msg.member.id, "pishockname") == "string") &&
+                getOption(msg.guild.id, msg.member.id, "pishockcode") && (typeof getOption(msg.guild.id, msg.member.id, "pishockcode") == "string") &&
+                getOption(msg.guild.id, msg.member.id, "pishockapikey") && (typeof getOption(msg.guild.id, msg.member.id, "pishockapikey") == "string")) {
                     // Set up the https request. 
                     const reqdata = JSON.stringify({
-                        Username: getOption(msg.member.id, "pishockusername"),
-                        Name: getOption(msg.member.id, "pishockname"),
-                        Code: getOption(msg.member.id, "pishockcode"),
+                        Username: getOption(msg.guild.id, msg.member.id, "pishockusername"),
+                        Name: getOption(msg.guild.id, msg.member.id, "pishockname"),
+                        Code: getOption(msg.guild.id, msg.member.id, "pishockcode"),
                         Intensity: 100,
                         Duration: 2,
-                        Apikey: getOption(msg.member.id, "pishockapikey"),
-                        Op: (getOption(msg.member.id, "pishockop") ? getOption(msg.member.id, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
+                        Apikey: getOption(msg.guild.id, msg.member.id, "pishockapikey"),
+                        Op: (getOption(msg.guild.id, msg.member.id, "pishockop") ? getOption(msg.guild.id, msg.member.id, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
                     });
                     const options = {
                         hostname: 'do.pishock.com/api/apioperate', // without https://
@@ -502,9 +506,9 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
     }
 
     // If they're wearing a sponsorship collar, 30% chance to add a sponsor. 
-    if (process.collar && process.collar[msg.author.id] && ((process.collar[msg.author.id].collartype == "sponsorcollar") || (process.collar[msg.author.id].additionalcollars && process.collar[msg.author.id].additionalcollars.includes("sponsorcollar")))) {
-        let randomchance = 0.95 - (!isNaN(getUserVar(msg.author.id, "sponsorcollartrigger")) ? (((Date.now() - getUserVar(msg.author.id, "sponsorcollartrigger")) / 60000) * 0.015) : 0.5) // 5% + 1.5% per minute, uncapped. +50% chance if this is their first time ever being sponsored
-        if ((Math.random() > randomchance) && (!isNaN(getUserVar(msg.author.id, "sponsorcollartrigger")) ? (((Date.now() - getUserVar(msg.author.id, "sponsorcollartrigger")) / 60000) > 1.0) : true)) { // Higher than proc rate AND at least a minute since last proc.
+    if (process.collar && process.collar[msg.guild.id] && process.collar[msg.guild.id][msg.author.id] && ((process.collar[msg.guild.id][msg.author.id].collartype == "sponsorcollar") || (process.collar[msg.guild.id][msg.author.id].additionalcollars && process.collar[msg.guild.id][msg.author.id].additionalcollars.includes("sponsorcollar")))) {
+        let randomchance = 0.95 - (!isNaN(getUserVar(msg.guild.id, msg.author.id, "sponsorcollartrigger")) ? (((Date.now() - getUserVar(msg.guild.id, msg.author.id, "sponsorcollartrigger")) / 60000) * 0.015) : 0.5) // 5% + 1.5% per minute, uncapped. +50% chance if this is their first time ever being sponsored
+        if ((Math.random() > randomchance) && (!isNaN(getUserVar(msg.guild.id, msg.author.id, "sponsorcollartrigger")) ? (((Date.now() - getUserVar(msg.guild.id, msg.author.id, "sponsorcollartrigger")) / 60000) > 1.0) : true)) { // Higher than proc rate AND at least a minute since last proc.
             let sponsors = [
                 `FANG (Fox Asset and National Growth) - Asset Management since 2008!`,
                 `FEC (Fox Exchange Commission) - Your Trusted Stock Broker since 1929!`,
@@ -551,9 +555,10 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 `Cassandra's Secret - Witch by Day, Obedient Doll by Night`,
                 `Sponsorship Collar - Put me on. Advertise our corporate overlords like a good little subbie drone you are!`,
                 `DommeDash - Feeding Subs, One Door at a Time!`,
+                `Toast - The single piece that carries a hungry cat`
             ]
             appendmessages.push(`-# Sponsored by ${sponsors[Math.floor(sponsors.length * Math.random())]}`);
-            setUserVar(msg.author.id, "sponsorcollartrigger", Date.now());
+            setUserVar(msg.guild.id, msg.author.id, "sponsorcollartrigger", Date.now());
         }
     }
 
@@ -600,9 +605,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 		}
 
         // Increment the gagged message counter
-        if (process.userstats == undefined) { process.userstats = {} }
-        if (process.userstats[msg.author.id] == undefined) { process.userstats[msg.author.id] = {} }
-        process.userstats[msg.author.id].gaggedmessages = (process.userstats[msg.author.id].gaggedmessages ?? 0) + 1;
+        statsAddCounter(msg.guild.id, msg.author.id, "gaggedmessages")
         markForSave("userstats");
 
 		// Determine if an attachment was posted in the original message.
@@ -639,7 +642,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 				);
 			}
 			Promise.all(promisearr).then(async (v) => {
-                let avatar = await getPFP(msg.member);
+                let avatar = await getPFP(msg.guild.id, msg.member);
 				// Send it!
 				messageSendImg(msg, outtext, avatar ?? msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, attachments, modified, isreply, replyobject).then((modifiedmsg) => {
                     // Cleanup after sending
@@ -669,7 +672,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 			if (outtext.length == 0) {
 				outtext = "Something went wrong. Ping <@125093095405518850> and let her know!";
 			}
-            let avatar = await getPFP(msg.member);
+            let avatar = await getPFP(msg.guild.id, msg.member);
 			// Finally send it!
 			messageSend(msg, outtext, avatar ?? msg.member.displayAvatarURL(), dollIDDisplay ? dollIDDisplay : msg.member.displayName, threadID, modified, isreply, replyobject).then((modifiedmsg) => {
 				// Cleanup after sending.
@@ -677,7 +680,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 					// If the user violates Doll Protocol, do STUFF
 					if (dollProtocol) {
 						// Punish the doll for being bad.
-						let dollPunishment = punishDoll(msg.author.id, dollProtocol);
+						let dollPunishment = punishDoll(msg.guild.id, msg.author.id, dollProtocol);
 
 						// If the doll was actually punished
 						if (dollPunishment.punish) {

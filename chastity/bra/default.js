@@ -17,9 +17,9 @@ exports.vibeScaling = (data) => { return 0.3 }
 
 // Fumble for bras.
 exports.fumble = (data) => {
-    if (getOption(data.userID, "fumbling") == "disabled") { return 0 }
-    let fumble = rollKeyFumble(data.keyholderID, data.userID);
-    if (fumble > 1 && (getOption(data.userID, "keyloss") == "disabled")) {
+    if (getOption(data.serverID, data.userID, "fumbling") == "disabled") { return 0 }
+    let fumble = rollKeyFumble(data.serverID, data.keyholderID, data.userID);
+    if (fumble > 1 && (getOption(data.serverID, data.userID, "keyloss") == "disabled")) {
         fumble = 1; // force it back to a no key loss
     }
     return fumble;
@@ -27,12 +27,12 @@ exports.fumble = (data) => {
 
 // Discard for bras
 exports.discard = (data) => {
-    return discardKey(data.userID, data.keyholderID, "chastity bra")
+    return discardKey(data.serverID, data.userID, data.keyholderID, "chastity bra")
 }
 
-exports.canUnequip = (data) => { return canAccessChastityBra(data.userID, data.keyholderID, true).access }
+exports.canUnequip = (data) => { return canAccessChastityBra(data.serverID, data.userID, data.keyholderID, true).access }
 
-exports.canAccessToys = (data) => { return (canAccessChastityBra(data.userID, data.keyholderID).access) }
+exports.canAccessToys = (data) => { return (canAccessChastityBra(data.serverID, data.userID, data.keyholderID).access) }
 
 // Category
 exports.category = "Chastity Bra"

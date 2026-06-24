@@ -35,6 +35,9 @@ const { getWearable } = require("./getters/wearable/getWearable.js");
 const { getToys } = require("./getters/toy/getToys.js");
 const { configoptions } = require("../lists/configoptions.js");
 const { getChastityName } = require("./getters/chastity/getChastityName.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { canAccessChastityBra } = require("./getters/chastity/canAccessChastityBra.js");
+const { getChastityBraName } = require("./getters/chastity/getChastityBraName.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
@@ -71,7 +74,7 @@ const handleConsent = async (interaction, user) => {
 	try {
 		const confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 300_000 });
 		console.log(confirmation);
-		assignConsent(testusertarget);
+		assignConsent(interaction.guildId, testusertarget);
 		await interaction.editReply({ content: `Consent form agreed to by <@${testusertarget}>! Please re-run the command to tie!`, components: [] });
 	} catch (err) {
 		console.log(err);
@@ -98,12 +101,12 @@ This restraint is intended to allow **others** to use **/mitten**, **/chastity**
 		othertext = "keyholder";
 	} else if (keyholder != interaction.user && !freeuse) {
 		// Other keyholder, NOT free use
-		keyholderpermissionstext = `You have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(keyholder.id, "object")} to play with you.`;
-		othertext = getPronouns(keyholder.id, "object");
+		keyholderpermissionstext = `You have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(interaction.guildId, keyholder.id, "object")} to play with you.`;
+		othertext = getPronouns(interaction.guildId, keyholder.id, "object");
 	} else {
 		// Other keyholder, free use
-		keyholderpermissionstext = `**(Public Access)** You have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(keyholder.id, "object")} to play with you, in addition to everyone else as public access.`;
-		othertext = getPronouns(keyholder.id, "object");
+		keyholderpermissionstext = `**(Public Access)** You have chosen ${keyholder} to be your keyholder, and will allow ${getPronouns(interaction.guildId, keyholder.id, "object")} to play with you, in addition to everyone else as public access.`;
+		othertext = getPronouns(interaction.guildId, keyholder.id, "object");
 	}
 	warningText = `${warningText}\n\nCollars may result in unintended situations such as someone holding your chastity key other than you, or you becoming unable to remove restraints because of heavy bondage.\n\n-# **NOTE:** Extreme Restraints will still prompt as selected in **/config**`;
 
@@ -152,7 +155,7 @@ This restraint is intended to allow **others** to use **/mitten**, **/chastity**
 	// Add labels to modal
 	modal.addTextDisplayComponents(restrictionWarningText).addLabelComponents(keyholderuserlabel, restrictionscheckboxlabel)
 
-    if (getOption(interaction.user.id, "publicaccess") != "enabled") {
+    if (getOption(interaction.guildId, interaction.user.id, "publicaccess") != "enabled") {
         // They have NOT enabled free use. 
         modal.addTextDisplayComponents(freeusenotenabled)
     }
@@ -199,13 +202,13 @@ This will lock ${wearer}'s chastity belt for a set period of time. Please config
 			.setValue("access_no"),
 	];
 
-	if (getOption(wearer.id, "publicaccess") != "disabled") {
+	if (getOption(interaction.guildId, wearer.id, "publicaccess") != "disabled") {
 		accesswhileboundoptions.unshift(
 			new StringSelectMenuOptionBuilder()
 				// Label displayed to user
 				.setLabel("Everyone Else")
 				// Description of option
-				.setDescription(`Everyone except ${interaction.user.id == wearer.id ? "you" : `${wearer.displayName}`} can vibe and corset ${interaction.user.id == wearer.id ? "you" : `${getPronouns(wearer.id, "object")}`}`)
+				.setDescription(`Everyone except ${interaction.user.id == wearer.id ? "you" : `${wearer.displayName}`} can vibe and corset ${interaction.user.id == wearer.id ? "you" : `${getPronouns(interaction.guildId, wearer.id, "object")}`}`)
 				// Value returned to you in modal submission
 				.setValue("access_others"),
 		);
@@ -311,13 +314,13 @@ This will lock ${wearer}'s chastity bra for a set period of time. Please configu
 			.setValue("access_no"),
 	];
 
-	if (getOption(wearer.id, "publicaccess") != "disabled") {
+	if (getOption(interaction.guildId, wearer.id, "publicaccess") != "disabled") {
 		accesswhileboundoptions.unshift(
 			new StringSelectMenuOptionBuilder()
 				// Label displayed to user
 				.setLabel("Everyone Else")
 				// Description of option
-				.setDescription(`Everyone except ${interaction.user.id == wearer.id ? "you" : `${wearer.displayName}`} can do things to ${interaction.user.id == wearer.id ? "you" : `${getPronouns(wearer.id, "object")}`}`)
+				.setDescription(`Everyone except ${interaction.user.id == wearer.id ? "you" : `${wearer.displayName}`} can do things to ${interaction.user.id == wearer.id ? "you" : `${getPronouns(interaction.guildId, wearer.id, "object")}`}`)
 				// Value returned to you in modal submission
 				.setValue("access_others"),
 		);
@@ -423,7 +426,7 @@ This will lock ${wearer}'s collar for a set period of time. Please configure you
 			.setValue("access_no"),
 	];
 
-	if (getOption(wearer.id, "publicaccess") != "disabled") {
+	if (getOption(interaction.guildId, earer.id, "publicaccess") != "disabled") {
 		accesswhileboundoptions.unshift(
 			new StringSelectMenuOptionBuilder()
 				// Label displayed to user
@@ -587,8 +590,8 @@ const assignMemeImages = () => {
 // Returns a blocking function which can be awaited
 // Will immediately resolve if the user allows everyone to remove bondage
 // else, will prompt them. Will resolve false if rejected.
-function checkBondageRemoval(userID, targetID, type, item) {
-	let useroption = getOption(targetID, "removebondage");
+function checkBondageRemoval(serverID, userID, targetID, type, item) {
+	let useroption = getOption(serverID, targetID, "removebondage");
 
 	// Return true immediately if it's accepted without question
 	if (useroption == "accept") {
@@ -602,7 +605,7 @@ function checkBondageRemoval(userID, targetID, type, item) {
 	}
 
 	// If keyholder and keyholders allowed, return true
-	if (useroption == "all_binder_and_keyholder" && (canAccessChastity(targetID, userID, true).access || canAccessCollar(targetID, userID, true).access)) {
+	if (useroption == "all_binder_and_keyholder" && (canAccessChastity(serverID, targetID, userID, true).access || canAccessChastityBra(serverID, targetID, userID, true).access || canAccessCollar(serverID, targetID, userID, true).access)) {
 		return true;
 	}
 
@@ -610,19 +613,19 @@ function checkBondageRemoval(userID, targetID, type, item) {
 	if (useroption == "all_binder" || useroption == "all_binder_and_keyholder") {
 		let restraintobject;
 		if (type == "heavy") {
-			restraintobject = getHeavyBinder(targetID, type);
+			restraintobject = getHeavyBinder(serverID, targetID, type);
 		}
 		if (type == "gag") {
-			restraintobject = getGagBinder(targetID, item);
+			restraintobject = getGagBinder(serverID, targetID, item);
 		}
 		if (type == "mitten") {
-			restraintobject = getMittenBinder(targetID);
+			restraintobject = getMittenBinder(serverID, targetID);
 		}
 		if (type == "corset") {
-			restraintobject = getCorsetBinder(targetID);
+			restraintobject = getCorsetBinder(serverID, targetID);
 		}
 		if (type == "headwear") {
-			restraintobject = getHeadwearBinder(targetID, item);
+			restraintobject = getHeadwearBinder(serverID, targetID, item);
 		}
 		// if (type == "vibe") { restraintobject = getVibe(targetID) }
 
@@ -636,7 +639,8 @@ function checkBondageRemoval(userID, targetID, type, item) {
 	return false;
 }
 
-async function handleBondageRemoval(user, target, type, change = false) {
+async function handleBondageRemoval(serverID, user, target, type, change = false) {
+    traceFirstParam(arguments[0]);
 	return new Promise(async (res, rej) => {
 		try {
 			let buttons = [new ButtonBuilder().setCustomId("denyButton").setLabel("Deny").setStyle(ButtonStyle.Danger), new ButtonBuilder().setCustomId("acceptButton").setLabel("Allow").setStyle(ButtonStyle.Success)];
@@ -685,7 +689,8 @@ async function handleBondageRemoval(user, target, type, change = false) {
     })*/
 }
 
-async function handleExtremeRestraint(user, target, type, restraint) {
+async function handleExtremeRestraint(serverID, user, target, type, restraint) {
+    traceFirstParam(arguments[0]);
 	return new Promise(async (res, rej) => {
         // cull out multiple styles of the same kind, this is used for things like Gag Harness to group multiple headpieces.
         let origrestraint = restraint
@@ -695,7 +700,7 @@ async function handleExtremeRestraint(user, target, type, restraint) {
             extrahelptextoverride = configoptions["Extreme"][`extreme-mask-gagharness`]?.prompttext
             restraint = "gagharness"
         }
-		let hasOption = getOption(target.id, `extreme-${type}-${restraint}`);
+		let hasOption = getOption(serverID, target.id, `extreme-${type}-${restraint}`);
 		if (!hasOption || hasOption == "Enabled" || (hasOption == "PromptOthers" && user.id == target.id)) {
 			res(true);
 			return;
@@ -712,7 +717,7 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 		let restraintfullname = ``;
 		switch (type) {
             case "collar":
-                restraintfullname = getCollarName(user, restraint);
+                restraintfullname = getCollarName(serverID, user, restraint);
                 break;
 			case "heavy":
 				restraintfullname = getHeavyName(restraint);
@@ -778,13 +783,14 @@ async function handleExtremeRestraint(user, target, type, restraint) {
 // Prompts the target to put on a restraint such as a chastity belt or armbinder. 
 // Will never be available for collars.
 // Will ALWAYS nag the user unless they're collared for that respective restraint.
-async function handleMajorRestraint(user, target, type, restraint) {
+async function handleMajorRestraint(serverID, user, target, type, restraint) {
+    traceFirstParam(arguments[0]);
 	return new Promise(async (res, rej) => {
-		let hasOption = getOption(target.id, `majorrestraint`);
-		if (canAccessCollar(target.id, user.id).access) {
+		let hasOption = getOption(serverID, target.id, `majorrestraint`);
+		if (canAccessCollar(serverID, target.id, user.id).access) {
             let bondagetype = type;
             if (type == "chastitybra") { bondagetype = "chastity" }
-            if (getCollar(target.id) && getCollar(target.id)[bondagetype]) {
+            if (getCollar(serverID, target.id) && getCollar(serverID, target.id)[bondagetype]) {
                 // User is able to access the collar of the user *and* it has the permission. 
                 res(true);
 			    return;
@@ -822,22 +828,22 @@ async function handleMajorRestraint(user, target, type, restraint) {
 				restraintfullname = getBaseChastity(restraint)?.name;
                 prettytype = "Chastity Belt"
                 emoji = `${process.emojis.chastity}`;
-                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${user} until it is unlocked by ${getPronouns(user.id, "object")}!`
+                limitationstext = `This will prevent you from using commands to modify relevant toys with **/toy**! Additionally, the restraint will be keyed to ${user} until it is unlocked by ${getPronouns(serverID, user.id, "object")}!`
 				break;
             case "chastitybra":
 				restraintfullname = getBaseChastity(restraint)?.name;
                 prettytype = "Chastity Bra"
                 emoji = `${process.emojis.chastitybra}`;
-                limitationstext = `This will prevent you from using commands to modify relevant toy on your breasts with **/toy**! Additionally, the restraint will be keyed to ${user} until it is unlocked by ${getPronouns(user.id, "object")}!`
+                limitationstext = `This will prevent you from using commands to modify relevant toy on your breasts with **/toy**! Additionally, the restraint will be keyed to ${user} until it is unlocked by ${getPronouns(serverID, user.id, "object")}!`
 				break;
             case "mitten":
-                restraintfullname = getMittenName(undefined, restraint) ?? "Standard Mittens";
+                restraintfullname = getMittenName(serverID, undefined, restraint) ?? "Standard Mittens";
                 prettytype = "Mittens"
                 emoji = `${process.emojis.mitten}`;
                 limitationstext = `This will prevent you from adding or removing gags with **/gag** or masks with **/mask** until someone else unmittens you!`
                 break;
             case "mask":
-                restraintfullname = getHeadwearName(undefined, restraint);
+                restraintfullname = getHeadwearName(serverID, undefined, restraint);
                 prettytype = "Mask"
                 emoji = `${process.emojis.gasmask}`;
                 limitationstext = `This may have a major effect on your speech or emoji, as well as blinding you in **/inspect**!`
@@ -1013,7 +1019,8 @@ function generateListTexts() {
 }
 
 // Generates a message box with buttons to give keys for a user to a target, and listing all valid keys along with current cloned keyholders.
-async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) {
+async function generateKeyGivingModal(serverID, userid, weareridin, targetidin, keybitin) {
+    traceFirstParam(arguments[0]);
     let wearerid = weareridin ?? userid;
     let targetid = targetidin ?? userid;
     let keybit = keybitin ?? "0000"; // first character is give/clone, second, third and fourth are chastity, chastity bra and collar.
@@ -1021,13 +1028,13 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
     let giveclonecap = `${giveclone.slice(0,1).toUpperCase()}${giveclone.slice(1)}`
 
     // Reset any keybits we became ineligible for
-    if ((getChastity(wearerid)?.keyholder != userid) || (getChastity(wearerid)?.clonedKeyholders && getChastity(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastity(wearerid)?.fumbled)) {
+    if ((getChastity(serverID, wearerid)?.keyholder != userid) || (getChastity(serverID, wearerid)?.clonedKeyholders && getChastity(serverID, wearerid)?.clonedKeyholders.includes(targetid)) || (getChastity(serverID, wearerid)?.fumbled)) {
         keybit = `${keybit.slice(0,1)}0${keybit.slice(2)}`
     }
-    if ((getChastityBra(wearerid)?.keyholder != userid) || (getChastityBra(wearerid)?.clonedKeyholders && getChastityBra(wearerid)?.clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid)?.fumbled)) {
+    if ((getChastityBra(serverID, wearerid)?.keyholder != userid) || (getChastityBra(serverID, wearerid)?.clonedKeyholders && getChastityBra(serverID, wearerid)?.clonedKeyholders.includes(targetid)) || (getChastityBra(serverID, wearerid)?.fumbled)) {
         keybit = `${keybit.slice(0,2)}0${keybit.slice(3)}`
     }
-    if ((getCollar(wearerid)?.keyholder != userid) || (getCollar(wearerid)?.clonedKeyholders && getCollar(wearerid)?.clonedKeyholders.includes(targetid)) || (getCollar(wearerid)?.fumbled)) {
+    if ((getCollar(serverID, wearerid)?.keyholder != userid) || (getCollar(serverID, wearerid)?.clonedKeyholders && getCollar(serverID, wearerid)?.clonedKeyholders.includes(targetid)) || (getCollar(serverID, wearerid)?.fumbled)) {
         keybit = `${keybit.slice(0,3)}0`
     }
 
@@ -1059,20 +1066,20 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
     
     // Restraint components!
     let restraintcomponents = [];
-    if (getChastity(wearerid)) {
+    if (getChastity(serverID, wearerid)) {
         let keyholdertext = ``;
-        keyholdertext = `<@${getChastity(wearerid).keyholder}>`
-        if (getChastityTimelock(wearerid)) { keyholdertext = `Timelocked` }
-        if (getChastity(wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
-        if (getChastity(wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
-        let clonetext = (getChastity(wearerid).clonedKeyholders && getChastity(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastity(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
-        let notholding = (!(getChastity(wearerid).keyholder == userid) || getChastity(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
+        keyholdertext = `<@${getChastity(serverID, wearerid).keyholder}>`
+        if (getChastityTimelock(serverID, wearerid)) { keyholdertext = `Timelocked` }
+        if (getChastity(serverID, wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
+        if (getChastity(serverID, wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
+        let clonetext = (getChastity(serverID, wearerid).clonedKeyholders && getChastity(serverID, wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastity(serverID, wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
+        let notholding = (!(getChastity(serverID, wearerid).keyholder == userid) || getChastity(serverID, wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
         let blocked = false;
-        if ((getChastity(wearerid).keyholder != userid) || (getChastity(wearerid).clonedKeyholders && getChastity(wearerid).clonedKeyholders.includes(targetid)) || (getChastity(wearerid).fumbled)) {
+        if ((getChastity(serverID, wearerid).keyholder != userid) || (getChastity(serverID, wearerid).clonedKeyholders && getChastity(serverID, wearerid).clonedKeyholders.includes(targetid)) || (getChastity(serverID, wearerid).fumbled)) {
             blocked = true;
         }
         let buttonsection = new SectionBuilder()
-            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.chastity} Chastity - ${getChastityName(wearerid, getChastity(wearerid).chastitytype) ?? "Standard Chastity Belt"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
+            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.chastity} Chastity - ${getChastityName(serverID, wearerid, getChastity(serverID, wearerid).chastitytype) ?? "Standard Chastity Belt"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
             .setButtonAccessory((button) =>
                 button
                     .setCustomId(`key_key_chastity_${wearerid}_${targetid}_${keybitin}`)
@@ -1082,20 +1089,20 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
             );
         restraintcomponents.push(buttonsection)
     }
-    if (getChastityBra(wearerid)) {
+    if (getChastityBra(serverID, wearerid)) {
         let keyholdertext = ``;
-        keyholdertext = `<@${getChastityBra(wearerid).keyholder}>`
-        if (getChastityBraTimelock(wearerid)) { keyholdertext = `Timelocked` }
-        if (getChastityBra(wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
-        if (getChastityBra(wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
-        let clonetext = (getChastityBra(wearerid).clonedKeyholders && getChastityBra(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastityBra(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
-        let notholding = (!(getChastityBra(wearerid).keyholder == userid) || getChastityBra(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
+        keyholdertext = `<@${getChastityBra(serverID, wearerid).keyholder}>`
+        if (getChastityBraTimelock(serverID, wearerid)) { keyholdertext = `Timelocked` }
+        if (getChastityBra(serverID, wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
+        if (getChastityBra(serverID, wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
+        let clonetext = (getChastityBra(serverID, wearerid).clonedKeyholders && getChastityBra(serverID, wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getChastityBra(serverID, wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
+        let notholding = (!(getChastityBra(serverID, wearerid).keyholder == userid) || getChastityBra(serverID, wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
         let blocked = false;
-        if ((getChastityBra(wearerid).keyholder != userid) || (getChastityBra(wearerid).clonedKeyholders && getChastityBra(wearerid).clonedKeyholders.includes(targetid)) || (getChastityBra(wearerid).fumbled)) {
+        if ((getChastityBra(serverID, wearerid).keyholder != userid) || (getChastityBra(serverID, wearerid).clonedKeyholders && getChastityBra(serverID, wearerid).clonedKeyholders.includes(targetid)) || (getChastityBra(serverID, wearerid).fumbled)) {
             blocked = true;
         }
         let buttonsection = new SectionBuilder()
-            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.chastitybra} Chastity Bra - ${getChastityBraName(wearerid, getChastityBra(wearerid).chastitytype) ?? "Standard Chastity Bra"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
+            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.chastitybra} Chastity Bra - ${getChastityBraName(serverID, wearerid, getChastityBra(serverID, wearerid).chastitytype) ?? "Standard Chastity Bra"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
             .setButtonAccessory((button) =>
                 button
                     .setCustomId(`key_key_chastitybra_${wearerid}_${targetid}_${keybitin}`)
@@ -1105,20 +1112,20 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
             );
         restraintcomponents.push(buttonsection)
     }
-    if (getCollar(wearerid)) {
+    if (getCollar(serverID, wearerid)) {
         let keyholdertext = ``;
-        keyholdertext = `<@${getCollar(wearerid).keyholder}>`
-        if (getCollarTimelock(wearerid)) { keyholdertext = `Timelocked` }
-        if (getCollar(wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
-        if (getCollar(wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
-        let clonetext = (getCollar(wearerid).clonedKeyholders && getCollar(wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getCollar(wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
-        let notholding = (!(getCollar(wearerid).keyholder == userid) || getCollar(wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
+        keyholdertext = `<@${getCollar(serverID, wearerid).keyholder}>`
+        if (getCollarTimelock(serverID, wearerid)) { keyholdertext = `Timelocked` }
+        if (getCollar(serverID, wearerid).keyholder == wearerid) { keyholdertext = `Self-bound` }
+        if (getCollar(serverID, wearerid)?.fumbled) { keyholdertext = `Keys are missing!` }
+        let clonetext = (getCollar(serverID, wearerid).clonedKeyholders && getCollar(serverID, wearerid).clonedKeyholders.length > 0) ? `\n**Cloned Keys:** ${getCollar(serverID, wearerid).clonedKeyholders.map((k) => `<@${k}>`).join(", ")}` : ``
+        let notholding = (!(getCollar(serverID, wearerid).keyholder == userid) || getCollar(serverID, wearerid).fumbled) ? "\n***🔒 You are not holding the primary keys to this restraint***" : ""
         let blocked = false;
-        if ((getCollar(wearerid).keyholder != userid) || (getCollar(wearerid).clonedKeyholders && getCollar(wearerid).clonedKeyholders.includes(targetid)) || (getCollar(wearerid).fumbled)) {
+        if ((getCollar(serverID, wearerid).keyholder != userid) || (getCollar(serverID, wearerid).clonedKeyholders && getCollar(serverID, wearerid).clonedKeyholders.includes(targetid)) || (getCollar(serverID, wearerid).fumbled)) {
             blocked = true;
         }
         let buttonsection = new SectionBuilder()
-            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.collar} Collar - ${getCollarName(wearerid, getCollar(wearerid).chastitytype) ?? "Leather Collar"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
+            .addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${process.emojis.collar} Collar - ${getCollarName(serverID, wearerid, getCollar(serverID, wearerid).chastitytype) ?? "Leather Collar"}\n**Primary Keyholder:** ${keyholdertext}${clonetext}${notholding}\n‎`))
             .setButtonAccessory((button) =>
                 button
                     .setCustomId(`key_key_collar_${wearerid}_${targetid}_${keybitin}`)
@@ -1176,9 +1183,9 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
     // Determine if we can give the keys. The rules are, if it's SELF or if they auto accepted, it should say give/clone
     // otherwise, it should say request. 
     let allowedtext = `Request to ${giveclonecap} Keys`
-    if (((getOption(wearerid, "keygiving") == "auto") && (keybit.charAt(0) == "0")) ||
-        ((getOption(wearerid, "keycloning") == "auto") && (keybit.charAt(0) == "1"))) {
-        allowedtext = `${giveclonecap} ${getPronouns(wearerid, "possessiveDeterminer")} Keys`
+    if (((getOption(serverID, wearerid, "keygiving") == "auto") && (keybit.charAt(0) == "0")) ||
+        ((getOption(serverID, wearerid, "keycloning") == "auto") && (keybit.charAt(0) == "1"))) {
+        allowedtext = `${giveclonecap} ${getPronouns(serverID, wearerid, "possessiveDeterminer")} Keys`
     }
     if ((userid == wearerid) || (wearerid == targetid)) {
         // This is us, we are probably okay with what we're about to do. 
@@ -1187,8 +1194,8 @@ async function generateKeyGivingModal(userid, weareridin, targetidin, keybitin) 
 
     // Determine if the wearer blocked keygiving. If they did, no.
     let allowedbool = false;
-    if (((getOption(wearerid, "keygiving") == "disabled") && (keybit.charAt(0) == "0")) ||
-        ((getOption(wearerid, "keycloning") == "disabled") && (keybit.charAt(0) == "1"))) {
+    if (((getOption(serverID, wearerid, "keygiving") == "disabled") && (keybit.charAt(0) == "0")) ||
+        ((getOption(serverID, wearerid, "keycloning") == "disabled") && (keybit.charAt(0) == "1"))) {
         allowedbool = true;
     }
     if ((keybit.slice(1).search(1) == -1)) {
@@ -1274,120 +1281,120 @@ async function generateExtraConfig(interaction, userid, itemname, force) {
         }
         else {
             // Gags
-            getGags(userid).forEach(async (g) => {
+            getGags(interaction.guildId, userid).forEach(async (g) => {
                 if ((g.gagtype == itemname) && process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype].extraconfig) {
                     interactionoutput.push(await process.eventfunctions.gags[g.gagtype].extraconfig(interaction, userid, itemname));
                 }
             });
             // Headwear
-            getHeadwear(userid).forEach(async (h) => {
+            getHeadwear(interaction.guildId, userid).forEach(async (h) => {
                 console.log(itemname)
                 if ((h == itemname) && process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h].extraconfig) {
                     interactionoutput.push(await process.eventfunctions.headwear[h].extraconfig(interaction, userid, itemname));
                 }
             });
             // Mittens
-            if (getMitten(userid)) {
-                if ((getMitten(userid).mittenname == itemname) && process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(userid).mittenname] && process.eventfunctions.mitten[getMitten(userid).mittenname].extraconfig) {
-                    interactionoutput.push(await process.eventfunctions.mitten[getMitten(userid).mittenname].extraconfig(interaction, userid, itemname));
+            if (getMitten(interaction.guildId, userid)) {
+                if ((getMitten(userid).mittenname == itemname) && process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(interaction.guildId, userid).mittenname] && process.eventfunctions.mitten[getMitten(interaction.guildId, userid).mittenname].extraconfig) {
+                    interactionoutput.push(await process.eventfunctions.mitten[getMitten(interaction.guildId, userid).mittenname].extraconfig(interaction, userid, itemname));
                 }
             }
             // Heavy Bondage
-            if (getHeavyList(userid).length > 0) {
-                getHeavyList(userid).forEach(async (h) => {
+            if (getHeavyList(interaction.guildId, userid).length > 0) {
+                getHeavyList(interaction.guildId, userid).forEach(async (h) => {
                     if ((h.type == itemname) && process.eventfunctions.heavy && process.eventfunctions.heavy[h.type] && process.eventfunctions.heavy[h.type].extraconfig) {
                         interactionoutput.push(await process.eventfunctions.heavy[h.type].extraconfig(interaction, userid, itemname));
                     }
                 })
             }
             // Chastity Belts
-            if (getChastity(userid)) {
-                if ((getChastity(userid).chastitytype == itemname) && process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(userid).chastitytype] && process.eventfunctions.chastity[getChastity(userid).chastitytype].extraconfig) {
-                    interactionoutput.push(await process.eventfunctions.chastity[getChastity(userid).chastitytype].extraconfig(interaction, userid, itemname));
+            if (getChastity(interaction.guildId, userid)) {
+                if ((getChastity(interaction.guildId, userid).chastitytype == itemname) && process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(interaction.guildId, userid).chastitytype] && process.eventfunctions.chastity[getChastity(interaction.guildId, userid).chastitytype].extraconfig) {
+                    interactionoutput.push(await process.eventfunctions.chastity[getChastity(interaction.guildId, userid).chastitytype].extraconfig(interaction, userid, itemname));
                 }
             }
             // Chastity Bras
-            if (getChastityBra(userid)) {
-                if ((getChastityBra(userid).chastitytype == itemname) && process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].extraconfig) {
-                    interactionoutput.push(await process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].extraconfig(interaction, userid, itemname));
+            if (getChastityBra(interaction.guildId, userid)) {
+                if ((getChastityBra(interaction.guildId, userid).chastitytype == itemname) && process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(interaction.guildId, userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(interaction.guildId, userid).chastitytype].extraconfig) {
+                    interactionoutput.push(await process.eventfunctions.chastitybra[getChastityBra(interaction.guildId, userid).chastitytype].extraconfig(interaction, userid, itemname));
                 }
             }
             // Wearables
-            getWearable(userid).forEach(async (h) => {
+            getWearable(interaction.guildId, userid).forEach(async (h) => {
                 if ((h == itemname) && process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h].extraconfig) {
                     interactionoutput.push(await process.eventfunctions.wearable[h].extraconfig(interaction, userid, itemname));
                 }
             });
             // Toys
-            getToys(userid).forEach(async (h) => {
+            getToys(interaction.guildId, userid).forEach(async (h) => {
                 if ((h.type == itemname) && process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type].extraconfig) {
                     interactionoutput.push(await process.eventfunctions.toys[h.type].extraconfig(interaction, userid, itemname));
                 }
             });
             // Collars
-            if (getCollar(userid)) {
-                if ((getCollar(userid).collartype == itemname) && process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).collartype] && process.eventfunctions.collar[getCollar(userid).collartype]) {
-                    interactionoutput.push(await process.eventfunctions.collar[getCollar(userid).collartype].extraconfig(interaction, userid, itemname));
+            if (getCollar(interaction.guildId, userid)) {
+                if ((getCollar(interaction.guildId, userid).collartype == itemname) && process.eventfunctions.collar && process.eventfunctions.collar[getCollar(interaction.guildId, userid).collartype] && process.eventfunctions.collar[getCollar(interaction.guildId, userid).collartype]) {
+                    interactionoutput.push(await process.eventfunctions.collar[getCollar(interaction.guildId, userid).collartype].extraconfig(interaction, userid, itemname));
                 }
             }
         }
     }
     else {
         // Gags
-        getGags(userid).forEach(async (g) => {
+        getGags(interaction.guildId, userid).forEach(async (g) => {
             if ((g.gagtype == itemname) && process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype].extraconfig) {
                 interactionoutput.push(await process.eventfunctions.gags[g.gagtype].extraconfig(interaction, userid, itemname));
             }
         });
         // Headwear
-        getHeadwear(userid).forEach(async (h) => {
+        getHeadwear(interaction.guildId, userid).forEach(async (h) => {
             console.log(itemname)
             if ((h == itemname) && process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h].extraconfig) {
                 interactionoutput.push(await process.eventfunctions.headwear[h].extraconfig(interaction, userid, itemname));
             }
         });
         // Mittens
-        if (getMitten(userid)) {
-            if ((getMitten(userid).mittenname == itemname) && process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(userid).mittenname] && process.eventfunctions.mitten[getMitten(userid).mittenname].extraconfig) {
-                interactionoutput.push(await process.eventfunctions.mitten[getMitten(userid).mittenname].extraconfig(interaction, userid, itemname));
+        if (getMitten(interaction.guildId, userid)) {
+            if ((getMitten(interaction.guildId, userid).mittenname == itemname) && process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(interaction.guildId, userid).mittenname] && process.eventfunctions.mitten[getMitten(interaction.guildId, userid).mittenname].extraconfig) {
+                interactionoutput.push(await process.eventfunctions.mitten[getMitten(interaction.guildId, userid).mittenname].extraconfig(interaction, userid, itemname));
             }
         }
         // Heavy Bondage
-        if (getHeavyList(userid).length > 0) {
-            getHeavyList(userid).forEach(async (h) => {
+        if (getHeavyList(interaction.guildId, userid).length > 0) {
+            getHeavyList(interaction.guildId, userid).forEach(async (h) => {
                 if ((h.type == itemname) && process.eventfunctions.heavy && process.eventfunctions.heavy[h.type] && process.eventfunctions.heavy[h.type].extraconfig) {
                     interactionoutput.push(await process.eventfunctions.heavy[h.type].extraconfig(interaction, userid, itemname));
                 }
             })
         }
         // Chastity Belts
-        if (getChastity(userid)) {
-            if ((getChastity(userid).chastitytype == itemname) && process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(userid).chastitytype] && process.eventfunctions.chastity[getChastity(userid).chastitytype].extraconfig) {
-                interactionoutput.push(await process.eventfunctions.chastity[getChastity(userid).chastitytype].extraconfig(interaction, userid, itemname));
+        if (getChastity(interaction.guildId, userid)) {
+            if ((getChastity(interaction.guildId, userid).chastitytype == itemname) && process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(interaction.guildId, userid).chastitytype] && process.eventfunctions.chastity[getChastity(interaction.guildId, userid).chastitytype].extraconfig) {
+                interactionoutput.push(await process.eventfunctions.chastity[getChastity(interaction.guildId, userid).chastitytype].extraconfig(interaction, userid, itemname));
             }
         }
         // Chastity Bras
-        if (getChastityBra(userid)) {
-            if ((getChastityBra(userid).chastitytype == itemname) && process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].extraconfig) {
-                interactionoutput.push(await process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].extraconfig(interaction, userid, itemname));
+        if (getChastityBra(interaction.guildId, userid)) {
+            if ((getChastityBra(interaction.guildId, userid).chastitytype == itemname) && process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(interaction.guildId, userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(interaction.guildId, userid).chastitytype].extraconfig) {
+                interactionoutput.push(await process.eventfunctions.chastitybra[getChastityBra(interaction.guildId, userid).chastitytype].extraconfig(interaction, userid, itemname));
             }
         }
         // Wearables
-        getWearable(userid).forEach(async (h) => {
+        getWearable(interaction.guildId, userid).forEach(async (h) => {
             if ((h == itemname) && process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h].extraconfig) {
                 interactionoutput.push(await process.eventfunctions.wearable[h].extraconfig(interaction, userid, itemname));
             }
         });
         // Toys
-        getToys(userid).forEach(async (h) => {
+        getToys(interaction.guildId, userid).forEach(async (h) => {
             if ((h.type == itemname) && process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type].extraconfig) {
                 interactionoutput.push(await process.eventfunctions.toys[h.type].extraconfig(interaction, userid, itemname));
             }
         });
         // Collars
-        if (getCollar(userid)) {
-            if ((getCollar(userid).collartype == itemname) && process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).collartype] && process.eventfunctions.collar[getCollar(userid).collartype]) {
-                interactionoutput.push(await process.eventfunctions.collar[getCollar(userid).collartype].extraconfig(interaction, userid, itemname));
+        if (getCollar(interaction.guildId, userid)) {
+            if ((getCollar(interaction.guildId, userid).collartype == itemname) && process.eventfunctions.collar && process.eventfunctions.collar[getCollar(interaction.guildId, userid).collartype] && process.eventfunctions.collar[getCollar(interaction.guildId, userid).collartype]) {
+                interactionoutput.push(await process.eventfunctions.collar[getCollar(interaction.guildId, userid).collartype].extraconfig(interaction, userid, itemname));
             }
         }
     }

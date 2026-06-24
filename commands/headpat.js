@@ -14,12 +14,12 @@ module.exports = {
 		try {
             let targetuser = interaction.options.getUser("user") ?? interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(targetuser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, targetuser.id)?.mainconsent) {
 				await handleConsent(interaction, targetuser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
@@ -27,6 +27,7 @@ module.exports = {
 			let data = {
 				textarray: "texts_touch",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: targetuser,
 					//c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
@@ -35,10 +36,10 @@ module.exports = {
 			};
 
             await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-            await handleTouchEvent(interaction.user, targetuser, "headpat").then(
+            await handleTouchEvent(interaction.guildId, interaction.user, targetuser, "headpat").then(
                 async (success) => {
                     await interaction.followUp({ content: `Headpatting ${targetuser}`, flags: MessageFlags.Ephemeral })
-                    let headpatattempt = rollPatChance(interaction.user.id, targetuser.id)
+                    let headpatattempt = rollPatChance(interaction.guildId, interaction.user.id, targetuser.id, interaction.guildId)
                     data.headpat = true;
 
                     if (interaction.user.id == targetuser.id) {
@@ -87,7 +88,7 @@ module.exports = {
                         nomessage = `Something went wrong - Submit a bug report!`;
                     }
                     if (reject == "NoDM") {
-                        nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(targetuser.id, "subject")} ${getPronouns(targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent to touch.`;
+                        nomessage = `Something went wrong sending a DM to ${targetuser}, or ${getPronouns(interaction.guildId, targetuser.id, "subject")} ${getPronouns(interaction.guildId, targetuser.id, "subject") == "they" ? `have` : "has"} DMs from this server disabled. Cannot obtain consent to touch.`;
                     }
                     await interaction.followUp({ content: nomessage });
                 },

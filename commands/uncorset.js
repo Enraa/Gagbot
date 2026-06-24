@@ -24,30 +24,31 @@ module.exports = {
 		try {
 			let corsetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let data = {
 				textarray: "texts_uncorset",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: corsetuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-					c2: getBaseCorset(getCorset(corsetuser.id).type)?.name ?? "Leather Corset", // corset type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+					c2: getBaseCorset(getCorset(interaction.guildId, corsetuser.id)?.type)?.name ?? "Leather Corset", // corset type
 				},
 			};
 
-			if (!getHeavyBound(interaction.user.id, corsetuser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, corsetuser.id)) {
 				// User is in heavy bondage
 				data.heavy = true;
 				if (corsetuser == interaction.user) {
 					// Working with ourselves!
 					data.self = true;
-					if (getCorset(corsetuser.id)) {
+					if (getCorset(interaction.guildId, corsetuser.id)) {
 						// We are wearing a corset!
 						data.corset = true;
-						if (getChastity(corsetuser.id)) {
+						if (getChastity(interaction.guildId, corsetuser.id)) {
 							// We're in a chastity belt!
 							data.chastity = true;
 							interaction.reply(getText(data));
@@ -64,10 +65,10 @@ module.exports = {
 				} else {
 					// Working with others
 					data.other = true;
-					if (getCorset(corsetuser.id)) {
+					if (getCorset(interaction.guildId, corsetuser.id)) {
 						// They are wearing a corset!
 						data.corset = true;
-						if (getChastity(corsetuser.id)) {
+						if (getChastity(interaction.guildId, orsetuser.id)) {
 							// They're in a chastity belt!
 							data.chastity = true;
 							interaction.reply(getText(data));
@@ -88,23 +89,23 @@ module.exports = {
 				if (corsetuser == interaction.user) {
 					// Working with ourselves!
 					data.self = true;
-					if (getCorset(corsetuser.id)) {
+					if (getCorset(interaction.guildId, corsetuser.id)) {
 						// We are wearing a corset!
 						data.corset = true;
-						if (getChastity(corsetuser.id)) {
+						if (getChastity(interaction.guildId, corsetuser.id)) {
 							// We're in a chastity belt!
 							data.chastity = true;
-							if (canAccessChastity(corsetuser.id, interaction.user.id).access) {
+							if (canAccessChastity(interaction.guildId, corsetuser.id, interaction.user.id).access) {
 								// We own the key for the chastity belt
 								data.key = true;
-								const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype).fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
+								const fumbleResult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype).fumble({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if ((getOption(corsetuser.id, "keyloss") == "enabled") && fumbleResult > 1) {
+									if ((getOption(interaction.guildId, corsetuser.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
-										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
+										let discardresult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").discard({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {
@@ -115,7 +116,7 @@ module.exports = {
 									// We didnt fumble!
 									data.nofumble = true;
 									interaction.reply(getText(data));
-									removeCorset(corsetuser.id);
+									removeCorset(interaction.guildId, corsetuser.id);
 								}
 							}
 							// Note, no public access to our own belt!
@@ -128,7 +129,7 @@ module.exports = {
 							// We're not belted
 							data.nochastity = true;
 							interaction.reply(getText(data));
-							removeCorset(corsetuser.id);
+							removeCorset(interaction.guildId, corsetuser.id);
 						}
 					} else {
 						// We're not in a corset
@@ -138,23 +139,23 @@ module.exports = {
 				} else {
 					// Working with others
 					data.other = true;
-					if (getCorset(corsetuser.id)) {
+					if (getCorset(interaction.guildId, corsetuser.id)) {
 						// They are wearing a corset!
 						data.corset = true;
-						if (getChastity(corsetuser.id)) {
+						if (getChastity(interaction.guildId, corsetuser.id)) {
 							// They're in a chastity belt!
 							data.chastity = true;
-							if (canAccessChastity(corsetuser.id, interaction.user.id).access && !canAccessChastity(corsetuser.id, interaction.user.id).public) {
+							if (canAccessChastity(interaction.guildId, corsetuser.id, interaction.user.id).access && !canAccessChastity(interaction.guildId, corsetuser.id, interaction.user.id).public) {
 								// We own the key for the chastity belt and it is NOT sealed.
 								data.key = true;
-								const fumbleResult = getBaseChastity(getChastity(corsetuser.id).chastitytype).fumble({ userID: corsetuser.id, keyholderID: interaction.user.id })
+								const fumbleResult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype).fumble({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id })
 								if (fumbleResult > 0) {
 									// We fumbled the key
 									data.fumble = true;
-									if ((getOption(corsetuser.id, "keyloss") == "enabled") && fumbleResult > 1) {
+									if ((getOption(interaction.guildId, corsetuser.id, "keyloss") == "enabled") && fumbleResult > 1) {
 										// We lost the key while fumbling
 										data.discard = true;
-										let discardresult = getBaseChastity(getChastity(corsetuser.id).chastitytype ?? "belt_silver").discard({ userID: corsetuser.id, keyholderID: interaction.user.id })
+										let discardresult = getBaseChastity(getChastity(interaction.guildId, corsetuser.id).chastitytype ?? "belt_silver").discard({ serverID: interaction.guildId, userID: corsetuser.id, keyholderID: interaction.user.id })
 										data[discardresult] = true;
 										interaction.reply(getText(data));
 									} else {
@@ -165,20 +166,20 @@ module.exports = {
 									// We didnt fumble!
 									data.nofumble = true;
 									// Now lets make sure the wearer wants that.
-									if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+									if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 										// Allowed immediately, lets go
 										interaction.reply(getText(data));
-										removeCorset(corsetuser.id);
+										removeCorset(interaction.guildId, corsetuser.id);
 									} else {
 										// We need to ask first.
 										let datatogeneric = Object.assign({}, data.textdata);
 										datatogeneric.c1 = "corset";
 										interaction.reply({ content: getTextGeneric("unbind", datatogeneric), flags: MessageFlags.Ephemeral });
-										let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+										let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset").then(
 											async (res) => {
 												await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 												await interaction.followUp(getText(data));
-												removeCorset(corsetuser.id);
+												removeCorset(interaction.guildId, corsetuser.id);
 											},
 											async (rej) => {
 												await interaction.editReply(getTextGeneric("unbind_decline", datatogeneric));
@@ -186,24 +187,24 @@ module.exports = {
 										);
 									}
 								}
-							} else if (canAccessChastity(corsetuser.id, interaction.user.id).access && canAccessChastity(corsetuser.id, interaction.user.id).public) {
+							} else if (canAccessChastity(interaction.guildId, corsetuser.id, interaction.user.id).access && canAccessChastity(interaction.guildId, corsetuser.id, interaction.user.id).public) {
 								// This is a public access belt!
 								data.public = true;
 								// Now lets make sure the wearer wants that.
-								if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+								if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 									// Allowed immediately, lets go
 									interaction.reply(getText(data));
-									removeCorset(corsetuser.id);
+									removeCorset(interaction.guildId, corsetuser.id);
 								} else {
 									// We need to ask first.
 									let datatogeneric = Object.assign({}, data.textdata);
 									datatogeneric.c1 = "corset";
 									interaction.reply({ content: getTextGeneric("unbind", datatogeneric), flags: MessageFlags.Ephemeral });
-									let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+									let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset").then(
 										async (res) => {
 											await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 											await interaction.followUp(getText(data));
-											removeCorset(corsetuser.id);
+											removeCorset(interaction.guildId, corsetuser.id);
 										},
 										async (rej) => {
 											await interaction.editReply(getTextGeneric("unbind_decline", datatogeneric));
@@ -219,7 +220,7 @@ module.exports = {
 							// They're not belted
 							data.nochastity = true;
 							// Now lets make sure the wearer wants that.
-							if (checkBondageRemoval(interaction.user.id, corsetuser.id, "corset") == true) {
+							if (checkBondageRemoval(interaction.guildId, interaction.user.id, corsetuser.id, "corset") == true) {
 								// Allowed immediately, lets go
 								interaction.reply(getText(data));
 								removeCorset(corsetuser.id);
@@ -228,11 +229,11 @@ module.exports = {
 								let datatogeneric = Object.assign({}, data.textdata);
 								datatogeneric.c1 = "corset";
 								interaction.reply({ content: getTextGeneric("unbind", datatogeneric), flags: MessageFlags.Ephemeral });
-								let canRemove = await handleBondageRemoval(interaction.user, corsetuser, "corset").then(
+								let canRemove = await handleBondageRemoval(interaction.guildId, interaction.user, corsetuser, "corset").then(
 									async (res) => {
 										await interaction.editReply(getTextGeneric("unbind_accept", datatogeneric));
 										await interaction.followUp(getText(data));
-										removeCorset(corsetuser.id);
+										removeCorset(interaction.guildId, corsetuser.id);
 									},
 									async (rej) => {
 										await interaction.editReply(getTextGeneric("unbind_decline", datatogeneric));

@@ -1,13 +1,18 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+
 /*******
  * Get delve player stats. Otherwise, create a template for the player. 
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - User ID doing the Delve
  *******/
-function getDelvePlayerStats(user) {
+function getDelvePlayerStats(serverID, user) {
+    traceFirstParam(arguments[0]);
     if (process.delveuserstats == undefined) { process.delveuserstats = {} }
-    if (process.delveuserstats[user] == undefined) {
+    if (process.delveuserstats[serverID] == undefined) { process.delveuserstats[serverID] = {} }
+    if (process.delveuserstats[serverID][user] == undefined) {
         // Create a template if it does not exist. 
-        process.delveuserstats[user] = {
+        process.delveuserstats[serverID][user] = {
             // Main
             strength: 6,
             dexterity: 6,
@@ -28,7 +33,7 @@ function getDelvePlayerStats(user) {
             level: 1
         }
     }
-    return process.delveuserstats[user]
+    return process.delveuserstats[serverID][user]
 }
 
 exports.getDelvePlayerStats = getDelvePlayerStats;

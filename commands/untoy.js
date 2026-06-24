@@ -9,6 +9,7 @@ const { getHeavy } = require("../functions/getters/heavy/getHeavy");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound");
 const { getSpecificToy } = require("../functions/getters/toy/getSpecificToy");
 const { removeToy } = require("../functions/setters/toy/removeToy");
+const { getOption } = require("../functions/getters/config/getOption");
 
 
 module.exports = {
@@ -25,7 +26,7 @@ module.exports = {
         try {
             const focusedValue = interaction.options.getFocused();
             let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-            let autocompletes = getToys(chosenuserid).map((t) => { return { name: getBaseToy(t.type).toyname, value: t.type }})
+            let autocompletes = getToys(interaction.guildId, chosenuserid).map((t) => { return { name: getBaseToy(t.type).toyname, value: t.type }})
             console.log(autocompletes)
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
@@ -52,8 +53,8 @@ module.exports = {
             let toyuser = interaction.options.getUser("user") ?? interaction.user;
             let toyintensity = interaction.options.getNumber("intensity") ?? 5;
             let toytype = interaction.options.getString("type");
-            if ((toytype == undefined) && (getToys(toyuser.id)) && (getToys(toyuser.id).length > 0)) {
-                toytype = getToys(toyuser.id)[0]?.type
+            if ((toytype == undefined) && (getToys(interaction.guildId, toyuser.id)) && (getToys(interaction.guildId, toyuser.id).length > 0)) {
+                toytype = getToys(interaction.guildId, toyuser.id)[0]?.type
             }
             if (toytype == undefined) {
                 interaction.reply({ content: `${toyuser} is not wearing any toys!`, flags: MessageFlags.Ephemeral })
@@ -61,12 +62,12 @@ module.exports = {
             }
             let toybase = getBaseToy(toytype);
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(toyuser.id)?.mainconsent) {
+            if (!getConsent(interaction.guildId, toyuser.id)?.mainconsent) {
                 await handleConsent(interaction, toyuser.id);
                 return;
             }
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-            if (!getConsent(interaction.user.id)?.mainconsent) {
+            if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
                 await handleConsent(interaction, interaction.user.id);
                 return;
             }
@@ -74,9 +75,10 @@ module.exports = {
             let data = {
 				textarray: "texts_untoy",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: toyuser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: getBaseToy(toytype)?.toyname, // the chosen vibe type
 					c3: toyintensity,
 				},
@@ -91,13 +93,13 @@ module.exports = {
                 return;
             }*/
 
-            if (!getHeavyBound(interaction.user.id, toyuser.id)) {
+            if (!getHeavyBound(interaction.guildId, interaction.user.id, toyuser.id)) {
 				// We are in heavy bondage
 				data.heavy = true;
 				if (toyuser == interaction.user) {
 					// ourselves
 					data.self = true;
-					if (toybase.canUnequip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+					if (toybase.canUnequip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
 						// cannot equip
 						data.access = true;
                         data[toybase.category] = true;
@@ -111,7 +113,7 @@ module.exports = {
 				} else {
 					// someone else
 					data.other = true;
-					if (toybase.canUnequip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+					if (toybase.canUnequip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
 						// cannot equip
 						data.access = true;
                         data[toybase.category] = true;
@@ -130,23 +132,23 @@ module.exports = {
                 if (toyuser == interaction.user) {
                     // self
                     data.self = true;
-                    if (getSpecificToy(toyuser.id, toytype)) {
+                    if (getSpecificToy(interaction.guild.id, toyuser.id, toytype)) {
                         // toy already on wearer
                         data.toy = true;
-                        if (toybase.blocker({ userID: toyuser.id })) {
+                        if (toybase.blocker({ serverID: interaction.guildId, userID: toyuser.id })) {
                             data.blocker = true;
-                            if (toybase.canUnequip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+                            if (toybase.canUnequip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
                                 // can access the toy
                                 data.access = true;
                                 data[toybase.category] = true;
-                                let fumble = toybase.fumble({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                let fumble = toybase.fumble({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                 if (fumble > 0) {
                                     // We fumbled the key
                                     data.fumble = true;
-                                    if (fumble > 1) {
+                                    if ((getOption(interaction.guildId, toyuser.id, "keyloss") == "enabled") && (fumble > 1)) {
                                         // We lost the key
                                         data.keyloss = true;
-                                        let discardresult = toybase.discard({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                        let discardresult = toybase.discard({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                         if (discardresult) { data[discardresult] = true }
                                         interaction.reply(getText(data))
                                     }
@@ -159,7 +161,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    removeToy(toyuser.id, interaction.user.id, toytype)
+                                    removeToy(interaction.guildId, toyuser.id, interaction.user.id, toytype)
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -174,7 +176,7 @@ module.exports = {
                             // Not wearing anything to block access
                             data.noblocker = true;
                             data[toybase.category] = true;
-                            removeToy(toyuser.id, interaction.user.id, toytype)
+                            removeToy(interaction.guildId, toyuser.id, interaction.user.id, toytype)
                             interaction.reply(getText(data))
                         }
                     }
@@ -190,20 +192,20 @@ module.exports = {
                     if (getSpecificToy(toyuser.id, toytype)) {
                         // toy already on wearer
                         data.toy = true;
-                        if (toybase.blocker({ userID: toyuser.id })) {
+                        if (toybase.blocker({ serverID: interaction.guildId, userID: toyuser.id })) {
                             data.blocker = true;
-                            if (toybase.canUnequip({ userID: toyuser.id, keyholderID: interaction.user.id })) {
+                            if (toybase.canUnequip({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })) {
                                 // can access the toy
                                 data.access = true;
                                 data[toybase.category] = true;
-                                let fumble = toybase.fumble({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                let fumble = toybase.fumble({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                 if (fumble > 0) {
                                     // We fumbled the key
                                     data.fumble = true;
-                                    if (fumble > 1) {
+                                    if ((getOption(interaction.guildId, toyuser.id, "keyloss") == "enabled") && (fumble > 1)) {
                                         // We lost the key
                                         data.keyloss = true;
-                                        let discardresult = toybase.discard({ userID: toyuser.id, keyholderID: interaction.user.id })
+                                        let discardresult = toybase.discard({ serverID: interaction.guildId, userID: toyuser.id, keyholderID: interaction.user.id })
                                         if (discardresult) { data[discardresult] = true }
                                         interaction.reply(getText(data))
                                     }
@@ -216,7 +218,7 @@ module.exports = {
                                 else {
                                     // Successfully unlocked blocking device
                                     data.nofumble = true;
-                                    removeToy(toyuser.id, interaction.user.id, toytype)
+                                    removeToy(interaction.guildId, toyuser.id, interaction.user.id, toytype)
                                     interaction.reply(getText(data))
                                 }
                             }
@@ -231,7 +233,7 @@ module.exports = {
                             // Not wearing anything to block access
                             data.noblocker = true;
                             data[toybase.category] = true;
-                            removeToy(toyuser.id, interaction.user.id, toytype)
+                            removeToy(interaction.guildId, toyuser.id, interaction.user.id, toytype)
                             interaction.reply(getText(data))
                         }
                     }

@@ -33,22 +33,22 @@ module.exports = {
 		try {
 			if (subcommand == "protect") {
 				// Headwear
-				let itemswornhead = getHeadwear(interaction.user.id);
-				let itemslockedhead = getLockedHeadgear(interaction.user.id);
+				let itemswornhead = getHeadwear(interaction.guildId, interaction.user.id);
+				let itemslockedhead = getLockedHeadgear(interaction.guildId, interaction.user.id);
 
 				let sorted = itemswornhead.filter((f) => !itemslockedhead.includes(f));
 
 				// Clothing
-				let itemswornwearable = getWearable(interaction.user.id);
-				let itemslockedwearable = getLockedWearable(interaction.user.id);
+				let itemswornwearable = getWearable(interaction.guildId, interaction.user.id);
+				let itemslockedwearable = getLockedWearable(interaction.guildId, interaction.user.id);
 
 				let sortedwearable = itemswornwearable.filter((f) => !itemslockedwearable.includes(f));
 
 				sorted = sorted.map((f) => {
-					return { name: getHeadwearName(undefined, f), value: `${f}+head` };
+					return { name: getHeadwearName(interaction.guildId, undefined, f), value: `${f}+head` };
 				});
 				sortedwearable = sortedwearable.map((f) => {
-					return { name: getWearableName(undefined, f), value: `${f}+wearable` };
+					return { name: getWearableName(interaction.guildId, undefined, f), value: `${f}+wearable` };
 				});
 
 				// Merge the lists.
@@ -66,8 +66,8 @@ module.exports = {
 					await interaction.respond(sorted.filter((f) => f.name.toLowerCase().includes(focusedValue.toLowerCase())).slice(0, 10));
 				}
 			} else {
-				let itemslockedhead = getLockedHeadgear(interaction.user.id);
-				let itemslockedwearable = getLockedWearable(interaction.user.id);
+				let itemslockedhead = getLockedHeadgear(interaction.guildId, interaction.user.id);
+				let itemslockedwearable = getLockedWearable(interaction.guildId, interaction.user.id);
 
 				let sorted = itemslockedhead.map((f) => {
 					return { name: getHeadwearName(undefined, f), value: `${f}+head` };
@@ -98,16 +98,16 @@ module.exports = {
 					let chosenitemparts = chosenitem.split("+");
 					let replytextname;
 					if (chosenitemparts[1] == "head") {
-						if (getHeadwearName(undefined, chosenitemparts[0])) {
-							addLockedHeadgear(interaction.user.id, chosenitemparts[0]);
+						if (getHeadwearName(interaction.guildId, undefined, chosenitemparts[0])) {
+							addLockedHeadgear(interaction.guildId, interaction.user.id, chosenitemparts[0]);
 							replytextname = getHeadwearName(undefined, chosenitemparts[0]);
 						} else {
 							interaction.reply({ content: `Item ${replytextname} is an invalid item! Try again.`, flags: MessageFlags.Ephemeral });
 							return;
 						}
 					} else {
-						if (getWearableName(undefined, chosenitemparts[0])) {
-							addLockedWearable(interaction.user.id, chosenitemparts[0]);
+						if (getWearableName(interaction.guildId, undefined, chosenitemparts[0])) {
+							addLockedWearable(interaction.guildId, interaction.user.id, chosenitemparts[0]);
 							replytextname = getWearableName(undefined, chosenitemparts[0]);
 						} else {
 							interaction.reply({ content: `Item ${replytextname} is an invalid item! Try again.`, flags: MessageFlags.Ephemeral });
@@ -125,10 +125,10 @@ module.exports = {
 					let chosenitemparts = chosenitem.split("+");
 					let replytextname;
 					if (chosenitemparts[1] == "head") {
-						removeLockedHeadgear(interaction.user.id, chosenitemparts[0]);
+						removeLockedHeadgear(interaction.guildId, interaction.user.id, chosenitemparts[0]);
 						replytextname = getHeadwearName(undefined, chosenitemparts[0]);
 					} else {
-						removeLockedWearable(interaction.user.id, chosenitemparts[0]);
+						removeLockedWearable(interaction.guildId, interaction.user.id, chosenitemparts[0]);
 						replytextname = getWearableName(undefined, chosenitemparts[0]);
 					}
 					interaction.reply({ content: `Item ${replytextname} removed from protection!`, flags: MessageFlags.Ephemeral });

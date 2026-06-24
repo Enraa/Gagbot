@@ -1,4 +1,5 @@
 const { DRONEVISORS, DOLLVISORS } = require("../../headwearfunctions");
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { getCollar } = require("../collar/getCollar");
 const { getHeadwear } = require("../headwear/getHeadwear");
 const { getOption } = require("./getOption");
@@ -7,23 +8,25 @@ const { getOption } = require("./getOption");
 /**********
  * Retrieves any alternate name for the user
  * 
+ * - (server ID) serverID - The server this is running on (technically derivable from the guild member param)
  * - (guild member) user - The user wearing name modifying items
  * ---
  * ##### Returns a string, either modified or the user's display name
  **********/
-function getAlternateName(user) {
+function getAlternateName(serverID, user) {
+    traceFirstParam(arguments[0]);
     let outname = user.displayName // We're putting a member object in here
     // Handle pet collar name
-    if ((getCollar(user.id)?.collartype == "collarengraved") || (getCollar(user.id) && getCollar(user.id).additionalcollars && getCollar(user.id).additionalcollars.includes("collarengraved"))) {
-        if (getOption(user.id, "engravedcollarname") && getOption(user.id, "engravedcollarname").length > 0) {
-            outname = getOption(user.id, "engravedcollarname");
+    if ((getCollar(serverID, user.id)?.collartype == "collarengraved") || (getCollar(serverID, user.id) && getCollar(serverID, user.id).additionalcollars && getCollar(serverID, user.id).additionalcollars.includes("collarengraved"))) {
+        if (getOption(serverID, user.id, "engravedcollarname") && getOption(serverID, user.id, "engravedcollarname").length > 0) {
+            outname = getOption(serverID, user.id, "engravedcollarname");
         }
     }
 
     // Handle Doll Visor name
-    if (getHeadwear(user.id).find((headwear) => DOLLVISORS.includes(headwear))) {
-        let dollIDOverride = getOption(user.id, "dollvisorname");
-        let dollmaker = getHeadwear(user.id).find((headwear) => headwear === "dollmaker_visor");
+    if (getHeadwear(serverID, user.id).find((headwear) => DOLLVISORS.includes(headwear))) {
+        let dollIDOverride = getOption(serverID, user.id, "dollvisorname");
+        let dollmaker = getHeadwear(serverID, user.id).find((headwear) => headwear === "dollmaker_visor");
         // If dollIDOverride is not specified or the override is exactly a string of numbers...
         // Force Dollmaker's Visor wearers to get this generation function
         if (!dollIDOverride || (Number.isFinite(dollIDOverride) && dollIDOverride.length < 6) || dollmaker) {
@@ -41,8 +44,8 @@ function getAlternateName(user) {
     }
 
     // Handle Drone Visor name
-    if (getHeadwear(user.id).find((headwear) => DRONEVISORS.includes(headwear))) {
-        outname = `⬡-Drone ${getOption(user.id, "dronevisorname")}`;
+    if (getHeadwear(serverID, user.id).find((headwear) => DRONEVISORS.includes(headwear))) {
+        outname = `⬡-Drone ${getOption(serverID, user.id, "dronevisorname")}`;
     }
 
     // Finally, if the outname is EXACTLY the same as the displayName we recieved, 

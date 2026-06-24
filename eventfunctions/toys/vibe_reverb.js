@@ -11,7 +11,7 @@ const OOC = new RegExp(/^[*][^*].*[^*][*]$/)
 const LOUD = new RegExp(/(\b[A-Z]['A-Z]+|\b[A-Z]\b)/)
 const BOLD = new RegExp(/([\*][\*])/)
 
-function msgfunction(userid, data) {
+function msgfunction(serverID, userid, data) {
 
     // Catch Message, and Check for OOC, Whispers, or Shouting
     let intensity = volumetest(data.msgcontent)
@@ -21,42 +21,42 @@ function msgfunction(userid, data) {
     if (intensity == 0) return;
 
     //Update End Time and Increment Vibe Intensity    
-    if(getUserVar(userid, "reverbEndTime") == undefined) {
+    if(getUserVar(serverID, userid, "reverbEndTime") == undefined) {
         // Set initial 3 minute timer
-        setUserVar(userid, "reverbEndTime", Date.now() + initial_timespan);
+        setUserVar(serverID, userid, "reverbEndTime", Date.now() + initial_timespan);
     } else {
         // Increment reverbEndTime by 15s x intensity per Message 
-        setUserVar(userid, "reverbEndTime", getUserVar(userid, "reverbEndTime") + (timespan_inc * intensity));
+        setUserVar(serverID, userid, "reverbEndTime", getUserVar(serverID, userid, "reverbEndTime") + (timespan_inc * intensity));
     }
 
     // Declare Initial reverbDecayTime
-    if(getUserVar(userid, "reverbDecayTime") == undefined) {
-        setUserVar(userid, "reverbDecayTime", Date.now() + (decay_period * intensity));
+    if(getUserVar(serverID, userid, "reverbDecayTime") == undefined) {
+        setUserVar(serverID, userid, "reverbDecayTime", Date.now() + (decay_period * intensity));
     }
     else
     {
         // Override Next Decay time with a new value based on the intensity if it is longer than the current delay
-        setUserVar(userid, "reverbDecayTime", Math.max(Date.now() + (decay_period * intensity), getUserVar(userid, "reverbDecayTime")));
+        setUserVar(serverID, userid, "reverbDecayTime", Math.max(Date.now() + (decay_period * intensity), getUserVar(serverID, userid, "reverbDecayTime")));
     }
 
     // Increment reverbVibeIntensity based on intensity of message text
-    setUserVar(userid, "reverbVibeIntensity", Math.min(getUserVar(userid, "reverbVibeIntensity") + (1 * intensity), 20));
+    setUserVar(serverID, userid, "reverbVibeIntensity", Math.min(getUserVar(serverID, userid, "reverbVibeIntensity") + (1 * intensity), 20));
     return;
 }
 
-async function tick(userID) {
+async function tick(serverID, userID) {
     // Decay Intensity every Decay Period until 0
-    if (getUserVar(userID, "reverbDecayTime") < Date.now() && getUserVar(userID, "reverbDecayTime") != undefined)
+    if (getUserVar(serverID, userID, "reverbDecayTime") < Date.now() && getUserVar(serverID, userID, "reverbDecayTime") != undefined)
     {
-        setUserVar(userID, "reverbVibeIntensity", Math.max(getUserVar(userID, "reverbVibeIntensity") - 1, 0));
-        setUserVar(userID, "reverbDecayTime", Date.now() + decay_period);
+        setUserVar(serverID, userID, "reverbVibeIntensity", Math.max(getUserVar(serverID, userID, "reverbVibeIntensity") - 1, 0));
+        setUserVar(serverID, userID, "reverbDecayTime", Date.now() + decay_period);
     }
 
     // Clear Values When Vibe Stops
-    if (getUserVar(userID, "reverbEndTime") < Date.now() && getUserVar(userID, "reverbVibeIntensity") == 0) {
+    if (getUserVar(serverID, userID, "reverbEndTime") < Date.now() && getUserVar(serverID, userID, "reverbVibeIntensity") == 0) {
         console.log(`${userID}'s Reverb Vibe has stopped`)
-        setUserVar(userID, "reverbEndTime", undefined)
-        setUserVar(userID, "reverbDecayTime", undefined)
+        setUserVar(serverID, userID, "reverbEndTime", undefined)
+        setUserVar(serverID, userID, "reverbDecayTime", undefined)
     }
 }
 

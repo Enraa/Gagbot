@@ -4,6 +4,7 @@ const https = require("https");
 const { getCollar } = require("./getters/collar/getCollar");
 const { getChastity } = require("./getters/chastity/getChastity");
 const { getChastityBra } = require("./getters/chastity/getChastityBra");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
 
 // Load the game files! 
 function loadGames() {
@@ -22,6 +23,7 @@ function loadGames() {
 // Applies an escrow on a user's restraint, preventing it from being transferred
 // or removed until the game state has been concluded.
 function placeEscrow(user, restraint, gameid) {
+    traceFirstParam(arguments[0]);
     if (process.games && process.games[gameid]) {
         if (restraint == "collar") {
             if (getCollar(user)) {
@@ -43,6 +45,7 @@ function placeEscrow(user, restraint, gameid) {
 
 // Removes all restraints with gameid from user
 function removeEscrow(user, gameid) {
+    traceFirstParam(arguments[0]);
     if (process.games && process.games[gameid]) {
         if (getCollar(user) && (getCollar(user).escrow == gameid)) {
             getCollar(user).escrow = undefined;
@@ -58,6 +61,7 @@ function removeEscrow(user, gameid) {
 
 // Rewards all restraint keys placed in escrow for the loser to the winner
 function rewardEscrow(winner, loser, gameid) {
+    traceFirstParam(arguments[0]);
     if (process.games && process.games[gameid]) {
         // Transfer the loser's keys to the winner
         if (getCollar(loser) && (getCollar(loser).escrow == gameid)) {
@@ -83,6 +87,7 @@ function rewardEscrow(winner, loser, gameid) {
 // Creates a game object. Note that this does not start it until the .started param is added to the object,
 // which will be handled when prompting everyone that is invited to the game. 
 function createGame(players, gametype, escrows, options) {
+    traceFirstParam(arguments[0]);
     let randomid = crypto.randomUUID(); // Generates a unique 32-bit UUID.
     let playerarr = (Array.isArray(players)) ? players : [players];
     process.games[randomid] = {

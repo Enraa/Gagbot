@@ -20,20 +20,21 @@ module.exports = {
 			let data = {
 				textarray: "texts_uncollar",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: collaruser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
-                    c2: getCollarName(collaruser.id, getCollar(collaruser.id)?.collartype) ?? "collar"
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
+                    c2: getCollarName(interaction.guildId, collaruser.id, getCollar(interaction.guildId, collaruser.id)?.collartype) ?? "collar"
 				},
 			};
 
-			if (!getHeavyBound(interaction.user.id, interaction.user.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, interaction.user.id)) {
 				// in heavy bondage, can't
 				data.heavy = true;
 				if (interaction.user == collaruser) {
 					// This is ourselves
 					data.self = true;
-					if (getCollar(interaction.user.id)) {
+					if (getCollar(interaction.guildId, interaction.user.id)) {
 						// we are wearing a collar
 						data.collar = true;
 						interaction.reply(getText(data));
@@ -45,7 +46,7 @@ module.exports = {
 				} else {
 					// This is someone else
 					data.other = true;
-					if (getCollar(collaruser.id)) {
+					if (getCollar(interaction.guildId, collaruser.id)) {
 						// They are wearing a collar
 						data.collar = true;
 						interaction.reply(getText(data));
@@ -61,14 +62,14 @@ module.exports = {
 				if (interaction.user == collaruser) {
 					// This is ourselves
 					data.self = true;
-					if (getCollar(collaruser.id)) {
+					if (getCollar(interaction.guildId, collaruser.id)) {
 						// we are wearing a collar
 						data.collar = true;
-						if (canAccessCollar(collaruser.id, interaction.user.id, true).access) {
+						if (canAccessCollar(interaction.guildId, collaruser.id, interaction.user.id, true).access) {
 							// We have the key to our own collar
 							data.key = true;
 							interaction.reply(getText(data));
-							removeCollar(collaruser.id);
+							removeCollar(interaction.guildId, collaruser.id);
 						} else {
 							// We do not have the key to our collar.
 							data.nokey = true;
@@ -82,18 +83,18 @@ module.exports = {
 				} else {
 					// This is someone else
 					data.other = true;
-					if (getCollar(collaruser.id)) {
+					if (getCollar(interaction.guildId, collaruser.id)) {
 						// they are wearing a collar
 						data.collar = true;
-						if (canAccessCollar(collaruser.id, interaction.user.id, true).access) {
+						if (canAccessCollar(interaction.guildId, collaruser.id, interaction.user.id, true).access) {
 							// We have the key to their collar
 							data.key = true;
 							interaction.reply(getText(data));
-							removeCollar(collaruser.id);
+							removeCollar(interaction.guildId, collaruser.id);
 						} else {
 							// We do not have the key to their collar. Ephemeral
 							data.nokey = true;
-							if (!getCollar(collaruser.id).keyholderOnly && getCollar(collaruser.id).keyholder == collaruser.id) {
+							if (!getCollar(interaction.guildId, collaruser.id).keyholderOnly && getCollar(interaction.guildId, collaruser.id).keyholder == collaruser.id) {
 								// They're wearing an unlocked collar - its their choice!
 								data.nokeyholderonly = true;
 								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });

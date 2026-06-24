@@ -12,7 +12,7 @@ exports.setupfunction = (data) => {
             name: `Lockable Harness (${process.gagtypes[g].choicename})`,
             lockable: true,
             // Only show in autocomplete if the user is currently wearing the gag. 
-            showfunction: (targetuser) => { return (process.gags[targetuser] && process.gags[targetuser].find((ga) => ga.gagtype == g)) }
+            showfunction: (serverID, targetuser) => { return (process.gags[serverID] && process.gags[serverID][targetuser] && process.gags[serverID][targetuser].find((ga) => ga.gagtype == g)) }
         })
     })
     return returnheadwear;

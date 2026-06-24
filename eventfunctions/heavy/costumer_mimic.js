@@ -4,6 +4,7 @@ const { getChastityBraName } = require("../../functions/getters/chastity/getChas
 const { getChastityName } = require("../../functions/getters/chastity/getChastityName.js");
 const { getCollar } = require("../../functions/getters/collar/getCollar.js");
 const { getCollarName } = require("../../functions/getters/collar/getCollarName.js");
+const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js");
 const { getGag } = require("../../functions/getters/gag/getGag.js");
 const { convertGagText } = require("../../functions/getters/gag/getGagName.js");
 const { getHeadwear } = require("../../functions/getters/headwear/getHeadwear.js");
@@ -11,6 +12,7 @@ const { getHeadwearName } = require("../../functions/getters/headwear/getHeadwea
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy.js");
 const { getMitten } = require("../../functions/getters/mitten/getMitten.js");
 const { getMittenName } = require("../../functions/getters/mitten/getMittenName.js");
+const { getToys } = require("../../functions/getters/toy/getToys.js");
 const { getLockedWearable } = require("../../functions/getters/wearable/getLockedWearable.js");
 const { getWearable } = require("../../functions/getters/wearable/getWearable.js");
 const { getWearableName } = require("../../functions/getters/wearable/getWearableName.js");
@@ -19,11 +21,13 @@ const { addArousal } = require("../../functions/setters/arousal/addArousal.js");
 const { assignChastity } = require("../../functions/setters/chastity/assignChastity.js");
 const { assignChastityBra } = require("../../functions/setters/chastity/assignChastityBra.js");
 const { assignCollar } = require("../../functions/setters/collar/assignCollar.js");
+const { setProcessVariable } = require("../../functions/setters/config/setProcessVariable.js");
 const { assignGag } = require("../../functions/setters/gag/assignGag.js");
 const { assignHeadwear } = require("../../functions/setters/headwear/assignHeadwear.js");
 const { assignHeavy } = require("../../functions/setters/heavy/assignHeavy.js");
 const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy.js");
 const { assignMitten } = require("../../functions/setters/mitten/assignMitten.js");
+const { assignToy } = require("../../functions/setters/toy/assignToy.js");
 const { assignWearable } = require("../../functions/setters/wearable/assignWearable.js");
 const { deleteWearable } = require("../../functions/setters/wearable/removeWearable.js");
 const { getText } = require("../../functions/textfunctions.js");
@@ -377,33 +381,33 @@ function shuffleWearables(inputArray) {
 // Then it will slowly apply a random outfit and set of restraints!
 // Then it will spit them out and apply a new heavy item at the end!
 
-let tick = async (userID, datain) => {
+let tick = async (serverID, userID, datain) => {
     if (process.userevents == undefined) { process.userevents = {} }
-    if (process.userevents[userID] == undefined) { process.userevents[userID] = {} }
-    if (process.userevents[userID].costumermimic == undefined) { process.userevents[userID].costumermimic = { stage: 0 } }
-    if (process.userevents[userID].costumermimic.costumeidx == undefined) { process.userevents[userID].costumermimic.costumeidx = 0 }
-    if (process.userevents[userID].costumermimic.origbinder == undefined) { process.userevents[userID].costumermimic.origbinder = getHeavy(userID).origbinder }
+    if (getProcessVariable(serverID, userID, "userevents") == undefined) { setProcessVariable(serverID, userID, "userevents", {}) }
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic = { stage: 0 } }
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx = 0 }
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder = getHeavy(serverID, userID).origbinder }
 
     // Randomly select an outfit from mimicCostumes.js
-    if (process.userevents[userID].costumermimic.outfit == undefined) { process.userevents[userID].costumermimic.outfit = Object.keys(mimicCostumes)[Math.floor(Math.random() * Object.keys(mimicCostumes).length)]; }
-    let currclothes = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))); // Current clothes that can be removed
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.outfit == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.outfit = Object.keys(mimicCostumes)[Math.floor(Math.random() * Object.keys(mimicCostumes).length)]; }
+    let currclothes = getWearable(serverID, userID).filter((f) => (!getLockedWearable(serverID, userID).includes(f))); // Current clothes that can be removed
     let shuffledclothes = shuffleWearables(currclothes); // I admittedly dont think a big shuffler's necessary but its fine
     // Capture length of initial Removable Wearables array
-    if (process.userevents[userID].costumermimic.removableclothes == undefined) { process.userevents[userID].costumermimic.removableclothes = shuffledclothes.length }
-    let consumeperpass = Math.round(process.userevents[userID].costumermimic.removableclothes / 4);
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.removableclothes == undefined) { getProcessVariable(serverID, userID, "userevents").costumermimic.removableclothes = shuffledclothes.length }
+    let consumeperpass = Math.round(getProcessVariable(serverID, userID, "userevents").costumermimic.removableclothes / 4);
 
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
-    let targetobject = await process.client.users.fetch(getHeavy(userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
+    let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[userID])) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
         return;
     }
 
     // Only update a max of once every 20 seconds. 
-    if ((process.userevents[userID].costumermimic.nextupdate ?? 0) < Date.now()) {
-        //process.userevents[userID].costumermimic.nextupdate = Date.now() + 2000; // Test Speed
-        process.userevents[userID].costumermimic.nextupdate = Date.now() + 20000;
+    if ((getProcessVariable(serverID, userID, "userevents").costumermimic.nextupdate ?? 0) < Date.now()) {
+        //getProcessVariable(serverID, userID, "userevents").costumermimic.nextupdate = Date.now() + 2000; // Test Speed
+        getProcessVariable(serverID, userID, "userevents").costumermimic.nextupdate = Date.now() + 20000;
     }
     else { return };
 
@@ -411,30 +415,31 @@ let tick = async (userID, datain) => {
     let data = {
         textarray: "texts_eventfunctions",
         textdata: {
+            serverID: serverID,
             interactionuser: userobject,
             targetuser: targetobject,
         }
     }
 
     // The Mimic is teasing the Victim during the entire event~ (Arousal Gain can be increased or decreased as desired)
-    addArousal(userID, 1);
+    addArousal(serverID, userID, 1);
 
-    console.log(process.userevents[userID].costumermimic)
+    console.log(getProcessVariable(serverID, userID, "userevents").costumermimic)
 
     // Select Item from Chosen Outfit based in index
-    let nextitem = mimicCostumes[process.userevents[userID].costumermimic.outfit][process.userevents[userID].costumermimic.costumeidx];
+    let nextitem = mimicCostumes[getProcessVariable(serverID, userID, "userevents").costumermimic.outfit][getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx];
     let itemtoequipcolored = null;
     let nom_idx = 0;
     let itemsconsumed = "";
 
-    console.log("Consume: ", consumeperpass, ", Total: ", getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f))).length, ", Stage: ", process.userevents[userID].costumermimic.stage);
+    console.log("Consume: ", consumeperpass, ", Total: ", getWearable(serverID, userID).filter((f) => (!getLockedWearable(serverID, userID).includes(f))).length, ", Stage: ", getProcessVariable(serverID, userID, "userevents").costumermimic.stage);
 
     // Initial Text Formatting
     data.heavy = true;
     data.costumer_mimic = true;
 
     // Stripping Clothes
-    if (process.userevents[userID].costumermimic.stage < 3) {
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.stage < 3) {
         if (shuffledclothes.length > consumeperpass && consumeperpass >= 2) {
             while (nom_idx < consumeperpass && shuffledclothes[nom_idx] != null) {
                 // Fetch Wearable name and concatenate onto string
@@ -444,7 +449,7 @@ let tick = async (userID, datain) => {
                     itemsconsumed += "and " + getWearableName(undefined, shuffledclothes[nom_idx]);
                 }
                 // remove it 
-                deleteWearable(userID, shuffledclothes[nom_idx]);
+                deleteWearable(serverID, userID, shuffledclothes[nom_idx]);
                 nom_idx++;
             }
             data.textdata.c1 = itemsconsumed;
@@ -452,39 +457,39 @@ let tick = async (userID, datain) => {
             data.removeclothing = true;
 
             // Send a message saying it stripped things off the wearer <3
-            messageSendChannel(getText(data), process.recentmessages[userID])
-            process.userevents[userID].costumermimic.stage++
+            messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+            getProcessVariable(serverID, userID, "userevents").costumermimic.stage++
             return;
 
         } else if (shuffledclothes.length <= consumeperpass && shuffledclothes.length > 0) {
             console.log("Not enough Clothes remaining for a full cycle! Skipping to stage 3!")
             // Skip to Stage 4 and consume all remaining items
-            process.userevents[userID].costumermimic.stage = 3
+            getProcessVariable(serverID, userID, "userevents").costumermimic.stage = 3
         } else if (shuffledclothes.length == 0) {
             // Victim Stripped of all unprotected clothing unexpectedly, progress to next stage
             console.log("Unexpectedly Naked! Skipping to Dress Up!")
-            process.userevents[userID].costumermimic.stage = 4;
+            getProcessVariable(serverID, userID, "userevents").costumermimic.stage = 4;
             data.textdata.c1 = "Naked";
             data.donestripping = true;
             data.noneremaining = true;
-            messageSendChannel(getText(data), process.recentmessages[userID])
+            messageSendChannel(getText(data), process.recentmessages[serverID][userID])
             return;
         } else {
             console.log("Initial Clothes count less than 4! Skipping to stage 3!")
             // Skip to Stage 4 and consume all remaining items
-            process.userevents[userID].costumermimic.stage = 3
+            getProcessVariable(serverID, userID, "userevents").costumermimic.stage = 3
         }
     }
 
-    if (process.userevents[userID].costumermimic.stage == 3) {
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.stage == 3) {
         console.log("Entering Final Consumption!")
         // Handle all remaining Wearables
         data.donestripping = true;
-        let remainingwearables = getWearable(userID).filter((f) => (!getLockedWearable(userID).includes(f)))
+        let remainingwearables = getWearable(serverID, userID).filter((f) => (!getLockedWearable(serverID, userID).includes(f)))
         let concat = []
         remainingwearables.forEach((w) => {
             concat.push(getWearableName(undefined, w));
-            deleteWearable(userID, w);
+            deleteWearable(serverID, userID, w);
         })
         if (concat.length > 0) {
             data.textdata.c1 = concat.join(", ")
@@ -502,14 +507,14 @@ let tick = async (userID, datain) => {
         }
 
         // Send a message saying it has consumed all remaining wearables
-        messageSendChannel(getText(data), process.recentmessages[userID])
+        messageSendChannel(getText(data), process.recentmessages[serverID][userID])
 
-        process.userevents[userID].costumermimic.stage++
+        getProcessVariable(serverID, userID, "userevents").costumermimic.stage++
         return;
     }
 
     // Apply Outfit Items once stripped until last index of array is reached or a heavy item is found
-    if (process.userevents[userID].costumermimic.stage >= 4 && process.userevents[userID].costumermimic.costumeidx < mimicCostumes[process.userevents[userID].costumermimic.outfit].length && nextitem.category != "end") {
+    if (getProcessVariable(serverID, userID, "userevents").costumermimic.stage >= 4 && getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx < mimicCostumes[getProcessVariable(serverID, userID, "userevents").costumermimic.outfit].length && nextitem.category != "end") {
 
         data.applyingOutfit = true;
         switch (nextitem.category) {
@@ -518,163 +523,163 @@ let tick = async (userID, datain) => {
                 itemtoequipcolored = colourItem(nextitem.itemtowear, nextitem.color);
                 if (itemtoequipcolored != null) {
                     data.textdata.c1 = getWearableName(undefined, itemtoequipcolored)
-                    assignWearable(userID, itemtoequipcolored);
+                    assignWearable(serverID, userID, itemtoequipcolored);
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[userID])
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
                 }
                 else {
                     data.textdata.c1 = getWearableName(undefined, nextitem.itemtowear)
-                    assignWearable(userID, itemtoequipcolored);
+                    assignWearable(serverID, userID, itemtoequipcolored);
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[userID])
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "headwear":
-                if (!getHeadwear(userID) || (getHeadwear(userID) && (getHeadwear(userID).getHeadwearName != nextitem.itemtowear))) {
+                if (!getHeadwear(serverID, userID) || (getHeadwear(serverID, userID) && (getHeadwear(serverID, userID).getHeadwearName != nextitem.itemtowear))) {
                     data.headwear = true;
-                    data.textdata.c1 = getHeadwearName(undefined, nextitem.itemtowear), // headwear name
+                    data.textdata.c1 = getHeadwearName(serverID, undefined, nextitem.itemtowear), // headwear name
 
                         // Apply the headwear    
-                        assignHeadwear(userID, nextitem.itemtowear, targetobject.id)
+                        assignHeadwear(serverID, userID, nextitem.itemtowear, targetobject.id)
 
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[userID])
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "gag":
-                if (!getGag(userID) || (getGag(userID) && (getGag(userID).getGagName != nextitem.itemtowear))) {
+                if (!getGag(serverID, userID) || (getGag(serverID, userID) && (getGag(serverID, userID).getGagName != nextitem.itemtowear))) {
                     data.gag = true;
                     data.textdata.c1 = convertGagText(nextitem.itemtowear), // gag name
                         // Apply the gag    
-                        assignGag(userID, nextitem.itemtowear, Math.floor(Math.random() * 10) + 1, process.userevents[userID].costumermimic.origbinder)
+                        assignGag(serverID, userID, nextitem.itemtowear, Math.floor(Math.random() * 10) + 1, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder)
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[userID])
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "mittens":
-                if (!getMitten(userID) || (getMitten(userID) && (getMitten(userID).getMittenName != nextitem.itemtowear))) {
+                if (!getMitten(serverID, userID) || (getMitten(serverID, userID) && (getMitten(serverID, userID).getMittenName != nextitem.itemtowear))) {
                     data.mitten = true;
-                    if (getMitten(userID)) {
-                        data.textdata.c1 = getMittenName(undefined, getMitten(userID).mittenname) ?? "mittens", // mitten name
-                            data.textdata.c2 = getMittenName(undefined, nextitem.itemtowear), // new mitten name
-                            assignMitten(userID, nextitem.itemtowear, getMitten(userID).origbinder)
+                    if (getMitten(serverID, userID)) {
+                        data.textdata.c1 = getMittenName(serverID, undefined, getMitten(serverID, userID).mittenname) ?? "mittens", // mitten name
+                            data.textdata.c2 = getMittenName(serverID, undefined, nextitem.itemtowear), // new mitten name
+                            assignMitten(serverID, userID, nextitem.itemtowear, getMitten(serverID, userID).origbinder)
 
                         data.replace = true;
                     }
                     else {
-                        data.textdata.c1 = getMittenName(undefined, nextitem.itemtowear), // mitten name
-                            assignMitten(userID, nextitem.itemtowear, process.userevents[userID].costumermimic.origbinder)
+                        data.textdata.c1 = getMittenName(serverID, undefined, nextitem.itemtowear), // mitten name
+                            assignMitten(serverID, userID, nextitem.itemtowear, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[userID]);
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
 
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "chastitybelt":
-                if (!getChastity(userID) || (getChastity(userID) && (getChastity(userID).getChastityName != nextitem.itemtowear))) {
+                if (!getChastity(serverID, userID) || (getChastity(serverID, userID) && (getChastity(serverID, userID).getChastityName != nextitem.itemtowear))) {
                     data.chastitybelt = true;
-                    if (getChastity(userID)) {
-                        data.textdata.c1 = getChastityName(undefined, getChastity(userID).getChastityName) ?? "chastity belt", // chastity name
-                            data.textdata.c2 = getChastityName(undefined, nextitem.itemtowear), // new chastity name
+                    if (getChastity(serverID, userID)) {
+                        data.textdata.c1 = getChastityName(serverID, undefined, getChastity(serverID, userID).getChastityName) ?? "chastity belt", // chastity name
+                            data.textdata.c2 = getChastityName(serverID, undefined, nextitem.itemtowear), // new chastity name
 
                             // Update Chastity Belt Name with new type
-                            process.chastity[userID].chastitytype = nextitem.itemtowear
+                            getChastity(serverID, userID).chastitytype = nextitem.itemtowear
 
                         data.replace = true;
                     }
                     else {
-                        data.textdata.c2 = getChastityName(undefined, nextitem.itemtowear), // chastity name
-                            assignChastity(userID, process.userevents[userID].costumermimic.origbinder, nextitem.itemtowear)
+                        data.textdata.c2 = getChastityName(serverID, undefined, nextitem.itemtowear), // chastity name
+                            assignChastity(serverID, userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, nextitem.itemtowear)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[userID]);
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
 
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "chastitybra":
-                if (!getChastityBra(userID) || (getChastityBra(userID) && (getChastityBra(userID).getChastityBraName != nextitem.itemtowear))) {
+                if (!getChastityBra(serverID, userID) || (getChastityBra(serverID, userID) && (getChastityBra(serverID, userID).getChastityBraName != nextitem.itemtowear))) {
                     data.chastitybra = true;
-                    if (getChastityBra(userID)) {
-                        data.textdata.c1 = getChastityBraName(undefined, getChastityBra(userID).getChastityBraName) ?? "chastity bra", // chastity bra name
-                            data.textdata.c2 = getChastityBraName(undefined, nextitem.itemtowear), // new chastity bra name
+                    if (getChastityBra(serverID, userID)) {
+                        data.textdata.c1 = getChastityBraName(serverID, undefined, getChastityBra(serverID, userID).getChastityBraName) ?? "chastity bra", // chastity bra name
+                            data.textdata.c2 = getChastityBraName(serverID, undefined, nextitem.itemtowear), // new chastity bra name
 
                             // Update Chastity Bra Name with new type
-                            process.chastitybra[userID].chastitytype = nextitem.itemtowear
+                            getChastityBra(serverID, userID).chastitytype = nextitem.itemtowear
 
                         data.replace = true;
                     }
                     else {
-                        data.textdata.c2 = getChastityBraName(undefined, nextitem.itemtowear), // chastity bra name
-                            assignChastityBra(userID, process.userevents[userID].costumermimic.origbinder, nextitem.itemtowear)
+                        data.textdata.c2 = getChastityBraName(serverID, undefined, nextitem.itemtowear), // chastity bra name
+                            assignChastityBra(serverID, userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, nextitem.itemtowear)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[userID]);
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
 
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "collar":
-                if (!getCollar(userID) || (getCollar(userID) && (getCollar(userID).getCollarName != nextitem.itemtowear))) {
+                if (!getCollar(serverID, userID) || (getCollar(serverID, userID) && (getCollar(serverID, userID).getCollarName != nextitem.itemtowear))) {
                     data.collar = true;
-                    if (getCollar(userID)) {
-                        data.textdata.c1 = getCollarName(undefined, getCollar(userID).getCollarName) ?? "collar", // collar name
-                            data.textdata.c2 = getCollarName(undefined, nextitem.itemtowear), // new collar name
+                    if (getCollar(serverID, userID)) {
+                        data.textdata.c1 = getCollarName(serverID, undefined, getCollar(serverID, userID).getCollarName) ?? "collar", // collar name
+                            data.textdata.c2 = getCollarName(serverID, undefined, nextitem.itemtowear), // new collar name
 
                             // Update Collar Name with new type
-                            process.collar[userID].collartype = nextitem.itemtowear
+                            getCollar(serverID, userID).collartype = nextitem.itemtowear
 
                         data.replace = true;
                     }
                     else {
-                        data.textdata.c2 = getCollarName(undefined, nextitem.itemtowear), // collar name
-                            assignCollar(userID, process.userevents[userID].costumermimic.origbinder, {}, false, nextitem.itemtowear)
+                        data.textdata.c2 = getCollarName(serverID, undefined, nextitem.itemtowear), // collar name
+                            assignCollar(serverID, userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, {}, false, nextitem.itemtowear)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[userID]);
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
 
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "heavy":
-                if (!getHeavy(userID, nextitem.itemtowear)) {
+                if (!getHeavy(serverID, userID, nextitem.itemtowear)) {
                     // Apply the Heavy Restraint 
-                    assignHeavy(userID, nextitem.itemtowear, process.userevents[userID].costumermimic.origbinder);
+                    assignHeavy(serverID, userID, nextitem.itemtowear, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder);
 
                     // Configure Message Parameters                    
                     data.heavyrestraint = true;
-                    data.textdata.c1 = getHeavy(userID, nextitem.itemtowear).displayname; // heavy name
+                    data.textdata.c1 = getHeavy(serverID, userID, nextitem.itemtowear).displayname; // heavy name
                     data.add = true;
 
                     //Send Message to Channel
-                    messageSendChannel(getText(data), process.recentmessages[userID]);
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
 
             case "toy":
-                if (!getToys(userID).find((t) => t.type === nextitem.itemtowear)) {
+                if (!getToys(serverID, userID).find((t) => t.type === nextitem.itemtowear)) {
                     // Assign the Toy at a random power between 1 and 5
-                    assignToy(userID, getHeavy(userID).origbinder, Math.max(Math.round(Math.random() * 5), 1), nextitem.itemtowear, getHeavy(userID).origbinder);
+                    assignToy(serverID, userID, getHeavy(serverID, userID).origbinder, Math.max(Math.round(Math.random() * 5), 1), nextitem.itemtowear, getHeavy(serverID, userID).origbinder);
                     
                     // Configure Message Parameters                    
                     data.toy = true;
@@ -682,61 +687,63 @@ let tick = async (userID, datain) => {
                     data.add = true;
                     
                     //Send Message to Channel
-                    messageSendChannel(getText(data), process.recentmessages[userID]);
+                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
                 }
                 // Increment Costume Index
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
             default:
                 // Unknown Item Category in Outfit
                 data.unknown = true;
                 data.textdata.c1 = nextitem.itemtowear; // item name
-                messageSendChannel(getText(data), process.recentmessages[userID]);
+                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
 
                 // Increment Costume Index to bypass unknown item
-                process.userevents[userID].costumermimic.costumeidx++;
+                getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
                 break;
         }
 
-        if (process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
+        if (getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx >= mimicCostumes[getProcessVariable(serverID, userID, "userevents").costumermimic.outfit].length) {
             // Remove Current Heavy (Mimic) if end of Costume Array Reached Without End Marker
             let data = {
+                serverID: serverID,
                 textarray: "texts_eventfunctions",
                 textdata: {
+                    serverID: serverID, 
                     interactionuser: userobject,
                     targetuser: targetobject,
                 }
             }
             data.heavy = true;
             data.costumer_mimic = true;
-            removeHeavy(userID, "costumer_mimic");
+            removeHeavy(serverID, userID, "costumer_mimic");
             data.spitout = true;
             data.none = true;
-            messageSendChannel(getText(data), process.recentmessages[userID]);
+            messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
         }
 
 
-    } else if (nextitem.category == "end" || process.userevents[userID].costumermimic.costumeidx >= mimicCostumes[process.userevents[userID].costumermimic.outfit].length) {
+    } else if (nextitem.category == "end" || getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx >= mimicCostumes[getProcessVariable(serverID, userID, "userevents").costumermimic.outfit].length) {
         // Final Stage - Remove Mimic Heavy and spit them out, then apply Closing Heavy!
         // End of Outfit Marker Reached!        
 
         // Remove Current Heavy (Mimic)
-        removeHeavy(userID, "costumer_mimic");
+        removeHeavy(serverID, userID, "costumer_mimic");
         data.spitout = true;
 
         // Apply New Heavy
         if (nextitem.itemtowear && nextitem.category == "end") {
-            assignHeavy(userID, nextitem.itemtowear, process.userevents[userID].costumermimic.origbinder);
-            data.textdata.c1 = getHeavy(userID, nextitem.itemtowear).displayname; // heavy name
+            assignHeavy(serverID, userID, nextitem.itemtowear, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder);
+            data.textdata.c1 = getHeavy(serverID, userID, nextitem.itemtowear).displayname; // heavy name
             data.add = true;
-            messageSendChannel(getText(data), process.recentmessages[userID]);
+            messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
         } else {
             data.none = true;
-            messageSendChannel(getText(data), process.recentmessages[userID]);
+            messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
         }
 
         // Remove Event and exit (Does this automatically go to Garbage Collector?)
-        delete process.userevents[userID].costumermimic;
+        delete getProcessVariable(serverID, userID, "userevents").costumermimic;
     }
 }
 

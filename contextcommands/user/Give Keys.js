@@ -7,7 +7,7 @@ module.exports = {
         .setType(ApplicationCommandType.User), // This command will appear when right-clicking a user
     async execute(interaction) {
         try {
-            interaction.reply(await generateKeyGivingModal(interaction.user.id, interaction.targetId ?? interaction.user.id, interaction.targetId ?? interaction.user.id, "0000"))
+            interaction.reply(await generateKeyGivingModal(interaction.guildId, interaction.user.id, interaction.targetId ?? interaction.user.id, interaction.targetId ?? interaction.user.id, "0000"))
         } catch (err) {
             console.log(err);
         }

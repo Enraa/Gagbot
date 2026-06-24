@@ -2,8 +2,10 @@ const { ButtonBuilder } = require("@discordjs/builders");
 const { ButtonStyle, ComponentType } = require("discord.js");
 const { ActionRowBuilder } = require("@discordjs/builders");
 const { setPronouns } = require("./setters/config/setPronouns.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 
-const remindPronouns = async (user) => {
+async function remindPronouns(serverID, user) {
+    traceFirstParam(arguments[0]);
     if (process.recentlyremindedpronouns == undefined) {
         process.recentlyremindedpronouns = {}
     }
@@ -15,7 +17,7 @@ const remindPronouns = async (user) => {
             }, 900000)
             let userobject = await process.client.users.fetch(user)
             let buttons = [new ButtonBuilder().setCustomId("sheher").setLabel("She/Her").setStyle(ButtonStyle.Secondary), new ButtonBuilder().setCustomId("hehim").setLabel("He/Him").setStyle(ButtonStyle.Secondary), new ButtonBuilder().setCustomId("theythem").setLabel("They/Them").setStyle(ButtonStyle.Secondary), new ButtonBuilder().setCustomId("itits").setLabel("It/Its").setStyle(ButtonStyle.Secondary)];
-            let pronounremindertext = `This bot uses gendered language for roleplay texts and output to individuals. Your pronouns currently are not set in the bot. Please click an option below to set them:`
+            let pronounremindertext = `This bot uses gendered language for roleplay texts and output to individuals. Your pronouns currently are not set in the bot for this server. Please click an option below to set them:`
             let dmchannel = await userobject.createDM();
             await dmchannel
                 .send({ content: `${pronounremindertext}`, components: [new ActionRowBuilder().addComponents(...buttons)]})
@@ -24,19 +26,19 @@ const remindPronouns = async (user) => {
                     collector.on("collect", async (i) => {
                         console.log(i);
                         if (i.customId == "sheher") {
-                            setPronouns(user, "she/her")
+                            setPronouns(serverID, user, "she/her")
                             await i.update({ content: 'Set your pronouns to She/Hers!', components: [] })
                         }
                         else if (i.customId == "hehim") {
-                            setPronouns(user, "he/him")
+                            setPronouns(serverID, user, "he/him")
                             await i.update({ content: 'Set your pronouns to He/Him!', components: [] })
                         }
                         else if (i.customId == "theythem") {
-                            setPronouns(user, "they/them")
+                            setPronouns(serverID, user, "they/them")
                             await i.update({ content: 'Set your pronouns to They/Them!', components: [] })
                         }
                         else if (i.customId == "itits") {
-                            setPronouns(user, "it/its")
+                            setPronouns(serverID, user, "it/its")
                             await i.update({ content: 'Set your pronouns to It/Its!', components: [] })
                         }
                     });

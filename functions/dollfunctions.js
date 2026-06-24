@@ -4,6 +4,8 @@ const garble = require("garble");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getOption } = require("./getters/config/getOption.js");
 const { markForSave } = require("./other/markForSave.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { getGags } = require("./getters/gag/getGags.js");
 
 // Regex to capture the user's intended text segments post-corset and post-vibrator.
 // NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.
@@ -181,25 +183,27 @@ const dronecodes = {
  * Typical use: let dollified = checkDollification(userID)
  * @param userID - The user's discord ID number
  *************************************************/
-function checkDollification(userID) {
+function checkDollification(serverID, userID) {
+    traceFirstParam(arguments[0]);
 	if (process.dolls == undefined) {
 		process.dolls = {};
 	}
 	let isDoll = false;
 	// Dollify a valid doll if needed
-	if (isValidDoll(userID)) {
+	if (isValidDoll(serverID, userID)) {
 		// If user is NOT a doll, make them a doll.
-		if (!process.dolls[userID]) {
-			process.dolls[userID] = { violations: 0, punishmentLevel: 0, goodDollStreak: 0 };
+        if (process.dolls[serverID] == undefined) { process.dolls[serverID] = {} }
+		if (process.dolls[serverID] && !process.dolls[serverID][userID]) {
+			process.dolls[serverID][userID] = { violations: 0, punishmentLevel: 0, goodDollStreak: 0 };
 			// Save the doll to the database.
 			markForSave("dolls");
 		}
 		isDoll = true;
 		// Undollify if needed
 	} else {
-		if (process.dolls[userID]) {
-			delete process.dolls[userID];
-			// Save the doll to the database.
+		if (process.dolls[serverID] && process.dolls[serverID][userID]) {
+			delete process.dolls[serverID][userID];
+			// Remove the doll from the database.
 			markForSave("dolls");
 		}
 	}
@@ -209,21 +213,26 @@ function checkDollification(userID) {
  * Determine if a user is wearing doll gear.
  * @param userID - The user's discord ID number
  **********************************************/
-function isValidDoll(userID) {
+function isValidDoll(serverID, userID) {
+    traceFirstParam(arguments[0]);
 	// TODO - Control harness + collar required for dollification?
 
-	return getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear));
+	return getHeadwear(serverID, userID).find((headwear) => DOLLVISORS.includes(headwear));
 }
 
 /**********************************************
  * Reward a doll for following protocol.
  * @param userID - The user's discord ID number
  **********************************************/
-function rewardDoll(userID) {
+function rewardDoll(serverID, userID) {
+    traceFirstParam(arguments[0]);
 	if (process.dolls == undefined) {
 		process.dolls = {};
 	}
-	let doll = process.dolls[userID];
+    if (process.dolls[serverID] == undefined) {
+		process.dolls[serverID] = {};
+	}
+	let doll = process.dolls[serverID][userID];
 	if (doll) {
 		doll.goodDollStreak++;
 		// Reward the doll
@@ -251,17 +260,17 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 	// Handle Dollification
 	let modified = modifiedmessage;
 	let outtext = outtextin;
-	let dollified = checkDollification(msg.author.id);
+	let dollified = checkDollification(msg.guild.id, msg.author.id);
 	let dollIDDisplay;
 	let dollID = ``;
-	let dollIDOverride = getOption(msg.author.id, "dollvisorname");
-	let dollIDColor = getOption(msg.author.id, "dollvisorcolor") ?? 34;
-	let dollProtocol = !(getOption(msg.author.id, "dollforcedprotocol") == "disabled"); // Enabled for any level that isn't disabled
-    let dollProtocolLevel = getOption(msg.author.id, "dollforcedprotocol");
-    let dollPunishThresh = getOption(msg.author.id, "dollpunishthresh");
-    let dollmaker = getHeadwear(msg.member.id).find((headwear) => headwear === "dollmaker_visor");
+	let dollIDOverride = getOption(msg.guild.id, msg.author.id, "dollvisorname");
+	let dollIDColor = getOption(msg.guild.id, msg.author.id, "dollvisorcolor") ?? 34;
+	let dollProtocol = !(getOption(msg.guild.id, msg.author.id, "dollforcedprotocol") == "disabled"); // Enabled for any level that isn't disabled
+    let dollProtocolLevel = getOption(msg.guild.id, msg.author.id, "dollforcedprotocol");
+    let dollPunishThresh = getOption(msg.guild.id, msg.author.id, "dollpunishthresh");
+    let dollmaker = getHeadwear(msg.guild.id, msg.member.id).find((headwear) => headwear === "dollmaker_visor");
     // This creates a circular, so, access the variable directly. Oh well. 
-    let eldritchcorrupted = (process.gags && process.gags[msg.member.id] && process.gags[msg.member.id].find((g) => g.gagtype === "eldritch"))
+    let eldritchcorrupted = getGags(msg.guild.id, msg.member.id).find((gag) => gag === "eldritch");
 	let dollProtocolViolations = 0;
 	let dollProtocolVioType = undefined;
 	if (dollified) {
@@ -381,8 +390,8 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                 }
 
                 // If the Doll has configured forbidden words, add those to the array. 
-                if (getOption(msg.author.id, "dollpunishwords")) {
-                    getOption(msg.author.id, "dollpunishwords").forEach((r) => {
+                if (getOption(msg.guild.id, msg.author.id, "dollpunishwords")) {
+                    getOption(msg.guild.id, msg.author.id, "dollpunishwords").forEach((r) => {
                         // Each of these is a regexp already, so adding them is easy!
                         uniquedollprotocol.push({ regex: new RegExp(`\\b(${r})\\b`, "gi"), value: 2, type: "redact", string: r } )
                     })
@@ -435,7 +444,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 				if ((dollProtocolViolations > 0 || warnmodified) && i == lastDollifiedMessage) {
 					let totalViolations = dollProtocolViolations;
 					if (dollProtocolLevel != "warning") {
-						totalViolations = dollProtocolViolations + process.dolls[msg.author.id].violations;
+						totalViolations = dollProtocolViolations + (process.dolls[msg.guild.id, msg.author.id]?.violations ?? 0);
 					}
 
 					// WARN if below punishment threshold. ERROR if exceeded.
@@ -461,12 +470,12 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
                     
                     dollMessageParts[i].text += `\n[1;${violationColor}${violationTier}:[0;${violationColor} Protocol Violation${violationcount} - ${vioMessage}`;
 				} else if (dollProtocolViolations == 0 && i == lastDollifiedMessage) {
-					let goodDollReturn = rewardDoll(msg.author.id);
+					let goodDollReturn = rewardDoll(msg.guild.id, msg.author.id);
 					//console.log(goodDollReturn)
 					if (goodDollReturn == "violation") {
-						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.author.id].violations}/${dollPunishThresh}). It is a Good Doll.`;
+						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.guild.id][msg.author.id].violations}/${dollPunishThresh}). It is a Good Doll.`;
 					} else if (goodDollReturn == "punishlevel") {
-						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${process.dolls[msg.author.id].punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`;
+						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${process.dolls[msg.guild.id][msg.author.id].punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`;
 					}
 				}
 				// Finish the codeblock
@@ -509,9 +518,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 }
 
 function textGarbleDrone(text, parent, msg, msgTreeMods) {
-    if (getHeadwear(msg.member.id).includes("drone_visor")) {
+    if (getHeadwear(msg.guild.id, msg.member.id).includes("drone_visor")) {
         //let supplieddronespeech = (text.startsWith(`${getOption(msg.member.id, "dronevisorname")}`))
-        let outtext = `${getOption(msg.member.id, "dronevisorname")} :: Code ${(msg.type == "19") ? "250" : "050"} :: ${(msg.type == "19") ? "Response" : "Statement"}, ${text}`
+        let outtext = `${getOption(msg.guild.id, msg.member.id, "dronevisorname")} :: Code ${(msg.type == "19") ? "250" : "050"} :: ${(msg.type == "19") ? "Response" : "Statement"}, ${text}`
         msgTreeMods.modified = true;
         return ("`" + outtext + "`")
     }

@@ -6,8 +6,8 @@ exports.tags = ["latex"];
 
 // Remove the shared hose if it is present
 exports.onUnlock = (data) => {
-    if (process.headwear && process.headwear[data.userID] && process.headwear[data.userID].sharedbreathhose) {
-        delete process.headwear[data.userID].sharedbreathhose;
+    if (process.headwear && process.headwear[data.serverID] && process.headwear[data.serverID][data.userID] && process.headwear[data.serverID][data.userID].sharedbreathhose) {
+        delete process.headwear[data.serverID][data.userID].sharedbreathhose;
     }
 }
 

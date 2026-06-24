@@ -11,27 +11,27 @@ exports.orgasmCooldown = (data) => { return 2 }
 exports.denialCoefficient = (data) => { return 1 }
 
 // Set Min Arousal to be equal to the base Arousal + 5% when equipped
-exports.maxArousal = function(data) { return getUserVar(data.userID, "base_arousal") * 1.05}
+exports.maxArousal = function(data) { return getUserVar(data.serverID, data.userID, "base_arousal") * 1.05}
 
 // Events
 exports.onOrgasm = (data) => {
     // Decrease Base Arousal as the ice refreezes
-    setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 0.5)
+    setUserVar(data.serverID, data.userID, "base_arousal", getUserVar(data.serverID, data.userID, "base_arousal") * 0.5)
 }
 exports.onFailedOrgasm = (data) => {
     // Remove a small amount of arousal with each failed attempt
-    addArousal(data.userID, -0.5);
+    addArousal(data.serverID, data.userID, -0.5);
 }
 exports.afterArousalChange = (data) => {
     // Gradually raise the arousal cap as the ice slowly melts
-    if(getArousal(data.userID) > getUserVar(data.userID, "base_arousal")) setUserVar(data.userID, "base_arousal", getUserVar(data.userID, "base_arousal") * 1.001)
+    if(getArousal(data.serverID, data.userID) > getUserVar(data.serverID, data.userID, "base_arousal")) setUserVar(data.serverID, data.userID, "base_arousal", getUserVar(data.serverID, data.userID, "base_arousal") * 1.001)
 }
 exports.onEquip = (data) => {
     // Configure base arousal value
-    if (!getUserVar(data.userID, "base_arousal") || getUserVar(data.userID, "base_arousal") == undefined) setUserVar(data.userID, "base_arousal", getArousal(data.userID) ?? 5);
+    if (!getUserVar(data.serverID, data.userID, "base_arousal") || getUserVar(data.serverID, data.userID, "base_arousal") == undefined) setUserVar(data.serverID, data.userID, "base_arousal", getArousal(data.serverID, data.userID) ?? 5);
 }
 exports.onUnequip = (data) => {
-    setUserVar(data.userID, "base_arousal", undefined);
+    setUserVar(data.serverID, data.userID, "base_arousal", undefined);
 }
 
 // Tags

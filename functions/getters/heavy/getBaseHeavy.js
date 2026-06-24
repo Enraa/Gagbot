@@ -16,7 +16,7 @@ const { heavytypes } = require("../../heavyfunctions");
  * - noother?: If true, prevents putting on others
  * - namefunction?: async (interaction, data) => Sets custom name on heavy object
  **************/
-const getBaseHeavy = (type) => {
+function getBaseHeavy(type) {
     return heavytypes.find((h) => h.value === type);
 };
 

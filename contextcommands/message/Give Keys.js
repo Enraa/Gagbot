@@ -13,12 +13,12 @@ module.exports = {
                 let message = await channel.messages.fetch(interaction.targetId)
                 if (message) {
                     if (message.webhookId == null) {
-                        interaction.reply(await generateKeyGivingModal(interaction.user.id, message.author.id ?? interaction.user.id, message.author.id ?? interaction.user.id, "0000"))
+                        interaction.reply(await generateKeyGivingModal(interaction.guildId, interaction.user.id, message.author.id ?? interaction.user.id, message.author.id ?? interaction.user.id, "0000"))
                     }
                     else {
                         let founduserid;
                         // Check for engraved pet tag
-                        let engravedpettags = getAllSelectedOption("engravedcollarname")
+                        let engravedpettags = getAllSelectedOption(interaction.guildId, "engravedcollarname")
                         Object.keys(engravedpettags).forEach((k) => {
                             // If the visor matches, then we found our pet!
                             if (message.author.username.startsWith(engravedpettags[k]) && (engravedpettags[k].length > 0)) {
@@ -27,7 +27,7 @@ module.exports = {
                             }
                         })
                         // Doll Visors
-                        let dollvisorids = getAllSelectedOption("dollvisorname")
+                        let dollvisorids = getAllSelectedOption(interaction.guildId, "dollvisorname")
                         Object.keys(dollvisorids).forEach((k) => {
                             // If the visor matches, then we found our doll!
                             if (message.author.username.startsWith(dollvisorids[k])) {
@@ -35,7 +35,7 @@ module.exports = {
                             }
                         })
                         // Drone Visors
-                        let dronevisorids = getAllSelectedOption("dronevisorname")
+                        let dronevisorids = getAllSelectedOption(interaction.guildId, "dronevisorname")
                         Object.keys(dronevisorids).forEach((k) => {
                             // If the visor matches, then we found our drone!
                             if (message.author.username.startsWith(`⬡-Drone ${dronevisorids[k]}`)) {
@@ -69,15 +69,15 @@ module.exports = {
                                 }
                             }
                         }
-                        interaction.reply(await generateKeyGivingModal(interaction.user.id, founduserid ?? interaction.user.id, founduserid ?? interaction.user.id, "0000"))
+                        interaction.reply(await generateKeyGivingModal(interaction.guildId, interaction.user.id, founduserid ?? interaction.user.id, founduserid ?? interaction.user.id, "0000"))
                     }
                 }
                 else {
-                    interaction.reply(await generateKeyGivingModal(interaction.user.id, undefined, undefined, "0000"))
+                    interaction.reply(await generateKeyGivingModal(interaction.guildId, interaction.user.id, undefined, undefined, "0000"))
                 }
             }
             else {
-                interaction.reply(await generateKeyGivingModal(interaction.user.id, undefined, undefined, "0000"))
+                interaction.reply(await generateKeyGivingModal(interaction.guildId, interaction.user.id, undefined, undefined, "0000"))
             }
         } catch (err) {
             console.log(err);

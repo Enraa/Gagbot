@@ -5,6 +5,9 @@ const { getHeavy } = require("./getters/heavy/getHeavy");
 const { getWearable } = require("./getters/wearable/getWearable");
 const { getToys } = require("./getters/toy/getToys");
 const { getCollar } = require("./getters/collar/getCollar");
+const { getGags } = require("./getters/gag/getGags");
+const { getMitten } = require("./getters/mitten/getMitten");
+const { getHeavyList } = require("./getters/heavy/getHeavyList");
 
 
 /*********
@@ -12,10 +15,11 @@ const { getCollar } = require("./getters/collar/getCollar");
  * 
  * - (string) type - The specific eventID being emitted
  * - (user id) userid - The user causing this event
+ * - (server id) server - The server this event is occurring in
  * - (object any) data - Additional details, sufficient to reconstruct the event
  * - (integer) delay? - Delay, if any to run this event.
  *********/
-async function emitEvent(type, userid, data, delay = 0) {
+async function emitEvent(type, userid, serverid, data, delay = 0) {
     // All of this because I had the lack of foresight to see that events would eventually evolve and need a better approach.
     // Note, this access process vars directly due to potential circular dependencies. In the future, these should be resolved. 
     // Notable circulars include the messaging system which lives heavily in gagfunctions.js. 
@@ -24,65 +28,65 @@ async function emitEvent(type, userid, data, delay = 0) {
     if (delay) { await new Promise(res => setTimeout(res, delay)) }
 
     // Gags
-	if (process.gags && process.gags[userid]) {
-        process.gags[userid].forEach((g) => {
+	if (getGags(serverid, userid)) {
+        getGags(serverid, userid).forEach((g) => {
             if (process.eventfunctions && process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype][type]) {
-                process.eventfunctions.gags[g.gagtype][type](userid, data);
+                process.eventfunctions.gags[g.gagtype][type](serverid, userid, data);
             }
         });
 	}
 	// Headwear
-	if (process.headwear) {
-        getHeadwear(userid).forEach((h) => {
+	if (getHeadwear(serverid, userid)) {
+        getHeadwear(serverid, userid).forEach((h) => {
             if (process.eventfunctions && process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h][type]) {
-                process.eventfunctions.headwear[h][type](userid, data);
+                process.eventfunctions.headwear[h][type](serverid, userid, data);
             }
         });
 	}
 	// Mittens
-	if (process.mitten) {
-        if (process.mitten[userid]) {
-            if (process.eventfunctions && process.eventfunctions.mitten && process.eventfunctions.mitten[process.mitten[userid].mittenname] && process.eventfunctions.mitten[process.mitten[userid].mittenname][type]) {
-                process.eventfunctions.mitten[process.mitten[userid].mittenname][type](userid, data);
+	if (getMitten(serverid, userid)) {
+        if (getMitten(serverid, userid)) {
+            if (process.eventfunctions && process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname] && process.eventfunctions.mitten[process.mitten[userid].mittenname][type]) {
+                process.eventfunctions.mitten[getMitten(serverid, userid).mittenname][type](serverid, userid, data);
             }
         }
 	}
 	// Heavy Bondage
-	if (process.heavy) {
-        if (getHeavy(userid)) {
-            process.heavy[userid].forEach((heavy) => {
+	if (getHeavy(serverid, userid)) {
+        if (getHeavy(serverid, userid)) {
+            getHeavyList(serverid, userid).forEach((heavy) => {
                 if (process.eventfunctions && process.eventfunctions.heavy && process.eventfunctions.heavy[heavy.type] && process.eventfunctions.heavy[heavy.type][type]) {
-                    process.eventfunctions.heavy[heavy.type][type](userid, data);
+                    process.eventfunctions.heavy[heavy.type][type](serverid, userid, data);
                 }
             })
         }
 	}
 	// Wearables
-	if (process.wearable) {
-        getWearable(userid).forEach((h) => {
+	if (getWearable(serverid, userid)) {
+        getWearable(serverid, userid).forEach((h) => {
             if (process.eventfunctions && process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h][type]) {
-                process.eventfunctions.wearable[h][type](userid, data);
+                process.eventfunctions.wearable[h][type](serverid, userid, data);
             }
         });
 	}
     // Toys
-    if (process.toys) {
-        getToys(userid).forEach((h) => {
+    if (getToys(serverid, userid)) {
+        getToys(serverid, userid).forEach((h) => {
             if (process.eventfunctions && process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type][type]) {
-                process.eventfunctions.toys[h.type][type](userid, data);
+                process.eventfunctions.toys[h.type][type](serverid, userid, data);
             }
         });
 	}
     // Collars
-    if (process.collar) {
-        if (getCollar(userid)) {
-            if (process.eventfunctions && process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).collartype] && process.eventfunctions.collar[getCollar(userid).collartype][type]) {
-                process.eventfunctions.collar[getCollar(userid).collartype][type](userid, data);
+    if (getCollar(serverid, userid)) {
+        if (getCollar(serverid, userid)) {
+            if (process.eventfunctions && process.eventfunctions.collar && process.eventfunctions.collar[getCollar(serverid, userid).collartype] && process.eventfunctions.collar[getCollar(serverid, userid).collartype][type]) {
+                process.eventfunctions.collar[getCollar(serverid, userid).collartype][type](serverid, userid, data);
             }
-            if (getCollar(userid).additionalcollars) {
-                getCollar(userid).additionalcollars.forEach((ac) => {
+            if (getCollar(serverid, userid).additionalcollars) {
+                getCollar(serverid, userid).additionalcollars.forEach((ac) => {
                     if (process.eventfunctions && process.eventfunctions.collar && process.eventfunctions.collar[ac] && process.eventfunctions.collar[ac][type]) {
-                        process.eventfunctions.collar[ac][type](userid, data);
+                        process.eventfunctions.collar[ac][type](serverid, userid, data);
                     }
                 })
             }

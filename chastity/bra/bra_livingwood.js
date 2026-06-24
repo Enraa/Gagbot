@@ -13,25 +13,25 @@ exports.decayCoefficient = (data) => { return 0.1 }
 // Never Fully Clear Arousal
 exports.minArousal = (data) => { return 0.5 }
 exports.minVibe = function(data) {
-    return Math.max(Math.min(Math.floor((Date.now() - (getUserVar(data.userID, "livingwood_chastity") ?? Date.now())) / 900000), 20), getUserVar(data.userID, "livingwood_vibe"))
+    return Math.max(Math.min(Math.floor((Date.now() - (getUserVar(data.serverID, data.userID, "livingwood_chastity") ?? Date.now())) / 900000), 20), getUserVar(data.serverID, data.userID, "livingwood_vibe"))
 }
 exports.onOrgasm = (data) =>  {
-    setUserVar(data.userID, "livingwood_vibe", Math.max((this.minVibe(data) - 10), 0))
-    setUserVar(data.userID, "livingwood_chastity", Date.now());
+    setUserVar(data.serverID, data.userID, "livingwood_vibe", Math.max((this.minVibe(data) - 10), 0))
+    setUserVar(data.serverID, data.userID, "livingwood_chastity", Date.now());
 }
 exports.onFailedOrgasm = (data) => {
     //console.log(this);
-    setUserVar(data.userID, "livingwood_vibe", Math.min((this.minVibe(data) + 1), 20));
+    setUserVar(data.serverID, data.userID, "livingwood_vibe", Math.min((this.minVibe(data) + 1), 20));
 }
 exports.onEquip = (data) => {
-    if (!getUserVar(data.userID, "livingwood_vibe") || getUserVar(data.userID, "livingwood_vibe") == undefined) setUserVar(data.userID, "livingwood_vibe", 0);
-    if (!getUserVar(data.userID, "livingwood_chastity") || getUserVar(data.userID, "livingwood_chastity") == undefined) setUserVar(data.userID, "livingwood_chastity", Date.now());
+    if (!getUserVar(data.serverID, data.userID, "livingwood_vibe") || getUserVar(data.serverID, data.userID, "livingwood_vibe") == undefined) setUserVar(data.serverID, data.userID, "livingwood_vibe", 0);
+    if (!getUserVar(data.serverID, data.userID, "livingwood_chastity") || getUserVar(data.serverID, data.userID, "livingwood_chastity") == undefined) setUserVar(data.serverID, data.userID, "livingwood_chastity", Date.now());
 }
 exports.onUnequip = (data) => {
     // Check if user is wearing a Livingwood Belt otherwise Null Out Vars
-    if (getChastity(data.userID)?.chastitytype != "belt_livingwood") {
-        setUserVar(data.userID, "livingwood_vibe", undefined);
-        setUserVar(data.userID, "livingwood_chastity", undefined);
+    if (getChastity(data.serverID, data.userID)?.chastitytype != "belt_livingwood") {
+        setUserVar(data.serverID, data.userID, "livingwood_vibe", undefined);
+        setUserVar(data.serverID, data.userID, "livingwood_chastity", undefined);
     }
 }
 

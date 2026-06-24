@@ -1,3 +1,4 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { getUserVar } = require("../config/getUserVar");
 const { getBaseHeavy } = require("./getBaseHeavy");
 const { getHeavy } = require("./getHeavy");
@@ -5,6 +6,7 @@ const { getHeavy } = require("./getHeavy");
 /*******
  * Retrieve a list of restrictions for a user based on current heavy bondage
  * 
+ * - (server id) serverID - The server this is running on 
  * - (user id) user - The person wearing the heavy bondage
  * ---
  * ##### Returns an object with the following properties:
@@ -13,19 +15,20 @@ const { getHeavy } = require("./getHeavy");
  * - touchothers: If true, the user is able to do actions on others
  * - touchlist?: If specified, an array of users the user can do actions to
  *******/
-function getHeavyRestrictions(user) {
+function getHeavyRestrictions(serverID, user) {
+    traceFirstParam(arguments[0]);
     let returnobject = {
         heavytags: [],
         touchself: true,
         touchothers: true,
     }
-    if (getHeavy(user) == undefined) {
+    if (getHeavy(serverID, user) == undefined) {
         return returnobject; // User is unbound, they can do anything. 
     }
     else {
-        process.heavy[user].forEach((heavy) => {
+        process.heavy[serverID][user].forEach((heavy) => {
             if (getBaseHeavy(heavy.type).heavytags.includes("arms")) {
-                if ((heavy.type == "windupclockwork") && (getUserVar(user, "windupcharge") <= 0.0005)) {
+                if ((heavy.type == "windupclockwork") && (getUserVar(serverID, user, "windupcharge") <= 0.0005)) {
                     returnobject.heavytags.push("arms");
                     returnobject.touchself = false;
                     returnobject.touchothers = false;
@@ -46,8 +49,8 @@ function getHeavyRestrictions(user) {
                     returnobject.touchlist = [];
                 }
                 // Users in a container can ONLY do stuff to OTHERS in that same container. 
-                Object.keys(process.heavy).forEach((k) => {
-                    if (getHeavy(k, heavy.type)) {
+                Object.keys(process.heavy[serverID]).forEach((k) => {
+                    if (getHeavy(serverID, k, heavy.type)) {
                         returnobject.touchlist.push(k);
                     }
                 }) 

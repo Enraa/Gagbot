@@ -1,6 +1,7 @@
 const { ModalBuilder, UserSelectMenuBuilder, LabelBuilder, SectionBuilder, ButtonStyle, TextDisplayBuilder, ButtonBuilder, ActionRowBuilder } = require("discord.js");
 const { messageSendChannel } = require("../../functions/messagefunctions");
 const { getPronouns } = require("../../functions/getters/config/getPronouns");
+const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable");
 
 // This is called and replaces the "equipping ___" in the chain
 exports.extraconfig = async (interaction, userid) => {
@@ -33,36 +34,36 @@ exports.extraconfigresponse = async (interaction, userid) => {
     if (interaction.user.id == wearerid) {
         // Handling our own breath
         if (interaction.members.first().id == interaction.user.id) {
-            interaction.reply(`<@${interaction.user.id}> holds onto ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask tube for now...`)
+            interaction.reply(`<@${interaction.user.id}> holds onto ${getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer")} gasmask tube for now...`)
         }
         else {
-            if (process.headwear && process.headwear[sharebreathuser] && (process.headwear[sharebreathuser].sharedbreathhose == wearerid)) {
+            if (getProcessVariable(interaction.guildId, sharebreathuser, "headwear")?.sharedbreathhose == wearerid) {
                 // The other person already shared a breath with them, acknowledge that. 
-                interaction.reply(`<@${interaction.user.id}> takes the breath hose from <@${sharebreathuser}> and connects it to ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask, limiting both of their abilities to get fresh air!`)
+                interaction.reply(`<@${interaction.user.id}> takes the breath hose from <@${sharebreathuser}> and connects it to ${getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer")} gasmask, limiting both of their abilities to get fresh air!`)
             }
             else {
-                interaction.reply(`<@${interaction.user.id}> gives ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask tube to <@${sharebreathuser}>!`)
+                interaction.reply(`<@${interaction.user.id}> gives ${getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer")} gasmask tube to <@${sharebreathuser}>!`)
             }
         }
     }
     else {
         if (interaction.members.first().id == wearerid) {
-            interaction.reply(`<@${interaction.user.id}> gives <@${wearerid}>'s gasmask tube to ${getPronouns(wearerid, "object")} for now...`)
+            interaction.reply(`<@${interaction.user.id}> gives <@${wearerid}>'s gasmask tube to ${getPronouns(interaction.guildId, wearerid, "object")} for now...`)
         }
         if (interaction.members.first().id == interaction.user.id) {
-            if (process.headwear && process.headwear[sharebreathuser] && (process.headwear[sharebreathuser].sharedbreathhose == wearerid)) {
-                interaction.reply(`<@${interaction.user.id}> grabs <@${wearerid}>'s gasmask tube and connects it up to ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask, limiting their abilities to breathe freely!`)
+            if (getProcessVariable(interaction.guildId, sharebreathuser, "headwear")?.sharedbreathhose == wearerid) {
+                interaction.reply(`<@${interaction.user.id}> grabs <@${wearerid}>'s gasmask tube and connects it up to ${getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer")} gasmask, limiting their abilities to breathe freely!`)
             }
         }
-        if (process.headwear && process.headwear[sharebreathuser] && (process.headwear[sharebreathuser].sharedbreathhose == wearerid)) {
+        if (getProcessVariable(interaction.guildId, sharebreathuser, "headwear")?.sharedbreathhose == wearerid) {
             interaction.reply(`<@${interaction.user.id}> takes the breath hose from <@${sharebreathuser}> and connects it to <@${wearerid}>'s gasmask, limiting both of their abilities to get fresh air!`)
         }
         else {
             interaction.reply(`<@${interaction.user.id}> gives <@${wearerid}>'s gasmask tube to <@${sharebreathuser}>!`)
         }
     }
-    if (process.headwear[wearerid]) {
-        process.headwear[wearerid].sharedbreathhose = sharebreathuser
+    if (getProcessVariable(interaction.guildId, wearerid, "headwear")) {
+        getProcessVariable(interaction.guildId, wearerid, "headwear").sharedbreathhose = sharebreathuser
     }
 }
 
@@ -101,35 +102,35 @@ exports.modalexecute = async (interaction) => {
     if (weareruser == sharebreathuser) {
         // They're the same person lol
         if (weareruser == interactionuser) {
-            messageSendChannel(`<@${interaction.user.id}> holds onto ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask tube for now...`, interaction.channelId)
+            messageSendChannel(`<@${interaction.user.id}> holds onto ${getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer")} gasmask tube for now...`, interaction.channelId)
         }
         else {
-            messageSendChannel(`<@${interaction.user.id}> gives <@${weareruser}>'s gasmask tube to ${getPronouns(weareruser, "object")} for now...`, interaction.channelId)
+            messageSendChannel(`<@${interaction.user.id}> gives <@${weareruser}>'s gasmask tube to ${getPronouns(interaction.guildId, weareruser, "object")} for now...`, interaction.channelId)
         }
     }
     else {
         if (weareruser == interactionuser) {
-            if (process.headwear && process.headwear[sharebreathuser] && (process.headwear[sharebreathuser].sharedbreathhose == weareruser)) {
+            if (getProcessVariable(interaction.guildId, sharebreathuser, "headwear")?.sharedbreathhose == weareruser) {
                 // The other person already shared a breath with them, acknowledge that. 
-                messageSendChannel(`<@${interaction.user.id}> takes the breath hose from <@${sharebreathuser}> and connects it to ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask, limiting both of their abilities to get fresh air!`, interaction.channelId)
+                messageSendChannel(`<@${interaction.user.id}> takes the breath hose from <@${sharebreathuser}> and connects it to ${getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer")} gasmask, limiting both of their abilities to get fresh air!`, interaction.channelId)
             }
             else {
-                messageSendChannel(`<@${interaction.user.id}> gives ${getPronouns(interaction.user.id, "possessiveDeterminer")} gasmask tube to <@${sharebreathuser}>!`, interaction.channelId)
+                messageSendChannel(`<@${interaction.user.id}> gives ${getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer")} gasmask tube to <@${sharebreathuser}>!`, interaction.channelId)
             }
-            if (process.headwear[weareruser]) {
-                process.headwear[weareruser].sharedbreathhose = sharebreathuser
+            if (getProcessVariable(interaction.guildId, weareruser, "headwear")) {
+                getProcessVariable(interaction.guildId, weareruser, "headwear").sharedbreathhose = sharebreathuser
             }
         }
         else {
-            if (process.headwear && process.headwear[sharebreathuser] && (process.headwear[sharebreathuser].sharedbreathhose == weareruser)) {
+            if (getProcessVariable(interaction.guildId, sharebreathuser, "headwear")?.sharedbreathhose == weareruser) {
                 // The other person already shared a breath with them, acknowledge that. 
                 messageSendChannel(`<@${interaction.user.id}> takes the breath hose from <@${sharebreathuser}> and connects it to <@${weareruser}>'s gasmask, limiting both of their abilities to get fresh air!`, interaction.channelId)
             }
             else {
                 messageSendChannel(`<@${interaction.user.id}> gives <@${weareruser}>'s gasmask tube to <@${sharebreathuser}>!`, interaction.channelId)
             }
-            if (process.headwear[weareruser]) {
-                process.headwear[weareruser].sharedbreathhose = sharebreathuser
+            if (getProcessVariable(interaction.guildId, weareruser, "headwear")) {
+                getProcessVariable(interaction.guildId, weareruser, "headwear").sharedbreathhose = sharebreathuser
             }
         }
     }

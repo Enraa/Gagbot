@@ -23,9 +23,9 @@ module.exports = {
 		const focusedValue = interaction.options.getFocused();
 		// Note, we only need to know if we can ***unlock*** a restraint to timelock it.
 		let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-		let collarkeyholder = getCollar(chosenuserid) && canAccessCollar(chosenuserid, interaction.user.id, true).access;
-		let chastitykeyholder = getChastity(chosenuserid) && canAccessChastity(chosenuserid, interaction.user.id, true).access;
-		let chastitybrakeyholder = getChastityBra(chosenuserid) && canAccessChastityBra(chosenuserid, interaction.user.id, true).access;
+		let collarkeyholder = getCollar(interaction.guildId, chosenuserid) && canAccessCollar(interaction.guildId, chosenuserid, interaction.user.id, true).access;
+		let chastitykeyholder = getChastity(interaction.guildId, chosenuserid) && canAccessChastity(interaction.guildId, chosenuserid, interaction.user.id, true).access;
+		let chastitybrakeyholder = getChastityBra(interaction.guildId, chosenuserid) && canAccessChastityBra(interaction.guildId, chosenuserid, interaction.user.id, true).access;
 
 		let choices = [];
 		if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
@@ -66,12 +66,12 @@ module.exports = {
 					return;
 				}
 
-				if (!getHeavyBound(interaction.user.id, wearer.id)) {
+				if (!getHeavyBound(interaction.guildId, interaction.user.id, wearer.id)) {
 					if (wearer == interaction.user) {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${their(wearer.id)} chastity belt, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(interaction.guildId, wearer.id)} ${getHeavy(interaction.guildId, interaction.user.id).displayname} trying to apply a timelock to ${their(interaction.guildId, wearer.id)} chastity belt, but is completely stuck!`);
 						return;
 					} else {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s chastity belt, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(interaction.guildId, wearer.id)} ${getHeavy(interaction.guildId, interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s chastity belt, but is completely stuck!`);
 						return;
 					}
 				}
@@ -79,7 +79,7 @@ module.exports = {
 				interaction.showModal(timelockChastityModal(interaction, wearer));
 				break;
 			case "chastitybra":
-				let chastitybra = getChastityBra(wearer.id);
+				let chastitybra = getChastityBra(interaction.guildId, wearer.id);
 
 				if (!chastitybra) {
 					interaction.reply({ content: `${wearer} is not wearing a chastity bra`, flags: MessageFlags.Ephemeral });
@@ -96,12 +96,12 @@ module.exports = {
 					return;
 				}
 
-				if (!getHeavyBound(interaction.user.id, wearer.id)) {
+				if (!getHeavyBound(interaction.guildId, interaction.user.id, wearer.id)) {
 					if (wearer == interaction.user) {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${their(wearer.id)} chastity bra, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(interaction.guildId, wearer.id)} ${getHeavy(interaction.guildId, interaction.user.id).displayname} trying to apply a timelock to ${their(interaction.guildId, wearer.id)} chastity bra, but is completely stuck!`);
 						return;
 					} else {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s chastity bra, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(interaction.guildId, wearer.id)} ${getHeavy(interaction.guildId, interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s chastity bra, but is completely stuck!`);
 						return;
 					}
 				}
@@ -109,7 +109,7 @@ module.exports = {
 				interaction.showModal(timelockChastityBraModal(interaction, wearer));
 				break;
 			case "collar":
-				let collar = getCollar(wearer.id);
+				let collar = getCollar(interaction.guildId, wearer.id);
 
 				if (!collar) {
 					interaction.reply({ content: `${wearer} is not wearing a collar`, flags: MessageFlags.Ephemeral });
@@ -126,12 +126,12 @@ module.exports = {
 					return;
 				}
 
-				if (!getHeavyBound(interaction.user.id, wearer.id)) {
+				if (!getHeavyBound(interaction.guildId, interaction.user.id, wearer.id)) {
 					if (wearer == interaction.user) {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${their(wearer.id)} collar, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(interaction.guildId, wearer.id)} ${getHeavy(interaction.guildId, interaction.user.id).displayname} trying to apply a timelock to ${their(interaction.guildId, wearer.id)} collar, but is completely stuck!`);
 						return;
 					} else {
-						interaction.reply(`${interaction.user} pulls against ${their(wearer.id)} ${getHeavy(interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s collar, but is completely stuck!`);
+						interaction.reply(`${interaction.user} pulls against ${their(interaction.guildId, wearer.id)} ${getHeavy(interaction.guildId, interaction.user.id).displayname} trying to apply a timelock to ${wearer}'s collar, but is completely stuck!`);
 						return;
 					}
 				}
@@ -214,7 +214,7 @@ module.exports = {
 		confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 300_000 });
 		if (confirmation.customId === "confirm") {
 			confirmation.update({ content: `Engaging your timelock!`, components: [] });
-			let data = { textarray: "texts_timelock", textdata: { interactionuser: interaction.user, targetuser: wearerobject, c1: `<@${keyholder}>` } };
+			let data = { textarray: "texts_timelock", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearerobject, c1: `<@${keyholder}>` } };
 			data.timelockengage = true;
 			if (access == 0) {
 				data.everyoneaccess = true;
@@ -236,13 +236,13 @@ module.exports = {
 			}
 			data[split[2]] = true;
 			if (split[2] == "chastitybelt") {
-				timelockChastity(interaction.client, wearer, keyholder, Math.floor(timelockmodal.unlockTime), access, keyholderAfter, interaction.channel.id);
+				timelockChastity(interaction.guildId, interaction.client, wearer, keyholder, Math.floor(timelockmodal.unlockTime), access, keyholderAfter, interaction.channel.id);
 				await interaction.followUp(getText(data));
 			} else if (split[2] == "chastitybra") {
-				timelockChastityBra(interaction.client, wearer, keyholder, Math.floor(timelockmodal.unlockTime), access, keyholderAfter, interaction.channel.id);
+				timelockChastityBra(interaction.guildId, interaction.client, wearer, keyholder, Math.floor(timelockmodal.unlockTime), access, keyholderAfter, interaction.channel.id);
 				await interaction.followUp(getText(data));
 			} else if (split[2] == "collar") {
-				timelockCollar(interaction.client, wearer, keyholder, Math.floor(timelockmodal.unlockTime), access, keyholderAfter, interaction.channel.id);
+				timelockCollar(interaction.guildId, interaction.client, wearer, keyholder, Math.floor(timelockmodal.unlockTime), access, keyholderAfter, interaction.channel.id);
 				await interaction.followUp(getText(data));
 			}
 		} else if (confirmation.customId === "reject") {

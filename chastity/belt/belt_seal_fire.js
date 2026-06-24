@@ -11,23 +11,23 @@ exports.orgasmCooldown = (data) => { return 0.5 }
 exports.denialCoefficient = (data) => { return 1 }
 
 // Set Min Arousal to be equal to the initial Arousal when equipped
-exports.minArousal = function(data) { return getUserVar(data.userID, "base_arousal") }
+exports.minArousal = function(data) { return getUserVar(data.serverID, data.userID, "base_arousal") }
 
 // Events
 exports.onOrgasm = (data) => {
     // Reset Arousal to Base
-    addArousal(data.userID, getUserVar(data.userID, "base_arousal"));
+    addArousal(data.serverID, data.userID, getUserVar(data.serverID, data.userID, "base_arousal"));
 }
 exports.onFailedOrgasm = (data) => {
     // Add a small amount of arousal with each failed attempt
-    addArousal(data.userID, 2 * Math.random());
+    addArousal(data.serverID, data.userID, 2 * Math.random());
 }
 exports.onEquip = (data) => {
     // Configure base arousal value
-    if (!getUserVar(data.userID, "base_arousal") || getUserVar(data.userID, "base_arousal") == undefined) setUserVar(data.userID, "base_arousal", getArousal(data.userID));
+    if (!getUserVar(data.serverID, data.userID, "base_arousal") || getUserVar(data.serverID, data.userID, "base_arousal") == undefined) setUserVar(data.serverID, data.userID, "base_arousal", getArousal(data.serverID, data.userID));
 }
 exports.onUnequip = (data) => {
-    setUserVar(data.userID, "base_arousal", undefined);
+    setUserVar(data.serverID, data.userID, "base_arousal", undefined);
 }
 
 // Tags

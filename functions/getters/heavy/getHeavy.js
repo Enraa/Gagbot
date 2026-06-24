@@ -1,8 +1,10 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { getBaseHeavy } = require("./getBaseHeavy");
 
 /*********
  * Get Heavy Bondage worn by the user. Returns arms -> legs -> container if multiple.
  * 
+ * - (server ID) serverID - The server this is running on
  * - (user id) user - The user wearing the heavy bondage
  * - (string) type? - If specified, get specific bondage 
  * ---
@@ -12,34 +14,38 @@ const { getBaseHeavy } = require("./getBaseHeavy");
  * - displayname: The display name of this heavy bondage
  * - namedcontainerowner?: User ID included in container checks
  *********/
-function getHeavy(user, type) {
+function getHeavy(serverID, user, type) {
+    traceFirstParam(arguments[0]);
     if (process.heavy == undefined) {
         process.heavy = {};
+    }
+    if (process.heavy[serverID] == undefined) {
+        process.heavy[serverID] = {};
     }
     let returnarms;
     let returnlegs;
     let returncontainer;
     let returnedval;
-    if (process.heavy[user] && (process.heavy[user].length > 0)) {
+    if (process.heavy[serverID][user] && (process.heavy[serverID][user].length > 0)) {
         if (!type) {
-            let mapped = process.heavy[user].map((h) => getBaseHeavy(h.type))
+            let mapped = process.heavy[serverID][user].map((h) => getBaseHeavy(h.type))
         
             // return arms first
             mapped.forEach((h) => {
                 if (h.heavytags.includes("arms")) {
-                    returnarms = process.heavy[user].find((heavy) => heavy.type === h.value)
+                    returnarms = process.heavy[serverID][user].find((heavy) => heavy.type === h.value)
                 }
             })
             // return legs next
             mapped.forEach((h) => {
                 if (h.heavytags.includes("legs")) {
-                    returnlegs = process.heavy[user].find((heavy) => heavy.type === h.value)
+                    returnlegs = process.heavy[serverID][user].find((heavy) => heavy.type === h.value)
                 }
             })
             // return container last
             mapped.forEach((h) => {
                 if (h.heavytags.includes("container")) {
-                    returncontainer = process.heavy[user].find((heavy) => heavy.type === h.value)
+                    returncontainer = process.heavy[serverID][user].find((heavy) => heavy.type === h.value)
                 }
             })
             if (returnarms) {
@@ -53,7 +59,7 @@ function getHeavy(user, type) {
             }
         }
         else {
-            returnedval = process.heavy[user].find((h) => h.type === type);
+            returnedval = process.heavy[serverID][user].find((h) => h.type === type);
         }
     }
     return returnedval

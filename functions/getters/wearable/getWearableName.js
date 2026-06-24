@@ -1,3 +1,5 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+
 /************
  * Gets the full wearable name of the User ID. Optionally will get the full wearable name of a wearable by ID.
  * 

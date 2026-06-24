@@ -1,6 +1,8 @@
 const { getOption } = require("../../getters/config/getOption")
 const { markForSave } = require("../../other/markForSave")
 
+// Message IDs are unique, so we do not need to delineate these. Use msg.guild.id for getOption. 
+
 /*********
  * Records a message for Edit Message app command
  * 
@@ -11,7 +13,7 @@ const { markForSave } = require("../../other/markForSave")
  * ##### *No return value*
  *********/
 function recordMessage (msg, modifiedmsg, reply) {
-    if (getOption(msg?.author?.id, "recordmessages") == "disabled") { return }
+    if (msg?.guild?.id && getOption(msg?.guild?.id, msg?.author?.id, "recordmessages") == "disabled") { return }
     if (process.recordedmessages == undefined) { process.recordedmessages = {} }
     if (modifiedmsg?.id && msg?.content && msg?.author?.id && msg?.createdTimestamp) {
         process.recordedmessages[modifiedmsg.id] = {

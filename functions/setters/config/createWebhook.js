@@ -1,5 +1,7 @@
 const { markForSave } = require("../../other/markForSave");
 
+// Since channels are unique regardless of the server, we don't really need to delineate them. 
+
 /********
  * (async) Creates a webhook for a channel. 
  * 

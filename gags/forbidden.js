@@ -4,7 +4,7 @@ const { getOption } = require("../functions/getters/config/getOption");
 const garbleText = (text, parent, intensity, msg) => {
 	let newtextparts = text.split(" ");
 	let outtext = text;
-    let forbiddenwords = getOption(msg.author.id, "forbiddengagpunishwords") ?? [];
+    let forbiddenwords = getOption(msg.guild.id, msg.author.id, "forbiddengagpunishwords") ?? [];
     console.log(forbiddenwords)
     if (!Array.isArray(forbiddenwords)) { return outtext } // Just skip this gag if it's not an array.
     forbiddenwords.forEach((w) => {

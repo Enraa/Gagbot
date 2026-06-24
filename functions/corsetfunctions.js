@@ -6,6 +6,7 @@ const { getBaseCorset } = require("./getters/corset/getBaseCorset");
 const { getCorset } = require("./getters/corset/getCorset");
 const { getHeadwear } = require("./getters/headwear/getHeadwear");
 const { markForSave } = require("./other/markForSave");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
 
 nlp.extend(nlpSpeech);
 
@@ -131,7 +132,7 @@ const silenceReplacers = [" ", ".", ",", ""];
 const silenceMessages = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"];
 
 // Consumes breath and returns possibly modified text
-function corsetLimitWords(text, parent, user, msgModified) {
+function corsetLimitWords(text, parent, user, msgModified, serverID) {
 	// just do nothing if no text
 	if (text.length == 0 || text.match(/^\s*$/)) return text;
 
@@ -142,7 +143,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 
 	// Bad bottom for shouting! Corsets should make you SILENT. Double all breath used.
 	let globalMultiplier = scriptLevel > 0 ? 2 : 1;
-	const corset = calcBreath(user);
+	const corset = calcBreath(serverID, user);
 	const basecorset = getBaseCorset(corset.type);
 
 	// Tightlaced bottoms must only whisper
@@ -233,7 +234,7 @@ function corsetLimitWords(text, parent, user, msgModified) {
 		}
 	}
 
-	basecorset.afterUsingBreath({ userID: user, corset: corset });
+	basecorset.afterUsingBreath({ serverID: serverID, userID: user, corset: corset });
 
 	let outtext = (silence ? chars.slice(0, silenceIdx + 1) : chars).join("");
 
@@ -250,23 +251,25 @@ function corsetLimitWords(text, parent, user, msgModified) {
 	return outtext;
 }
 
-// calculates current breath and returns corset. Does not save to file.
-function calcBreath(user) {
-	const corset = getCorset(user);
+// calculates current breath and returns corset. Does not save to file. (server id, user id)
+function calcBreath(serverID, user) {
+    traceFirstParam(arguments[0]);
+	const corset = getCorset(serverID, user);
 	const basecorset = getBaseCorset(corset.type);
 	if (!corset) return null;
 	if (corset.breath < basecorset.getMinBreath({ tightness: corset.tightness })) corset.breath = basecorset.getMinBreath({ tightness: corset.tightness });
 	const now = Date.now();
 	let recoveryCoefficient = 1;
 	if (process.gags == undefined) process.gags = {};
-	if (process.gags[user] && process.gags[user].length > 0) {
-        process.gags[user].forEach((g) => {
+    if (process.gags[serverID] == undefined) process.gags[serverID] = {};
+	if (process.gags[serverID][user] && process.gags[serverID][user].length > 0) {
+        process.gags[serverID][user].forEach((g) => {
             if (process.gagtypes && process.gagtypes[g.gagtype]?.breathRecovery) {
-                recoveryCoefficient *= process.gagtypes[g.gagtype]?.breathRecovery(user, g.intensity ?? 5)
+                recoveryCoefficient *= process.gagtypes[g.gagtype]?.breathRecovery(user, g.intensity ?? 5, serverID)
             }
         })
 	}
-    let userheadwear = getHeadwear(user);
+    let userheadwear = getHeadwear(serverID, user);
     if (userheadwear.includes("gasmask") || userheadwear.includes("gasmasklinked") || userheadwear.includes("gasmask_hornygas") || userheadwear.includes("gasmask_truthgas")) {
         // It is harder to breathe in a gasmask or share air
         recoveryCoefficient = recoveryCoefficient * 0.7 
@@ -283,11 +286,12 @@ function calcBreath(user) {
 }
 
 // consumes specified breath and returns true if user had enough
-function tryExpendBreath(user, exertion) {
-	const corset = calcBreath(user);
+function tryExpendBreath(serverID, user, exertion) {
+    traceFirstParam(arguments[0]);
+	const corset = calcBreath(serverID, user);
 	const basecorset = getBaseCorset(corset.type ?? "corset_leather");
 	corset.breath -= exertion;
-	basecorset.afterUsingBreath({ userID: user, corset: corset });
+	basecorset.afterUsingBreath({ serverID: serverID, userID: user, corset: corset });
 	markForSave("corset");
 	return corset.breath > 0;
 }

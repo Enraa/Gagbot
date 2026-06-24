@@ -6,6 +6,7 @@ const { forcedtextemoji } = require("../headwear/doll_visor.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getHeadwearBlocks } = require("./getters/headwear/getBaseHeadwear.js");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 
 /* // This can probably be retired - leaving here for reference
 const headweartypes = [
@@ -102,7 +103,7 @@ const loadHeadwearTypes = () => {
     process.autocompletes.headtypes = headwearautocompletes;
 };
 
-const replaceEmoji = (text, parent, replaceEmoji, msgModified, matchFound) => {
+function replaceEmoji(text, parent, replaceEmoji, msgModified, matchFound) {
 	if(text !== replaceEmoji){
 		msgModified.modified = true;
 		msgModified.emojiModified = true;
@@ -112,13 +113,14 @@ const replaceEmoji = (text, parent, replaceEmoji, msgModified, matchFound) => {
 	}
 }
 // Removes all emoji, optionally using an assigned emoji if they are wearing a mask with it!
-const processHeadwearEmoji = (userID, msgTree, msgModified, dollvisoroverride) => {
+function processHeadwearEmoji(serverID, userID, msgTree, msgModified, dollvisoroverride) {
+    traceFirstParam(arguments[0]);
 	// Do nothing if no headwear blocks.
-	if (getHeadwearRestrictions(userID).canEmote) {return;}
+	if (getHeadwearRestrictions(serverID, userID).canEmote) {return;}
 
 	let replaceemote = "";
-	let wornheadwear = getHeadwear(userID);
-	let isDoll = getHeadwear(userID).find((headwear) => DOLLVISORS.includes(headwear))
+	let wornheadwear = getHeadwear(serverID, userID);
+	let isDoll = getHeadwear(serverID, userID).find((headwear) => DOLLVISORS.includes(headwear))
 	if(!isDoll){		// Doll Visors overwrite all other emoji replacements due to codeblock formatting
 		for (let i = 0; i < wornheadwear.length; i++) {
 			if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).replaceemote != undefined) {
@@ -297,9 +299,10 @@ const truthgasopposites = (text, parent, msgModified) => {
     return outtext.slice(1) // Cut the leading space
 }
 // Changes words and negates them
-const processHeadwearTruthgas = (userID, msgTree, msgModified) => {
+function processHeadwearTruthgas(serverID, userID, msgTree, msgModified) {
+    traceFirstParam(arguments[0]);
 	// Do nothing if no headwear blocks.
-	if (!getHeadwear(userID).includes("gasmask_truthgas")) { return }
+	if (!getHeadwear(serverID, userID).includes("gasmask_truthgas")) { return }
 
     msgTree.callFunc(truthgasopposites, true, undefined, [msgModified])
 };

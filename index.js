@@ -22,7 +22,10 @@ const { loadCollarTypes } = require('./functions/collarfunctions.js');
 const { buttonboard } = require('./contextcommands/message/Button Board.js');
 const { setUpEventFunctions } = require('./functions/eventhandling.js');
 const { getBotOption } = require('./functions/getters/config/getBotOption.js');
-const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js")
+const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedGuilds.js");
+const { logConsole } = require('./functions/logfunctions.js');
+const { markForSave } = require('./functions/other/markForSave.js');
+const { processdatatoload } = require(`./lists/processdatatoload.js`);
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -77,33 +80,6 @@ if (process.env.GAGBOTFILEDIRECTORY === "Z:\\Somewhere\\I\\Belong\\") { process.
 let GagbotSavedFileDirectory = process.env.GAGBOTFILEDIRECTORY ? process.env.GAGBOTFILEDIRECTORY : __dirname
 
 process.GagbotSavedFileDirectory = GagbotSavedFileDirectory // Because honestly, I dont know WHY global stuff in index.js can't be accessble everywhere
-
-let processdatatoload = [
-    { textname: "gaggedusers.txt", processvar: "gags", default: {} },
-    { textname: "mittenedusers.txt", processvar: "mitten", default: {} },
-    { textname: "chastityusers.txt", processvar: "chastity", default: {} },
-    { textname: "chastitybrausers.txt", processvar: "chastitybra", default: {} },
-    { textname: "toyusers.txt", processvar: "toys", default: {} },
-    { textname: "collarusers.txt", processvar: "collar", default: {} },
-    { textname: "heavyusers.txt", processvar: "heavy", default: {} },
-    { textname: "pronounsusers.txt", processvar: "pronouns", default: {} },
-    { textname: "usersdata.txt", processvar: "usercontext", default: {} },
-    { textname: "consentusers.txt", processvar: "consented", default: {} },
-    { textname: "corsetusers.txt", processvar: "corset", default: {} },
-    { textname: "arousal.txt", processvar: "arousal", default: {} },
-    { textname: "headwearusers.txt", processvar: "headwear", default: {} },
-    { textname: "discardedkeys.txt", processvar: "discardedKeys", default: [] },
-    { textname: "configs.txt", processvar: "configs", default: {}},
-    { textname: "outfits.txt", processvar: "outfits", default: {}},
-    { textname: "dollusers.txt", processvar: "dolls", default: {}},
-    { textname: "wearables.txt", processvar: "wearable", default: {}},
-    { textname: "webhooks.txt", processvar: "webhookstoload", default: {}},
-    { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {}},
-    { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}},
-    { textname: "userstats.txt", processvar: "userstats", default: {}},
-    { textname: "memberavatars.txt", processvar: "memberavatars", default: {}},
-    { textname: "heldkeytimers.txt", processvar: "heldkeytimers", default: {}},
-]
 
 processdatatoload.forEach((s) => {
     try {
@@ -227,8 +203,7 @@ const client = new discord.Client({
     intents: [
         discord.GatewayIntentBits.Guilds,
         discord.GatewayIntentBits.GuildMessages,
-        discord.GatewayIntentBits.MessageContent,
-        discord.GatewayIntentBits.GuildMembers
+        discord.GatewayIntentBits.MessageContent
     ]
 })
 
@@ -241,6 +216,7 @@ client.on("clientReady", async () => {
     if (process.recentmessages == undefined) { process.recentmessages = {} }
     try {
         await client.application.fetch();
+        await client.guilds.fetch();
         console.log(`Bot is owned by user ID ${client?.application?.owner.id}`)
         console.log(`Executable Functions: [${Array.from(commands.keys()).join(", ")}]`);
         console.log(`Modals: [${Array.from(modalHandlers.keys()).join(", ")}]`);
@@ -302,10 +278,11 @@ client.on("messageCreate", async (msg) => {
             if ((getBotOption("bot-allowkeyfinding") == "Enabled")) {
                 handleKeyFinding(msg);
             }
-            process.recentmessages[msg.author.id] = msg.channel.id;
+            if (process.recentmessages[msg.guild.id] == undefined) { process.recentmessages[msg.guild.id] = {} }
+            process.recentmessages[msg.guild.id][msg.author.id] = msg.channel.id;
             modifymessage(msg, thread ? msg.channelId : null);
         }
-        if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first())) { return }
+        if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first()) || (message.flags && message.flags.has(discord.MessageFlags.HasSnapshot)) || (message.flags && message.flags.has(discord.MessageFlags.IsCrosspost))) { return }
     }
     catch (err) {
         console.log(err);
@@ -317,25 +294,26 @@ client.on('interactionCreate', async (interaction) => {
         // Handle general interactions from a user
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.user.id) {
             if (process.recentmessages == undefined) { process.recentmessages = {} }
-            process.recentmessages[interaction.user.id] = interaction.channelId;
+            if (process.recentmessages[interaction.guildId] == undefined) { process.recentmessages[interaction.guildId] = {} }
+            process.recentmessages[interaction.guildId][interaction.user.id] = interaction.channelId;
         }
         // Handle User targeted actions from context menu
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.targetId && (interaction.commandType == 2)) {
             if (process.recentmessages == undefined) { process.recentmessages = {} }
-            process.recentmessages[interaction.targetId] = interaction.channelId;
+            if (process.recentmessages[interaction.guildId] == undefined) { process.recentmessages[interaction.guildId] = {} }
+            process.recentmessages[interaction.guildId][interaction.targetId] = interaction.channelId;
         }
         // Handle Message targeted headpats
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.targetId && (interaction.commandType == 3)) {
             if (process.recentmessages == undefined) { process.recentmessages = {} }
+            if (process.recentmessages[interaction.guildId] == undefined) { process.recentmessages[interaction.guildId] = {} }
             let channel = await interaction.client.channels.fetch(interaction.channelId)
             if (channel) {
                 let message = await channel.messages.fetch(interaction.targetId)
                 if (message) {
-                    process.recentmessages[message.author.id] = interaction.channelId;
+                    process.recentmessages[interaction.guildId][message.author.id] = interaction.channelId;
                 }
             }
-            
-            //process.recentmessages[interaction.targetId] = interaction.channelId;
         }
         if (interaction.isUserContextMenuCommand()) {
             usercontextcommands.get(`${interaction.commandName}`)?.execute(interaction)

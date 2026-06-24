@@ -23,9 +23,9 @@ module.exports = {
 			}
 			// Gag status
 			// You can easily feel if you're gagged, so no restrictions here
-			if (getGag(inspectuser.id)) {
+			if (getGag(interaction.guildId, inspectuser.id)) {
 				let inspecttext = `${process.emojis.gag} Gag: **`;
-				getGags(inspectuser.id).forEach((g) => {
+				getGags(interaction.guildId, inspectuser.id).forEach((g) => {
 					inspecttext = `${inspecttext}${convertGagText(g.gagtype)} (${g.intensity}), `;
 				});
 				inspecttext = `${inspecttext.slice(0, -2)}**`;

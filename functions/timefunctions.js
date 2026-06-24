@@ -107,6 +107,11 @@ const backupsAreAnnoying = () => {
 		let dest = path.resolve(filepath, "backups");
 		let files = fs.readdirSync(filepath).filter((file) => file.endsWith(".txt"));
 
+        // Blacklist filenames to NOT save. If a file starts with any of these, they will NOT be preserved in the backup. 
+        // This is explicitly to prevent retaining sensitive user data or a big crash log file. 
+        let blacklistnames = ["recordedmessages.txt", "crashlog.txt"]
+        files = files.filter((f) => !blacklistnames.includes(f));
+
 		let zip = new admZip();
 
 		let timestring = getTimestringForZip();
@@ -291,24 +296,30 @@ function processTimedEvents() {
 function processUnlockTimes(client) {
 	let now = Date.now();
 	if (process.chastity) {
-		Object.keys(process.chastity).forEach((person) => {
-			if (process.chastity[person]?.unlockTime < now) {
-				unlockTimelockChastity(client, person);
-			}
+		Object.keys(process.chastity).forEach((server) => {
+			Object.keys(process.chastity[server]).forEach((person) => {
+                if (process.chastity[server][person]?.unlockTime < now) {
+                    unlockTimelockChastity(server, client, person);
+                }
+            })
 		});
 	}
 	if (process.chastitybra) {
-		Object.keys(process.chastitybra).forEach((person) => {
-			if (process.chastitybra[person]?.unlockTime < now) {
-				unlockTimelockChastityBra(client, person);
-			}
+		Object.keys(process.chastitybra).forEach((server) => {
+			Object.keys(process.chastitybra[server]).forEach((person) => {
+                if (process.chastitybra[server][person]?.unlockTime < now) {
+                    unlockTimelockChastityBra(server, client, person);
+                }
+            })
 		});
 	}
 	if (process.collar) {
-		Object.keys(process.collar).forEach((person) => {
-			if (process.collar[person]?.unlockTime < now) {
-				unlockTimelockCollar(client, person);
-			}
+		Object.keys(process.collar).forEach((server) => {
+            Object.keys(process.collar[server]).forEach((person) => {
+                if (process.collar[server][person]?.unlockTime < now) {
+                    unlockTimelockCollar(server, client, person);
+                }
+            })
 		});
 	}
 }
@@ -317,102 +328,125 @@ function runTickEvents() {
     if (process.eventfunctions == undefined) { return }
 	// Gags
 	if (process.gags) {
-		Object.keys(process.gags).forEach((userid) => {
-			getGags(userid).forEach((g) => {
-				if (process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype].tick) {
-					process.eventfunctions.gags[g.gagtype].tick(userid);
-				}
-			});
-		});
+		Object.keys(process.gags).forEach((serverid) => {
+			Object.keys(process.gags[serverid]).forEach((userid) => {
+                try {
+                    getGags(serverid, userid).forEach((g) => {
+                        if (process.eventfunctions.gags && process.eventfunctions.gags[g.gagtype] && process.eventfunctions.gags[g.gagtype].tick) {
+                            process.eventfunctions.gags[g.gagtype].tick(serverid, userid);
+                        }
+                    });
+                }
+                catch (err) {
+                    console.log(err);
+                }
+		    });
+        });
 	}
 	// Headwear
 	if (process.headwear) {
-		Object.keys(process.headwear).forEach((userid) => {
-			getHeadwear(userid).forEach((h) => {
-				if (process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h].tick) {
-					process.eventfunctions.headwear[h].tick(userid);
-				}
-			});
+		Object.keys(process.headwear).forEach((serverid) => {
+            Object.keys(process.headwear[serverid]).forEach((userid) => {
+                getHeadwear(serverid, userid).forEach((h) => {
+                    if (process.eventfunctions.headwear && process.eventfunctions.headwear[h] && process.eventfunctions.headwear[h].tick) {
+                        process.eventfunctions.headwear[h].tick(serverid, userid);
+                    }
+                });
+            });
 		});
 	}
 	// Mittens
 	if (process.mitten) {
-		Object.keys(process.mitten).forEach((userid) => {
-			if (getMitten(userid)) {
-				if (process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(userid).mittenname] && process.eventfunctions.mitten[getMitten(userid).mittenname].tick) {
-					process.eventfunctions.mitten[getMitten(userid).mittenname].tick(userid);
-				}
-			}
+		Object.keys(process.mitten).forEach((serverid) => {
+            Object.keys(process.mitten[serverid]).forEach((userid) => {
+                if (getMitten(serverid, userid)) {
+                    if (process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname] && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname].tick) {
+                        process.eventfunctions.mitten[getMitten(serverid, userid).mittenname].tick(serverid, userid);
+                    }
+                }
+            });
 		});
 	}
 	// Heavy Bondage
 	if (process.heavy) {
-		Object.keys(process.heavy).forEach((userid) => {
-			if (getHeavyList(userid).length > 0) {
-                getHeavyList(userid).forEach((h) => {
-                    if (process.eventfunctions.heavy && process.eventfunctions.heavy[h.type] && process.eventfunctions.heavy[h.type].tick) {
-                        process.eventfunctions.heavy[h.type].tick(userid);
-                    }
-                })
-			}
-		});
-	}
-    // Chastity Belts
-	if (process.chastity) {
-		Object.keys(process.chastity).forEach((userid) => {
-			if (getChastity(userid)) {
-				if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(userid).chastitytype] && process.eventfunctions.chastity[getChastity(userid).chastitytype].tick) {
-					process.eventfunctions.chastity[getChastity(userid).chastitytype].tick(userid);
-				}
-			}
-		});
-	}
-    // Chastity Bras
-	if (process.chastitybra) {
-		Object.keys(process.chastitybra).forEach((userid) => {
-			if (getChastityBra(userid)) {
-				if (process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].tick) {
-					process.eventfunctions.chastitybra[getChastityBra(userid).chastitytype].tick(userid);
-				}
-			}
-		});
-	}
-	// Wearables
-	if (process.wearable) {
-		Object.keys(process.wearable).forEach((userid) => {
-			getWearable(userid).forEach((h) => {
-				if (process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h].tick) {
-					process.eventfunctions.wearable[h].tick(userid);
-				}
-			});
-		});
-	}
-    // Toys
-    if (process.toys) {
-		Object.keys(process.toys).forEach((userid) => {
-			getToys(userid).forEach((h) => {
-				if (process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type].tick) {
-					process.eventfunctions.toys[h.type].tick(userid);
-				}
-			});
-		});
-	}
-    // Collars
-    if (process.collar) {
-		Object.keys(process.collar).forEach((userid) => {
-			if (getCollar(userid)) {
-                if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(userid).collartype] && process.eventfunctions.collar[getCollar(userid).collartype].tick) {
-					process.eventfunctions.collar[getCollar(userid).collartype].tick(userid);
-				}
-                if (getCollar(userid).additionalcollars) {
-                    getCollar(userid).additionalcollars.forEach((ac) => {
-                        if (process.eventfunctions.collar && process.eventfunctions.collar[ac] && process.eventfunctions.collar[ac].tick) {
-                            process.eventfunctions.collar[ac].tick(userid);
+		Object.keys(process.heavy).forEach((serverid) => {
+            Object.keys(process.heavy[serverid]).forEach((userid) => {
+                if (getHeavyList(serverid, userid).length > 0) {
+                    getHeavyList(serverid, userid).forEach((h) => {
+                        if (process.eventfunctions.heavy && process.eventfunctions.heavy[h.type] && process.eventfunctions.heavy[h.type].tick) {
+                            process.eventfunctions.heavy[h.type].tick(serverid, userid);
                         }
                     })
                 }
-            }
-		});
+            });
+        });
+	}
+    // Chastity Belts
+	if (process.chastity) {
+		Object.keys(process.chastity).forEach((serverid) => {
+            Object.keys(process.chastity[serverid]).forEach((userid) => {
+                if (getChastity(serverid, userid)) {
+                    if (process.eventfunctions.chastity && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype] && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype].tick) {
+                        process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype].tick(serverid, userid);
+                    }
+                }
+            });
+        });
+	}
+    // Chastity Bras
+	if (process.chastitybra) {
+		Object.keys(process.chastitybra).forEach((serverid) => {
+            Object.keys(process.chastitybra[serverid]).forEach((userid) => {
+                if (getChastityBra(serverid, userid)) {
+                    if (process.eventfunctions.chastitybra && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype].tick) {
+                        process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype].tick(serverid, userid);
+                    }
+                }
+            });
+        });
+	}
+	// Wearables
+	if (process.wearable) {
+		Object.keys(process.wearable).forEach((serverid) => {
+            Object.keys(process.wearable[serverid]).forEach((userid) => {
+                getWearable(serverid, userid).forEach((h) => {
+                    if (process.eventfunctions.wearable && process.eventfunctions.wearable[h] && process.eventfunctions.wearable[h].tick) {
+                        process.eventfunctions.wearable[h].tick(serverid, userid);
+                    }
+                });
+            });
+        });
+	}
+    // Toys
+    if (process.toys) {
+		Object.keys(process.toys).forEach((serverid) => {
+            Object.keys(process.toys[serverid]).forEach((userid) => {
+                getToys(serverid, userid).forEach((h) => {
+                    if (process.eventfunctions.toys && process.eventfunctions.toys[h.type] && process.eventfunctions.toys[h.type].tick) {
+                        process.eventfunctions.toys[h.type].tick(serverid, userid);
+                    }
+                });
+            });
+        });
+	}
+    // Collars
+    if (process.collar) {
+		Object.keys(process.collar).forEach((serverid) => {
+            Object.keys(process.collar[serverid]).forEach((userid) => {
+                if (getCollar(serverid, userid)) {
+                    if (process.eventfunctions.collar && process.eventfunctions.collar[getCollar(serverid, userid).collartype] && process.eventfunctions.collar[getCollar(serverid, userid).collartype].tick) {
+                        process.eventfunctions.collar[getCollar(serverid, userid).collartype].tick(serverid, userid);
+                    }
+                    if (getCollar(serverid, userid).additionalcollars) {
+                        getCollar(serverid, userid).additionalcollars.forEach((ac) => {
+                            if (process.eventfunctions.collar && process.eventfunctions.collar[ac] && process.eventfunctions.collar[ac].tick) {
+                                process.eventfunctions.collar[ac].tick(serverid, userid);
+                            }
+                        })
+                    }
+                }
+            });
+        });
 	}
 }
 
@@ -420,45 +454,47 @@ function checkFumbledTemporaryKeys() {
     let processvars = ["collar", "chastity", "chastitybra"];
     processvars.forEach((pv) => {
         if (process[pv] == undefined) { process[pv] = {} }
-        Object.entries(process[pv]).forEach(async (en) => {
-            try {
-                if (en[1]?.fumbled && en[1]?.temporarykeyholdertime && (en[1]?.temporarykeyholdertime < Date.now())) {
-                    let data = {
-                        interactionuser: { id: en[1].temporarykeyholder },
-                        targetuser: { id: en[0] }
-                    }
+        Object.keys(process[pv]).forEach((server) => {
+            Object.entries(process[pv][server]).forEach(async (en) => {
+                try {
+                    if (en[1]?.fumbled && en[1]?.temporarykeyholdertime && (en[1]?.temporarykeyholdertime < Date.now())) {
+                        let data = {
+                            interactionuser: { id: en[1].temporarykeyholder },
+                            targetuser: { id: en[0] }
+                        }
 
-                    delete en[1].fumbled;
-                    delete en[1].temporarykeyholdertime;
-                    delete en[1].temporarykeyholder;
+                        delete en[1].fumbled;
+                        delete en[1].temporarykeyholdertime;
+                        delete en[1].temporarykeyholder;
 
-                    if ((pv == "chastity") || (pv == "chastitybra")) {
-                        let def = (pv == "chastity") ? "belt" : "bra"
-                        data.c1 = getBaseChastity(en[1].chastitytype ?? `${def}_silver`).name
-                    }
-                    else if (pv == "collar") {
-                        data.c1 = getBaseCollar(en[1].collartype ?? `collar_leather`).name
-                    }
+                        if ((pv == "chastity") || (pv == "chastitybra")) {
+                            let def = (pv == "chastity") ? "belt" : "bra"
+                            data.c1 = getBaseChastity(en[1].chastitytype ?? `${def}_silver`).name
+                        }
+                        else if (pv == "collar") {
+                            data.c1 = getBaseCollar(en[1].collartype ?? `collar_leather`).name
+                        }
 
-                    // Now that @___ has had her fun, she returns the keys for @___'s chastity belt. 
-                    if (process.recentmessages[en[0]]) {
-                        messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[en[0]])
+                        // Now that @___ has had her fun, she returns the keys for @___'s chastity belt. 
+                        if (process.recentmessages[en[0]]) {
+                            messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[en[0]])
+                        }
+                        else if (process.recentmessages[data.interactionuser.id]) {
+                            messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[data.interactionuser.id])
+                        }
+                        else {
+                            console.log("No suitable channel found for returning temp key.")
+                        }
+                        
+                        markForSave("collar");
+                        markForSave("chastity");
+                        markForSave("chastitybra");
                     }
-                    else if (process.recentmessages[data.interactionuser.id]) {
-                        messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[data.interactionuser.id])
-                    }
-                    else {
-                        console.log("No suitable channel found for returning temp key.")
-                    }
-                    
-                    markForSave("collar");
-                    markForSave("chastity");
-                    markForSave("chastitybra");
                 }
-            }
-            catch (err) {
-                console.log(err)
-            }
+                catch (err) {
+                    console.log(err)
+                }
+            })
         })
     })
 }
@@ -467,29 +503,30 @@ function checkFumbledTemporaryKeys() {
 // If the user does NOT exist in any of them, then remove. 
 async function scavengeUsers(client) {
     let processvars = ["wearable", "gags", "mitten", "chastity", "chastitybra", "chastitybra", "arousal", "toys", "collar", "heavy", "pronouns", "usercontext", "consented", "corset", "headwear", "outfits"]
-    let allguilds = await client.guilds.fetch();
-    let allguildslist = []; // array of guild member maps
-    for (const guild of allguilds) {
-        let guildfetched = await client.guilds.fetch(guild[0])
-        let guildmembers = await guildfetched.members.fetch()
-        allguildslist.push(guildmembers);
-    }
+    await client.guilds.fetch();
     processvars.forEach(async (v) => {
-        if (process[v]) {
-            Object.keys(process[v]).forEach((k) => {
-                let found = false;
-                allguildslist.forEach((g) => {
-                    if (g.get(k)) { found = true }
-                })
-                if (!found) {
-                    // DELETE THIS
-                    console.log(`Key ${k} missing from all guilds, run on ${v}.`)
-                    if (process[v][k]) {
-                        delete process[v][k]
+        if (process[v] == undefined) { process[v] = {} }
+        Object.keys(process[v]).forEach(async (server) => {
+            if (process.client.guilds.cache.has(server)) {
+                let guildfetched = await client.guilds.fetch(server)
+                Object.keys(process[v][server]).forEach(async (person) => {
+                    if (guildfetched) {
+                        try {
+                            if (!(await guildfetched.members.fetch(person))) {
+                                delete process[v][server][person] // This person did NOT fetch successfully, so get rid of them. 
+                            }
+                        }
+                        catch (err) {
+                            console.log(`Crashed while fetching ${person} lol`);
+                            console.log(err);
+                        }
+                    } 
+                    else {
+                        console.log(`Guild doesn't exist!`)
                     }
-                }
-            })
-        }
+                })
+            }
+        })
     })
 }
 

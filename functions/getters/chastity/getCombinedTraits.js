@@ -1,3 +1,4 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { getBaseChastity } = require("./getBaseChastity");
 const { getChastity } = require("./getChastity");
 const { getChastityBra } = require("./getChastityBra");
@@ -58,6 +59,7 @@ function bounded(min, val, max) {
 /********
  * Get the combined chastity related traits for a user, accounting for chastity belt and bra, if worn. 
  * 
+ * - (server id) serverID - The server this is running on
  * - (user id) user - The person wearing the chastity devices
  * ---
  * ##### Returns an object with the following properties: 
@@ -76,14 +78,16 @@ function bounded(min, val, max) {
  * - orgasmCooldown: Multiplier for how long a wearer is immune to arousal gains after letting go.
  * - orgasmArousalLeft: Percentage of arousal that will be left on the wearer after letting go.
  ********/
-function getCombinedTraits(user) {
+function getCombinedTraits(serverID, user) {
+    traceFirstParam(arguments[0]);
     // Build an object which references the combined properties
     // Any FUNCTIONS will be called from both when their respective unlock is called.
-    const beltbase = getChastity(user) ? getBaseChastity(getChastity(user).chastitytype ?? "belt_silver") : undefined;
-    const brabase = getChastityBra(user) ? getBaseChastity(getChastityBra(user).chastitytype ?? "bra_silver") : undefined;
+    const beltbase = getChastity(serverID, user) ? getBaseChastity(getChastity(serverID, user).chastitytype ?? "belt_silver") : undefined;
+    const brabase = getChastityBra(serverID, user) ? getBaseChastity(getChastityBra(serverID, user).chastitytype ?? "bra_silver") : undefined;
 	if (!beltbase && !brabase) return NO_CHASTITY;
     let datatopass = {
-        userID: user
+        userID: user,
+        serverID: serverID
     }
     // Because the usual stuff found in return object are typically referenced NOT as functions, we're gonna
     // parse them here. I don't think this is the best solution, admittedly, but it should suffice.

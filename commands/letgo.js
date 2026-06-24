@@ -15,7 +15,7 @@ module.exports = {
 	async execute(interaction) {
 		try {
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
@@ -24,24 +24,25 @@ module.exports = {
 			let data = {
 				textarray: "texts_letgo",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: interaction.user, // Not needed, but required for function parsing anyway.
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 				},
 			};
 
-			if (tryOrgasm(interaction.user.id)) {
+			if (tryOrgasm(interaction.guildId, interaction.user.id)) {
 				// User was able to orgasm!
 				data.orgasm = true;
 				interaction.reply(getText(data));
 			} else {
-				if (getChastity(interaction.user.id)) {
+				if (getChastity(interaction.guildId, interaction.user.id)) {
 					data.chastity = true;
 					interaction.reply(getText(data));
 					return;
 				}
 
-				const heavy = !getHeavyBound(interaction.user.id, interaction.user.id);
+				const heavy = !getHeavyBound(interaction.guildId, interaction.user.id, interaction.user.id);
 				if (heavy) {
 					data.heavy = true;
 					interaction.reply(getText(data));
@@ -51,7 +52,7 @@ module.exports = {
 				// cool off response, replace with something good
 				data.free = true;
 				interaction.reply(getText(data));
-				setArousalCooldown(interaction.user.id);
+				setArousalCooldown(interaction.guildId, interaction.user.id);
 			}
 		} catch (err) {
 			console.log(err);

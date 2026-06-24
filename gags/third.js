@@ -22,9 +22,9 @@ const pregarble = (text, parent, intensity, msg) => {
         let outtext = text;
 
         let replacementstring = "this toy";
-        if (getPronouns(msg.author.id, "subject") == "he") { replacementstring = "boy" }
-        if (getPronouns(msg.author.id, "subject") == "she") { replacementstring = "girl" }
-        if (getOption(msg.author.id, "deferentialgagsubject").length > 0) { replacementstring = getOption(msg.author.id, "deferentialgagsubject") }
+        if (getPronouns(msg.guild.id, msg.author.id, "subject") == "he") { replacementstring = "boy" }
+        if (getPronouns(msg.guild.id, msg.author.id, "subject") == "she") { replacementstring = "girl" }
+        if (getOption(msg.guild.id, msg.author.id, "deferentialgagsubject").length > 0) { replacementstring = getOption(msg.guild.id, msg.author.id, "deferentialgagsubject") }
 
         // Set up sentence array. 
         let docin = nlp(outtext);

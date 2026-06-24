@@ -36,7 +36,7 @@ module.exports = {
             if (matches.length == 0) {
                 matches = autocompletes;
             }
-            let tags = getUserTags(interaction.user.id);
+            let tags = getUserTags(interaction.guildId, interaction.user.id);
             let newsorted = [];
             matches.forEach((f) => {
                 let tagged = false;
@@ -62,22 +62,22 @@ module.exports = {
 		try {
 			let gaggeduser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(gaggeduser.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, gaggeduser.id)?.mainconsent) {
 				await handleConsent(interaction, gaggeduser.id);
 				return;
 			}
 			// CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
-			if (!getConsent(interaction.user.id)?.mainconsent) {
+			if (!getConsent(interaction.guildId, interaction.user.id)?.mainconsent) {
 				await handleConsent(interaction, interaction.user.id);
 				return;
 			}
 			let interactionuser = interaction.user;
 			let gagtype = interaction.options.getString("gag") ? interaction.options.getString("gag") : "ball";
 			let gagintensity = interaction.options.getNumber("intensity") ? interaction.options.getNumber("intensity") : 5;
-			let currentgag = getGag(gaggeduser.id, gagtype);
+			let currentgag = getGag(interaction.guildId, gaggeduser.id, gagtype);
 			let gagname = process.gagtypes[gagtype]?.choicename;
 
-            let tags = getUserTags(gaggeduser.id);
+            let tags = getUserTags(interaction.guildId, gaggeduser.id);
             let i = process.gagtypes[gagtype]
             let blocked = false;
             tags.forEach((t) => {
@@ -89,7 +89,7 @@ module.exports = {
             })
             if (blocked) { return } // GO AWAY
 
-			let oldgagname = process.gagtypes[getGagLast(gaggeduser.id)]?.choicename;
+			let oldgagname = process.gagtypes[getGagLast(interaction.guildId, gaggeduser.id)]?.choicename;
 			let intensitytext = "loosely";
 			if (intensitytext == "loosely") {
 				if (gagintensity > 2) {
@@ -120,9 +120,10 @@ module.exports = {
 			let data = {
 				textarray: "texts_gag",
 				textdata: {
+                    serverID: interaction.guildId, 
 					interactionuser: interaction.user,
 					targetuser: gaggeduser,
-					c1: getHeavy(interaction.user.id)?.displayname, // heavy bondage type
+					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: intensitytext, // gag tightness
 					c3: gagname, // New gag being put on the wearer
 					c4: oldgagname, // Old gag the wearer has on
@@ -144,13 +145,13 @@ module.exports = {
 				gaggeduser = interaction.user;
 			}
 
-			if (!getHeavyBound(interaction.user.id, gaggeduser.id)) {
+			if (!getHeavyBound(interaction.guildId, interaction.user.id, gaggeduser.id)) {
 				// in heavy bondage, cant equip
 				data.heavy = true;
 				if (interactionuser == gaggeduser) {
 					// gagging self
 					data.self = true;
-					if (getGag(interactionuser.id)) {
+					if (getGag(interaction.guildId, interaction.guildId, interactionuser.id)) {
 						// has a gag already
 						data.gag = true;
 						interaction.reply(getText(data));
@@ -162,7 +163,7 @@ module.exports = {
 				} else {
 					// gagging another
 					data.other = true;
-					if (getGag(gaggeduser.id)) {
+					if (getGag(interaction.guildId, interaction.guildId, gaggeduser.id)) {
 						// has a gag already
 						data.gag = true;
 						interaction.reply(getText(data));
@@ -172,13 +173,13 @@ module.exports = {
 						interaction.reply(getText(data));
 					}
 				}
-			} else if (getMitten(interactionuser.id)) {
+			} else if (getMitten(interaction.guildId, interactionuser.id)) {
 				// We are wearing mittens, we can't hold onto the straps!
 				data.noheavy = true;
 				data.mitten = true;
 				if (interactionuser.id != gaggeduser.id) {
 					data.other = true; // yes, this is backwards, sorry.
-					if (getGag(gaggeduser.id)) {
+					if (getGag(interaction.guildId, interaction.guildId, gaggeduser.id)) {
 						data.gag = true;
 						interaction.reply(getText(data));
 					} else {
@@ -196,23 +197,23 @@ module.exports = {
 				if (interactionuser.id == gaggeduser.id) {
 					// Gagging ourself
 					data.self = true;
-					if (getGag(gaggeduser.id)) {
+					if (getGag(interaction.guildId, interaction.guildId, gaggeduser.id)) {
 						// We are already gagged!
 						data.gag = true;
 						if (currentgag) {
 							// We are already gagged with that kind. Remove and put it at the end of the list!
 							data.changetightness = true;
 							interaction.reply(getText(data));
-							assignGag(gaggeduser.id, gagtype, gagintensity, interactionuser.id);
+							assignGag(interaction.guildId, gaggeduser.id, gagtype, gagintensity, interactionuser.id);
 						} else {
 							// We are NOT gagged with this kind.
 							data.newgag = true;
 							await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-							await handleExtremeRestraint(interactionuser, gaggeduser, "gag", gagtype).then(
+							await handleExtremeRestraint(interaction.guildId, interactionuser, gaggeduser, "gag", gagtype).then(
 								async (success) => {
 									await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true });
 									await interaction.followUp(getText(data));
-									assignGag(gaggeduser.id, gagtype, gagintensity, interactionuser.id);
+									assignGag(interaction.guildId, gaggeduser.id, gagtype, gagintensity, interactionuser.id);
 								},
 								async (reject) => {
 									let nomessage = `You rejected the ${gagname}.`;
@@ -233,11 +234,11 @@ module.exports = {
 						// Not already gagged, lets put one on
 						data.nogag = true;
 						await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-						await handleExtremeRestraint(interactionuser, gaggeduser, "gag", gagtype).then(
+						await handleExtremeRestraint(interaction.guildId, interactionuser, gaggeduser, "gag", gagtype).then(
 							async (success) => {
 								await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true });
 								await interaction.followUp(getText(data));
-								assignGag(gaggeduser.id, gagtype, gagintensity, interactionuser.id);
+								assignGag(interaction.guildId, gaggeduser.id, gagtype, gagintensity, interactionuser.id);
 							},
 							async (reject) => {
 								let nomessage = `You rejected the ${gagname}.`;
@@ -257,7 +258,7 @@ module.exports = {
 				} else {
 					// Gagging others
 					data.other = true;
-					if (getGag(gaggeduser.id)) {
+					if (getGag(interaction.guildId, gaggeduser.id)) {
 						// They are already gagged, so we want to change gags
 						// Note, we should check if we're allowed in this case, since it may interfere.
 						data.gag = true;
@@ -265,16 +266,16 @@ module.exports = {
 							// We are already gagged with that kind. Remove and put it at the end of the list!
 							data.changetightness = true;
 							// Now lets make sure the wearer wants that.
-							if (checkBondageRemoval(interactionuser.id, gaggeduser.id, "gag") == true) {
+							if (checkBondageRemoval(interaction.guildId, interactionuser.id, gaggeduser.id, "gag") == true) {
 								// Allowed immediately, lets go
 								interaction.reply(getText(data));
-								assignGag(gaggeduser.id, gagtype, gagintensity, interactionuser.id);
+								assignGag(interaction.guildId, gaggeduser.id, gagtype, gagintensity, interactionuser.id);
 							} else {
 								// We need to ask first.
 								let datatogeneric = Object.assign({}, data.textdata);
 								datatogeneric.c1 = "gag";
 								interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-								let canRemove = await handleBondageRemoval(interactionuser, gaggeduser, "gag", true).then(
+								let canRemove = await handleBondageRemoval(interaction.guildId, interactionuser, gaggeduser, "gag", true).then(
 									async (res) => {
 										await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
 										await interaction.followUp(getText(data));
@@ -289,14 +290,14 @@ module.exports = {
 							// We are NOT gagged with this kind.
 							data.newgag = true;
 							// Now lets make sure the wearer wants that.
-							if (checkBondageRemoval(interactionuser.id, gaggeduser.id, "gag") == true) {
+							if (checkBondageRemoval(interaction.guildId, interactionuser.id, gaggeduser.id, "gag") == true) {
 								// Allowed immediately, lets go
 								await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-								await handleExtremeRestraint(interactionuser, gaggeduser, "gag", gagtype).then(
+								await handleExtremeRestraint(interaction.guildId, interactionuser, gaggeduser, "gag", gagtype).then(
 									async (success) => {
 										await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true });
 										await interaction.followUp(getText(data));
-										assignGag(gaggeduser.id, gagtype, gagintensity, interactionuser.id);
+			        					assignGag(interaction.guildId, gaggeduser.id, gagtype, gagintensity, interactionuser.id);
 									},
 									async (reject) => {
 										let nomessage = `${gaggeduser} rejected the ${gagname}.`;
@@ -317,14 +318,14 @@ module.exports = {
 								let datatogeneric = Object.assign({}, data.textdata);
 								datatogeneric.c1 = "gag";
 								interaction.reply({ content: getTextGeneric("changebind", datatogeneric), flags: MessageFlags.Ephemeral });
-								let canRemove = await handleBondageRemoval(interactionuser, gaggeduser, "gag", true).then(
+								let canRemove = await handleBondageRemoval(interaction.guildId, interactionuser, gaggeduser, "gag", true).then(
 									async (res) => {
 										await interaction.editReply(getTextGeneric("changebind_accept", datatogeneric));
-										await handleExtremeRestraint(interactionuser, gaggeduser, "gag", gagtype).then(
+										await handleExtremeRestraint(interaction.guildId, interactionuser, gaggeduser, "gag", gagtype).then(
 											async (success) => {
 												await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true });
 												await interaction.followUp(getText(data));
-												assignGag(gaggeduser.id, gagtype, gagintensity, interactionuser.id);
+												assignGag(interaction.guildId, gaggeduser.id, gagtype, gagintensity, interactionuser.id);
 											},
 											async (reject) => {
 												let nomessage = `${gaggeduser} rejected the ${gagname}.`;
@@ -353,11 +354,11 @@ module.exports = {
 						data.nogag = true;
 						data[tone] = true;
 						await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-						await handleExtremeRestraint(interactionuser, gaggeduser, "gag", gagtype).then(
+						await handleExtremeRestraint(interaction.guildId, interactionuser, gaggeduser, "gag", gagtype).then(
 							async (success) => {
 								await interaction.followUp({ content: `Equipping ${gagname}`, withResponse: true });
 								await interaction.followUp(getText(data));
-								assignGag(gaggeduser.id, gagtype, gagintensity, interactionuser.id);
+								assignGag(interaction.guildId, gaggeduser.id, gagtype, gagintensity, interactionuser.id);
 							},
 							async (reject) => {
 								let nomessage = `${gaggeduser} rejected the ${gagname}.`;
@@ -381,7 +382,7 @@ module.exports = {
 		}
 	},
     async help(userid, page) {
-        let restrictedtext = (getMitten(userid)) ? `***You cannot gag anyone because of your mittens***\n` : ""
+        let restrictedtext = (getMitten(interaction.guildId, userid)) ? `***You cannot gag anyone because of your mittens***\n` : ""
         let overviewtext = `## Gag
 ### Usage: /gag (user) (intensity) (tone)
 ### Remove:  /ungag (user) (gag)

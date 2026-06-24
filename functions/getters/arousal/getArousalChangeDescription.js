@@ -1,5 +1,7 @@
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 const { getBotOption } = require("../config/getBotOption");
 const { getOption } = require("../config/getOption");
+const { getProcessVariable } = require("../config/getProcessVariable");
 
 // the arousal needed for an unbelted user to orgasm
 const ORGASM_LIMIT = 10;
@@ -7,14 +9,16 @@ const ORGASM_LIMIT = 10;
 /**********
  * Gets a description representing the user's arousal change
  * 
+ * - (server id) serverID - The server this is on
  * - (user id) user - The user who is aroused
  * ---
  * ##### Returns a string representing their arousal change
  **********/
-function getArousalChangeDescription(user) {
-	if (getOption(user, "arousalsystem") != 2) return null;
+function getArousalChangeDescription(serverID, user) {
+    traceFirstParam(arguments[0]);
+	if (getOption(serverID, user, "arousalsystem") != 2) return null;
 
-	const arousal = process.arousal[user];
+	const arousal = getProcessVariable(serverID, user, "arousal");
 	if (!arousal) return null;
 	const lastChange = (arousal.arousal - arousal.prev) / (getBotOption("bot-timetickrate") / 60000);
 	if (Math.abs(lastChange) < 0.01) return null;

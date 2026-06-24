@@ -16,9 +16,11 @@ const { getClonedChastityBraKey } = require("./getters/chastity/getClonedChastit
 const { getClonedCollarKey } = require("./getters/collar/getClonedCollarKey");
 const { canAccessCollar } = require("./getters/collar/canAccessCollar");
 const { statsAddCounter } = require("./setters/config/statsAddCounter");
+const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
 
 /****************
  * Rolls a Pat based on the user's bondage and the target's bondage. If hit is false, then boundmiss will note the reason, if it is due to the user being bound. 
+ * - **(server id) serverID** the server that this is on
  * - **(user id) user** trying to deliver the pat
  * - **(user id) target** to receive the pat
  * 
@@ -27,7 +29,8 @@ const { statsAddCounter } = require("./setters/config/statsAddCounter");
  * - crit: Boolean
  * - boundmiss: string ("arms", "blind", "legs", "container")
 *******************/
-function rollPatChance(user, target) {
+function rollPatChance(serverID, user, target) {
+    traceFirstParam(arguments[0]);
     let returnedobject = {
         hit: false,
         crit: false,
@@ -42,8 +45,8 @@ function rollPatChance(user, target) {
     }
     
     // If they are in heavy bondage, we need that list. 
-    let userheavyrestrictions = getHeavyRestrictions(user);
-    let targetheavyrestrictions = getHeavyRestrictions(target);
+    let userheavyrestrictions = getHeavyRestrictions(serverID, user);
+    let targetheavyrestrictions = getHeavyRestrictions(serverID, target);
     
     // Check if they are in a container. If so, they need to be in the same container to succeed. 
     // If they are not, accuracy is 0, set the boundmiss reason to container.
@@ -97,26 +100,26 @@ function rollPatChance(user, target) {
 
     // Do all of the functions for the person receiving the headpats.
     // Note, within the function we need to check if headpat was successful! 
-    emitEvent("headpatfunction", target, { target: target, returnedobject: returnedobject })
+    emitEvent("headpatfunction", target, serverID, { target: target, returnedobject: returnedobject })
 
     if (returnedobject.hit) {
-        statsAddCounter(user, "headpatsgiven");
-        statsAddCounter(target, "headpatsreceived");
+        statsAddCounter(serverID, user, "headpatsgiven");
+        statsAddCounter(serverID, target, "headpatsreceived");
         if (user == target) {
-            statsAddCounter(target, "headpatsself");
+            statsAddCounter(serverID, target, "headpatsself");
         }
     }
     if (returnedobject.crit) { 
-        statsAddCounter(user, "headpatcrits") 
-        statsAddCounter(target, "headpatcritsreceived") 
+        statsAddCounter(serverID, user, "headpatcrits") 
+        statsAddCounter(serverID, target, "headpatcritsreceived") 
     }
     if (returnedobject.doublecrit) { 
-        statsAddCounter(user, "headpatdoublecrits") 
-        statsAddCounter(target, "headpatdoublecritsreceived") 
+        statsAddCounter(serverID, user, "headpatdoublecrits") 
+        statsAddCounter(serverID, target, "headpatdoublecritsreceived") 
     }
     if (returnedobject.triplecrit) { 
-        statsAddCounter(user, "headpattriplecrits") 
-        statsAddCounter(target, "headpattriplecritsreceived") 
+        statsAddCounter(serverID, user, "headpattriplecrits") 
+        statsAddCounter(serverID, target, "headpattriplecritsreceived") 
     }
 
     return returnedobject;
@@ -196,21 +199,22 @@ function doHeadpatFunctions(headpatter, recipient, returnedobject) {
  * 
  * - (user id) user - The person to shock!
  ********/
-async function shockUser(user) {
+async function shockUser(serverID, user) {
+    traceFirstParam(arguments[0]);
     try {
-        if (getOption(user, "pishockusername") && (typeof getOption(user, "pishockusername") == "string") &&
-            getOption(user, "pishockname") && (typeof getOption(user, "pishockname") == "string") &&
-            getOption(user, "pishockcode") && (typeof getOption(user, "pishockcode") == "string") &&
-            getOption(user, "pishockapikey") && (typeof getOption(user, "pishockapikey") == "string")) {
+        if (getOption(serverID, user, "pishockusername") && (typeof getOption(serverID, user, "pishockusername") == "string") &&
+            getOption(serverID, user, "pishockname") && (typeof getOption(serverID, user, "pishockname") == "string") &&
+            getOption(serverID, user, "pishockcode") && (typeof getOption(serverID, user, "pishockcode") == "string") &&
+            getOption(serverID, user, "pishockapikey") && (typeof getOption(serverID, user, "pishockapikey") == "string")) {
                 // Set up the https request. 
                 const reqdata = JSON.stringify({
-                    Username: getOption(user, "pishockusername"),
-                    Name: getOption(user, "pishockname"),
-                    Code: getOption(user, "pishockcode"),
+                    Username: getOption(serverID, user, "pishockusername"),
+                    Name: getOption(serverID, user, "pishockname"),
+                    Code: getOption(serverID, user, "pishockcode"),
                     Intensity: 100,
                     Duration: 2,
-                    Apikey: getOption(user, "pishockapikey"),
-                    Op: (getOption(user, "pishockop") ? getOption(user, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
+                    Apikey: getOption(serverID, user, "pishockapikey"),
+                    Op: (getOption(serverID, user, "pishockop") ? getOption(serverID, user, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
                 });
                 const options = {
                     hostname: 'do.pishock.com/api/apioperate', // without https://
@@ -251,7 +255,8 @@ async function shockUser(user) {
  * - (string) type - The type of action being performed ("headpat", "shock", etc)
  * - (boolean) noprompt? - If true, skips DMing and immediately rejects if no suitable user
  ********/
-async function handleTouchEvent(user, target, type, noprompt = false) {
+async function handleTouchEvent(serverID, user, target, type, noprompt = false) {
+    traceFirstParam(arguments[0]);
 	return new Promise(async (res, rej) => {
         if (!user || !target) {
             rej("User or Target does NOT exist")
@@ -262,12 +267,12 @@ async function handleTouchEvent(user, target, type, noprompt = false) {
             rej("Blocked")
             return;
         }
-		let hasOption = getOption(target.id, `receive${type}`);
+		let hasOption = getOption(serverID, target.id, `receive${type}`);
         if (user.id === target.id) { 
             res(true) 
             return;
         } // We're okay with touching ourselves.
-        if (getOption(target.id, `allowed${type}`) && getOption(target.id, `allowed${type}`).includes(user.id)) {
+        if (getOption(serverID, target.id, `allowed${type}`) && getOption(serverID, target.id, `allowed${type}`).includes(user.id)) {
             // This is on the target's approved headpat list. 
             res(true)
             return;
@@ -275,12 +280,12 @@ async function handleTouchEvent(user, target, type, noprompt = false) {
         
         let iskeyholder = false;
         
-        if (getCollar(target.id)?.keyholder == user.id) { iskeyholder = true }
-        if (getChastity(target.id)?.keyholder == user.id) { iskeyholder = true }
-        if (getChastityBra(target.id)?.keyholder == user.id) { iskeyholder = true }
-        if (getClonedChastityKey(target.id).includes(user.id)) { iskeyholder = true }
-        if (getClonedChastityBraKey(target.id).includes(user.id)) { iskeyholder = true }
-        if (getClonedCollarKey(target.id).includes(user.id)) { iskeyholder = true }
+        if (getCollar(serverID, target.id)?.keyholder == user.id) { iskeyholder = true }
+        if (getChastity(serverID, target.id)?.keyholder == user.id) { iskeyholder = true }
+        if (getChastityBra(serverID, target.id)?.keyholder == user.id) { iskeyholder = true }
+        if (getClonedChastityKey(serverID, target.id).includes(user.id)) { iskeyholder = true }
+        if (getClonedChastityBraKey(serverID, target.id).includes(user.id)) { iskeyholder = true }
+        if (getClonedCollarKey(serverID, target.id).includes(user.id)) { iskeyholder = true }
 
         if (hasOption === "everyonenoprompt") {
             // Nothing needs to be done here.
@@ -312,7 +317,7 @@ async function handleTouchEvent(user, target, type, noprompt = false) {
             }
         }
         if (hasOption === "collaraccess") {
-            if (canAccessCollar(target.id, user.id).access) {
+            if (canAccessCollar(serverID, target.id, user.id).access) {
                 res(true)
                 return;
             }

@@ -1,16 +1,19 @@
 const axios = require("axios");
 const sharp = require("sharp");
 const { markForSave } = require("../../other/markForSave");
+const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 
 /**********
  * Get the combined profile picture of the user, if their original one matches the one we have on file
  * 
+ * - (server ID) - The server this is running on. Can be derived from guild member
  * - (guild member) member - The Guild Member object sending the message
  * - (mods) mods - Additional images to overlay in reverse order (not implemented yet)
  * ---
  * ##### Returns a string with the user's PFP URL to use
  **********/
-async function getPFP(member, mods = []) {
+async function getPFP(serverID, member, mods = []) {
+    traceFirstParam(arguments[0]);
     let imagelist = mods.slice(0);
     if (member.displayAvatarDecorationURL()) {
         imagelist.push(member.displayAvatarDecorationURL())
@@ -18,12 +21,13 @@ async function getPFP(member, mods = []) {
     imagelist.push(member.displayAvatarURL())
 
     if (process.memberavatars == undefined) { process.memberavatars = {} }
-    if (process.memberavatars[member.id]) {
-        if (process.memberavatars[member.id].avatarURL == member.displayAvatarURL()) {
-            if (process.memberavatars[member.id].decorationURL == member.displayAvatarDecorationURL()) {
+    if (process.memberavatars[serverID] == undefined) { process.memberavatars[serverID] = {} }
+    if (process.memberavatars[serverID][member.id]) {
+        if (process.memberavatars[serverID][member.id].avatarURL == member.displayAvatarURL()) {
+            if (process.memberavatars[serverID][member.id].decorationURL == member.displayAvatarDecorationURL()) {
                 let modifiers = Object.keys(mods).join("")
-                if (process.memberavatars[member.id][`${mods}link`]) {
-                    return process.memberavatars[member.id][`${mods}link`]
+                if (process.memberavatars[serverID][member.id][`${mods}link`]) {
+                    return process.memberavatars[serverID][member.id][`${mods}link`]
                 }
             }
         }
@@ -109,7 +113,7 @@ async function getPFP(member, mods = []) {
         let imgururl = imgurupload?.data?.data?.link;
 
         if (imgururl) {
-            process.memberavatars[member.id] = {
+            process.memberavatars[serverID][member.id] = {
                 avatarURL: member.displayAvatarURL(),
                 decorationURL: member.displayAvatarDecorationURL(),
                 link: imgururl

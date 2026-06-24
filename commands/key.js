@@ -112,9 +112,9 @@ module.exports = {
 				// We want to return ONLY options that the user COULD clone a key for
 				// So if they own a collar key, it only gives "Collar"
 				let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-				let collarkeyholder = getCollar(chosenuserid) && canAccessCollar(chosenuserid, interaction.user.id, undefined, true).access;
-				let chastitykeyholder = getChastity(chosenuserid) && canAccessChastity(chosenuserid, interaction.user.id, undefined, true).access;
-				let chastitybrakeyholder = getChastityBra(chosenuserid) && canAccessChastityBra(chosenuserid, interaction.user.id, undefined, true).access;
+				let collarkeyholder = getCollar(interaction.guildId, chosenuserid) && canAccessCollar(interaction.guildId, chosenuserid, interaction.user.id, undefined, true).access;
+				let chastitykeyholder = getChastity(interaction.guildId, chosenuserid) && canAccessChastity(interaction.guildId, chosenuserid, interaction.user.id, undefined, true).access;
+				let chastitybrakeyholder = getChastityBra(interaction.guildId, chosenuserid) && canAccessChastityBra(interaction.guildId, chosenuserid, interaction.user.id, undefined, true).access;
 
 				let choices = [];
 				if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
@@ -132,13 +132,13 @@ module.exports = {
 
 				await interaction.respond(choices);
 			} else if (subcommand == "revoke") {
-				let ownedclonedchastitykeys = getClonedChastityKeysOwned(interaction.user.id);
-				let ownedclonedchastitybrakeys = getClonedChastityBraKeysOwned(interaction.user.id);
-				let ownedclonedcollarkeys = getClonedCollarKeysOwned(interaction.user.id);
+				let ownedclonedchastitykeys = getClonedChastityKeysOwned(interaction.guildId, interaction.user.id);
+				let ownedclonedchastitybrakeys = getClonedChastityBraKeysOwned(interaction.guildId, interaction.user.id);
+				let ownedclonedcollarkeys = getClonedCollarKeysOwned(interaction.guildId, interaction.user.id);
 
-				let clonedchastitykeys = getOtherKeysChastity(interaction.user.id);
-				let clonedchastitybrakeys = getOtherKeysChastityBra(interaction.user.id);
-				let clonedcollarkeys = getOtherKeysCollar(interaction.user.id);
+				let clonedchastitykeys = getOtherKeysChastity(interaction.guildId, interaction.user.id);
+				let clonedchastitybrakeys = getOtherKeysChastityBra(interaction.guildId, interaction.user.id);
+				let clonedcollarkeys = getOtherKeysCollar(interaction.guildId, interaction.user.id);
 
 				// Iterate over every member, ensuring that they are cached using the await command.
 				// I hate this code. It feels sloppy.
@@ -252,9 +252,9 @@ module.exports = {
 				// Note, we only need to know if we can ***unlock*** a restraint to swap it.
 				if (interaction.options.get("restraint")?.focused) {
 					let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-					let collarkeyholder = getCollar(chosenuserid) && canAccessCollar(chosenuserid, interaction.user.id, true).access;
-					let chastitykeyholder = getChastity(chosenuserid) && canAccessChastity(chosenuserid, interaction.user.id, true).access;
-					let chastitybrakeyholder = getChastityBra(chosenuserid) && canAccessChastityBra(chosenuserid, interaction.user.id, true).access;
+					let collarkeyholder = getCollar(interaction.guildId, chosenuserid) && canAccessCollar(interaction.guildId, chosenuserid, interaction.user.id, true).access;
+					let chastitykeyholder = getChastity(interaction.guildId, chosenuserid) && canAccessChastity(interaction.guildId, chosenuserid, interaction.user.id, true).access;
+					let chastitybrakeyholder = getChastityBra(interaction.guildId, chosenuserid) && canAccessChastityBra(interaction.guildId, chosenuserid, interaction.user.id, true).access;
 
 					let choices = [];
 					if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
@@ -301,7 +301,7 @@ module.exports = {
                     if (matches.length == 0) {
                         matches = choices.slice(0,25);
                     }
-                    let tags = getUserTags(chosenuserid);
+                    let tags = getUserTags(interaction.guildId, chosenuserid);
                     let newsorted = [];
                     matches.forEach((f) => {
                         let tagged = false;
@@ -319,9 +319,9 @@ module.exports = {
 			} else if (subcommand == "discardkey") {
                 // We need to know if we're holding the primary keys to throw them away. 
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-                let collarkeyholder = getCollar(chosenuserid) && (getCollar(chosenuserid).keyholder == interaction.user.id) && !getCollar(chosenuserid)?.fumbled && !canAccessCollar(chosenuserid, interaction.user.id, true).public
-                let chastitykeyholder = getChastity(chosenuserid) && (getChastity(chosenuserid).keyholder == interaction.user.id) && !getChastity(chosenuserid)?.fumbled && !canAccessChastity(chosenuserid, interaction.user.id, true).public
-                let chastitybrakeyholder = getChastityBra(chosenuserid) && (getChastityBra(chosenuserid).keyholder == interaction.user.id) && !getChastityBra(chosenuserid)?.fumbled && !canAccessChastityBra(chosenuserid, interaction.user.id, true).public
+                let collarkeyholder = getCollar(interaction.guildId, chosenuserid) && (getCollar(interaction.guildId, chosenuserid).keyholder == interaction.user.id) && !getCollar(interaction.guildId, chosenuserid)?.fumbled && !canAccessCollar(interaction.guildId, chosenuserid, interaction.user.id, true).public
+                let chastitykeyholder = getChastity(interaction.guildId, chosenuserid) && (getChastity(interaction.guildId, chosenuserid).keyholder == interaction.user.id) && !getChastity(interaction.guildId, chosenuserid)?.fumbled && !canAccessChastity(interaction.guildId, chosenuserid, interaction.user.id, true).public
+                let chastitybrakeyholder = getChastityBra(interaction.guildId, chosenuserid) && (getChastityBra(interaction.guildId, chosenuserid).keyholder == interaction.user.id) && !getChastityBra(interaction.guildId, chosenuserid)?.fumbled && !canAccessChastityBra(interaction.guildId, chosenuserid, interaction.user.id, true).public
 
                 let choices = [];
                 if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
@@ -340,7 +340,7 @@ module.exports = {
                 await interaction.respond(choices);
             } else if (subcommand == "additionalcollar") {
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-                let collarkeyholder = canAccessCollar(chosenuserid, interaction.user.id, true).access
+                let collarkeyholder = canAccessCollar(interaction.guildId, chosenuserid, interaction.user.id, true).access
                 let chosentype = interaction.options.get("type")?.value;
                 let choices = [];
                 console.log(chosentype)
@@ -358,7 +358,7 @@ module.exports = {
                         if (matches.length == 0) {
                             matches = autocompletes;
                         }
-                        let tags = getUserTags(chosenuserid);
+                        let tags = getUserTags(interaction.guildId, chosenuserid);
                         let newsorted = [];
                         matches.forEach((f) => {
                             let tagged = false;
@@ -367,7 +367,7 @@ module.exports = {
                                 if (i.tags && i.tags.includes(t)) { tagged = true }
                             })
                             // Only attempt to add it to the list if it is not the worn collar type or the additional collar effect
-                            if ((getCollar(chosenuserid)?.collartype != f.value) && !(getCollar(chosenuserid)?.additionalcollars && getCollar(chosenuserid)?.additionalcollars.includes(f.value))) {
+                            if ((getCollar(interaction.guildId, chosenuserid)?.collartype != f.value) && !(getCollar(interaction.guildId, chosenuserid)?.additionalcollars && getCollar(interaction.guildId, chosenuserid)?.additionalcollars.includes(f.value))) {
                                 if (!tagged) {
                                     newsorted.push(f);
                                 }
@@ -389,8 +389,8 @@ module.exports = {
                         choices = [
                             { name: "No Additional Effects", value: "noeffect" }
                         ]
-                        if (getCollar(chosenuserid)?.additionalcollars && getCollar(chosenuserid)?.additionalcollars.length > 0) {
-                            choices = getCollar(chosenuserid).additionalcollars.map((ac) => { return { name: getCollarName(undefined, ac), value: ac }})
+                        if (getCollar(interaction.guildId, chosenuserid)?.additionalcollars && getCollar(interaction.guildId, chosenuserid)?.additionalcollars.length > 0) {
+                            choices = getCollar(interaction.guildId, chosenuserid).additionalcollars.map((ac) => { return { name: getCollarName(interaction.guildId, undefined, ac), value: ac }})
                         }
                     }
                 }
@@ -419,17 +419,17 @@ module.exports = {
 				// Check if the interaction user has access to clone the target restraint.
 				let canclone = false;
 				let chosenrestraintreadable;
-				if (chosenrestrainttoclone == "collar" && getCollar(wearertoclone.id) && canAccessCollar(wearertoclone.id, interaction.user.id, undefined, true).access) {
+				if (chosenrestrainttoclone == "collar" && getCollar(interaction.guildId, wearertoclone.id) && canAccessCollar(interaction.guildId, wearertoclone.id, interaction.user.id, undefined, true).access) {
 					canclone = true;
 					chosenrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (chosenrestrainttoclone == "chastitybelt" && getChastity(wearertoclone.id) && canAccessChastity(wearertoclone.id, interaction.user.id, undefined, true).access) {
+				if (chosenrestrainttoclone == "chastitybelt" && getChastity(interaction.guildId, wearertoclone.id) && canAccessChastity(interaction.guildId, wearertoclone.id, interaction.user.id, undefined, true).access) {
 					canclone = true;
 					chosenrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (chosenrestrainttoclone == "chastitybra" && getChastityBra(wearertoclone.id) && canAccessChastityBra(wearertoclone.id, interaction.user.id, undefined, true).access) {
+				if (chosenrestrainttoclone == "chastitybra" && getChastityBra(interaction.guildId, wearertoclone.id) && canAccessChastityBra(interaction.guildId, wearertoclone.id, interaction.user.id, undefined, true).access) {
 					canclone = true;
 					chosenrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;
@@ -446,7 +446,7 @@ module.exports = {
 				}
 
 				// If the wearer has disabled key cloning, tell them to leave.
-				if (getOption(wearertoclone.id, "keycloning") == "disabled") {
+				if (getOption(interaction.guildId, wearertoclone.id, "keycloning") == "disabled") {
 					interaction.reply({ content: `${wearertoclone} has disabled key cloning.`, flags: MessageFlags.Ephemeral });
 					return;
 				}
@@ -477,8 +477,8 @@ module.exports = {
 
 					if (confirmation.customId === "agreetoclonebutton") {
 						// Skip the DM if it's the wearer giving a clone of their key.
-						if (wearertoclone == interaction.user || wearertoclone == clonedkeyholder || getOption(wearertoclone.id, "keycloning") == "auto") {
-							let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
+						if (wearertoclone == interaction.user || wearertoclone == clonedkeyholder || getOption(interaction.guildId, wearertoclone.id, "keycloning") == "auto") {
+							let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
 							let cloneaccept;
 							console.log(cloneaccept);
 							data.clone = true;
@@ -493,29 +493,29 @@ module.exports = {
 							if (chosenrestrainttoclone == "collar") {
 								await confirmation.update({ content: getTextGeneric(cloneaccept, data.textdata), components: [] });
 								await confirmation.followUp(getText(data));
-								cloneCollarKey(wearertoclone.id, clonedkeyholder.id);
+								cloneCollarKey(interaction.guildId, wearertoclone.id, clonedkeyholder.id);
 							} else if (chosenrestrainttoclone == "chastitybelt") {
 								await confirmation.update({ content: getTextGeneric(cloneaccept, data.textdata), components: [] });
 								await confirmation.followUp(getText(data));
-								cloneChastityKey(wearertoclone.id, clonedkeyholder.id);
+								cloneChastityKey(interaction.guildId, wearertoclone.id, clonedkeyholder.id);
 							} else if (chosenrestrainttoclone == "chastitybra") {
 								await confirmation.update({ content: getTextGeneric(cloneaccept, data.textdata), components: [] });
 								await confirmation.followUp(getText(data));
-								cloneChastityBraKey(wearertoclone.id, clonedkeyholder.id);
+								cloneChastityBraKey(interaction.guildId, wearertoclone.id, clonedkeyholder.id);
 							}
 						} else {
 							await confirmation.update({ content: `Prompting the user for permission.`, components: [] });
 							if (chosenrestrainttoclone == "collar") {
-								let canRemove = await promptCloneCollarKey(interaction.user, wearertoclone, clonedkeyholder).then(
+								let canRemove = await promptCloneCollarKey(interaction.guildId, interaction.user, wearertoclone, clonedkeyholder).then(
 									async (res) => {
 										// User said yes
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
 										data.clone = true;
 										data.other = true;
 										data[chosenrestrainttoclone] = true;
 										await confirmation.editReply(getTextGeneric("clone_accept", data.textdata));
 										await confirmation.followUp(getText(data));
-										cloneCollarKey(wearertoclone.id, clonedkeyholder.id);
+										cloneCollarKey(interaction.guildId, wearertoclone.id, clonedkeyholder.id);
 									},
 									async (rej) => {
 										// User said no.
@@ -523,16 +523,16 @@ module.exports = {
 									},
 								);
 							} else if (chosenrestrainttoclone == "chastitybelt") {
-								let canRemove = await promptCloneChastityKey(interaction.user, wearertoclone, clonedkeyholder).then(
+								let canRemove = await promptCloneChastityKey(interaction.guildId, interaction.user, wearertoclone, clonedkeyholder).then(
 									async (res) => {
 										// User said yes
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
 										data.clone = true;
 										data.other = true;
 										data[chosenrestrainttoclone] = true;
 										await confirmation.editReply(getTextGeneric("clone_accept", data.textdata));
 										await confirmation.followUp(getText(data));
-										cloneChastityKey(wearertoclone.id, clonedkeyholder.id);
+										cloneChastityKey(interaction.guildId, wearertoclone.id, clonedkeyholder.id);
 									},
 									async (rej) => {
 										// User said no.
@@ -540,16 +540,16 @@ module.exports = {
 									},
 								);
 							} else if (chosenrestrainttoclone == "chastitybra") {
-								let canRemove = await promptCloneChastityBraKey(interaction.user, wearertoclone, clonedkeyholder).then(
+								let canRemove = await promptCloneChastityBraKey(interaction.guildId, interaction.user, wearertoclone, clonedkeyholder).then(
 									async (res) => {
 										// User said yes
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearertoclone, c1: chosenrestraintreadable, c2: clonedkeyholder } };
 										data.clone = true;
 										data.other = true;
 										data[chosenrestrainttoclone] = true;
 										await confirmation.editReply(getTextGeneric("clone_accept", data.textdata));
 										await confirmation.followUp(getText(data));
-										cloneChastityBraKey(wearertoclone.id, clonedkeyholder.id);
+										cloneChastityBraKey(interaction.guildId, wearertoclone.id, clonedkeyholder.id);
 									},
 									async (rej) => {
 										// User said no.
@@ -590,33 +590,33 @@ module.exports = {
 				let isclone = false;
 				let typeofrestraintreadable;
 				// Has primary keys to the collar!
-				if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true).access) {
+				if (typeofrestraint == "collar" && getCollar(interaction.guildId, wearer.id) && canAccessCollar(interaction.guildId, wearer.id, interaction.user.id, undefined, true).access) {
 					canrevoke = true;
 					typeofrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true).access) {
+				if (typeofrestraint == "chastitybelt" && getChastity(interaction.guildId, wearer.id) && canAccessChastity(interaction.guildId, wearer.id, interaction.user.id, undefined, true).access) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true).access) {
+				if (typeofrestraint == "chastitybra" && getChastityBra(interaction.guildId, wearer.id) && canAccessChastityBra(interaction.guildId, wearer.id, interaction.user.id, undefined, true).access) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;
 				}
 				// Allow cloned key to be revoked if the cloned keyholder is the interaction user.
-				if (typeofrestraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
+				if (typeofrestraint == "collar" && getCollar(interaction.guildId, wearer.id) && canAccessCollar(interaction.guildId, wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (typeofrestraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
+				if (typeofrestraint == "chastitybelt" && getChastity(interaction.guildId, wearer.id) && canAccessChastity(interaction.guildId, wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (typeofrestraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
+				if (typeofrestraint == "chastitybra" && getChastityBra(interaction.guildId, wearer.id) && canAccessChastityBra(interaction.guildId, wearer.id, interaction.user.id).access && clonedkeyholder.id == interaction.user.id) {
 					canrevoke = true;
 					typeofrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;
@@ -649,7 +649,7 @@ module.exports = {
 				let verifyresponse = `Revoking the cloned keys for ${choiceemoji}${wearer} from 🔑${clonedkeyholder}. ${clonedkeyholder} will no longer have access to ${wearer}'s ${typeofrestraintreadable}.\n\nPlease confirm by pressing the button below:`;
 				if (wearer.id == clonedkeyholder.id) {
 					// they hold their own cloned key.
-					verifyresponse = `Revoking the cloned keys for ${choiceemoji}${wearer} from 🔑${clonedkeyholder}. ${getPronouns(clonedkeyholder.id, "subject", true)} will no longer have access to ${getPronouns(clonedkeyholder.id, "possessiveDeterminer")} ${typeofrestraintreadable}.\n\nPlease confirm by pressing the button below:`;
+					verifyresponse = `Revoking the cloned keys for ${choiceemoji}${wearer} from 🔑${clonedkeyholder}. ${getPronouns(interaction.guildId, clonedkeyholder.id, "subject", true)} will no longer have access to ${getPronouns(interaction.guildId, clonedkeyholder.id, "possessiveDeterminer")} ${typeofrestraintreadable}.\n\nPlease confirm by pressing the button below:`;
 				}
 				if (isclone) {
 					verifyresponse = `Revoking your cloned keys for ${choiceemoji}${wearer}. You will no longer have access to ${wearer}'s ${typeofrestraintreadable}.\n\nPlease confirm by pressing the button below:`;
@@ -663,7 +663,7 @@ module.exports = {
 					confirmation = await response.resource.message.awaitMessageComponent({ filter: collectorFilter, time: 300_000 });
 
 					if (confirmation.customId === "agreetorevokebutton") {
-						let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: typeofrestraintreadable, c2: clonedkeyholder } };
+						let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: typeofrestraintreadable, c2: clonedkeyholder } };
 						data.revoke = true;
 						if (isclone) {
 							data.isclone = true;
@@ -674,15 +674,15 @@ module.exports = {
 						if (typeofrestraint == "collar") {
 							await confirmation.update({ content: getTextGeneric("revoke_accept", data.textdata), components: [] });
 							await confirmation.followUp(getText(data));
-							revokeCollarKey(wearer.id, clonedkeyholder.id);
+							revokeCollarKey(interaction.guildId, wearer.id, clonedkeyholder.id);
 						} else if (typeofrestraint == "chastitybelt") {
 							await confirmation.update({ content: getTextGeneric("revoke_accept", data.textdata), components: [] });
 							await confirmation.followUp(getText(data));
-							revokeChastityKey(wearer.id, clonedkeyholder.id);
+							revokeChastityKey(interaction.guildId, wearer.id, clonedkeyholder.id);
 						} else if (typeofrestraint == "chastitybra") {
 							await confirmation.update({ content: getTextGeneric("revoke_accept", data.textdata), components: [] });
 							await confirmation.followUp(getText(data));
-							revokeChastityBraKey(wearer.id, clonedkeyholder.id);
+							revokeChastityBraKey(interaction.guildId, wearer.id, clonedkeyholder.id);
 						}
 					} else if (confirmation.customId === "cancel") {
 						await confirmation.update({ content: "Action cancelled", components: [] });
@@ -713,17 +713,17 @@ module.exports = {
 				// Check if the interaction user has access to give the key for the target restraint.
 				let cangive = false;
 				let chosenrestraintreadable;
-				if (restraint == "collar" && getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, undefined, true).access) {
+				if (restraint == "collar" && getCollar(interaction.guildId, wearer.id) && canAccessCollar(interaction.guildId, wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "collar";
 					choiceemoji = `${process.emojis.collar}`;
 				}
-				if (restraint == "chastitybelt" && getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, undefined, true).access) {
+				if (restraint == "chastitybelt" && getChastity(interaction.guildId, wearer.id) && canAccessChastity(interaction.guildId, wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "chastity belt";
 					choiceemoji = `${process.emojis.chastity}`;
 				}
-				if (restraint == "chastitybra" && getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, undefined, true).access) {
+				if (restraint == "chastitybra" && getChastityBra(interaction.guildId, wearer.id) && canAccessChastityBra(interaction.guildId, wearer.id, interaction.user.id, undefined, true).access) {
 					cangive = true;
 					chosenrestraintreadable = "chastity bra";
 					choiceemoji = `${process.emojis.chastitybra}`;
@@ -759,8 +759,8 @@ module.exports = {
 
 					if (confirmation.customId === "agreetogivebutton") {
 						// Skip the DM if the wearer is the giver or receiver, or if they have auto accepting enabled
-						if (wearer == interaction.user || wearer == newKeyholder || (getOption(wearer, "keygiving") == "auto")) {
-							let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
+						if (wearer == interaction.user || wearer == newKeyholder || (getOption(interaction.guildId, wearer, "keygiving") == "auto")) {
+							let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 							data.give = true;
 							if (wearer == interaction.user) {
 								data.self = true;
@@ -771,69 +771,69 @@ module.exports = {
 							if (restraint == "collar") {
 								await confirmation.update({ content: getTextGeneric("give_accept_self", data.textdata), components: [] });
 								await confirmation.followUp(getText(data));
-								transferCollarKey(wearer.id, newKeyholder.id);
+								transferCollarKey(interaction.guildId, wearer.id, newKeyholder.id);
 							} else if (restraint == "chastitybelt") {
 								await confirmation.update({ content: getTextGeneric("give_accept_self", data.textdata), components: [] });
 								await confirmation.followUp(getText(data));
-								transferChastityKey(wearer.id, newKeyholder.id);
+								transferChastityKey(interaction.guildId, wearer.id, newKeyholder.id);
 							} else if (restraint == "chastitybra") {
 								await confirmation.update({ content: getTextGeneric("give_accept_self", data.textdata), components: [] });
 								await confirmation.followUp(getText(data));
-								transferChastityBraKey(wearer.id, newKeyholder.id);
+								transferChastityBraKey(interaction.guildId, wearer.id, newKeyholder.id);
 							}
 						} else {
 							await confirmation.update({ content: `Prompting the user for permission.`, components: [] });
 							if (restraint == "collar") {
-								let canRemove = await promptTransferCollarKey(interaction.user, wearer, newKeyholder).then(
+								let canRemove = await promptTransferCollarKey(interaction.guildId, interaction.user, wearer, newKeyholder).then(
 									async (res) => {
 										// User said yes
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 										data.give = true;
 										data.other = true;
 										data[restraint] = true;
 										await confirmation.editReply(getTextGeneric("give_accept", data.textdata));
 										await confirmation.followUp(getText(data));
-										transferCollarKey(wearer.id, newKeyholder.id);
+										transferCollarKey(interaction.guildId, wearer.id, newKeyholder.id);
 									},
 									async (rej) => {
 										// User said no.
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 										await interaction.editReply(getTextGeneric("give_decline", data.textdata));
 									},
 								);
 							} else if (restraint == "chastitybelt") {
-								let canRemove = await promptTransferChastityKey(interaction.user, wearer, newKeyholder).then(
+								let canRemove = await promptTransferChastityKey(interaction.guildId, interaction.user, wearer, newKeyholder).then(
 									async (res) => {
 										// User said yes
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 										data.give = true;
 										data.other = true;
 										data[restraint] = true;
 										await confirmation.editReply(getTextGeneric("give_accept", data.textdata));
 										await confirmation.followUp(getText(data));
-										transferChastityKey(wearer.id, newKeyholder.id);
+										transferChastityKey(interaction.guildId, wearer.id, newKeyholder.id);
 									},
 									async (rej) => {
 										// User said no.
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 										await interaction.editReply(getTextGeneric("give_decline", data.textdata));
 									},
 								);
 							} else if (restraint == "chastitybra") {
-								let canRemove = await promptTransferChastityBraKey(interaction.user, wearer, newKeyholder).then(
+								let canRemove = await promptTransferChastityBraKey(interaction.guildId, interaction.user, wearer, newKeyholder).then(
 									async (res) => {
 										// User said yes
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 										data.give = true;
 										data.other = true;
 										data[restraint] = true;
 										await confirmation.editReply(getTextGeneric("give_accept", data.textdata));
 										await confirmation.followUp(getText(data));
-										transferChastityBraKey(wearer.id, newKeyholder.id);
+										transferChastityBraKey(interaction.guildId, wearer.id, newKeyholder.id);
 									},
 									async (rej) => {
 										// User said no.
-										let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
+										let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 										await interaction.editReply(getTextGeneric("give_decline", data.textdata));
 									},
 								);
@@ -861,18 +861,18 @@ module.exports = {
 				let newrestraintname;
 				let permitted = false;
 				if (restrainttype == "collar") {
-					newrestraintname = getCollarName(undefined, newrestraint);
-					if (getCollar(wearer.id) && canAccessCollar(wearer.id, interaction.user.id, true).access) {
+					newrestraintname = getCollarName(interaction.guildId, undefined, newrestraint);
+					if (getCollar(wearer.id) && canAccessCollar(interaction.guildId, wearer.id, interaction.user.id, true).access) {
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybelt") {
-					newrestraintname = getChastityName(undefined, newrestraint);
-					if (getChastity(wearer.id) && canAccessChastity(wearer.id, interaction.user.id, true).access) {
+					newrestraintname = getChastityName(interaction.guildId, undefined, newrestraint);
+					if (getChastity(wearer.id) && canAccessChastity(interaction.guildId, wearer.id, interaction.user.id, true).access) {
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybra") {
-					newrestraintname = getChastityBraName(undefined, newrestraint);
-					if (getChastityBra(wearer.id) && canAccessChastityBra(wearer.id, interaction.user.id, true).access) {
+					newrestraintname = getChastityBraName(interaction.guildId, undefined, newrestraint);
+					if (getChastityBra(wearer.id) && canAccessChastityBra(interaction.guildId, wearer.id, interaction.user.id, true).access) {
 						permitted = true;
 					}
 				}
@@ -887,21 +887,21 @@ module.exports = {
 				}
 
 				// Okay they're probably allowed lol
-				let data = { textarray: "texts_key", textdata: { interactionuser: interaction.user, targetuser: wearer } };
+				let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer } };
 				data.swapitem = true;
 				if (interaction.user.id == wearer.id) {
 					// swapping own keyed item
 					data.self = true;
 					data[restrainttype] = true;
 					if (restrainttype == "collar") {
-						data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
+						data.textdata.c1 = getCollarName(interaction.guildId, wearer.id, getCollar(interaction.guildId, wearer.id).collartype) ?? "collar"; // Old collar
 						data.textdata.c2 = newrestraintname;
                         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                        await handleExtremeRestraint(interaction.user, wearer, "collar", newrestraint).then(
+                        await handleExtremeRestraint(interaction.guildId, interaction.user, wearer, "collar", newrestraint).then(
                             async (success) => {
                                 await interaction.followUp({ content: `Swapping your collar to the ${data.textdata.c2}.`, flags: MessageFlags.Ephemeral })
                                 await interaction.followUp({ content: getText(data) })
-                                getCollar(wearer.id).collartype = newrestraint;
+                                getCollar(interaction.guildId, wearer.id).collartype = newrestraint;
                                 markForSave("collar");
                             },
                             async (reject) => {
@@ -909,14 +909,14 @@ module.exports = {
                             }
                         )
 					} else if (restrainttype == "chastitybelt") {
-						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
+						data.textdata.c1 = getChastityName(interaction.guildId, wearer.id, getChastity(interaction.guildId, wearer.id).chastitytype) ?? "chastity belt"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastity(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
+						if(!swapChastity(interaction.guildId, wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
 						interaction.reply(getText(data));
 					} else if (restrainttype == "chastitybra") {
-						data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
+						data.textdata.c1 = getChastityBraName(interaction.guildId, wearer.id, getChastityBra(interaction.guildId, wearer.id).chastitytype) ?? "chastity bra"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastityBra(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
+						if(!swapChastityBra(interaction.guildId, wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
 						interaction.reply(getText(data));
 					}
 				} else {
@@ -924,14 +924,14 @@ module.exports = {
 					data.other = true;
 					data[restrainttype] = true;
 					if (restrainttype == "collar") {
-						data.textdata.c1 = getCollarName(wearer.id, getCollar(wearer.id).collartype) ?? "collar"; // Old collar
+						data.textdata.c1 = getCollarName(interaction.guildId, wearer.id, getCollar(interaction.guildId, wearer.id).collartype) ?? "collar"; // Old collar
 						data.textdata.c2 = newrestraintname;
                         await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                        await handleExtremeRestraint(interaction.user, wearer, "collar", newrestraint).then(
+                        await handleExtremeRestraint(interaction.guildId, interaction.user, wearer, "collar", newrestraint).then(
                             async (success) => {
                                 await interaction.followUp({ content: `Swapping ${wearer}'s collar to the ${data.textdata.c2}.`, flags: MessageFlags.Ephemeral })
                                 await interaction.followUp({ content: getText(data) })
-                                getCollar(wearer.id).collartype = newrestraint;
+                                getCollar(interaction.guildId, wearer.id).collartype = newrestraint;
                                 markForSave("collar");
                             },
                             async (reject) => {
@@ -939,15 +939,15 @@ module.exports = {
                             }
                         )
 					} else if (restrainttype == "chastitybelt") {
-						data.textdata.c1 = getChastityName(wearer.id, getChastity(wearer.id).chastitytype) ?? "chastity belt"; // Old collar
+						data.textdata.c1 = getChastityName(interaction.guildId, wearer.id, getChastity(interaction.guildId, wearer.id).chastitytype) ?? "chastity belt"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastity(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; } // I'm gonna leave this like this for now. Maybe once we have belts that can fail to unlock we can improve this.
+						if(!swapChastity(interaction.guildId, wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity belt couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; } // I'm gonna leave this like this for now. Maybe once we have belts that can fail to unlock we can improve this.
 						markForSave("chastity");
 						interaction.reply(getText(data));
 					} else if (restrainttype == "chastitybra") {
-						data.textdata.c1 = getChastityBraName(wearer.id, getChastityBra(wearer.id).chastitytype) ?? "chastity bra"; // Old collar
+						data.textdata.c1 = getChastityBraName(interaction.guildId, wearer.id, getChastityBra(interaction.guildId, wearer.id).chastitytype) ?? "chastity bra"; // Old collar
 						data.textdata.c2 = newrestraintname;
-						if(!swapChastityBra(wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
+						if(!swapChastityBra(interaction.guildId, wearer.id, interaction.user.id, newrestraint)){ interaction.reply({ content: `The chastity bra couldn't be unlocked.`, flags: MessageFlags.Ephemeral }); return; }
 						markForSave("chastitybra");
 						interaction.reply(getText(data));
 					}
@@ -964,16 +964,16 @@ module.exports = {
                 let discardedhelp = "collar";
                 let permitted = false;
 				if (restrainttype == "collar") {
-					if (getCollar(wearer.id) && getCollar(wearer.id).keyholder == interaction.user.id && !getCollar(wearer.id)?.fumbled) {
+					if (getCollar(interaction.guildId, wearer.id) && getCollar(interaction.guildId, wearer.id).keyholder == interaction.user.id && !getCollar(interaction.guildId, wearer.id)?.fumbled) {
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybelt") {
-					if (getChastity(wearer.id) && getChastity(wearer.id).keyholder == interaction.user.id && !getChastity(wearer.id)?.fumbled) {
+					if (getChastity(interaction.guildId, wearer.id) && getChastity(interaction.guildId, wearer.id).keyholder == interaction.user.id && !getChastity(interaction.guildId, wearer.id)?.fumbled) {
                         discardedhelp = "chastity belt"
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybra") {
-					if (getChastityBra(wearer.id) && getChastityBra(wearer.id).keyholder == interaction.user.id && !getChastityBra(wearer.id)?.fumbled) {
+					if (getChastityBra(interaction.guildId, wearer.id) && getChastityBra(interaction.guildId, wearer.id).keyholder == interaction.user.id && !getChastityBra(interaction.guildId, wearer.id)?.fumbled) {
                         discardedhelp = "chastity bra"
 						permitted = true;
 					}
@@ -988,13 +988,14 @@ module.exports = {
                 // Okay they're probably allowed lol
 				let data = { 
                     textarray: "texts_key", textdata: { 
+                        serverID: interaction.guildId, 
                         interactionuser: interaction.user, 
                         targetuser: wearer,
                         c1: discardedhelp
                     },
                 };
                 data.discardkey = true;
-                let discardedkey = discardKey(wearer.id, interaction.user.id, discardedhelp);
+                let discardedkey = discardKey(interaction.guildId, wearer.id, interaction.user.id, discardedhelp);
                 if (wearer.id == interaction.user.id) {
                     data.self = true
                 }
@@ -1005,14 +1006,14 @@ module.exports = {
                 interaction.reply(getText(data));
             }
             else if (subcommand == "menu") {
-                interaction.reply(await generateKeyGivingModal(interaction.user.id, undefined, undefined, "0000"))
+                interaction.reply(await generateKeyGivingModal(interaction.guildId, interaction.user.id, undefined, undefined, "0000"))
             } 
             else if (subcommand == "additionalcollar") {
                 // Handling additional collar effects!
                 let wearer = interaction.options.getUser("wearer") ?? interaction.user;
                 let additionaltype = interaction.options.getString("type"); // "additionalcollar_add", "additionalcollar_remove"
 				let collareffect = interaction.options.getString("collareffect"); // eligible collar type!
-                let collarkeyholder = canAccessCollar(wearer.id, interaction.user.id, true).access
+                let collarkeyholder = canAccessCollar(interaction.guildId, wearer.id, interaction.user.id, true).access
                 if ((!collarkeyholder) || (collareffect == "nokeys")) {
                     // If we do not have the target's collar keys, go away.
                     if (interaction.user.id == wearer.id) {
@@ -1033,7 +1034,7 @@ module.exports = {
                         else {
                             // Check their tags and make sure they're okay with this. 
                             let blocked = false;
-                            let tags = getUserTags(wearer.id);
+                            let tags = getUserTags(interaction.guildId, wearer.id);
                             let i = getBaseCollar(collareffect)
                             tags.forEach((t) => {
                                 if (i && i.tags && i.tags[t] && (wearer != interaction.user)) {
@@ -1049,10 +1050,11 @@ module.exports = {
                             // Okay they're probably allowed lol
                             let data = { 
                                 textarray: "texts_key", textdata: { 
+                                    serverID: interaction.guildId, 
                                     interactionuser: interaction.user, 
                                     targetuser: wearer,
                                     c1: getBaseCollar(collareffect)?.name,
-                                    c2: getBaseCollar(getCollar(wearer.id)?.collartype)?.name ?? "collar"
+                                    c2: getBaseCollar(getCollar(interaction.guildId, wearer.id)?.collartype)?.name ?? "collar"
                                 },
                             };
                             data.additionalcollar = true;
@@ -1064,11 +1066,11 @@ module.exports = {
                             }
                             data.add = true;
                             await interaction.deferReply({ flags: MessageFlags.Ephemeral });
-                            await handleExtremeRestraint(interaction.user, wearer, "collar", collareffect).then(
+                            await handleExtremeRestraint(interaction.guildId, interaction.user, wearer, "collar", collareffect).then(
                                 async (success) => {
                                     await interaction.followUp({ content: `Applying the ${data.textdata.c1} effect`, flags: MessageFlags.Ephemeral })
                                     await interaction.followUp({ content: getText(data) })
-                                    addAdditionalCollarEffect(wearer.id, collareffect);
+                                    addAdditionalCollarEffect(interaction.guildId, wearer.id, collareffect);
                                 },
                                 async (reject) => {
                                     await interaction.followUp({ content: `The ${data.textdata.c1} effect was rejected.`, flags: MessageFlags.Ephemeral })
@@ -1088,7 +1090,7 @@ module.exports = {
                                     interactionuser: interaction.user, 
                                     targetuser: wearer,
                                     c1: getBaseCollar(collareffect)?.name,
-                                    c2: getBaseCollar(getCollar(wearer.id)?.collartype)?.name ?? "collar"
+                                    c2: getBaseCollar(getCollar(interaction.guildId, wearer.id)?.collartype)?.name ?? "collar"
                                 },
                             };
                             data.additionalcollar = true;
@@ -1100,7 +1102,7 @@ module.exports = {
                             }
                             data.remove = true;
                             interaction.reply({ content: getText(data) })
-                            removeAdditionalCollarEffect(wearer.id, collareffect);
+                            removeAdditionalCollarEffect(interaction.guildId, wearer.id, collareffect);
                         }
                     }
                 }
@@ -1117,13 +1119,13 @@ module.exports = {
 
 				// Check if the interaction user has access to discard the key for target restraint.
 				let candiscard = false;
-				if (chosenrestrainttoclone == "collar" && getCollar(wearertodiscard.id) && canAccessCollar(wearertodiscard.id, interaction.user.id, undefined, true).access) {
+				if (chosenrestrainttoclone == "collar" && getCollar(interaction.guildId, wearertodiscard.id) && canAccessCollar(interaction.guildId, wearertodiscard.id, interaction.user.id, undefined, true).access) {
                     candiscard = true
 				}
-				if (chosenrestrainttoclone == "chastitybelt" && getChastity(wearertodiscard.id) && canAccessChastity(wearertodiscard.id, interaction.user.id, undefined, true).access) {
+				if (chosenrestrainttoclone == "chastitybelt" && getChastity(interaction.guildId, wearertodiscard.id) && canAccessChastity(interaction.guildId, wearertodiscard.id, interaction.user.id, undefined, true).access) {
 					candiscard = true
 				}
-				if (chosenrestrainttoclone == "chastitybra" && getChastityBra(wearertodiscard.id) && canAccessChastityBra(wearertodiscard.id, interaction.user.id, undefined, true).access) {
+				if (chosenrestrainttoclone == "chastitybra" && getChastityBra(interaction.guildId, wearertodiscard.id) && canAccessChastityBra(interaction.guildId, wearertodiscard.id, interaction.user.id, undefined, true).access) {
 					candiscard = true
 				}
 				if (!candiscard) {
@@ -1137,7 +1139,7 @@ module.exports = {
 				}
 
 				// If the wearer has disabled key loss from fumbling, tell them to leave.
-				if (getOption(wearertodiscard.id, "keyloss") == "disabled") {
+				if (getOption(interaction.guildId, wearertodiscard.id, "keyloss") == "disabled") {
                     if (wearertodiscard.id === interaction.user.id) {
                         interaction.reply({ content: `You've disabled key loss from fumbling.`, flags: MessageFlags.Ephemeral });
 					    return;
@@ -1151,6 +1153,7 @@ module.exports = {
                 let data = { 
                     textarray: "texts_key", 
                     textdata: {
+                        serverID: interaction.guildId, 
                         interactionuser: interaction.user,
                         targetuser: wearertodiscard,
                     },
@@ -1166,16 +1169,16 @@ module.exports = {
                 data.keyholder = true;
 
                 if ((chosenrestrainttoclone == "chastitybelt")) {
-                    data.textdata.c1 = getBaseChastity(getChastity(wearertodiscard.id)?.chastitytype ?? `belt_silver`).name
-                    discardKey(wearertodiscard.id, interaction.user.id, "chastity belt");
+                    data.textdata.c1 = getBaseChastity(getChastity(interaction.guildId, wearertodiscard.id)?.chastitytype ?? `belt_silver`).name
+                    discardKey(interaction.guildId, wearertodiscard.id, interaction.user.id, "chastity belt");
                 }
                 else if ((chosenrestrainttoclone == "chastitybra")) {
-                    data.textdata.c1 = getBaseChastity(getChastityBra(wearertodiscard.id)?.chastitytype ?? `bra_silver`).name
-                    discardKey(wearertodiscard.id, interaction.user.id, "chastity bra");
+                    data.textdata.c1 = getBaseChastity(getChastityBra(interaction.guildId, wearertodiscard.id)?.chastitytype ?? `bra_silver`).name
+                    discardKey(interaction.guildId, wearertodiscard.id, interaction.user.id, "chastity bra");
                 }
                 else if (chosenrestrainttoclone == "collar") {
                     // Why the fuck is .collartype ever storing a string value named "null"!?
-                    let collartype = getCollar(wearertodiscard.id).collartype
+                    let collartype = getCollar(interaction.guildId, wearertodiscard.id).collartype
                     if (collartype == "null") {
                         collartype = `collar_leather`
                         data.textdata.c1 = `collar`
@@ -1205,7 +1208,7 @@ module.exports = {
                 else { 
                     newkeybit = `0${newkeybit.slice(1)}` 
                 }
-                await interaction.update(await generateKeyGivingModal(interaction.user.id, optionparts[3], optionparts[4], newkeybit));
+                await interaction.update(await generateKeyGivingModal(interaction.guildId, interaction.user.id, optionparts[3], optionparts[4], newkeybit));
 			}
             else if (optionparts[1] == "key") {
                 let newkeybit = optionparts[5]
@@ -1233,7 +1236,7 @@ module.exports = {
                         newkeybit = `${newkeybit.slice(0,3)}0}` 
                     }
                 }
-                await interaction.update(await generateKeyGivingModal(interaction.user.id, optionparts[3], optionparts[4], newkeybit));
+                await interaction.update(await generateKeyGivingModal(interaction.guildId, interaction.user.id, optionparts[3], optionparts[4], newkeybit));
             }
             else if (optionparts[1] == "select") {
                 let newkeybit = optionparts[5]
@@ -1242,14 +1245,14 @@ module.exports = {
                     if (interaction.values) {
                         newwearer = interaction.values[0]
                     }
-                    await interaction.update(await generateKeyGivingModal(interaction.user.id, newwearer, optionparts[4], optionparts[5]));
+                    await interaction.update(await generateKeyGivingModal(interaction.guildId, interaction.user.id, newwearer, optionparts[4], optionparts[5]));
                 }
                 if (optionparts[2] == "targetid") {
                     let newtarget = optionparts[4]
                     if (interaction.values) {
                         newtarget = interaction.values[0]
                     }
-                    await interaction.update(await generateKeyGivingModal(interaction.user.id, optionparts[3], newtarget, optionparts[5]));
+                    await interaction.update(await generateKeyGivingModal(interaction.guildId, interaction.user.id, optionparts[3], newtarget, optionparts[5]));
                 }
             }
             else if (optionparts[1] == "confirm") {
@@ -1262,9 +1265,9 @@ module.exports = {
 
                 // Check each restraint individually. We need to verify we have primary key on it, and if a cloning, we need to ensure the target does not already have a clone
                 // Chastity
-                if ((keybit.charAt(1) == "1") && (getChastity(wearerid)?.keyholder == interaction.user.id) && (!getChastity(wearerid)?.fumbled)) {
+                if ((keybit.charAt(1) == "1") && (getChastity(interaction.guildId, wearerid)?.keyholder == interaction.user.id) && (!getChastity(interaction.guildId, wearerid)?.fumbled)) {
                     if (keybit.charAt(0) == "1") {
-                        if (!(getChastity(wearerid)?.clonedKeyholders && getChastity(wearerid)?.clonedKeyholders.includes(targetid))) {
+                        if (!(getChastity(interaction.guildId, wearerid)?.clonedKeyholders && getChastity(interaction.guildId, wearerid)?.clonedKeyholders.includes(targetid))) {
                             validrestraints.push("chastity");
                         }
                     }
@@ -1273,9 +1276,9 @@ module.exports = {
                     }
                 }
                 // Chastity Bra
-                if ((keybit.charAt(2) == "1") && (getChastityBra(wearerid)?.keyholder == interaction.user.id) && (!getChastityBra(wearerid)?.fumbled)) {
+                if ((keybit.charAt(2) == "1") && (getChastityBra(interaction.guildId, wearerid)?.keyholder == interaction.user.id) && (!getChastityBra(interaction.guildId, wearerid)?.fumbled)) {
                     if (keybit.charAt(0) == "1") {
-                        if (!(getChastityBra(wearerid)?.clonedKeyholders && getChastityBra(wearerid)?.clonedKeyholders.includes(targetid))) {
+                        if (!(getChastityBra(interaction.guildId, wearerid)?.clonedKeyholders && getChastityBra(interaction.guildId, wearerid)?.clonedKeyholders.includes(targetid))) {
                             validrestraints.push("chastitybra");
                         }
                     }
@@ -1284,9 +1287,9 @@ module.exports = {
                     }
                 }
                 // Collar
-                if ((keybit.charAt(3) == "1") && (getCollar(wearerid)?.keyholder == interaction.user.id) && (!getCollar(wearerid)?.fumbled)) {
+                if ((keybit.charAt(3) == "1") && (getCollar(interaction.guildId, wearerid)?.keyholder == interaction.user.id) && (!getCollar(interaction.guildId, wearerid)?.fumbled)) {
                     if (keybit.charAt(0) == "1") {
-                        if (!(getCollar(wearerid)?.clonedKeyholders && getCollar(wearerid)?.clonedKeyholders.includes(targetid))) {
+                        if (!(getCollar(interaction.guildId, wearerid)?.clonedKeyholders && getCollar(interaction.guildId, wearerid)?.clonedKeyholders.includes(targetid))) {
                             validrestraints.push("collar");
                         }
                     }
@@ -1303,8 +1306,8 @@ module.exports = {
 
                 // Determine if we can shortcut the requesting process. 
                 let giveauto = false;
-                if (((getOption(wearerid, "keygiving") == "auto") && (keybit.charAt(0) == "0")) ||
-                    ((getOption(wearerid, "keycloning") == "auto") && (keybit.charAt(0) == "1"))) {
+                if (((getOption(interaction.guildId, wearerid, "keygiving") == "auto") && (keybit.charAt(0) == "0")) ||
+                    ((getOption(interaction.guildId, wearerid, "keycloning") == "auto") && (keybit.charAt(0) == "1"))) {
                     giveauto = true;
                 }
                 if ((interaction.user.id == wearerid) || (wearerid == targetid)) {
@@ -1337,7 +1340,7 @@ module.exports = {
                     if (keybit.charAt(0) == "0") {
                         // Give
                         outtext = `<@${interaction.user.id}> would like to give the keys for your `
-                        outend = ` to <@${targetid}>. \n*${getPronouns(interaction.user.id, "subject", true)} will no longer have access to your restraint*\n\n**Accept** or **Deny** this request below:`
+                        outend = ` to <@${targetid}>. \n*${getPronouns(interaction.guildId, interaction.user.id, "subject", true)} will no longer have access to your restraint*\n\n**Accept** or **Deny** this request below:`
                     }
                     else {
                         // Clone
@@ -1368,35 +1371,35 @@ module.exports = {
                                         i.reply(`Confirmed - <@${targetid}> will receive keys to your restraints!`);
                                     });
                                     let wearertext = (wearerid == interaction.user.id) ? `your` : `<@${wearerid}>'s`
-                                    let desttext = (targetid == wearerid) ? `${getPronouns(wearerid, "object")}` : `<@${targetid}>`
+                                    let desttext = (targetid == wearerid) ? `${getPronouns(interaction.guildId, wearerid, "object")}` : `<@${targetid}>`
                                     // Do stuff!
                                     // Chastity
                                     if ((keybit.charAt(1) == "1") && validrestraints.includes("chastity")) {
                                         if (keybit.charAt(0) == "0") { // Give
-                                            transferChastityKey(wearerid, targetid);
+                                            transferChastityKey(interaction.guildId, wearerid, targetid);
                                         }
                                         else {
-                                            cloneChastityKey(wearerid, targetid);
+                                            cloneChastityKey(interaction.guildId, wearerid, targetid);
                                         }
                                     }
                                     if ((keybit.charAt(2) == "1") && validrestraints.includes("chastitybra")) {
                                         if (keybit.charAt(0) == "0") { // Give
-                                            transferChastityBraKey(wearerid, targetid);
+                                            transferChastityBraKey(interaction.guildId, wearerid, targetid);
                                         }
                                         else {
-                                            cloneChastityBraKey(wearerid, targetid);
+                                            cloneChastityBraKey(interaction.guildId, wearerid, targetid);
                                         }
                                     }
                                     if ((keybit.charAt(3) == "1") && validrestraints.includes("collar")) {
                                         if (keybit.charAt(0) == "0") { // Give
-                                            transferCollarKey(wearerid, targetid);
+                                            transferCollarKey(interaction.guildId, wearerid, targetid);
                                         }
                                         else {
-                                            cloneCollarKey(wearerid, targetid);
+                                            cloneCollarKey(interaction.guildId, wearerid, targetid);
                                         }
                                     }
                                     interaction.editReply(`${(keybit.charAt(0) == "0") ? `Transferred ` : `Cloned `}keys for ${wearertext} ${restraintstext} to ${desttext}.`)
-                                    interaction.followUp(`${interaction.user} ${(keybit.charAt(0) == "0") ? `transfers ` : `clones `}keys for ${(wearerid == interaction.user.id) ? getPronouns(interaction.user.id, "possessiveDeterminer") : wearertext} ${restraintstext} and gives them to ${desttext}.`)
+                                    interaction.followUp(`${interaction.user} ${(keybit.charAt(0) == "0") ? `transfers ` : `clones `}keys for ${(wearerid == interaction.user.id) ? getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer") : wearertext} ${restraintstext} and gives them to ${desttext}.`)
                                     return;
                                 } else {
                                     await mess.delete().then(() => {
@@ -1424,35 +1427,35 @@ module.exports = {
                 }
                 else {
                     let wearertext = (wearerid == interaction.user.id) ? `your` : `<@${wearerid}>'s`
-                    let desttext = (targetid == wearerid) ? `${getPronouns(wearerid, "object")}` : `<@${targetid}>`
+                    let desttext = (targetid == wearerid) ? `${getPronouns(interaction.guildId, wearerid, "object")}` : `<@${targetid}>`
                     // Do stuff!
                     // Chastity
                     if ((keybit.charAt(1) == "1") && validrestraints.includes("chastity")) {
                         if (keybit.charAt(0) == "0") { // Give
-                            transferChastityKey(wearerid, targetid);
+                            transferChastityKey(interaction.guildId, wearerid, targetid);
                         }
                         else {
-                            cloneChastityKey(wearerid, targetid);
+                            cloneChastityKey(interaction.guildId, wearerid, targetid);
                         }
                     }
                     if ((keybit.charAt(2) == "1") && validrestraints.includes("chastitybra")) {
                         if (keybit.charAt(0) == "0") { // Give
-                            transferChastityBraKey(wearerid, targetid);
+                            transferChastityBraKey(interaction.guildId, wearerid, targetid);
                         }
                         else {
-                            cloneChastityBraKey(wearerid, targetid);
+                            cloneChastityBraKey(interaction.guildId, wearerid, targetid);
                         }
                     }
                     if ((keybit.charAt(3) == "1") && validrestraints.includes("collar")) {
                         if (keybit.charAt(0) == "0") { // Give
-                            transferCollarKey(wearerid, targetid);
+                            transferCollarKey(interaction.guildId, wearerid, targetid);
                         }
                         else {
-                            cloneCollarKey(wearerid, targetid);
+                            cloneCollarKey(interaction.guildId, wearerid, targetid);
                         }
                     }
                     interaction.editReply(`${(keybit.charAt(0) == "0") ? `Transferred ` : `Cloned `}keys for ${wearertext} ${restraintstext} to ${desttext}.`)
-                    interaction.followUp(`${interaction.user} ${(keybit.charAt(0) == "0") ? `transfers ` : `clones `}keys for ${(wearerid == interaction.user.id) ? getPronouns(interaction.user.id, "possessiveDeterminer") : wearertext} ${restraintstext} and gives them to ${desttext}.`)
+                    interaction.followUp(`${interaction.user} ${(keybit.charAt(0) == "0") ? `transfers ` : `clones `}keys for ${(wearerid == interaction.user.id) ? getPronouns(interaction.guildId, interaction.user.id, "possessiveDeterminer") : wearertext} ${restraintstext} and gives them to ${desttext}.`)
                     return;
                 }
             }

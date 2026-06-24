@@ -12,9 +12,11 @@ const { createWebhook } = require("../functions/setters/config/createWebhook.js"
 const { deleteWebhook } = require("../functions/setters/config/deleteWebhook.js");
 const { leaveServerOptions } = require("../functions/setters/config/leaveServerOptions.js");
 const { setOption } = require("../functions/setters/config/setOption.js");
+const { setBotOption } = require("../functions/setters/config/setBotOption.js");
 const { configoptions } = require("../lists/configoptions.js");
 const { initializeServerOptions } = require("../functions/other/initializeServerOptions.js");
 const { markForSave } = require("../functions/other/markForSave.js");
+const { getProcessVariable } = require("../functions/getters/config/getProcessVariable.js");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("config").setDescription(`Configure settings...`),
@@ -44,15 +46,15 @@ module.exports = {
 				// We then find the current value and then increment it, resetting to 0 when out of range.
 				// Then we assign it to setOption. This means that choices are chosen from top to bottom in a circle.
 				let optionschoice = configoptions[optionparts[2]][optionparts[4]].choices.map((c) => c.value);
-				let newindex = optionschoice.indexOf(getOption(interaction.user.id, optionparts[4])) + 1;
+				let newindex = optionschoice.indexOf(getOption(interaction.guildId, interaction.user.id, optionparts[4])) + 1;
 				if (newindex >= optionschoice.length) {
 					newindex = 0;
 				}
-				setOption(interaction.user.id, optionparts[4], optionschoice[newindex]);
+				setOption(interaction.guildId, interaction.user.id, optionparts[4], optionschoice[newindex]);
 
 				// After doing so, run the NEW option's select_function.
 				if (typeof configoptions[optionparts[2]][optionparts[4]].choices[newindex].select_function == "function") {
-					await configoptions[optionparts[2]][optionparts[4]].choices[newindex]["select_function"](interaction.user.id);
+					await configoptions[optionparts[2]][optionparts[4]].choices[newindex]["select_function"](interaction.guildId, interaction.user.id);
 				}
 
 				// Finally, reprompt the user, now with the new choice set.
@@ -110,10 +112,10 @@ module.exports = {
 				let buttonpressed = configoptions[optionparts[2]][optionparts[3]];
 				let data = { title: buttonpressed.name, desctext: buttonpressed.descmodal, placeholder: buttonpressed.placeholder, page: optionparts[2], pagenum: optionparts[4] };
 				if (typeof buttonpressed.customtext == "function") {
-					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.user.id));
+					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.guildId, interaction.user.id));
 				}
 				if (typeof buttonpressed.placeholder == "function") {
-					data.placeholder = buttonpressed.placeholder(interaction.user.id);
+					data.placeholder = buttonpressed.placeholder(interaction.guildId, interaction.user.id);
 				}
                 if (!data.pagenum) { data.pagenum = 1 };
 
@@ -125,10 +127,10 @@ module.exports = {
 				let buttonpressed = configoptions[optionparts[2]][optionparts[3]];
 				let data = { title: buttonpressed.name, desctext: buttonpressed.descmodal, placeholder: buttonpressed.placeholder, page: optionparts[2], pagenum: optionparts[4] };
 				if (typeof buttonpressed.customtext == "function") {
-					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.user.id));
+					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.guildId, interaction.user.id));
 				}
 				if (typeof buttonpressed.placeholder == "function") {
-					data.placeholder = buttonpressed.placeholder(interaction.user.id);
+					data.placeholder = buttonpressed.placeholder(interaction.guildId, interaction.user.id);
 				}
                 if (!data.pagenum) { data.pagenum = 1 };
 
@@ -216,8 +218,8 @@ module.exports = {
 				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
 			} else if (optionparts[1] == "pageoptrevoke") {
 				// Revoke that CONSENT
-				if (process.consented[interaction.user.id]) {
-					delete process.consented[interaction.user.id];
+				if (getProcessVariable(interaction.guildId, interaction.user.id)) {
+					delete process.consented[interaction.guildId][interaction.user.id];
 					markForSave("consented");
 				}
 				// Finally, reprompt the user, now with the new choice set.
@@ -252,7 +254,7 @@ module.exports = {
 		let optionparts = interaction.customId.split("_");
 		if (optionparts[3] == "dollvisorname") {
             choiceinput = interaction.fields.getTextInputValue("choiceinput");
-			setOption(interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
+			setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
 			await interaction.reply({ content: `Updated your Doll Visor designation to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral });
 			if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
@@ -263,7 +265,7 @@ module.exports = {
 		}
         if (optionparts[3] == "dronevisorname") {
             choiceinput = interaction.fields.getTextInputValue("choiceinput");
-			setOption(interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
+			setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
 			await interaction.reply({ content: `Updated your ⬡-Drone Visor designation to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral });
 			if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
@@ -279,7 +281,7 @@ module.exports = {
             punishwordsseparated.forEach((w) => {
                 punishmentarr.push(w)
             })
-            setOption(interaction.user.id, optionparts[3], punishmentarr);
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], punishmentarr);
             await interaction.reply({ content: `Updated your punishment words to the following:\n- ${punishwordsseparated.join("\n- ")}`, flags: MessageFlags.Ephemeral });
 			if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
@@ -290,7 +292,7 @@ module.exports = {
         }
         if (optionparts[3] == "engravedcollarname") {
             choiceinput = interaction.fields.getTextInputValue("choiceinput");
-			setOption(interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
+			setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
 			await interaction.reply({ content: `Updated your Engraved Collar tag to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral });
 			if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
@@ -301,7 +303,7 @@ module.exports = {
 		}
         if (optionparts[3] == "deferentialgagsubject") {
             choiceinput = interaction.fields.getTextInputValue("choiceinput");
-			setOption(interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
+			setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceinput.slice(0, 30));
 			await interaction.reply({ content: `Updated your Deferential Gag subject to ${choiceinput.slice(0, 30)}`, flags: MessageFlags.Ephemeral });
 			if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
@@ -317,7 +319,7 @@ module.exports = {
             punishwordsseparated.forEach((w) => {
                 punishmentarr.push(w)
             })
-            setOption(interaction.user.id, optionparts[3], punishmentarr);
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], punishmentarr);
             await interaction.reply({ content: `Updated your Forbidden Gag words to the following:\n- ${punishwordsseparated.join("\n- ")}`, flags: MessageFlags.Ephemeral });
 			if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
@@ -329,11 +331,11 @@ module.exports = {
         if (optionparts[3] == "profilelink") {
             choiceinput = interaction.fields.getTextInputValue("choiceinput");
             if (choiceinput && choiceinput.length > 0) {
-                setOption(interaction.user.id, optionparts[3], choiceinput);
+                setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceinput);
                 await interaction.reply({ content: `Updated your profile link to ${choiceinput}`, flags: MessageFlags.Ephemeral });
             }
             else {
-                setOption(interaction.user.id, optionparts[3], ``);
+                setOption(interaction.guildId, interaction.user.id, optionparts[3], ``);
                 await interaction.reply({ content: `Cleared profile link`, flags: MessageFlags.Ephemeral });
             }
 			if (process.recentinteraction) {
@@ -346,11 +348,11 @@ module.exports = {
         if (optionparts[3] == "kinklistlink") {
             choiceinput = interaction.fields.getTextInputValue("choiceinput");
             if (choiceinput && choiceinput.length > 0) {
-                setOption(interaction.user.id, optionparts[3], choiceinput);
+                setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceinput);
                 await interaction.reply({ content: `Updated your kink list link to ${choiceinput}`, flags: MessageFlags.Ephemeral });
             }
             else {
-                setOption(interaction.user.id, optionparts[3], ``);
+                setOption(interaction.guildId, interaction.user.id, optionparts[3], ``);
                 await interaction.reply({ content: `Cleared profile link`, flags: MessageFlags.Ephemeral });
             }
 			if (process.recentinteraction) {
@@ -363,11 +365,11 @@ module.exports = {
         if (optionparts[3] == "preferredtitle") {
             choiceinput = interaction.fields.getTextInputValue("choiceinput");
             if (choiceinput && choiceinput.length > 0) {
-                setOption(interaction.user.id, optionparts[3], choiceinput);
+                setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceinput);
                 await interaction.reply({ content: `Updated your preferred title to ${choiceinput}`, flags: MessageFlags.Ephemeral });
             }
             else {
-                setOption(interaction.user.id, optionparts[3], ``);
+                setOption(interaction.guildId, interaction.user.id, optionparts[3], ``);
                 await interaction.reply({ content: `Cleared Preferred Titles`, flags: MessageFlags.Ephemeral });
             }
 			if (process.recentinteraction) {
@@ -383,7 +385,7 @@ module.exports = {
             if (choiceusers.length > 0) {
                 choiceusers = choiceusers.map((a) => a[0]).sort()
             }
-            setOption(interaction.user.id, optionparts[3], choiceusers);
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceusers);
             await interaction.reply({ content: `Updated allowed users to headpat you to ${choiceusers.map((a) => { return `<@${a}>`}).join(", ")}`, flags: MessageFlags.Ephemeral });
             if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
@@ -398,7 +400,7 @@ module.exports = {
             if (choiceusers.length > 0) {
                 choiceusers = choiceusers.map((a) => a[0]).sort()
             }
-            setOption(interaction.user.id, optionparts[3], choiceusers);
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceusers);
             await interaction.reply({ content: `Updated allowed users to shock you to ${choiceusers.map((a) => { return `<@${a}>`}).join(", ")}`, flags: MessageFlags.Ephemeral });
             if (process.recentinteraction) {
 				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {

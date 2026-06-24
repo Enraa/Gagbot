@@ -15,6 +15,8 @@ const honorifictitles = [
 	"maam",
     "madame",
     "madam",
+    "milady",
+    "milord",
 	"lady",
 	"ladies",
 	"lord",
@@ -62,10 +64,10 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 
 	if (regexpattern.test(msg.content)) {
 		// They were polite, don't touch it.
-        setUserVar(msg.member.id, "politeSubisPolite", Date.now() + 30000)
+        setUserVar(msg.guild.id, msg.member.id, "politeSubisPolite", Date.now() + 30000)
 		return;
 	}
-    else if (getUserVar(msg.member.id, "politeSubisPolite") > Date.now()) {
+    else if (getUserVar(msg.guild.id, msg.member.id, "politeSubisPolite") > Date.now()) {
         // They were polite within the last 30 seconds
         return;
     }
@@ -74,8 +76,8 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 		msgTree.callFunc(impoliteSub,true,["rawText","moan"],[silenced])	// Run a function on the tree.
 		if(silenced.isSilenced){
             msgTreeMods.modified = true
-            setUserVar(msg.member.id, "politeSubSilenceTime", Date.now() + 300000) // 5 mins of no silenced messages to clear
-            setUserVar(msg.member.id, "politeSubSilences", (getUserVar(msg.member.id, "politeSubSilences") ?? 0) + 1)
+            setUserVar(msg.guild.id, msg.member.id, "politeSubSilenceTime", Date.now() + 300000) // 5 mins of no silenced messages to clear
+            setUserVar(msg.guild.id, msg.member.id, "politeSubSilences", (getUserVar(msg.guild.id, msg.member.id, "politeSubSilences") ?? 0) + 1)
         }	// If the function caught anything, the message is modified.
 		return;
 	}

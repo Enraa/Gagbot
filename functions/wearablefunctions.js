@@ -1,6 +1,5 @@
 const fs = require("fs");
 const path = require("path");
-const { getLockedWearable } = require("./getters/wearable/getLockedWearable");
 
 let wearabletypes = [
 	// Aesthetic Body Parts
