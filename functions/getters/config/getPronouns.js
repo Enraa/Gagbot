@@ -24,7 +24,11 @@ function getPronouns(serverID, user, form, capitalize = false) {
     traceFirstParam(arguments[0]);
     let output = "";
     if (getProcessVariable(serverID, user, "pronouns")) {
+        // This user exists already!
         output = getProcessVariable(serverID, user, "pronouns")[form];
+    } else if (user == process.client.user.id) {
+        // This is for the bot
+        output = pronounsMap.get("it/its")[form];
     } else {
         output = pronounsMap.get("they/them")[form];
         // If the user has not set pronouns, we should try to send them a DM to have them do so

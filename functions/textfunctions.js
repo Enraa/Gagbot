@@ -2160,7 +2160,13 @@ const texts_touch = {
                 doublecrit: {
                     noboundmiss: [
                         `USER_TAG focuses USER_THEIR breath and places USER_THEIR hand on USER_THEIR waist, as if to unsheathe and perform a Middare Patsugekka on TARGET_TAG, critting *twice* on TARGET_THEIR head in one swing!`,
-                        `USER_TAG carefully breathes in and out... then out comes USER_THEIR pat on top of TARGET_TAG's head! Lady luck must favor USER_THEM twice over, as the sound echoes on the wall in succession!`
+                        `USER_TAG carefully breathes in and out... then out comes USER_THEIR pat on top of TARGET_TAG's head! Lady luck must favor USER_THEM twice over, as the sound echoes on the wall in succession!`,
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places USER_THEIR hand on TARGET_TAG's head! Shockingly, USER_THEY manage to find the secret reset switch, instantly disabling the bot for a moment. It recovers just a minute later before falling over a *second* time with stars in its eyes. After another cycle, it finally manages to stand up again and curtsies to USER_THEM, giving a pleasurable sound not unlike a 'thank you!' Well, as best can be understood through its gag anyway.`
+                        },
                     ]
                 },
                 crit: {
@@ -2173,7 +2179,31 @@ const texts_touch = {
                         `A different sound is heard as USER_TAG places USER_THEIR hand on TARGET_TAG. The headpat leaves TARGET_THEM in a bubbly glee!`,
                         `USER_TAG disappears for a brief moment and then appears behind TARGET_TAG, giving TARGET_THEM a stealthy critical pat before TARGET_THEY spotTARGET_S USER_THEM!`,
                         `USER_TAG limit breaks and casts a super-pat on TARGET_TAG! TARGET_THEY_CAP TARGET_ISARE left stunned from the sensation!`,
-                        `USER_TAG meditates for a moment and then gently places USER_THEIR hand on TARGET_TAG, moving at such a practiced and deliberate pace. The efforts pay off as TARGET_THEY meltTARGET_S under the gentlest, bestest of pats!`
+                        `USER_TAG meditates for a moment and then gently places USER_THEIR hand on TARGET_TAG, moving at such a practiced and deliberate pace. The efforts pay off as TARGET_THEY meltTARGET_S under the gentlest, bestest of pats!`,
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG runs USER_THEIR finger along TARGET_TAG's cheek, showering the bot with praise as the bot's synthetic porcelain skin almost appears to grow pink for a moment!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places a hand on TARGET_TAG's head. It's eyes go blank unexpectedly and a chime of falling notes can be heard from it's vocal processors as it goes unresponsive for a moment. Before USER_THEY can register what happened, the bot returns to life again!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG pats TARGET_TAG in just the right way, causing it to utter a synthetic, but genuine sound of pleasure - whatever a robot would sound like, anyway!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places USER_THEIR hand on TARGET_TAG's head. Its eyes glow brightly and it smiles while it's vocal processors utter a sound of sheer delight!`
+                        },
                     ]
                 },
                 nocrit: {
@@ -2233,6 +2263,80 @@ const texts_touch = {
                             },
                             text: `USER_TAG runs USER_THEIR hand over TARGET_TAG's hair. TARGET_THEIR_CAP eyes are a bit glazed over from how horny TARGET_THEY feelTARGET_S right now...`
                         },
+
+                        // If they target gagbot, these lines are available. They will each be tripled to ensure they're likely chosen!
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places a hand on TARGET_TAG, rewarding the bot for a job well done! It is a good bot, tying up all the silly subbies!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG places a hand on TARGET_TAG, rewarding the bot for a job well done! It is a good bot, tying up all the silly subbies!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG reaches over to pat TARGET_TAG and... it allows USER_THEM! Such a good bot! Maybe it will reward USER_THEM with some extra special bondage!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG reaches over to pat TARGET_TAG and... it allows USER_THEM! Such a good bot! Maybe it will reward USER_THEM with some extra special bondage!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to reach up and place USER_THEIR hand on the tall TARGET_TAG. A mechanical *giggle* can be heard from it as it kneels down to allow USER_THEM to ruffle its hair!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to reach up and place USER_THEIR hand on the tall TARGET_TAG. A mechanical *giggle* can be heard from it as it kneels down to allow USER_THEM to ruffle its hair!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `TARGET_TAG has been behaving so well lately, so USER_TAG goes to deliver an amazing headpat to the bestest bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `TARGET_TAG has been behaving so well lately, so USER_TAG goes to deliver an amazing headpat to the bestest bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG meeps a request to TARGET_TAG to kneel. It complies and USER_THEY placeUSER_S USER_THEIR hands in the bot's hair, ruffling it and playing with the head harness affixed to it! It is a good bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG meeps a request to TARGET_TAG to kneel. It complies and USER_THEY placeUSER_S USER_THEIR hands in the bot's hair, ruffling it and playing with the head harness affixed to it! It is a good bot!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG recognizes that even mechanical robots need a break sometimes, so USER_THEY decideUSER_S to pat TARGET_TAG! It's cooling fans can be heard spinning up to a slightly higher speed after the headpat!`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG recognizes that even mechanical robots need a break sometimes, so USER_THEY decideUSER_S to pat TARGET_TAG! It's cooling fans can be heard spinning up to a slightly higher speed after the headpat!`
+                        },
                     ]
                 }
             },
@@ -2272,7 +2376,27 @@ const texts_touch = {
                         `It's not for lack of trying, but for some reason, USER_TAG fumbles while trying to give TARGET_TAG a headpat and misses TARGET_THEM!`,
                         `USER_TAG may need to check USER_THEIR calculations because the headpat missed TARGET_TAG entirely.`,
                         `Despite not being blindfolded or USER_THEIR legs bound or anything, USER_TAG still manages to miss TARGET_TAG. TARGET_THEY_CAP must be built different.`,
-                        `The accuracy check is 95% - a 1 in 20 chance to miss - and *still* USER_TAG manages to miss TARGET_TAG when trying to place USER_THEIR hand on TARGET_THEIR head.`
+                        `The accuracy check is 95% - a 1 in 20 chance to miss - and *still* USER_TAG manages to miss TARGET_TAG when trying to place USER_THEIR hand on TARGET_THEIR head.`,
+
+                        // Gagbot dodges
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to place USER_THEIR hand on TARGET_TAG's head, but it dodges to the side and a taunting giggle can be heard from it, along with it's fiery amethyst eyes almost... smiling!`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG almost manages to place USER_THEIR hands on TARGET_TAG before it twists around in a flourish to pull away from the hands. It has *not* granted USER_THEM permission yet! USER_THEY_CAP should grovel and beg for the opportunity.`
+                        },
+                        {
+                            only: (t) => {
+                                return (t.targetuser.id == process.client.user.id);
+                            },
+                            text: `USER_TAG tries to headpat TARGET_TAG but it slinks away from the hand, staring sharply at USER_THEM to *kneel* to it instead.`
+                        },
                     ]
                 }
             }

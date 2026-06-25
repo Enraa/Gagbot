@@ -349,7 +349,6 @@ client.on('interactionCreate', async (interaction) => {
                     }
                 }
             }
-            console.log(interactioncommand);
             modalHandlers.get(`${interactioncommand}.js`)?.modalexecute(interaction);
             return;
         }

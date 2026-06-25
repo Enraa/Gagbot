@@ -11,7 +11,6 @@ module.exports = {
         .setType(ApplicationCommandType.User), // This command will appear when right-clicking a user
     async execute(interaction) {
         try {
-            console.log(interaction);
             let targetuser = await interaction.guild.members.fetch(interaction.targetId)
             // CHECK IF THEY CONSENTED! IF NOT, MAKE THEM CONSENT
             if (!getConsent(interaction.guildId, targetuser.id)?.mainconsent) {
