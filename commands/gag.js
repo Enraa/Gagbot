@@ -138,6 +138,7 @@ module.exports = {
 				data.textdata.targetuser = interaction.user;
 				interactionuser = process.client.user;
 				gaggeduser = interaction.user;
+                data.textdata.c4 = process.gagtypes[getGagLast(interaction.guildId, gaggeduser.id)]?.choicename;
 			}
 
 			if (!getHeavyBound(interaction.guildId, interaction.user.id, gaggeduser.id)) {
