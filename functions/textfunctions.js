@@ -1418,18 +1418,42 @@ const texts_key = {
             add: [
                 `USER_TAG pulls out a VAR_C1 and uses a bit of magic to transcribe its effects into USER_THEIR VAR_C2!`,
                 `USER_TAG casts a small spell on USER_THEIR VAR_C2 and clones the effects of a VAR_C1 onto it!`,
+                {
+                    only: (t) => {
+                        return (t.c1 == "Collar Bell")
+                    },
+                    text: `USER_TAG clips a little VAR_C1 onto USER_THEIR VAR_C2. It gives a little jingle as USER_THEY moveUSER_S!`
+                }
             ],
             remove: [
                 `USER_TAG snaps USER_THEIR fingers and dispels the VAR_C1 effect on USER_THEIR VAR_C2.`,
+                {
+                    only: (t) => {
+                        return (t.c1 == "Collar Bell")
+                    },
+                    text: `USER_TAG unhooks the little VAR_C1 on USER_THEIR VAR_C2 and puts it away!`
+                }
             ]
         },
         other: {
             add: [
                 `USER_TAG pulls out a VAR_C1 and uses a bit of magic to transcribe its effects into TARGET_TAG's VAR_C2!`,
                 `USER_TAG casts a small spell on TARGET_TAG's VAR_C2 and clones the effects of a VAR_C1 onto it!`,
+                {
+                    only: (t) => {
+                        return (t.c1 == "Collar Bell")
+                    },
+                    text: `USER_TAG clips a little VAR_C1 onto TARGET_TAG's VAR_C2. It gives a little jingle as TARGET_THEY moveTARGET_S!`
+                }
             ],
             remove: [
                 `USER_TAG snaps USER_THEIR fingers and dispels the VAR_C1 effect on TARGET_TAG's VAR_C2.`,
+                {
+                    only: (t) => {
+                        return (t.c1 == "Collar Bell")
+                    },
+                    text: `USER_TAG unhooks the little VAR_C1 on TARGET_TAG's VAR_C2 and puts it away!`
+                }
             ]
         }
     }
@@ -5518,6 +5542,21 @@ function getTextGeneric(type, data_in) {
                 text: `USER_TAG, the sadist USER_THEY USER_ISARE, presses the shiny red button a few times! TARGET_TAG writhes under the torrent of shocks!`,
             },
         ],
+        "bellcollar_1": [
+            `USER_TAG's bell makes a tiny little jingle as USER_THEY moveUSER_S around the channel!`,
+            `It's barely perceptible, but USER_TAG's collar makes a faint jingle!`,
+            `USER_TAG's bell makes a very small little jingle! How cute!`,
+            `'Jingle!' goes USER_TAG's little bell!`
+        ],
+        "bellcollar_2": [
+            `Doubtless finding something bigger, USER_TAG's bell makes a slightly louder jangle!`,
+            `USER_TAG's collar makes a jangle as USER_THEY moveUSER_S suddenly!`
+        ],
+        "bellcollar_3": [
+            `Darting off around the channel, USER_TAG's bell makes a lot of noise as USER_THEY chaseUSER_S something!`,
+            `A cacophany of jingles and jangles follows USER_TAG's tracks as USER_THEY zoomUSER_S around the channel!`,
+            `USER_TAG clearly failed stealth class because USER_THEIR collar jingles and jangles *loudly!*`
+        ]
 	};
     if (Array.isArray(generics[type])) {
         // Within the array, we want to handle the following cases:

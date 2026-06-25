@@ -1087,6 +1087,7 @@ module.exports = {
                             // Okay they're probably allowed lol
                             let data = { 
                                 textarray: "texts_key", textdata: { 
+                                    serverID: interaction.guildId, 
                                     interactionuser: interaction.user, 
                                     targetuser: wearer,
                                     c1: getBaseCollar(collareffect)?.name,

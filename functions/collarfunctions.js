@@ -34,7 +34,8 @@ const collartypes = [
     { name: "Remote-Controlled Shock Collar", value: "remoteshockcollar", special: true },
     { name: "Horny Shock Collar", value: "hornyshockcollar", special: true },
     { name: "Sponsorship Collar", value: "sponsorcollar", special: true },
-    { name: "Handcuff Amulet", value: "handcuffamulet" }
+    { name: "Handcuff Amulet", value: "handcuffamulet" },
+    { name: "Collar Bell", value: "collarbell", special: true, specialonly: true }
 ];
 
 function loadCollarTypes() {

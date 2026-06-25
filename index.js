@@ -26,6 +26,7 @@ const { getAllJoinedGuilds } = require("./functions/getters/config/getAllJoinedG
 const { logConsole } = require('./functions/logfunctions.js');
 const { markForSave } = require('./functions/other/markForSave.js');
 const { processdatatoload } = require(`./lists/processdatatoload.js`);
+const { addBellCollarReact } = require('./functions/setters/collar/addBellCollarReact.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -201,10 +202,17 @@ var gagged = {}
 
 const client = new discord.Client({
     intents: [
+        // Used to exist in servers, at all
         discord.GatewayIntentBits.Guilds,
+        // Used to detect message info from servers
         discord.GatewayIntentBits.GuildMessages,
-        discord.GatewayIntentBits.MessageContent
-    ]
+        // PRIVILEGED INTENT - Used to see contents of messages sent
+        discord.GatewayIntentBits.MessageContent,
+        // Used to receive interactions
+        discord.GatewayIntentBits.GuildMessageReactions,
+    ],
+    // Partials specify if we can receive data on older stuff
+    partials: [discord.Partials.Message, discord.Partials.Reaction, discord.Partials.User] 
 })
 
 client.on("clientReady", async () => {
@@ -429,6 +437,24 @@ client.on('interactionCreate', async (interaction) => {
     catch (err) {
         console.log(err);
     }
+})
+
+client.on(`messageReactionAdd`, async (react, user, details) => {
+    if (user.bot) { return } // We dont care about bot reacts. 
+
+    // If the react is a partial from an uncached message, try to get the full picture
+    if (react.partial) {
+        try {
+            await react.fetch();
+        }
+        catch (err) {
+            console.log(err);
+        }
+    }
+
+    if (!process.webhook[react.message.channelId]) { return } // We only wanna handle messages in webhooks we know about.
+
+    addBellCollarReact(react, user, details);
 })
 
 client.on(`guildDelete`, async (guild) => {

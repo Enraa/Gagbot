@@ -19,6 +19,7 @@ const { getMitten } = require("./getters/mitten/getMitten.js");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getGags } = require("./getters/gag/getGags.js");
 const { markForSave } = require("./other/markForSave.js");
+const { isWearingCollar } = require("./getters/collar/isWearingCollar.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
@@ -291,6 +292,7 @@ function processTimedEvents() {
     runTickEvents();
     checkFumbledTemporaryKeys();
     checkGagbotKeys();
+    endComboReacts();
 }
 
 function processUnlockTimes(client) {
@@ -525,6 +527,28 @@ async function scavengeUsers(client) {
                         console.log(`Guild doesn't exist!`)
                     }
                 })
+            }
+        })
+    })
+}
+
+// Clear any expired reaction combos with a message to the user's recent channel. 
+// Intended to do a 
+async function endComboReacts() {
+    if (process.reactions == undefined) { process.reactions = {} };
+    Object.keys(process.reactions).forEach((guild) => {
+        Object.keys(process.reactions[guild]).forEach((user) => {
+            if (process.reactions[guild][user] && (process.reactions[guild][user].comboend < Date.now())) {
+                if ((process.recentmessages[guild] && process.recentmessages[guild][user]) && isWearingCollar(guild, user, "collarbell")) {
+                    let counttojangle = Math.min(process.reactions[guild][user].count, 3) // up to 3 jangles!
+                    let data = {
+                        serverID: guild,
+                        interactionuser: { id: user },
+                        targetuser: { id: user }
+                    }
+                    messageSendChannel(getTextGeneric(`bellcollar_${counttojangle}`, data), process.recentmessages[guild][user]);
+                }
+                delete process.reactions[guild][user];
             }
         })
     })

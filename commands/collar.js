@@ -41,6 +41,7 @@ module.exports = {
                 hideitem = false;
             }
             let newsorted = getTaggedList(interaction.guildId, interaction.user.id, matches, hideitem);
+            newsorted = newsorted.filter((c) => !getBaseCollar(c.value).specialonly)
             interaction.respond(newsorted.slice(0,25))
         }
         catch (err) {
