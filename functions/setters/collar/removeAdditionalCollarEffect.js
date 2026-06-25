@@ -14,7 +14,7 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 function removeAdditionalCollarEffect(serverID, user, type) {
     traceFirstParam(arguments[0]);
     try {
-        if (getCollar(user)) {
+        if (getCollar(serverID, user)) {
             if (getCollar(serverID, user).additionalcollars && getCollar(serverID, user).additionalcollars.includes(type)) {
                 getCollar(serverID, user).additionalcollars.splice(getCollar(serverID, user).additionalcollars.indexOf(type), 1);
             }
