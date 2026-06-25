@@ -5550,7 +5550,7 @@ function getTextGeneric(type, data_in) {
             `It can juuuuust barely be heard, but USER_TAG moves a little bit and jingles USER_THEIR collar!`,
             `-# Jingle\nUSER_TAG isn't very stealthy, but USER_THEY tried.`,
             `USER_TAG looks at something and a little movement of USER_THEIR neck jingles USER_THEIR collar!`,
-            `-# Jinglejinglejingle!\nUSER_TAG tries to move around the channel sneakily. USER_THEY USER_ISARE totally invisible!`
+            `-# Jinglejinglejingle!\nUSER_TAG tries to move around the channel sneakily. USER_THEY_CAP USER_ISARE totally invisible!`
         ],
         "bellcollar_2": [
             `Doubtless finding something bigger, USER_TAG's bell makes a slightly louder jangle!`,

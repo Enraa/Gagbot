@@ -1,3 +1,5 @@
+const { getUserVar } = require("../../getters/config/getUserVar");
+
 /***********
  * Adds a reaction to the user's recent bell collar combo. Once the timer expires, then the next bot tick will clear it and emit a message to their recentmessages channel. 
  * 
@@ -8,6 +10,11 @@
 function addBellCollarReact(react, user, details) {
     if (process.reactions == undefined) { process.reactions = {} };
     if (process.reactions[react.message.guildId] == undefined) { process.reactions[react.message.guildId] = {} }
+
+    // If the user recently jingled, go away. 
+    if (getUserVar(react.message.guildId, user.id, "reactbellcooldown") > Date.now()) { return }
+
+    // jingle jingle jingle
     if (process.reactions[react.message.guildId][user.id]) {
         process.reactions[react.message.guildId][user.id].count++;
         process.reactions[react.message.guildId][user.id].comboend = (Date.now() + 7000);

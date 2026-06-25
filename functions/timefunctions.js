@@ -20,6 +20,7 @@ const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getGags } = require("./getters/gag/getGags.js");
 const { markForSave } = require("./other/markForSave.js");
 const { isWearingCollar } = require("./getters/collar/isWearingCollar.js");
+const { setUserVar } = require("./setters/config/setUserVar.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
@@ -547,6 +548,7 @@ async function endComboReacts() {
                         targetuser: { id: user }
                     }
                     messageSendChannel(getTextGeneric(`bellcollar_${counttojangle}`, data), process.recentmessages[guild][user]);
+                    setUserVar(guild, user, "reactbellcooldown", (Date.now() + 60000))
                 }
                 delete process.reactions[guild][user];
             }
