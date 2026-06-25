@@ -275,7 +275,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 			// console.log(err)
 		}
         // If the menuer is either the owner of the bot or a moderator. 
-		if ((inguild && interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) || (inguild && (client?.application?.owner.id === interaction.user.id))) {
+		if ((inguild && interaction.member.permissions.has(PermissionsBitField.Flags.ManageMessages)) || (inguild && (process.client?.application?.owner.id === interaction.user.id))) {
 			let opt = new StringSelectMenuOptionBuilder().setLabel("Server Settings").setValue(`menuopt_Server`);
 			menupageoptionsarr.push(opt);
 			// Set the page text to prettier if this is on their settings
