@@ -1,5 +1,7 @@
 // Since channels are unique regardless of the server, we don't really need to delineate them. 
 
+const { PermissionsBitField } = require("discord.js");
+
 /********
  * (async) Delete a webhook for a channel. 
  * 
