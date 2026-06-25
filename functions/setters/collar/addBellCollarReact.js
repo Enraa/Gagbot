@@ -10,12 +10,12 @@ function addBellCollarReact(react, user, details) {
     if (process.reactions[react.message.guildId] == undefined) { process.reactions[react.message.guildId] = {} }
     if (process.reactions[react.message.guildId][user.id]) {
         process.reactions[react.message.guildId][user.id].count++;
-        process.reactions[react.message.guildId][user.id].comboend = (Date.now() + 10000);
+        process.reactions[react.message.guildId][user.id].comboend = (Date.now() + 7000);
     }
     else {
         process.reactions[react.message.guildId][user.id] = {
             count: 1,
-            comboend: (Date.now() + 10000)
+            comboend: (Date.now() + 7000)
         }
     }
     if (process.recentmessages == undefined) { process.recentmessages = {} }
