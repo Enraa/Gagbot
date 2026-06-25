@@ -53,7 +53,7 @@ let tick = async (serverID, userID, datain) => {
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
     let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID][userID])) {
+    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
         return;
     }
     // Only update a max of once every 60 seconds. 
