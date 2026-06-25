@@ -3,6 +3,10 @@ const { messageSendChannel } = require("../../functions/messagefunctions");
 const { assignGag } = require("../../functions/setters/gag/assignGag");
 
 function msgfunction(serverID, userid, data) {
+    console.log("MAID TRIGGERED")
+    console.log(serverID)
+    console.log(userid)
+    console.log(data)
     const curses = ["fuck", "fucking", "fuckin", "motherfucker", "damn", "dammit", "bitch", "shit", "bitchin'", "ass", "asshole", "arse", "goddammit", "piss", "dick", "dickhead", "damned", "bullshit", "fucked", "fucker", "crap", "hell", "cunt", "bollocks", "slut", "sluts", "idiot"];
     const uncouthreminders = [
         `<@${userid}> has quite the mouth, so unbecoming of a trainee maid! ${getPronouns(serverID, userid, "subject", true)} ${(getPronouns(serverID, userid, "subject") == "they") ? "have" : "has"} been gagged with a bar of soap to teach ${getPronouns(serverID, userid, "object")} how to speak properly!`,
@@ -13,11 +17,11 @@ function msgfunction(serverID, userid, data) {
     let cursesmap = curses.join("|");
 	let regexpattern = new RegExp(`\\b(${cursesmap})\\b`, "i");
 
-    if (regexpattern.test(data.outtext)) {
+    if (regexpattern.test(data.outtext) && (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userid])) {
 		// They are UNCOUTH! Their speech somehow included foul language
         // Gag them with the soap gag. 
         assignGag(serverID, userid, "soap", 8, userid);
-        messageSendChannel(uncouthreminders[Math.floor(Math.random() * uncouthreminders.length)], process.recentmessages[userid])
+        messageSendChannel(uncouthreminders[Math.floor(Math.random() * uncouthreminders.length)], process.recentmessages[serverID][userid])
 
 		return;
 	}

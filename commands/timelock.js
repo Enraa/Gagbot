@@ -49,7 +49,7 @@ module.exports = {
 
 		switch (actiontotake) {
 			case "chastitybelt":
-				let chastity = getChastity(wearer.id);
+				let chastity = getChastity(interaction.guildId, wearer.id);
 
 				if (!chastity) {
 					interaction.reply({ content: `${wearer} is not wearing a chastity belt`, flags: MessageFlags.Ephemeral });

@@ -759,7 +759,7 @@ module.exports = {
 
 					if (confirmation.customId === "agreetogivebutton") {
 						// Skip the DM if the wearer is the giver or receiver, or if they have auto accepting enabled
-						if (wearer == interaction.user || wearer == newKeyholder || (getOption(interaction.guildId, wearer, "keygiving") == "auto")) {
+						if (wearer == interaction.user || wearer == newKeyholder || (getOption(interaction.guildId, wearer.id, "keygiving") == "auto")) {
 							let data = { textarray: "texts_key", textdata: { serverID: interaction.guildId, interactionuser: interaction.user, targetuser: wearer, c1: chosenrestraintreadable, c2: newKeyholder } };
 							data.give = true;
 							if (wearer == interaction.user) {

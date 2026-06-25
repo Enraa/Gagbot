@@ -1430,7 +1430,13 @@ const configoptions = {
             },
 			menutype: "choice_textentry",
 			default: (serverID, userID) => {
-				return `DOLL-${userID.slice(-4)}`;
+                if (typeof userID != "string") {
+                    console.log(`Error setting doll text for user ID ${userID}`)
+                    return `Unknown DOLL`
+                }
+                else {
+                    return `DOLL-${userID.slice(-4)}`;
+                }
 			},
 			disabled: () => {
 				return false;
