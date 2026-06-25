@@ -133,7 +133,7 @@ module.exports = {
 
 			// REFLECT // We may need to move this to within the nomitten section. 
 			if (gaggeduser.id == process.client.user.id) {
-				data.gagreflect = true;
+                data.gagreflect = true;
 				data.textdata.interactionuser = process.client.user;
 				data.textdata.targetuser = interaction.user;
 				interactionuser = process.client.user;

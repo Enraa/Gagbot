@@ -571,6 +571,18 @@ const texts_gag = {
 							},
 							text: `USER_TAG adjusts USER_THEIR VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around USER_THEIR head and under USER_THEIR hair again.`,
 						},
+                        {
+							only: (t) => {
+								return t.c2.includes("tightly") && t.c3.includes("OTN");
+							},
+							text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
+						},
+                        {
+							only: (t) => {
+								return t.c2.includes("loosely") && t.c3.includes("OTN");
+							},
+							text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
+						},
 
 						//`USER_TAG carefully undoes the straps on USER_THEIR VAR_C4, allowing just a moment to let the drool fall out before replacing it with a VAR_C3, pulling the straps on it VAR_C2 before buckling.`
 					],
@@ -588,6 +600,12 @@ const texts_gag = {
 							},
 							text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before wrapping tape VAR_C2 around USER_THEIR head and under USER_THEIR hair.`,
 						},
+                        {
+							only: (t) => {
+								return t.c3.includes("OTN");
+							},
+							text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before placing a VAR_C3 VAR_C2 over top of USER_THEIR gags, making it that much harder to breathe!`,
+						},
 					],
 				},
 				nogag: [
@@ -603,6 +621,12 @@ const texts_gag = {
 							return t.c2.includes("tightly") && t.c3.includes("Tape");
 						},
 						text: `USER_TAG picks up a roll of tape, takes a deep breath, and then begins to wrap it VAR_C2 around USER_THEIR head and under USER_THEIR hair in a wraparound VAR_C3.`,
+					},
+                    {
+						only: (t) => {
+							return t.c3.includes("OTN");
+						},
+						text: `USER_TAG picks up a VAR_C3, positioning it over USER_THEIR lips before pulling it VAR_C2 behind USER_THEIR head and then securing it firmly.`,
 					},
 				],
 			},
@@ -622,6 +646,18 @@ const texts_gag = {
 							},
 							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair again.`,
 						},
+                        {
+							only: (t) => {
+								return t.c2.includes("tightly") && t.c3.includes("OTN");
+							},
+							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
+						},
+                        {
+							only: (t) => {
+								return t.c2.includes("loosely") && t.c3.includes("OTN");
+							},
+							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
+						},
 						//`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
 					],
 					newgag: [
@@ -637,6 +673,12 @@ const texts_gag = {
 								return t.c2.includes("tightly") && t.c3.includes("Tape");
 							},
 							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, winding a roll of tape VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair.`,
+						},
+                        {
+							only: (t) => {
+								return t.c3.includes("OTN");
+							},
+							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, covering TARGET_THEIR lips and nose with the new material as USER_THEY secure the straps VAR_C2 behind TARGET_THEIR head.`,
 						},
 					],
 				},
@@ -657,6 +699,12 @@ const texts_gag = {
 							},
 							text: `USER_TAG taps a finger gently on TARGET_TAG's lips and waits for them to stop talking before carefully winding a roll of tape VAR_C2 around TARGET_THEIR head to form a VAR_C3.`,
 						},
+                        {
+							only: (t) => {
+								return t.c3.includes("OTN");
+							},
+							text: `USER_TAG holds up a VAR_C3, gently massaging TARGET_TAG's lips before placing it VAR_C2 over them, securing the straps behind TARGET_THEIR head.`,
+						},
 					],
 					forceful: [
 						`USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY goTARGET_ES to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`,
@@ -673,6 +721,12 @@ const texts_gag = {
 								return t.c2.includes("tightly") && t.c3.includes("Tape");
 							},
 							text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
+						},
+                        {
+							only: (t) => {
+								return t.c3.includes("OTN");
+							},
+							text: `USER_TAG uses a hand to cover TARGET_TAG's lips and silence TARGET_THEIR protest *forcefully* before covering them with a VAR_C3 and pulling the straps VAR_C2 behind TARGET_THEIR head!`,
 						},
 					],
 					requesting: [
@@ -691,12 +745,28 @@ const texts_gag = {
 							},
 							text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
 						},
+                        {
+							only: (t) => {
+								return t.c3.includes("OTN");
+							},
+							text: `USER_TAG gives TARGET_TAG a moment to finish speaking before gently placing a VAR_C3 over TARGET_THEIR lips, securing the straps of the gag VAR_C2 behind TARGET_THEIR head!`,
+						},
 					],
 				},
 			},
 		},
 	},
 	gagreflect: {
+        heavy: {
+            other: {
+                gag: [
+                    `TARGET_TAG tries TARGET_THEIR best to place a gag on USER_TAG. Unfortunately, being bound in restraints makes it incredibly hard even before trying to place a gag on an agile bot. It decides that TARGET_THEY TARGET_ISARE already gagged enough though.`
+                ],
+                nogag: [
+                    `TARGET_TAG tries TARGET_THEIR best to place a gag on USER_TAG. Unfortunately, being bound in restraints makes it incredibly hard even before trying to place a gag on an agile bot. It laughs at TARGET_THEM in response and leaves TARGET_THEM ungagged.`
+                ]
+            }
+        },
 		noheavy: {
 			nomitten: {
 				other: {
