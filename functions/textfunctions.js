@@ -5554,12 +5554,14 @@ function getTextGeneric(type, data_in) {
         ],
         "bellcollar_2": [
             `Doubtless finding something bigger, USER_TAG's bell makes a slightly louder jangle!`,
-            `USER_TAG's collar makes a jangle as USER_THEY moveUSER_S suddenly!`
+            `USER_TAG's collar makes a jangle as USER_THEY moveUSER_S suddenly!`,
+            `USER_TAG moves USER_THEIR neck to look at something, causing a slightly louder jangle!`,
         ],
         "bellcollar_3": [
             `Darting off around the channel, USER_TAG's bell makes a lot of noise as USER_THEY chaseUSER_S something!`,
             `A cacophany of jingles and jangles follows USER_TAG's tracks as USER_THEY zoomUSER_S around the channel!`,
-            `USER_TAG clearly failed stealth class because USER_THEIR collar jingles and jangles *loudly!*`
+            `USER_TAG clearly failed stealth class because USER_THEIR collar jingles and jangles *loudly!*`,
+            `Jinglejinglejanglejinglejangle! USER_TAG moves around the channel with the grace of... something.`,
         ]
 	};
     if (Array.isArray(generics[type])) {
