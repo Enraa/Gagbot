@@ -70,7 +70,7 @@ module.exports = {
 				let itemslockedwearable = getLockedWearable(interaction.guildId, interaction.user.id);
 
 				let sorted = itemslockedhead.map((f) => {
-					return { name: getHeadwearName(undefined, f), value: `${f}+head` };
+					return { name: getHeadwearName(interaction.guildId, undefined, f), value: `${f}+head` };
 				});
 				let sortedwearable = itemslockedwearable.map((f) => {
 					return { name: getWearableName(undefined, f), value: `${f}+wearable` };
