@@ -3,10 +3,6 @@ const { messageSendChannel } = require("../../functions/messagefunctions");
 const { assignGag } = require("../../functions/setters/gag/assignGag");
 
 function msgfunction(serverID, userid, data) {
-    console.log("MAID TRIGGERED")
-    console.log(serverID)
-    console.log(userid)
-    console.log(data)
     const curses = ["fuck", "fucking", "fuckin", "motherfucker", "damn", "dammit", "bitch", "shit", "bitchin'", "ass", "asshole", "arse", "goddammit", "piss", "dick", "dickhead", "damned", "bullshit", "fucked", "fucker", "crap", "hell", "cunt", "bollocks", "slut", "sluts", "idiot"];
     const uncouthreminders = [
         `<@${userid}> has quite the mouth, so unbecoming of a trainee maid! ${getPronouns(serverID, userid, "subject", true)} ${(getPronouns(serverID, userid, "subject") == "they") ? "have" : "has"} been gagged with a bar of soap to teach ${getPronouns(serverID, userid, "object")} how to speak properly!`,
