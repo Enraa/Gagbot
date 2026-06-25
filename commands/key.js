@@ -862,17 +862,17 @@ module.exports = {
 				let permitted = false;
 				if (restrainttype == "collar") {
 					newrestraintname = getCollarName(interaction.guildId, undefined, newrestraint);
-					if (getCollar(wearer.id) && canAccessCollar(interaction.guildId, wearer.id, interaction.user.id, true).access) {
+					if (getCollar(interaction.guildId, wearer.id) && canAccessCollar(interaction.guildId, wearer.id, interaction.user.id, true).access) {
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybelt") {
 					newrestraintname = getChastityName(interaction.guildId, undefined, newrestraint);
-					if (getChastity(wearer.id) && canAccessChastity(interaction.guildId, wearer.id, interaction.user.id, true).access) {
+					if (getChastity(interaction.guildId, wearer.id) && canAccessChastity(interaction.guildId, wearer.id, interaction.user.id, true).access) {
 						permitted = true;
 					}
 				} else if (restrainttype == "chastitybra") {
 					newrestraintname = getChastityBraName(interaction.guildId, undefined, newrestraint);
-					if (getChastityBra(wearer.id) && canAccessChastityBra(interaction.guildId, wearer.id, interaction.user.id, true).access) {
+					if (getChastityBra(interaction.guildId, wearer.id) && canAccessChastityBra(interaction.guildId, wearer.id, interaction.user.id, true).access) {
 						permitted = true;
 					}
 				}
