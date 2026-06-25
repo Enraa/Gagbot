@@ -1,4 +1,4 @@
-import { PermissionsBitField } from 'discord.js';
+const { PermissionsBitField } = require("discord.js");
 const { markForSave } = require("../../other/markForSave");
 
 // Since channels are unique regardless of the server, we don't really need to delineate them. 
