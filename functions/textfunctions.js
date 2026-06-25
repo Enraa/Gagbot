@@ -678,7 +678,7 @@ const texts_gag = {
 							only: (t) => {
 								return t.c3.includes("OTN");
 							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, covering TARGET_THEIR lips and nose with the new material as USER_THEY secure the straps VAR_C2 behind TARGET_THEIR head.`,
+							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, covering TARGET_THEIR lips and nose with the new material as USER_THEY secureUSER_S the straps VAR_C2 behind TARGET_THEIR head.`,
 						},
 					],
 				},
