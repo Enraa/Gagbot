@@ -48,7 +48,7 @@ let tick = async (serverID, userID, datain) => {
     })
     if (getProcessVariable(serverID, userID, "userevents").dollprocessing.color == undefined) { getProcessVariable(serverID, userID, "userevents").dollprocessing.color = "black" }
     let droneclothes = [`catsuit_latex_${getProcessVariable(serverID, userID, "userevents").dollprocessing.color}`, "cyberdoll_harness", "doll_heels", "cyberdoll_barcode"]
-    currclothes = getWearable(serverID, userID).filter((f) => (!getLockedWearable(userID).includes(f))).filter((f) => (!droneclothes.includes(f))); // These are the worn clothes, minus drone clothing
+    currclothes = getWearable(serverID, userID).filter((f) => (!getLockedWearable(serverID, userID).includes(f))).filter((f) => (!droneclothes.includes(f))); // These are the worn clothes, minus drone clothing
     // get the user object, if it doesn't exist, go away
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
     let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
