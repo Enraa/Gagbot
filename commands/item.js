@@ -48,7 +48,7 @@ module.exports = {
 					return { name: getHeadwearName(interaction.guildId, undefined, f), value: `${f}+head` };
 				});
 				sortedwearable = sortedwearable.map((f) => {
-					return { name: getWearableName(interaction.guildId, undefined, f), value: `${f}+wearable` };
+					return { name: getWearableName(undefined, f), value: `${f}+wearable` };
 				});
 
 				// Merge the lists.
