@@ -100,13 +100,13 @@ module.exports = {
 					if (chosenitemparts[1] == "head") {
 						if (getHeadwearName(interaction.guildId, undefined, chosenitemparts[0])) {
 							addLockedHeadgear(interaction.guildId, interaction.user.id, chosenitemparts[0]);
-							replytextname = getHeadwearName(undefined, chosenitemparts[0]);
+							replytextname = getHeadwearName(interaction.guildId, undefined, chosenitemparts[0]);
 						} else {
 							interaction.reply({ content: `Item ${replytextname} is an invalid item! Try again.`, flags: MessageFlags.Ephemeral });
 							return;
 						}
 					} else {
-						if (getWearableName(interaction.guildId, undefined, chosenitemparts[0])) {
+						if (getWearableName(undefined, chosenitemparts[0])) {
 							addLockedWearable(interaction.guildId, interaction.user.id, chosenitemparts[0]);
 							replytextname = getWearableName(undefined, chosenitemparts[0]);
 						} else {
@@ -126,7 +126,7 @@ module.exports = {
 					let replytextname;
 					if (chosenitemparts[1] == "head") {
 						removeLockedHeadgear(interaction.guildId, interaction.user.id, chosenitemparts[0]);
-						replytextname = getHeadwearName(undefined, chosenitemparts[0]);
+						replytextname = getHeadwearName(interaction.guildId, undefined, chosenitemparts[0]);
 					} else {
 						removeLockedWearable(interaction.guildId, interaction.user.id, chosenitemparts[0]);
 						replytextname = getWearableName(undefined, chosenitemparts[0]);
