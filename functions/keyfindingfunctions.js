@@ -19,6 +19,7 @@ const { statsAddCounter } = require("./setters/config/statsAddCounter");
 const { getTextGeneric } = require("./textfunctions");
 const { markForSave } = require("./other/markForSave");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
+const { getRecentChannel } = require("./getters/config/getRecentChannel");
 
 const MAX_FUMBLE_CHANCE = 0.95;
 

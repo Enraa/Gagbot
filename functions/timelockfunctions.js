@@ -1,5 +1,4 @@
 const { messageSendChannel } = require("./messagefunctions.js");
-const fs = require("fs");
 const { getTextGeneric } = require("./textfunctions.js");
 const { removeChastity } = require("./setters/chastity/removeChastity.js");
 const { removeChastityBra } = require("./setters/chastity/removeChastityBra.js");
@@ -17,6 +16,8 @@ const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 const { getChastity } = require("./getters/chastity/getChastity.js");
 const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
 const { getCollar } = require("./getters/collar/getCollar.js");
+const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
+const fs = require("fs");
 
 // returns whether the locking was successful
 function timelockChastity(serverID, client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
