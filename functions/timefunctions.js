@@ -21,6 +21,7 @@ const { getGags } = require("./getters/gag/getGags.js");
 const { markForSave } = require("./other/markForSave.js");
 const { isWearingCollar } = require("./getters/collar/isWearingCollar.js");
 const { setUserVar } = require("./setters/config/setUserVar.js");
+const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
