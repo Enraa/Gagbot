@@ -128,9 +128,9 @@ async function handleKeyFinding(message) {
         if (process[pv] == undefined) { process[pv] = {} }
         if (process[pv][message.guild.id] == undefined) { process[pv][message.guild.id] = {} }
         Object.entries(process[pv][message.guild.id]).forEach(async (en) => {
-            console.log(`Rolling key find for ${en[0]}... Find chance: ${Math.round(Math.max(Math.min(message.content.length * 0.0005, 0.3)) * 100)}, ${process.forcefindkey}`)
             try {
                 if (en[1]?.fumbled && !en[1]?.temporarykeyholder) {
+                    console.log(`Rolling key find for ${en[0]}... Find chance: ${Math.round(Math.max(Math.min(message.content.length * 0.0005, 0.3)) * 100)}, ${process.forcefindkey}`)
                     if (Math.random() < (Math.max(Math.min(message.content.length * 0.0005, 0.3), process.forcefindkey ? 1.0 : 0.01))) {
                         if (getRecentChannel(message.guild.id, en[0]).channelid != message.channel.id) { 
                             // Even if we succeeded the roll, just leave. The wearer needs to be present for their key to be found
