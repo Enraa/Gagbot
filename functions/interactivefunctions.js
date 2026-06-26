@@ -426,7 +426,7 @@ This will lock ${wearer}'s collar for a set period of time. Please configure you
 			.setValue("access_no"),
 	];
 
-	if (getOption(interaction.guildId, earer.id, "publicaccess") != "disabled") {
+	if (getOption(interaction.guildId, wearer.id, "publicaccess") != "disabled") {
 		accesswhileboundoptions.unshift(
 			new StringSelectMenuOptionBuilder()
 				// Label displayed to user

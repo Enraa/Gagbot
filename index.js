@@ -288,7 +288,7 @@ client.on("messageCreate", async (msg) => {
             if ((getBotOption("bot-allowkeyfinding") == "Enabled")) {
                 handleKeyFinding(msg);
             }
-            setRecentChannel(msg.guild.id, msg.user.id, msg.channel.id, "message");
+            setRecentChannel(msg.guild.id, msg.author.id, msg.channel.id, "message");
             modifymessage(msg, thread ? msg.channelId : null);
         }
         if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first()) || (message.flags && message.flags.has(discord.MessageFlags.HasSnapshot)) || (message.flags && message.flags.has(discord.MessageFlags.IsCrosspost))) { return }

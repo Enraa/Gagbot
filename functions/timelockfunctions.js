@@ -252,6 +252,7 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
         }
         if (process.heldkeytimers[`${serverID}_${wearerid}_${type}`].releasetime < Date.now()) {
             let data = {
+                serverID: serverID,
                 interactionuser: process.client.user,
                 targetuser: { id: wearerid },
             }
