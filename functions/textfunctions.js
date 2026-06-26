@@ -5753,7 +5753,7 @@ function getTextGeneric(type, data_in) {
         ],
         "bellcollar_3": [
             `Darting off around the channel, USER_TAG's bell makes a lot of noise as USER_THEY chaseUSER_S something!`,
-            `A cacophany of jingles and jangles follows USER_TAG's tracks as USER_THEY zoomUSER_S around the channel!`,
+            `A cacophony of jingles and jangles follows USER_TAG's tracks as USER_THEY zoomUSER_S around the channel!`,
             `USER_TAG clearly failed stealth class because USER_THEIR collar jingles and jangles *loudly!*`,
             `Jinglejinglejanglejinglejangle! USER_TAG moves around the channel with the grace of... something.`,
         ]

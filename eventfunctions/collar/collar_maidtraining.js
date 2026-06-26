@@ -14,11 +14,11 @@ function msgfunction(serverID, userid, data) {
     let cursesmap = curses.join("|");
 	let regexpattern = new RegExp(`\\b(${cursesmap})\\b`, "i");
 
-    if (regexpattern.test(data.outtext) && getRecentChannel(serverID, userID).valid) {
+    if (regexpattern.test(data.outtext) && getRecentChannel(serverID, userid).valid) {
 		// They are UNCOUTH! Their speech somehow included foul language
         // Gag them with the soap gag. 
         assignGag(serverID, userid, "soap", 8, userid);
-        messageSendChannel(uncouthreminders[Math.floor(Math.random() * uncouthreminders.length)], getRecentChannel(serverID, userID).channelid);
+        messageSendChannel(uncouthreminders[Math.floor(Math.random() * uncouthreminders.length)], getRecentChannel(serverID, userid).channelid);
 
 		return;
 	}
