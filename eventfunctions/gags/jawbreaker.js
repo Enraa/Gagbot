@@ -1,4 +1,5 @@
 const { getPronouns } = require("../../functions/getters/config/getPronouns");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel");
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { getGag } = require("../../functions/getters/gag/getGag");
 const { messageSendChannel } = require("../../functions/messagefunctions");
@@ -15,19 +16,19 @@ async function tick(serverID, userID, data) {
     }
 
     // Decrement Intensity every timer interval
-    if (getUserVar(serverID, userID, "confectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "jawbreaker") && (process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
+    if (getUserVar(serverID, userID, "confectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "jawbreaker") && getRecentChannel(serverID, userID).valid) {
         if(getGag(serverID, userID, "jawbreaker").intensity > 1){
             setUserVar(serverID, userID, "confectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
             // Get Intensity and push decremented version
             let oldIntensity = getGag(serverID, userID, "jawbreaker").intensity
             assignGag(serverID, userID, "jawbreaker", oldIntensity - 1)
-            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(serverID, userID, "possessiveDeterminer")} Jawbreaker Gag a little bit!`, process.recentmessages[serverID][userID])
+            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(serverID, userID, "possessiveDeterminer")} Jawbreaker Gag a little bit!`, getRecentChannel(serverID, userID).channelid)
         }
         else {
             // Clear Gag and Dissolve Timer
             setUserVar(serverID, userID, "confectionaryDissolveTimer", undefined)
             removeGag(serverID, userID, "jawbreaker")
-            messageSendChannel(`<@${userID}>'s Jawbreaker Gag has dissolved away!`, process.recentmessages[serverID][userID])
+            messageSendChannel(`<@${userID}>'s Jawbreaker Gag has dissolved away!`, getRecentChannel(serverID, userID).channelid)
         }
     }
 }

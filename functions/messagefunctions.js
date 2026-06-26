@@ -128,8 +128,16 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
 // Please god don't send to an invalid place I can't take it anymore
 const messageSendChannel = async (str, channel, components = []) => {
 	try {
+        // If we passed the whole getRecentChannel object, then grab that I guess
+        if (channel && channel.channelid && channel.valid) {
+            channel = channel.channelid;
+        }
         if (channel == undefined) { 
             throw new Error;
+            return;
+        }
+        if (channel === "0") {
+            console.log(`No channel ID sent to messageSendChannel function!`)
             return;
         }
 		let channeltosendto = await process.client.channels.fetch(channel);

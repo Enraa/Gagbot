@@ -1,11 +1,12 @@
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel")
 const { getUserVar } = require("../../functions/getters/config/getUserVar")
 const { messageSendChannel } = require("../../functions/messagefunctions")
 const { setUserVar } = require("../../functions/setters/config/setUserVar")
 
 async function tick(serverID, userID, data) {
     // Remind them on the third infraction and reset
-    if ((getUserVar(serverID, userID, "politeSubSilences") > 2) && process.recentmessages[serverID]) {
-        messageSendChannel(`<@${userID}> should speak with titles to people, such as "Miss," "Mxtress," "Sir," "-sama" and the like.`, process.recentmessages[serverID][userID])
+    if ((getUserVar(serverID, userID, "politeSubSilences") > 2) && getRecentChannel(serverID, userID).valid) {
+        messageSendChannel(`<@${userID}> should speak with titles to people, such as "Miss," "Mxtress," "Sir," "-sama" and the like.`, getRecentChannel(serverID, userID).channelid)
         setUserVar(serverID, userID, "politeSubSilenceTime", undefined)
         setUserVar(serverID, userID, "politeSubSilences", undefined)
     }

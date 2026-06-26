@@ -5,6 +5,7 @@ const { getClonedChastityKey } = require("../../functions/getters/chastity/getCl
 const { getClonedCollarKey } = require("../../functions/getters/collar/getClonedCollarKey")
 const { getCollar } = require("../../functions/getters/collar/getCollar")
 const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js")
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel.js")
 const { getUserVar } = require("../../functions/getters/config/getUserVar")
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy")
 const { messageSendChannel } = require("../../functions/messagefunctions")
@@ -53,7 +54,7 @@ let tick = async (serverID, userID, datain) => {
     let userobject = await process.client.users.fetch(userID); // The person that's been captured!
     let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw the pokeball!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID][userID]) || getUserVar(serverID, userID, "captureSphereCaptured")) {
+    if (!userobject || !targetobject || !getRecentChannel(serverID, userID).valid || getUserVar(serverID, userID, "captureSphereCaptured")) {
         return;
     }
     // Build data tree:
@@ -77,11 +78,11 @@ let tick = async (serverID, userID, datain) => {
         if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture) {
             if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture[getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress]) {
                 // Successful wiggle!
-                messageSendChannel(`*wiggle...*`, process.recentmessages[serverID][userID]);
+                messageSendChannel(`*wiggle...*`, getRecentChannel(serverID, userID).channelid);
             }
             else {
                 data[`wigglefail${getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress}`] = true
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 removeHeavy(serverID, userID, "capture_sphere");
                 return;
             }
@@ -94,10 +95,10 @@ let tick = async (serverID, userID, datain) => {
     else if (getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress == 2) {
         if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture) {
             if (getProcessVariable(serverID, userID, "userevents").capturesphere.capture[getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress]) {
-                messageSendChannel(`*wiggle...*`, process.recentmessages[serverID][userID]);
+                messageSendChannel(`*wiggle...*`, getRecentChannel(serverID, userID).channelid);
             }
             else {
-                messageSendChannel(`*wiggle...*`, process.recentmessages[serverID][userID])
+                messageSendChannel(`*wiggle...*`, getRecentChannel(serverID, userID).channelid)
             }
         }
         getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress++
@@ -113,12 +114,12 @@ let tick = async (serverID, userID, datain) => {
                 else {
                     data.capturesuccess_other = true
                 }
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             }
             else {
                 // This broke free on the third wiggle. 
                 data.wigglefail2 = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 removeHeavy(serverID, userID, "capture_sphere");
                 return;
             }

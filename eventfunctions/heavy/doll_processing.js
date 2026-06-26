@@ -6,6 +6,7 @@ const { getCollar } = require("../../functions/getters/collar/getCollar.js");
 const { getCollarName } = require("../../functions/getters/collar/getCollarName.js");
 const { getOption } = require("../../functions/getters/config/getOption.js");
 const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel.js");
 const { getHeadwear } = require("../../functions/getters/headwear/getHeadwear.js");
 const { getHeadwearName } = require("../../functions/getters/headwear/getHeadwearName.js");
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy.js");
@@ -53,7 +54,7 @@ let tick = async (serverID, userID, datain) => {
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
     let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
+    if (!userobject || !targetobject || !getRecentChannel(serverID, userID).valid) {
         return;
     }
     // Only update a max of once every 60 seconds. 
@@ -97,7 +98,7 @@ let tick = async (serverID, userID, datain) => {
             data.stage4 = true;
         }
         // Send a message saying it stripped something off the wearer <3
-        messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+        messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
     }
     else {
         let newclothes = getWearable(serverID, userID) // All Clothing, check for drone clothes
@@ -109,7 +110,7 @@ let tick = async (serverID, userID, datain) => {
                 data.existing_barcode = true;
                 data.textdata.c1 = getWearableName(undefined, d); // wearable name
                 data.textdata.c2 = getProcessVariable(serverID, userID, "userevents").dollprocessing.doll_id;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 equipped = true;
                 getProcessVariable(serverID, userID, "userevents").dollprocessing.existingbarcodelogged = true;
                 return;
@@ -123,7 +124,7 @@ let tick = async (serverID, userID, datain) => {
                 }
                 data.textdata.c1 = getWearableName(undefined, d), // wearable name
                     assignWearable(serverID, userID, d);
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 equipped = true;
                 return;
             }
@@ -134,7 +135,7 @@ let tick = async (serverID, userID, datain) => {
             if (getProcessVariable(serverID, userID, "userevents").dollprocessing.stage == 0) {
                 getProcessVariable(serverID, userID, "userevents").dollprocessing.stage++;
                 data.donestripping = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 return;
             }
             if (getProcessVariable(serverID, userID, "userevents").dollprocessing.stage == 1) {
@@ -160,7 +161,7 @@ let tick = async (serverID, userID, datain) => {
                         data.add = true;
                     appliedrestraint = true;
                 }
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
             }
             // Apply chastity belt if doll is not wearing it
             else if (!getChastity(serverID, userID) || (getChastity(serverID, userID) && (getChastity(serverID, userID).chastitytype != "belt_cyberdoll"))) {
@@ -177,7 +178,7 @@ let tick = async (serverID, userID, datain) => {
                         data.add = true;
                     appliedrestraint = true;
                 }
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
             }
             // Apply chastity bra if doll is not wearing it
             else if (!getChastityBra(serverID, userID) || (getChastityBra(serverID, userID) && (getChastityBra(serverID, userID).chastitytype != "bra_cyberdoll"))) {
@@ -194,7 +195,7 @@ let tick = async (serverID, userID, datain) => {
                         data.add = true;
                     appliedrestraint = true;
                 }
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
             }
             // Apply collar to the doll if it is not wearing it
             else if (!getCollar(serverID, userID) || (getCollar(serverID, userID) && (getCollar(serverID, userID).collartype != "collar_cyberdoll"))) {
@@ -211,7 +212,7 @@ let tick = async (serverID, userID, datain) => {
                         data.add = true;
                     appliedrestraint = true;
                 }
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
             }
             // Apply doll visor to the doll if it is not wearing it
             else if (!getHeadwear(serverID, userID).some((d) => DOLLVISORS.includes(d))) {
@@ -220,14 +221,14 @@ let tick = async (serverID, userID, datain) => {
                     assignHeadwear(serverID, userID, "doll_visor", targetobject.id)
                 data.add = true;
                 appliedrestraint = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
             }
             // We are FINALLY DONE!
             if (!appliedrestraint) {
                 getProcessVariable(serverID, userID, "userevents").dollprocessing.stage++
                 data.done = true;
                 data.textdata.c2 = getProcessVariable(serverID, userID, "userevents").dollprocessing.doll_id;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 return;
             }
         }
@@ -236,7 +237,7 @@ let tick = async (serverID, userID, datain) => {
             data.processingcomplete = true;
             delete getProcessVariable(serverID, userID, "userevents").dollprocessing;
             removeHeavy(serverID, userID, "doll_processing");
-            messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+            messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
         }
     }
 }

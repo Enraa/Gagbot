@@ -27,6 +27,8 @@ const { logConsole } = require('./functions/logfunctions.js');
 const { markForSave } = require('./functions/other/markForSave.js');
 const { processdatatoload } = require(`./lists/processdatatoload.js`);
 const { addBellCollarReact } = require('./functions/setters/collar/addBellCollarReact.js');
+const { setRecentChannel } = require(`./functions/setters/config/setRecentChannel.js`);
+const { setProcessVariable } = require('./functions/setters/config/setProcessVariable.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -286,8 +288,7 @@ client.on("messageCreate", async (msg) => {
             if ((getBotOption("bot-allowkeyfinding") == "Enabled")) {
                 handleKeyFinding(msg);
             }
-            if (process.recentmessages[msg.guild.id] == undefined) { process.recentmessages[msg.guild.id] = {} }
-            process.recentmessages[msg.guild.id][msg.author.id] = msg.channel.id;
+            setRecentChannel(msg.guild.id, msg.user.id, msg.channel.id, "message");
             modifymessage(msg, thread ? msg.channelId : null);
         }
         if ((msg.channel.id != process.env.CHANNELID && msg.channel.parentId != process.env.CHANNELID) || (msg.webhookId) || (msg.author.bot) || (msg.stickers?.first()) || (message.flags && message.flags.has(discord.MessageFlags.HasSnapshot)) || (message.flags && message.flags.has(discord.MessageFlags.IsCrosspost))) { return }
@@ -301,25 +302,19 @@ client.on('interactionCreate', async (interaction) => {
     try {
         // Handle general interactions from a user
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.user.id) {
-            if (process.recentmessages == undefined) { process.recentmessages = {} }
-            if (process.recentmessages[interaction.guildId] == undefined) { process.recentmessages[interaction.guildId] = {} }
-            process.recentmessages[interaction.guildId][interaction.user.id] = interaction.channelId;
+            setRecentChannel(interaction.guildId, interaction.user.id, interaction.channelId, "interaction");
         }
         // Handle User targeted actions from context menu
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.targetId && (interaction.commandType == 2)) {
-            if (process.recentmessages == undefined) { process.recentmessages = {} }
-            if (process.recentmessages[interaction.guildId] == undefined) { process.recentmessages[interaction.guildId] = {} }
-            process.recentmessages[interaction.guildId][interaction.targetId] = interaction.channelId;
+            setRecentChannel(interaction.guildId, interaction.targetId, interaction.channelId, "interaction");
         }
         // Handle Message targeted headpats
         if (interaction.channelId && interaction.guildId && interaction.user && interaction.targetId && (interaction.commandType == 3)) {
-            if (process.recentmessages == undefined) { process.recentmessages = {} }
-            if (process.recentmessages[interaction.guildId] == undefined) { process.recentmessages[interaction.guildId] = {} }
             let channel = await interaction.client.channels.fetch(interaction.channelId)
             if (channel) {
                 let message = await channel.messages.fetch(interaction.targetId)
                 if (message) {
-                    process.recentmessages[interaction.guildId][message.author.id] = interaction.channelId;
+                    setRecentChannel(interaction.guildId, message.author.id, interaction.channelId, "interaction");
                 }
             }
         }

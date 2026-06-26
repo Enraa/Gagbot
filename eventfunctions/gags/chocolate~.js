@@ -6,6 +6,7 @@ const { assignGag } = require("../../functions/setters/gag/assignGag.js");
 const { deleteGag } = require("../../functions/setters/gag/removeGag.js");
 const { getUserVar } = require("../../functions/getters/config/getUserVar.js");
 const { setUserVar } = require("../../functions/setters/config/setUserVar.js");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel.js");
 
 const DISSOLVE_RATE_MS = 60000;
 
@@ -18,7 +19,7 @@ async function tick(serverID, userID, data) {
     }
 
     // Decrement Intensity every timer interval
-    if (getUserVar(serverID, userID, "aphroConfectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "chocolate~") && (process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
+    if (getUserVar(serverID, userID, "aphroConfectionaryDissolveTimer") < Date.now() && getGag(serverID, userID, "chocolate~") && getRecentChannel(serverID, userID).valid) {
         if(getGag(serverID, userID, "chocolate~").intensity > 1){
             setUserVar(serverID, userID, "aphroConfectionaryDissolveTimer", Date.now() + DISSOLVE_RATE_MS)
 
@@ -30,7 +31,7 @@ async function tick(serverID, userID, data) {
             addArousal(serverID, userID, (0.2 * getUserVar(serverID, userID, "aphroCount")))
             setUserVar(serverID, userID, "aphroCount", getUserVar(serverID, userID, "aphroCount") + 1)
 
-            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(serverID, userID, "possessiveDeterminer")} Chocolate Gag a little bit. The chocolate was particularly tasty and makes ${getPronouns(serverID, userID, "object")} a little warm inside!`, process.recentmessages[serverID][userID])
+            messageSendChannel(`<@${userID}>'s licking has shrunk ${getPronouns(serverID, userID, "possessiveDeterminer")} Chocolate Gag a little bit. The chocolate was particularly tasty and makes ${getPronouns(serverID, userID, "object")} a little warm inside!`, getRecentChannel(serverID, userID).channelid)
         }
         else {
             // Clear Gag and Dissolve Timer
@@ -41,7 +42,7 @@ async function tick(serverID, userID, data) {
             setUserVar(serverID, userID, "aphroCount", undefined)
 
             deleteGag(serverID, userID, "chocolate~")
-            messageSendChannel(`<@${userID}>'s Chocolate Gag has dissolved away, leaving haunting memories of how good it tasted and how much ${getPronouns(serverID, userID, "subject")} want${(getPronouns(serverID, userID, "subject") == "they") ? "" : "s"} to touch down there...`, process.recentmessages[serverID][userID])
+            messageSendChannel(`<@${userID}>'s Chocolate Gag has dissolved away, leaving haunting memories of how good it tasted and how much ${getPronouns(serverID, userID, "subject")} want${(getPronouns(serverID, userID, "subject") == "they") ? "" : "s"} to touch down there...`, getRecentChannel(serverID, userID).channelid)
         }
     }
 }

@@ -1,5 +1,6 @@
 const { getBotOption } = require("../../functions/getters/config/getBotOption");
 const { getOption } = require("../../functions/getters/config/getOption");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel");
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
 const { setUserVar } = require("../../functions/setters/config/setUserVar");
@@ -11,7 +12,7 @@ function headpatfunction(serverID, recipient, data) {
     if (data.returnedobject.hit) {
         if (newcharge == 0.0) {
             setTimeout(() => {
-                messageSendChannel(`The headpat gives enough charge to start up a vibrator...`, process.recentmessages[serverID][recipient])
+                messageSendChannel(`The headpat gives enough charge to start up a vibrator...`, getRecentChannel(serverID, recipient).channelid)
             }, 3000)
         }
         newcharge = newcharge + (0.05 * getOption(serverID, recipient, "headpatrestraintpotency"))

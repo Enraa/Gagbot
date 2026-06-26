@@ -130,7 +130,7 @@ async function handleKeyFinding(message) {
             try {
                 if (en[1]?.fumbled && !en[1]?.temporarykeyholder) {
                     if (Math.random() < (Math.max(Math.min(message.content.length * 0.0005, 0.3), process.forcefindkey ? 1.0 : 0.01))) {
-                        if (process.recentmessages[message.guild.id][en[0]] != message.channel.id) { 
+                        if (getRecentChannel(message.guild.id, en[0]).channelid != message.channel.id) { 
                             // Even if we succeeded the roll, just leave. The wearer needs to be present for their key to be found
                             // This implicitly protects against finding the key on another server or on threads the wearer isnt in.
                             return 

@@ -479,11 +479,11 @@ function checkFumbledTemporaryKeys() {
                         }
 
                         // Now that @___ has had her fun, she returns the keys for @___'s chastity belt. 
-                        if (process.recentmessages[en[0]]) {
-                            messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[en[0]])
+                        if (getRecentChannel(server, en[0]).valid) {
+                            messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), getRecentChannel(server, en[0]).channelid)
                         }
-                        else if (process.recentmessages[data.interactionuser.id]) {
-                            messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), process.recentmessages[data.interactionuser.id])
+                        else if (getRecentChannel(server, data.interactionuser.id).valid) {
+                            messageSendChannel(getTextGeneric(`returnkeysfromfumble`, data), getRecentChannel(serverID, data.interactionuser.id).channelid)
                         }
                         else {
                             console.log("No suitable channel found for returning temp key.")
@@ -540,14 +540,14 @@ async function endComboReacts() {
     Object.keys(process.reactions).forEach((guild) => {
         Object.keys(process.reactions[guild]).forEach((user) => {
             if (process.reactions[guild][user] && (process.reactions[guild][user].comboend < Date.now())) {
-                if ((process.recentmessages[guild] && process.recentmessages[guild][user]) && isWearingCollar(guild, user, "collarbell")) {
+                if ((getRecentChannel(guild, user).valid) && isWearingCollar(guild, user, "collarbell")) {
                     let counttojangle = Math.min(process.reactions[guild][user].count, 3) // up to 3 jangles!
                     let data = {
                         serverID: guild,
                         interactionuser: { id: user },
                         targetuser: { id: user }
                     }
-                    messageSendChannel(getTextGeneric(`bellcollar_${counttojangle}`, data), process.recentmessages[guild][user]);
+                    messageSendChannel(getTextGeneric(`bellcollar_${counttojangle}`, data), getRecentChannel(guild, user).channelid);
                     setUserVar(guild, user, "reactbellcooldown", (Date.now() + 60000))
                 }
                 delete process.reactions[guild][user];

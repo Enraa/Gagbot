@@ -1,5 +1,6 @@
 const { getBotOption } = require("../../functions/getters/config/getBotOption");
 const { getOption } = require("../../functions/getters/config/getOption");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel");
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
 const { setUserVar } = require("../../functions/setters/config/setUserVar");
@@ -9,7 +10,7 @@ function headpatfunction(serverID, recipient, data) {
     let newcharge = (getUserVar(serverID, recipient, "windupcharge") ?? 0.0)
     if (data.returnedobject.hit) {
         if (newcharge == 0.0) {
-            //messageSendChannel(`The headpat winds up a key...`, process.recentmessages[recipient])
+
         }
         newcharge = newcharge + ((15/180) * getOption(serverID, recipient, "headpatrestraintpotency"))
         if (data.returnedobject.crit) {
@@ -33,7 +34,7 @@ async function tick(serverID, userid, datain) {
     }
     if (getUserVar(serverID, userid, "windupcharge") > 0.0 && (newcharge <= 0.0)) {
         // They JUST ran out of charge...
-        messageSendChannel(`<@${userid}> becomes dormant as the clockwork key stops ticking...`, process.recentmessages[serverID][userid])
+        messageSendChannel(`<@${userid}> becomes dormant as the clockwork key stops ticking...`, getRecentChannel(serverID, userID).channelid)
     }
     setUserVar(serverID, userid, "windupcharge", newcharge);
 }

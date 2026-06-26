@@ -1,4 +1,5 @@
 const { getPronouns } = require("../../functions/getters/config/getPronouns");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel");
 const { messageSendChannel } = require("../../functions/messagefunctions");
 const { assignGag } = require("../../functions/setters/gag/assignGag");
 
@@ -13,11 +14,11 @@ function msgfunction(serverID, userid, data) {
     let cursesmap = curses.join("|");
 	let regexpattern = new RegExp(`\\b(${cursesmap})\\b`, "i");
 
-    if (regexpattern.test(data.outtext) && (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userid])) {
+    if (regexpattern.test(data.outtext) && getRecentChannel(serverID, userID).valid) {
 		// They are UNCOUTH! Their speech somehow included foul language
         // Gag them with the soap gag. 
         assignGag(serverID, userid, "soap", 8, userid);
-        messageSendChannel(uncouthreminders[Math.floor(Math.random() * uncouthreminders.length)], process.recentmessages[serverID][userid])
+        messageSendChannel(uncouthreminders[Math.floor(Math.random() * uncouthreminders.length)], getRecentChannel(serverID, userID).channelid);
 
 		return;
 	}

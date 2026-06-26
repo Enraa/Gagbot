@@ -1,3 +1,4 @@
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel");
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
 const { setUserVar } = require("../../functions/setters/config/setUserVar");
@@ -55,9 +56,9 @@ function msgfunction(serverID, userid, data) {
         // This will be scaled HIGHLY over on the vibe side.
         // If they have a politesubvibe going and its undefined, then send a message
         if (getUserVar(serverID, userid, "politeSubVibeTime") == undefined) {
-            if (process.recentmessages[serverID] && process.recentmessages[serverID][userid]) {
+            if (getRecentChannel(serverID, userID).valid) {
                 try {
-                    messageSendChannel(`<@${userid}>'s Polite Vibe turns on as the honorific is spoken!`, process.recentmessages[serverID][userid])
+                    messageSendChannel(`<@${userid}>'s Polite Vibe turns on as the honorific is spoken!`, getRecentChannel(serverID, userID).channelid)
                 }
                 catch (err) {
                     console.log(err);

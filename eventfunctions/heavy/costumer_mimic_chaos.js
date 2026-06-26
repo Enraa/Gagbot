@@ -7,6 +7,7 @@ const { getChastityName } = require("../../functions/getters/chastity/getChastit
 const { getCollar } = require("../../functions/getters/collar/getCollar.js");
 const { getCollarName } = require("../../functions/getters/collar/getCollarName.js");
 const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel.js");
 const { getUserTags } = require("../../functions/getters/config/getUserTags.js");
 const { getGag } = require("../../functions/getters/gag/getGag.js");
 const { convertGagText } = require("../../functions/getters/gag/getGagName.js");
@@ -292,7 +293,7 @@ let tick = async (serverID, userID, datain) => {
     let userobject = await process.client.users.fetch(userID); // The person in the processing terminal!
     let targetobject = await process.client.users.fetch(getHeavy(serverID, userID).origbinder ?? userID); // The cruel person who threw this person in the terminal!
     // Something's wrong. 
-    if (!userobject || !targetobject || !(process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][userID])) {
+    if (!userobject || !targetobject || !getRecentChannel(serverID, userID).valid) {
         return;
     }
 
@@ -346,7 +347,7 @@ let tick = async (serverID, userID, datain) => {
             data.removeclothing = true;
 
             // Send a message saying it stripped things off the wearer <3
-            messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+            messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
             getProcessVariable(serverID, userID, "userevents").costumermimic.stage++
             return;
 
@@ -362,7 +363,7 @@ let tick = async (serverID, userID, datain) => {
             data.textdata.c1 = "Naked";
             data.donestripping = true;
             data.noneremaining = true;
-            messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+            messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
             return;
         }
     }
@@ -392,7 +393,7 @@ let tick = async (serverID, userID, datain) => {
         }
 
         // Send a message saying it has consumed all remaining wearables
-        messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+        messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
 
         getProcessVariable(serverID, userID, "userevents").costumermimic.stage++
         return;
@@ -410,13 +411,13 @@ let tick = async (serverID, userID, datain) => {
                     data.textdata.c1 = getWearableName(undefined, itemtoequipcolored)
                     assignWearable(serverID, userID, itemtoequipcolored);
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 }
                 else {
                     data.textdata.c1 = getWearableName(undefined, nextitem.itemtowear)
                     assignWearable(userID, itemtoequipcolored);
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 }
                 // Increment Costume Index
                 getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
@@ -431,7 +432,7 @@ let tick = async (serverID, userID, datain) => {
                         assignHeadwear(serverID, userID, nextitem.itemtowear, targetobject.id)
 
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 }
                 // Increment Costume Index
                 getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
@@ -444,7 +445,7 @@ let tick = async (serverID, userID, datain) => {
                         // Apply the gag    
                         assignGag(userID, nextitem.itemtowear, Math.floor(Math.random() * 10) + 1, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder)
                     data.add = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
                 }
                 // Increment Costume Index
                 getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
@@ -465,7 +466,7 @@ let tick = async (serverID, userID, datain) => {
                             assignMitten(userID, nextitem.itemtowear, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
 
                 }
                 // Increment Costume Index
@@ -489,7 +490,7 @@ let tick = async (serverID, userID, datain) => {
                             assignChastity(serverID, userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, nextitem.itemtowear)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
 
                 }
                 // Increment Costume Index
@@ -513,7 +514,7 @@ let tick = async (serverID, userID, datain) => {
                             assignChastityBra(serverID, userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, nextitem.itemtowear)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
 
                 }
                 // Increment Costume Index
@@ -537,7 +538,7 @@ let tick = async (serverID, userID, datain) => {
                             assignCollar(userID, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder, {}, false, nextitem.itemtowear)
                         data.add = true;
                     }
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
 
                 }
                 // Increment Costume Index
@@ -548,7 +549,7 @@ let tick = async (serverID, userID, datain) => {
                 // Unknown Item Category in Outfit
                 data.unknown = true;
                 data.textdata.c1 = nextitem.itemtowear; // item name
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
 
                 // Increment Costume Index to bypass unknown item
                 getProcessVariable(serverID, userID, "userevents").costumermimic.costumeidx++;
@@ -570,7 +571,7 @@ let tick = async (serverID, userID, datain) => {
             removeHeavy(serverID, userID, "costumer_mimic_chaos");
             data.spitout = true;
             data.none = true;
-            messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+            messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
         }
 
 
@@ -587,10 +588,10 @@ let tick = async (serverID, userID, datain) => {
             assignHeavy(serverID, userID, nextitem.itemtowear, getProcessVariable(serverID, userID, "userevents").costumermimic.origbinder);
             data.textdata.c1 = getHeavy(serverID, userID).displayname; // heavy name
             data.add = true;
-            messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+            messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
         } else {
             data.none = true;
-            messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+            messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
         }
 
         // Remove Event and exit (Does this automatically go to Garbage Collector?)

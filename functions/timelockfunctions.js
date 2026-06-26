@@ -65,13 +65,13 @@ function unlockTimelockChastity(serverID, client, wearer, skipWrite = false) {
 
 async function sendTimelockChastityUnlockMessage(serverID, client, wearer, keyholder) {
     traceFirstParam(arguments[0]);
-	if (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][wearer]) {
+	if (getRecentChannel(serverID, wearer).valid) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt unlocks and falls to the floor!`, getRecentChannel(serverID, wearer).channelid);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity belt returns to normal with <@${keyholder}> holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		}
 	}
     else {
@@ -126,13 +126,13 @@ function unlockTimelockChastityBra(serverID, client, wearer, skipWrite = false) 
 
 async function sendTimelockChastityBraUnlockMessage(serverID, client, wearer, keyholder) {
     traceFirstParam(arguments[0]);
-	if (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][wearer]) {
+	if (getRecentChannel(serverID, wearer).valid) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra unlocks and falls to the floor!`, getRecentChannel(serverID, wearer).channelid);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s chastity bra returns to normal with <@${keyholder}> holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		}
 	}
     else {
@@ -187,13 +187,13 @@ function unlockTimelockCollar(serverID, client, wearer, skipWrite = false) {
 
 async function sendTimelockCollarUnlockMessage(serverID, client, wearer, keyholder) {
     traceFirstParam(arguments[0]);
-	if (process.recentmessages && process.recentmessages[serverID] && process.recentmessages[serverID][wearer]) {
+	if (getRecentChannel(serverID, wearer).valid) {
 		if (!keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar unlocks and falls to the floor!`, getRecentChannel(serverID, wearer).channelid);
 		} else if (wearer == keyholder) {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with ${getPronouns(serverID, wearer, "object")} holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		} else {
-			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, process.recentmessages[serverID][wearer]);
+			messageSendChannel(`As the timer finally expires, <@${wearer}>'s collar returns to normal with <@${keyholder}> holding the keys!`, getRecentChannel(serverID, wearer).channelid);
 		}
 	}
     else {
@@ -230,15 +230,14 @@ function checkGagbotKeys() {
 function gagbotHeldKeyTime(serverID, wearerid, type) {
     traceFirstParam(arguments[0]);
     if (process.heldkeytimers == undefined) { process.heldkeytimers = {} }
-    if (process.recentmessages[serverID] == undefined) { process.recentmessages[serverID] = {} }
-    if ((process.recentmessages[serverID] && !process.recentmessages[serverID][wearerid])) { return }
+    if (!getRecentChannel(serverID, wearerid).valid) { return }
     if (!process.heldkeytimers[`${serverID}_${wearerid}_${type}`]) {
         let data = {
             serverID: serverID,
             interactionuser: process.client.user,
             targetuser: { id: wearerid },
         }
-        messageSendChannel(getTextGeneric("given_key", data), process.recentmessages[serverID][wearerid])
+        messageSendChannel(getTextGeneric("given_key", data), getRecentChannel(serverID, wearerid).channelid)
         let addedtime = Math.floor(Math.max(Math.random(), 0.4) * getOption(serverID, wearerid, "gagbotholdtimer")); // 40-100% of the time
         process.heldkeytimers[`${serverID}_${wearerid}_${type}`] = {
             releasetime: Date.now() + addedtime
@@ -255,7 +254,7 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
                 interactionuser: process.client.user,
                 targetuser: { id: wearerid },
             }
-            messageSendChannel(getTextGeneric(`return_key_${type}`, data), process.recentmessages[serverID][wearerid]) // process.recentmessages will *always* exist. 
+            messageSendChannel(getTextGeneric(`return_key_${type}`, data), getRecentChannel(serverID, wearerid).channelid)
             if (process[type] && process[type][serverID] && process[type][serverID][wearerid] && process[type][serverID][wearerid].keyholder == process.client.user.id) {
                 if (type == "collar") { 
                     transferCollarKey(serverID, wearerid, wearerid) 

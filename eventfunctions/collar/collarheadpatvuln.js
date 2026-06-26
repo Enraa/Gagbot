@@ -1,5 +1,6 @@
 const { getCollar } = require("../../functions/getters/collar/getCollar");
 const { getPronouns } = require("../../functions/getters/config/getPronouns");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel");
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
 const { setUserVar } = require("../../functions/setters/config/setUserVar");
@@ -18,7 +19,7 @@ function headpatfunction(serverID, recipient, data) {
         try {
             // Delay by 3 seconds to attempt to arrange the order
             setTimeout(() => {
-                messageSendChannel(critheadpatmessages[Math.floor(Math.random() * critheadpatmessages.length)], process.recentmessages[serverID][recipient])
+                messageSendChannel(critheadpatmessages[Math.floor(Math.random() * critheadpatmessages.length)], getRecentChannel(serverID, recipient).channelid)
             }, 3000);
         }
         catch (err) {

@@ -1,4 +1,5 @@
 const { getUserVar } = require("../../getters/config/getUserVar");
+const { setRecentChannel } = require("../config/setRecentChannel");
 
 /***********
  * Adds a reaction to the user's recent bell collar combo. Once the timer expires, then the next bot tick will clear it and emit a message to their recentmessages channel. 
@@ -25,9 +26,7 @@ function addBellCollarReact(react, user, details) {
             comboend: (Date.now() + 7000)
         }
     }
-    if (process.recentmessages == undefined) { process.recentmessages = {} }
-    if (process.recentmessages[react.message.guildId] == undefined) { process.recentmessages[react.message.guildId] = {} }
-    process.recentmessages[react.message.guildId][user.id] = react.message.channelId;
+    setRecentChannel(react.message.guildId, user.id, react.message.channelId, "interaction")
 }
 
 exports.addBellCollarReact = addBellCollarReact;

@@ -4,6 +4,7 @@ const { getChastityBraName } = require("../../functions/getters/chastity/getChas
 const { getChastityName } = require("../../functions/getters/chastity/getChastityName");
 const { getCollar } = require("../../functions/getters/collar/getCollar");
 const { getCollarName } = require("../../functions/getters/collar/getCollarName");
+const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel");
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { getCorset } = require("../../functions/getters/corset/getCorset");
 const { getGagLast } = require("../../functions/getters/gag/getGagLast");
@@ -64,7 +65,7 @@ exports.tick = async (serverID, userID, data) => {
             interaction.reply({ content: `Something went wrong with your input. Please let Enraa know with the exact thing you put in the Type field!`, flags: MessageFlags.Ephemeral })
             return;
         }*/
-       if (!process.recentmessages[serverID] || (process.recentmessages[serverID][userID] == undefined)) {
+       if (!getRecentChannel(serverID, userID).valid) {
             return; // Leave if we dont have a server we could send to. 
        }
 
@@ -75,28 +76,28 @@ exports.tick = async (serverID, userID, data) => {
             data.heavy = true;
             // Heavy Bondage is... pretty uniquely only influenced by itself.
             // It will also only ever have named bondage.
-            messageSendChannel(getText(data), process.recentmessages[serverID][userID])
+            messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
         } else if (chosenopt == "gag" && gagbondage) {
             data.gag = true;
             // Gags are influenced by heavy bondage or mittens.
             if (heavybondage) {
                 // Heavy Bondage is disabling.
                 data.heavy = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             } else {
                 data.noheavy = true;
                 if (mittenbondage || Math.random() > 0.5) {
                     // Either mittened, or not using fingers or similar
                     data.nofingers = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else if (mittenbondage && Math.random() > 0.5) {
                     // Mittened and random chance!
                     data.mitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else {
                     // No mittens and ABLE TO USE FINGERS!
                     data.nomitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 }
             }
         } else if (chosenopt == "mitten" && mittenbondage) {
@@ -107,21 +108,21 @@ exports.tick = async (serverID, userID, data) => {
             if (heavybondage) {
                 // Heavy Bondage is disabling.
                 data.heavy = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             } else {
                 data.noheavy = true;
                 if (gagbondage || Math.random() > 0.5) {
                     // Either gagged, or not using teeth
                     data.nomouth = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else if (gagbondage && Math.random() > 0.5) {
                     // Gagged and random chance!
                     data.gag = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else {
                     // No gag and ABLE TO USE TEETH!
                     data.mouth = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 }
             }
         } else if (chosenopt == "chastity" && chastitybondage) {
@@ -131,22 +132,22 @@ exports.tick = async (serverID, userID, data) => {
             if (heavybondage) {
                 // Heavy Bondage is disabling.
                 data.heavy = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             } else {
                 // Because the number of responses vary so much, going to use 33% chance for mitten/finger text
                 data.noheavy = true;
                 if (mittenbondage || Math.random() > 0.33) {
                     // Either mittened, or not using fingers or similar
                     data.nofingers = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else if (mittenbondage && Math.random() > 0.66) {
                     // Mittened and random chance!
                     data.mitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else {
                     // No mittens and ABLE TO USE FINGERS!
                     data.nomitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 }
             }
         } else if (chosenopt == "chastitybra" && chastitybrabondage) {
@@ -156,22 +157,22 @@ exports.tick = async (serverID, userID, data) => {
             if (heavybondage) {
                 // Heavy Bondage is disabling.
                 data.heavy = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             } else {
                 // Because the number of responses vary so much, going to use 33% chance for mitten/finger text
                 data.noheavy = true;
                 if (mittenbondage || Math.random() > 0.5) {
                     // Either mittened, or not using fingers or similar
                     data.nofingers = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else if (mittenbondage && Math.random() > 0.5) {
                     // Mittened and random chance!
                     data.mitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else {
                     // No mittens and ABLE TO USE FINGERS!
                     data.nomitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 }
             }
         } else if (chosenopt == "head" && headbondage.length > 0) {
@@ -181,21 +182,21 @@ exports.tick = async (serverID, userID, data) => {
             if (heavybondage) {
                 // Heavy Bondage is disabling.
                 data.heavy = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             } else {
                 data.noheavy = true;
                 if (mittenbondage || Math.random() > 0.5) {
                     // Either mittened, or not using fingers or similar
                     data.nofingers = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else if (mittenbondage && Math.random() > 0.5) {
                     // Mittened and random chance!
                     data.mitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else {
                     // No mittens and ABLE TO USE FINGERS!
                     data.nomitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 }
             }
         } else if (chosenopt == "corset" && corsetbondage) {
@@ -205,21 +206,21 @@ exports.tick = async (serverID, userID, data) => {
             if (heavybondage) {
                 // Heavy Bondage is disabling.
                 data.heavy = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             } else {
                 data.noheavy = true;
                 if (mittenbondage || Math.random() > 0.5) {
                     // Either mittened, or not using fingers or similar
                     data.nofingers = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else if (mittenbondage && Math.random() > 0.5) {
                     // Mittened and random chance!
                     data.mitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else {
                     // No mittens and ABLE TO USE FINGERS!
                     data.nomitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 }
             }
         } else if (chosenopt == "collar" && collarbondage) {
@@ -229,21 +230,21 @@ exports.tick = async (serverID, userID, data) => {
             if (heavybondage) {
                 // Heavy Bondage is disabling.
                 data.heavy = true;
-                messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
             } else {
                 data.noheavy = true;
                 if (mittenbondage || Math.random() > 0.5) {
                     // Either mittened, or not using fingers or similar
                     data.nofingers = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else if (mittenbondage && Math.random() > 0.5) {
                     // Mittened and random chance!
                     data.mitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 } else {
                     // No mittens and ABLE TO USE FINGERS!
                     data.nomitten = true;
-                    messageSendChannel(getText(data), process.recentmessages[serverID][userID]);
+                    messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
                 }
             }
         }
