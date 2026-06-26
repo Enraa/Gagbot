@@ -574,8 +574,10 @@ async function endComboReacts() {
 // Cull any message older than a day. 
 async function removeOldMessages() {
     Object.keys(process.recordedmessages).forEach((k) => {
-        if (process.recordedmessages && process.recordedmessages[k] && ((process.recordedmessages[k].createdTimestamp + 86400000) < Date.now())) {
+        if (process.recordedmessages && process.recordedmessages[k] && ((process.recordedmessages[k].timestamp + 86400000) < Date.now())) {
+            console.log(`Deleting message with ID ${k}`)
             delete process.recordedmessages[k];
+            markForSave("recordedmessages")
         } 
     })
 }

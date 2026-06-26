@@ -248,6 +248,7 @@ client.on("clientReady", async () => {
         generateListTexts();
 
         scavengeUsers(client);
+        removeOldMessages(); 
         setInterval(() => {
             try {
                 scavengeUsers(client);
