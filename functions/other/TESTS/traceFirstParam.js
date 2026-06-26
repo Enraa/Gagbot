@@ -12,6 +12,7 @@
  * ##### Returns true if it is a server ID, crashes if it's not. 
  *******/
 function traceFirstParam(serverID) {
+    if (serverID === "NoServer") { return } // Explicitly aware that we're passing an invalid server
     if (!process.client.guilds.cache.get(serverID)) {
         console.log(serverID)
         console.error(`Invalid server ID ${serverID}!`)
