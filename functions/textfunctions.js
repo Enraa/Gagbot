@@ -1490,7 +1490,7 @@ const texts_key = {
                 `USER_TAG casts a small spell on USER_THEIR VAR_C2 and clones the effects of a VAR_C1 onto it!`,
                 {
                     only: (t) => {
-                        return (t.c1 == "Collar Bell")
+                        return (t.c1.includes("Collar Bell"))
                     },
                     text: `USER_TAG clips a little VAR_C1 onto USER_THEIR VAR_C2. It gives a little jingle as USER_THEY moveUSER_S!`
                 }
@@ -1499,7 +1499,7 @@ const texts_key = {
                 `USER_TAG snaps USER_THEIR fingers and dispels the VAR_C1 effect on USER_THEIR VAR_C2.`,
                 {
                     only: (t) => {
-                        return (t.c1 == "Collar Bell")
+                        return (t.c1.includes("Collar Bell"))
                     },
                     text: `USER_TAG unhooks the little VAR_C1 on USER_THEIR VAR_C2 and puts it away!`
                 }
@@ -1511,7 +1511,7 @@ const texts_key = {
                 `USER_TAG casts a small spell on TARGET_TAG's VAR_C2 and clones the effects of a VAR_C1 onto it!`,
                 {
                     only: (t) => {
-                        return (t.c1 == "Collar Bell")
+                        return (t.c1.includes("Collar Bell"))
                     },
                     text: `USER_TAG clips a little VAR_C1 onto TARGET_TAG's VAR_C2. It gives a little jingle as TARGET_THEY moveTARGET_S!`
                 }
@@ -1520,7 +1520,7 @@ const texts_key = {
                 `USER_TAG snaps USER_THEIR fingers and dispels the VAR_C1 effect on TARGET_TAG's VAR_C2.`,
                 {
                     only: (t) => {
-                        return (t.c1 == "Collar Bell")
+                        return (t.c1.includes("Collar Bell"))
                     },
                     text: `USER_TAG unhooks the little VAR_C1 on TARGET_TAG's VAR_C2 and puts it away!`
                 }

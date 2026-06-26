@@ -542,7 +542,20 @@ async function endComboReacts() {
     Object.keys(process.reactions).forEach((guild) => {
         Object.keys(process.reactions[guild]).forEach((user) => {
             if (process.reactions[guild][user] && (process.reactions[guild][user].comboend < Date.now())) {
-                if ((getRecentChannel(guild, user).valid) && isWearingCollar(guild, user, "collarbell")) {
+                // If they are wearing the dampened collar bell, they must not have sent a MESSAGE in the last 5 minutes to get pinged.
+                // This is to tease lurkers. 
+                if ((getRecentChannel(guild, user).valid) && isWearingCollar(guild, user, "collarbell_dampened") && ((getRecentChannel(guild, user).messagetimestamp + 300000) < Date.now())) {
+                    let counttojangle = Math.min(process.reactions[guild][user].count, 3) // up to 3 jangles!
+                    let data = {
+                        serverID: guild,
+                        interactionuser: { id: user },
+                        targetuser: { id: user }
+                    }
+                    messageSendChannel(getTextGeneric(`bellcollar_${counttojangle}`, data), getRecentChannel(guild, user).channelid);
+                    setUserVar(guild, user, "reactbellcooldown", (Date.now() + 60000))
+                }
+                // else, regular collar bell does not care about message activity.
+                else if ((getRecentChannel(guild, user).valid) && isWearingCollar(guild, user, "collarbell")) {
                     let counttojangle = Math.min(process.reactions[guild][user].count, 3) // up to 3 jangles!
                     let data = {
                         serverID: guild,

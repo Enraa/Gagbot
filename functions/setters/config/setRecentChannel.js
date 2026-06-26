@@ -20,7 +20,6 @@ function setRecentChannel(serverID, userID, channelID, type) {
     current.channelid = channelID,
     current.timestamp = Date.now()
     setProcessVariable(serverID, userID, "recentmessages", current)
-    markForSave("recentmessages");
 }
 
 exports.setRecentChannel = setRecentChannel;
