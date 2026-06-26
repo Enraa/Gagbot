@@ -358,17 +358,11 @@ function handleDressProtocol(serverID, userID, dp) {
         }
     }
 
-    // If the stage is 3, we're ready to move to final phase. Increment 1 and return.
-    if (dp.stage == 3) { 
+    // If the stage is 3 or higher, we're ready to move until removal. 
+    // The dress protocol event should check the stage and handle outside of this function's scope. This needs to eventually remove the device.
+    if (dp.stage >= 3) { 
         messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
         dp.stage++;
-        return;
-    }
-
-    // If the stage is 4, we want to remove the heavy bondage that this dp is a part of!
-    if (dp.stage >= 4) { 
-        messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
-        removeHeavy(serverID, userID, dp.heavyID);
         return;
     }
 }

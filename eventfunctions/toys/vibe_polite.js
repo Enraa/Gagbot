@@ -56,9 +56,9 @@ function msgfunction(serverID, userid, data) {
         // This will be scaled HIGHLY over on the vibe side.
         // If they have a politesubvibe going and its undefined, then send a message
         if (getUserVar(serverID, userid, "politeSubVibeTime") == undefined) {
-            if (getRecentChannel(serverID, userID).valid) {
+            if (getRecentChannel(serverID, userid).valid) {
                 try {
-                    messageSendChannel(`<@${userid}>'s Polite Vibe turns on as the honorific is spoken!`, getRecentChannel(serverID, userID).channelid)
+                    messageSendChannel(`<@${userid}>'s Polite Vibe turns on as the honorific is spoken!`, getRecentChannel(serverID, userid).channelid)
                 }
                 catch (err) {
                     console.log(err);
