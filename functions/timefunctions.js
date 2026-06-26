@@ -463,6 +463,7 @@ function checkFumbledTemporaryKeys() {
                 try {
                     if (en[1]?.fumbled && en[1]?.temporarykeyholdertime && (en[1]?.temporarykeyholdertime < Date.now())) {
                         let data = {
+                            serverID: server,
                             interactionuser: { id: en[1].temporarykeyholder },
                             targetuser: { id: en[0] }
                         }
