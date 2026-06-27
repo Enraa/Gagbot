@@ -74,4 +74,6 @@ let tick = async (serverID, userID, datain) => {
     }
 }
 
+console.log(`WHAT THE FUCKING SHIT`)
+
 exports.tick = tick;
