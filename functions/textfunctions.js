@@ -5407,7 +5407,7 @@ const texts_dressprotocol = {
 				},
 				chastitybra: { replace: [`The VAR_C1 picks the locking mechanism on USER_TAG's VAR_C2, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`], add: [`The VAR_C1 wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`] },
 				collar: { replace: [`The VAR_C1 forces USER_TAG to lean forward as it removes USER_THEIR VAR_C2, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the VAR_C1 moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
-				headwear: { add: [`The VAR_C1 produces a VAR_C2 from within itself and secures it onto USER_TAG's head.`] },
+				mask: { add: [`The VAR_C1 produces a VAR_C2 from within itself and secures it onto USER_TAG's head.`] },
 				gag: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and secures it into USER_TAG's mouth.`] },
 				toy: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and applies it to USER_TAG.`] },
 				heavyrestraint: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and securely binds USER_TAG with it.`] },

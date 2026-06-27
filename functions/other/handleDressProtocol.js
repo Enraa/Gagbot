@@ -335,6 +335,7 @@ function handleDressProtocol(serverID, userID, dp) {
                             break;*/
                         default:
                             itemcheck = "unknown"
+                            equippeditem = true;
                             break;
                     }
                     data.textdata.c2 = getItemName(dp.items[i])
