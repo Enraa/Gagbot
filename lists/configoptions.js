@@ -451,7 +451,79 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			}, // if true, button is greyed out
-		}
+		},
+        receiveorgasmcontrol: {
+			name: "Orgasm Control",
+			desc: "When wearing the Orgasm Control Module, who is allowed to trigger /letgo on you?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to force an orgasm you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Collar Access",
+					helptext: "Anyone with access to your collar is allowed to force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "collaraccess",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "collaraccess",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedorgasmcontrol: {
+			name: "Orgasm Control Exempt Users",
+			desc: "Set users who can always trigger an orgasm on you regardless of the setting above",
+			descmodal: "Select up to 25 users which can /letgo you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
     },
     "Pishock Config": {
         pishockusername: {
@@ -1810,6 +1882,7 @@ const configoptions = {
 				return false;
 			},
 		},
+
 	},
     Content: {
         "wearabletags-latex": {
@@ -2233,6 +2306,44 @@ const configoptions = {
         "wearabletags-drug": {
             name: "Intoxication",
             desc: "Restraints which may have an intoxicating effect",
+            choices: [
+				{
+					name: "None",
+					helptext: "*Others will not be able to put items of this tag on you*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "none",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Yes",
+					helptext: "Items of this tag can be added to you",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "enabled",
+					style: ButtonStyle.Primary,
+				},
+                {
+					name: "Preferred",
+					helptext: "Items of this tag will have priority in random effects on you",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "preferred",
+					style: ButtonStyle.Success,
+				},
+			],
+			menutype: "choice",
+			default: "enabled",
+			disabled: (userID) => {
+				return false;
+			},
+        },
+        "wearabletags-autonomy": {
+            name: "Autonomy",
+            desc: "Restraints which modify or directly control the wearer's motor functions to perform involuntary actions or seize up",
             choices: [
 				{
 					name: "None",

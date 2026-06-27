@@ -25,6 +25,10 @@ const { statsAddCounter } = require("./setters/config/statsAddCounter.js");
 const { statsGetCounter } = require("./getters/config/statsGetCounter.js");
 const { statsSetCounter } = require("./setters/config/statsSetCounter.js");
 const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
+const { isWearingCollar } = require("./getters/collar/isWearingCollar.js");
+const { messageSendChannel } = require("./messagefunctions.js");
+const { getPronouns } = require("./getters/config/getPronouns.js");
+const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -635,8 +639,19 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
 }
 
 // user attempts to orgasm, returns if it succeeds
-function tryOrgasm(serverID, user) {
+/*******
+ * 
+ * 
+ *******/
+function tryOrgasm(serverID, user, forced = false) {
     traceFirstParam(arguments[0]);
+    // If the user is wearing an orgasm control collar and it is NOT forced, leave
+    if (isWearingCollar(serverID, user, "collar_orgasmcontrol") && !forced) { 
+        // Write more data logic here for public viewing
+        addArousal(serverID, user, 10.0); // Being unable to let go is VERY arousing
+        return false;
+    };  
+
 	// always succeed if user isnt using the system
 	if (getOption(serverID, user, "arousalsystem") != 2) return true;
 

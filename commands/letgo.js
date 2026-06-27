@@ -7,6 +7,7 @@ const { getConsent } = require("../functions/getters/config/getConsent.js");
 const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
 const { getChastity } = require("../functions/getters/chastity/getChastity.js");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { isWearingCollar } = require("../functions/getters/collar/isWearingCollar.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -36,6 +37,12 @@ module.exports = {
 				data.orgasm = true;
 				interaction.reply(getText(data));
 			} else {
+                if (isWearingCollar(interaction.guildId, interaction.user.id, "collar_orgasmcontrol")) {
+                    data.orgasmcontrolled = true;
+                    //interaction.reply(getText(data))
+                    return;
+                }
+
 				if (getChastity(interaction.guildId, interaction.user.id)) {
 					data.chastity = true;
 					interaction.reply(getText(data));

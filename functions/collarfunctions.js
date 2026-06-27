@@ -36,7 +36,8 @@ const collartypes = [
     { name: "Sponsorship Collar", value: "sponsorcollar", special: true },
     { name: "Handcuff Amulet", value: "handcuffamulet" },
     { name: "Collar Bell", value: "collarbell", special: true, specialonly: true },
-    { name: "Dampened Collar Bell", value: "collarbell_dampened", special: true, specialonly: true }
+    { name: "Dampened Collar Bell", value: "collarbell_dampened", special: true, specialonly: true },
+    { name: "Orgasm Control Module", value: "collar_orgasmcontrol", special: true, specialonly: true },
 ];
 
 function loadCollarTypes() {
