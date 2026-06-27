@@ -39,7 +39,7 @@ module.exports = {
 			} else {
                 if (isWearingCollar(interaction.guildId, interaction.user.id, "collar_orgasmcontrol")) {
                     data.orgasmcontrolled = true;
-                    //interaction.reply(getText(data))
+                    interaction.reply(getText(data))
                     return;
                 }
 
