@@ -51,8 +51,9 @@ module.exports = {
                 }
                 await handleTouchEvent(interaction.guildId, interaction.user, targetuser, "orgasmcontrol", true).then(
                     async (success) => {
+                        interaction.deferUpdate();
                         messageSendChannel(`${interaction.user} pushes a button on a remote...`, interaction.channelId)
-                        await new Promise((res) => setTimeout(res, 3000)) // Wait 3 seconds before proceeding!
+                        await new Promise((res) => setTimeout(res, 1000)) // Wait 3 seconds before proceeding!
                         let orgasmresult = tryOrgasm(interaction.guildId, targetuser.id, true);
                         let data = {
                             textarray: "texts_letgo",
@@ -67,6 +68,7 @@ module.exports = {
                             // User was able to orgasm!
 				            data.orgasm = true;
 				            interaction.reply(getText(data));
+                            console.log("SUCCESSFULLY ORGASMS")
                         }
                         else {
                             if (getChastity(interaction.guildId, targetuser.id)) {
@@ -86,6 +88,7 @@ module.exports = {
                             data.free = true;
                             interaction.reply(getText(data));
                             setArousalCooldown(interaction.guildId, targetuser.id);
+                            console.log("FREEBIE CLICK")
                         }
                     },
                     async (failure) => {
