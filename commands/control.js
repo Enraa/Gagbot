@@ -9,6 +9,7 @@ const { isWearingCollar } = require("../functions/getters/collar/isWearingCollar
 const { getChastity } = require("../functions/getters/chastity/getChastity.js");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
 const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getText } = require("../functions/textfunctions.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -69,7 +70,6 @@ module.exports = {
                             // User was able to orgasm!
 				            data.orgasm = true;
 				            interaction.reply(getText(data));
-                            console.log("SUCCESSFULLY ORGASMS")
                         }
                         else {
                             if (getChastity(interaction.guildId, targetuser.id)) {
@@ -89,7 +89,6 @@ module.exports = {
                             data.free = true;
                             interaction.reply(getText(data));
                             setArousalCooldown(interaction.guildId, targetuser.id);
-                            console.log("FREEBIE CLICK")
                         }
                     },
                     async (failure) => {
