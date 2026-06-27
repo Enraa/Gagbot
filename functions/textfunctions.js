@@ -1539,10 +1539,10 @@ const texts_letgo = {
 		`Like a dam bursting, USER_TAG thrashes out as USER_THEY finally reachUSER_ES the top!`,
 	],
     orgasmcontrolled: [
-        `USER_TAG's Orgasm Control Module senses USER_THEIR attempts and deadens the stimulation at the very last moment!`,
+        `USER_TAG's Orgasm Control Module senses USER_THEIR attempts and deadens the stimulation at the very last moment!`,\
         `USER_TAG squirms and softly screams as USER_THEIR sensations down there go numb right before climax!`,
         `USER_TAG thrusts USER_THEIR hips, trying to quickly finish before... the Orgasm Control Module softened the stimulation *again*.`,
-        `USER_TAG pouts as USER_THEY forgetUSER_S that USER_THEY don't get to choose when USER_THEY can orgasm anymore.`
+        `USER_TAG pouts as USER_THEY forgetUSER_S that USER_THEY USER_DOESNT get to choose when USER_THEY can orgasm anymore.`
     ],
 	chastity: [
 		`USER_TAG squirms, trying to adjust the belt so USER_THEY can feel ***something***, but USER_THEY just can't get over the edge!`,
