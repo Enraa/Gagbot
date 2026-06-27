@@ -185,7 +185,7 @@ let outfitslist = {
             "straitjacket_comfy"
         ],
         outfittags: [],
-        outfitsearchtags: ["librarian", "brown", "white"],
+        outfitsearchtags: ["librarian", "brown", "white"]
     },
     "rogue": {
         name: "",
@@ -205,7 +205,7 @@ let outfitslist = {
             "boxbinder_hisec"
         ],
         outfittags: ["leather"],
-        outfitsearchtags: ["rogue", "gray", "black", "leather"],
+        outfitsearchtags: ["rogue", "gray", "black", "leather"]
     },
     "dancer": {
         name: "Dancer",
@@ -228,7 +228,7 @@ let outfitslist = {
             "pole_dancer"
         ],
         outfittags: [],
-        outfitsearchtags: ["dancer", "gold", "cyan"],
+        outfitsearchtags: ["dancer", "gold", "cyan"]
     },
     "paladin": {
         name: "Paladin",
@@ -247,7 +247,7 @@ let outfitslist = {
             "yoke"
         ],
         outfittags: ["chastity", "metal"],
-        outfitsearchtags: ["paladin", "metal", "holy", "knight"],
+        outfitsearchtags: ["paladin", "metal", "holy", "knight"]
     },
     "ranger": {
         name: "Ranger",
@@ -267,7 +267,7 @@ let outfitslist = {
             "rope_hogtie"
         ],
         outfittags: ["leather"],
-        outfitsearchtags: ["ranger", "green", "brown"],
+        outfitsearchtags: ["ranger", "green", "brown"]
     },
     "healer": {
         name: "Healer",
@@ -290,7 +290,7 @@ let outfitslist = {
             "armbinder_ancient"
         ],
         outfittags: ["chastity"],
-        outfitsearchtags: ["healer", "white", "red", "ancient", "chastity", "extreme"],
+        outfitsearchtags: ["healer", "white", "red", "ancient", "chastity", "extreme"]
     },
     "witch": {
         name: "Whitch",
@@ -335,7 +335,7 @@ let outfitslist = {
             "fiddle"
         ],
         outfittags: ["chastity"],
-        outfitsearchtags: ["angel", "white", "extreme"],
+        outfitsearchtags: ["angel", "white", "extreme"]
     },
     "mermaid": {
         name: "Mermaid",
@@ -371,7 +371,7 @@ let outfitslist = {
             "mermaid_tank"
         ],
         outfittags: ["latex", "confined"],
-        outfitsearchtags: ["mermaid", "extreme", "maid"],
+        outfitsearchtags: ["mermaid", "extreme", "maid"]
     },
     "cheerleader": {
         name: "Cheerleader",
@@ -390,7 +390,7 @@ let outfitslist = {
             "mask_kigu_teto"
         ],
         outfittags: [],
-        outfitsearchtags: ["cheerleader", "red", "white"],
+        outfitsearchtags: ["cheerleader", "red", "white"]
     },
     "dryad": {
         name: "Dryad",
@@ -413,6 +413,97 @@ let outfitslist = {
         outfittags: ["chastity", "living"],
         outfitsearchtags: ["dryad", "green", "floral", "leafy"],
         uniformcolor: true
+    },
+    "latex_maid": {
+        name: "Latex Maid",
+        items: [
+            { item: "maiddress_latex", colors: ["Black"] },
+            "maidapron_latex",
+            "maid_headdress",
+            { item: "garters_latex", colors: ["White"] },
+            { item: "stockings", colors: ["White"] },
+            { item: "gloves_latex", colors: ["black"] },
+            "mittens_latex",
+            "collar_latex",
+            "belt_maid",
+            "politeSub",
+            "straitjacket_maid"
+        ],
+        outfittags: ["chastity", "latex"],
+        outfitsearchtags: ["maid", "monochrome"]
+    },
+    "latex_bunny": {
+        name: "Latex Bunnygirl",
+        items: [
+            { item: "outfit_playbunny_headwear", colors: ["black"] },
+            { item: "suit_outfit", colors: ["Playbunny"] },
+            { item: "bunnytights_latex", colors: ["black"] },
+            { item: "balletheels_latex", colors: ["red"] },
+            { item: "cuffswrist_latex", colors: ["red"] },
+            { item: "cuffsankle_latex", colors: ["red"] },
+            { item: "cuffsthigh_latex", colors: ["red"] },
+            "mittens_latex",
+            "ball",
+            "mask_bunny",
+            "armbinder_latex"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["bunny", "latex", "red", "black"]
+    },
+    "latex_kitsune": {
+        name: "Latex Kitsune",
+        items: [
+            { item: "panties_latex", colors: ["Indigo"] },
+            { item: "thighhighs_latex", colors: ["Starry"] },
+            { item: "kimono_latex", colors: ["Shadow"] },
+            { item: "sleeves_detached_latex", colors: ["Starry"] },
+            { item: "bigcute_ribbon", colors: ["purple"] },
+            { item: "balletheels_latex", colors: ["starry"] },
+            { item: "veil", colors: ["Starry"] },
+            "mask_kitsune",
+            "mittens_latex",
+            "ball",
+            "collar_latex",
+            "boxbinder_latex"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["kitsune", "latex", "indigo", "starry", "shadow", "purple"]
+    },
+    "latex_librarien": {
+        name: "Latex Librarien",
+        items: [
+            { item: "rope_karada", colors: ["green"] },
+            { item: "pencil_skirt", colors: ["Latex"] },
+            { item: "buttonup_blouse", colors: ["Latex"] },
+            "glasses_librarian",
+            { item: "highheels_latex", colors: ["Black"] },
+            "mittens_latex",
+            "mask_kigu_shy",
+            "ball",
+            "collar_posture"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["librarien", "latex", "green", "black"]
+    },
+    "latex_witch": {
+        name: "Latex Witch",
+        items: [
+            { item: "bra_latex", colors: ["Purple"] },
+            { item: "panties_latex", colors: ["purple"] },
+            { item: "stockings_latex", colors: ["starry"] },
+            { item: "gloves_opera_latex", colors: ["starry"] },
+            { item: "evening_dress_latex", colors: ["starry"] },
+            { item: "witchhat_normal", colors: ["starry"] },
+            { item: "tome", colors: ["Tome of Bondage"] },
+            { item: "thighhighboots_latex", colors: ["Purple"] },
+            "blindfold_latex",
+            "mittens_latex",
+            "ball",
+            "collar_latex",
+            "shadowhands"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["witch", "latex", "purple"]
     }
 }
 
