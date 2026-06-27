@@ -336,6 +336,7 @@ function handleDressProtocol(serverID, userID, dp) {
                         default:
                             itemcheck = "unknown"
                             equippeditem = true;
+                            dp.items.splice(dp.items.indexOf(dp.items[i], 1)) // Remove the errored item
                             break;
                     }
                     data.textdata.c2 = (getItemName(dp.items[i]) ?? dp.items[i])

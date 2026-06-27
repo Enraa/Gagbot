@@ -19,7 +19,7 @@ let outfitslist = {
         items: [
             { item: "garters", colors: ["white"] },
             { item: "stockings", colors: ["white"] },
-            "vibe_polite",
+            //"vibe_polite",
             "belt_maid",
             "bra_maid",
             "mittens_maid",
@@ -212,7 +212,7 @@ let outfitslist = {
         items: [
             "blindfold_cloth",
             "collar_moon",
-            "vibe_pulse",
+            //"vibe_pulse",
             "belt_seal_earth",
             { item: "armbands", colors: ["Gold"] },
             { item: "bracelets", colors: ["Gold"] },
@@ -276,7 +276,7 @@ let outfitslist = {
             "collar_star",
             "politeSub",
             { item: "stockings", colors: ["White"] },
-            "vibe_headpatbattery",
+            //"vibe_headpatbattery",
             "belt_ancient",
             "bra_ancient",
             { item: "shrine_maiden", colors: ["White"] },
@@ -386,7 +386,7 @@ let outfitslist = {
             "mittens_pompom",
             "collar_moon",
             "uwu",
-            "vibe_reverb",
+            //"vibe_reverb",
             "mask_kigu_teto"
         ],
         outfittags: [],
