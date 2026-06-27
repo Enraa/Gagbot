@@ -1,9 +1,9 @@
 const { getDressProtocolOutfit } = require("../../functions/getters/config/getDressProtocolOutfit");
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy");
-const { handleDressProtocol } = require("../../functions/other/handleDressProtocol.js");
 const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy.js");
 const { markForSave } = require("../../functions/other/markForSave.js");
 const { getRecentChannel } = require("../../functions/getters/config/getRecentChannel.js");
+const { handleDressProtocol } = require("../../functions/other/handleDressProtocol.js");
 
 /**********
  * Event for Dress Protocol. This is a subclass of tick events, but comes with the heavy bondage object in question. 
