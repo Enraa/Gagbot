@@ -5385,7 +5385,7 @@ const texts_dressprotocol = {
             equip: {
                 wearable: { add: [`The VAR_C1 pulls out a VAR_C2 from its internal storage and begins to dress USER_TAG in it!`, `The VAR_C1 produces a VAR_C2 from within itself and slips it onto USER_TAG!`, `The VAR_C1's tentacles fish out a VAR_C2 from its storage and begins to dress USER_TAG in it!`] },
 				mitten: { replace: [`The VAR_C1 removes the VAR_C2 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The VAR_C1 grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C2 on USER_THEM and secures them tightly.`] },
-				chastitybelt: { 
+				chastity: { 
 					replace: [
 						`The VAR_C1 rips off the VAR_C2 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`,
 						{

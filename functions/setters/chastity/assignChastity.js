@@ -37,7 +37,7 @@ function assignChastity(serverID, user, keyholder, namedchastity, force = false)
 	process.chastity[serverID][user] = { keyholder: keyholder ? keyholder : "unlocked", timestamp: Date.now(), chastitytype: namedchastity, stateligible: true };
 
     // Call the on equip for the new chastity belt!
-    newchastitybase.onEquip({ userID: user, keyholderID: keyholder })
+    newchastitybase.onEquip({ serverID: serverID, userID: user, keyholderID: keyholder })
 
 	markForSave("chastity");
 	return true;

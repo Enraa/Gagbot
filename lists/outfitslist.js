@@ -293,7 +293,7 @@ let outfitslist = {
         outfitsearchtags: ["healer", "white", "red", "ancient", "chastity", "extreme"]
     },
     "witch": {
-        name: "Whitch",
+        name: "Witch",
         items: [
             "blindfold_blackout",
             { item: "bra_lacy", colors: [   ...wearablecolors] },
