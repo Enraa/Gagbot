@@ -298,7 +298,7 @@ function handleDressProtocol(serverID, userID, dp) {
                                 didswap = true 
                                 perms = { chastity: existingcollar?.chastity, heavy: existingcollar?.heavy, mitten: existingcollar?.mitten, mask: existingcollar?.mask }
                             }
-                            assignCollar(serverID, userID, existingcollar?.keyholder ?? dp.keyholder ?? userID, oerms, true, dp.items[i]);
+                            assignCollar(serverID, userID, existingcollar?.keyholder ?? dp.keyholder ?? userID, perms, true, dp.items[i]);
                             equippeditem = true;
                             break;
                         case "gag":
