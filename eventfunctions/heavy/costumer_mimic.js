@@ -1,4 +1,3 @@
-const path = require("node:path");
 const { getDressProtocolOutfit } = require("../../functions/getters/config/getDressProtocolOutfit");
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy");
 const { handleDressProtocol } = require("../../functions/other/handleDressProtocol.js");
@@ -47,14 +46,14 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
             ignoreclothing: false,
             cooldown: 20000,
             nextupdate: Date.now() + 5000,
-            heavyid: path.basename(__filename, ".js")
+            heavyid: 'costumer_mimic'
         }
         console.log(`Chose the ${heavy.dressprotocol.dressprotocolname} Outfit!`);
         console.log(heavy.dressprotocol.items);
     }
     else {
         if (heavy.dressprotocol.stage >= 4) {
-            removeHeavy(serverID, userID, path.basename(__filename, ".js"))
+            removeHeavy(serverID, userID, 'costumer_mimic')
             return;
         }
         // My brain is failing me right now but we need to figure out a way to catch the "already naked" case
@@ -68,12 +67,10 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
 }
 
 let tick = async (serverID, userID, datain) => {
-    let thisheavyrestraint = getHeavy(serverID, userID, path.basename(__filename, ".js"));
+    let thisheavyrestraint = getHeavy(serverID, userID, 'costumer_mimic');
     if (thisheavyrestraint && dressprotocoltick) { 
         await dressprotocoltick(serverID, userID, thisheavyrestraint);
     }
 }
-
-console.log(`WHAT THE FUCKING SHIT`)
 
 exports.tick = tick;
