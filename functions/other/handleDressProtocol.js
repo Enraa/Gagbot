@@ -270,25 +270,29 @@ function handleDressProtocol(serverID, userID, dp) {
                 }
                 // Now equip it if we aren't wearing it!
                 if (!isworn) {
+                    let existingchastity;
+                    let existingcollar;
+                    let existingmitten;
+                    let existingcorset;
                     switch(itemcheck) {
                         case "wearable":
                             assignWearable(serverID, userID, dp.items[i]);
                             equippeditem = true;
                             break;
                         case "chastity":
-                            let existingchastity = getChastity(serverID, userID)
+                            existingchastity = getChastity(serverID, userID)
                             if (existingchastity) { didswap = true }
                             assignChastity(serverID, userID, existingchastity?.keyholder ?? dp.keyholder ?? userID, dp.items[i], true);
                             equippeditem = true;
                             break;
                         case "chastitybra":
-                            let existingchastity = getChastityBra(serverID, userID)
+                            existingchastity = getChastityBra(serverID, userID)
                             if (existingchastity) { didswap = true }
                             assignChastityBra(serverID, userID, existingchastity?.keyholder ?? dp.keyholder ?? userID, dp.items[i], true);
                             equippeditem = true;
                             break;
                         case "collar":
-                            let existingcollar = getCollar(serverID, userID)
+                            existingcollar = getCollar(serverID, userID)
                             let perms = {};
                             if (existingcollar) { 
                                 didswap = true 
@@ -302,13 +306,13 @@ function handleDressProtocol(serverID, userID, dp) {
                             equippeditem = true;
                             break;
                         case "mitten":
-                            let existingmitten = getMitten(serverID, userID)
+                            existingmitten = getMitten(serverID, userID)
                             if (existingmitten) { didswap = true }
                             assignMitten(serverID, userID, dp.items[i], existingmitten?.origbinder ?? dp.keyholder ?? userID);
                             equippeditem = true;
                             break;
                         case "corset":
-                            let existingcorset = getCorset(serverID, userID)
+                            existingcorset = getCorset(serverID, userID)
                             if (existingcorset) { didswap = true }
                             assignCorset(serverID, userID, dp.items[i], 5, existingcorset?.origbinder ?? dp.keyholder ?? userID);
                             equippeditem = true;
