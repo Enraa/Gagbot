@@ -56,40 +56,42 @@ module.exports = {
                 await handleTouchEvent(interaction.guildId, interaction.user, targetuser, "orgasmcontrol", true).then(
                     async (success) => {
                         messageSendChannel(`${interaction.user} pushes a button on a remote...`, interaction.channelId)
-                        let orgasmresult = tryOrgasm(interaction.guildId, targetuser.id, true);
-                        let data = {
-                            textarray: "texts_letgo",
-                            textdata: {
-                                serverID: interaction.guildId, 
-                                interactionuser: targetuser,
-                                targetuser: targetuser, // Not needed, but required for function parsing anyway.
-                                c1: getHeavy(interaction.guildId, targetuser.id)?.displayname, // heavy bondage type
-                            },
-                        };
-                        if (orgasmresult) {
-                            // User was able to orgasm!
-				            data.orgasm = true;
-				            interaction.reply(getText(data));
-                        }
-                        else {
-                            if (getChastity(interaction.guildId, targetuser.id)) {
-                                data.chastity = true;
+                        setTimeout(() => {
+                            let orgasmresult = tryOrgasm(interaction.guildId, targetuser.id, true);
+                            let data = {
+                                textarray: "texts_letgo",
+                                textdata: {
+                                    serverID: interaction.guildId, 
+                                    interactionuser: targetuser,
+                                    targetuser: targetuser, // Not needed, but required for function parsing anyway.
+                                    c1: getHeavy(interaction.guildId, targetuser.id)?.displayname, // heavy bondage type
+                                },
+                            };
+                            if (orgasmresult) {
+                                // User was able to orgasm!
+                                data.orgasm = true;
                                 interaction.reply(getText(data));
-                                return;
                             }
+                            else {
+                                if (getChastity(interaction.guildId, targetuser.id)) {
+                                    data.chastity = true;
+                                    interaction.reply(getText(data));
+                                    return;
+                                }
 
-                            const heavy = !getHeavyBound(interaction.guildId, targetuser.id, targetuser.id);
-                            if (heavy) {
-                                data.heavy = true;
+                                const heavy = !getHeavyBound(interaction.guildId, targetuser.id, targetuser.id);
+                                if (heavy) {
+                                    data.heavy = true;
+                                    interaction.reply(getText(data));
+                                    return;
+                                }
+
+                                // cool off response, replace with something good
+                                data.free = true;
                                 interaction.reply(getText(data));
-                                return;
+                                setArousalCooldown(interaction.guildId, targetuser.id);
                             }
-
-                            // cool off response, replace with something good
-                            data.free = true;
-                            interaction.reply(getText(data));
-                            setArousalCooldown(interaction.guildId, targetuser.id);
-                        }
+                        }, 1500)
                     },
                     async (failure) => {
                         interaction.reply({ content: `You don't have access to trigger an orgasm on ${targetuser}!`, flags: MessageFlags.Ephemeral });
