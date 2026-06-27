@@ -69,7 +69,7 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
 
 let tick = async (serverID, userID, datain) => {
     let thisheavyrestraint = getHeavy(serverID, userID, path.basename(__filename, ".js"));
-    if (thisheavyrestraint && dressprotocoltick) {
+    if (thisheavyrestraint && dressprotocoltick) { 
         await dressprotocoltick(serverID, userID, thisheavyrestraint);
     }
 }
