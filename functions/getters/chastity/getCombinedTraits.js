@@ -86,8 +86,8 @@ function getCombinedTraits(serverID, user) {
     const brabase = getChastityBra(serverID, user) ? getBaseChastity(getChastityBra(serverID, user).chastitytype ?? "bra_silver") : undefined;
 	if (!beltbase && !brabase) return NO_CHASTITY;
     let datatopass = {
-        userID: user,
-        serverID: serverID
+        serverID: serverID,
+        userID: user
     }
     // Because the usual stuff found in return object are typically referenced NOT as functions, we're gonna
     // parse them here. I don't think this is the best solution, admittedly, but it should suffice.

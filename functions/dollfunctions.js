@@ -6,6 +6,7 @@ const { getOption } = require("./getters/config/getOption.js");
 const { markForSave } = require("./other/markForSave.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 const { getGags } = require("./getters/gag/getGags.js");
+const { getProcessVariable } = require("./getters/config/getProcessVariable.js");
 
 // Regex to capture the user's intended text segments post-corset and post-vibrator.
 // NOTE: Code uses invisible EOT control characters to encapsulate additions from corset/vibrator.
@@ -442,9 +443,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 
 				// Append an error message to the final garbled text block.
 				if ((dollProtocolViolations > 0 || warnmodified) && i == lastDollifiedMessage) {
-					let totalViolations = dollProtocolViolations;
+					let totalViolations = dollProtocolViolations; 
 					if (dollProtocolLevel != "warning") {
-						totalViolations = dollProtocolViolations + (process.dolls[msg.guild.id, msg.author.id]?.violations ?? 0);
+						totalViolations = dollProtocolViolations + (getProcessVariable(msg.guild.id, msg.author.id, "dolls")?.violations ?? 0);
 					}
 
 					// WARN if below punishment threshold. ERROR if exceeded.
@@ -473,9 +474,9 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 					let goodDollReturn = rewardDoll(msg.guild.id, msg.author.id);
 					//console.log(goodDollReturn)
 					if (goodDollReturn == "violation") {
-						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${process.dolls[msg.guild.id][msg.author.id].violations}/${dollPunishThresh}). It is a Good Doll.`;
+						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mProtocol Violation count decremented to (${getProcessVariable(msg.guild.id, msg.author.id, "dolls").violations}/${dollPunishThresh}). It is a Good Doll.`;
 					} else if (goodDollReturn == "punishlevel") {
-						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${process.dolls[msg.guild.id][msg.author.id].punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`;
+						dollMessageParts[i].text += `\n[1;36mALERT: [0;36mPunishment Level decremented to (${getProcessVariable(msg.guild.id, msg.author.id, "dolls").punishmentLevel}/${DOLLMAXPUNISHMENT}). It is a Good Doll.`;
 					}
 				}
 				// Finish the codeblock
