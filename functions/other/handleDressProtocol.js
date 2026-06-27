@@ -338,7 +338,7 @@ function handleDressProtocol(serverID, userID, dp) {
                             equippeditem = true;
                             break;
                     }
-                    data.textdata.c2 = getItemName(dp.items[i])
+                    data.textdata.c2 = (getItemName(dp.items[i]) ?? dp.items[i])
                 }
 
                 // if we equipped something, break execution from for loop. 

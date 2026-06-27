@@ -5410,7 +5410,7 @@ const texts_dressprotocol = {
 				mask: { add: [`The VAR_C1 produces a VAR_C2 from within itself and secures it onto USER_TAG's head.`] },
 				gag: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and secures it into USER_TAG's mouth.`] },
 				toy: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and applies it to USER_TAG.`] },
-				heavyrestraint: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and securely binds USER_TAG with it.`] },
+				heavy: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and securely binds USER_TAG with it.`] },
 				unknown: { add: [`The VAR_C1 tries to dress USER_TAG in a VAR_C2... but it seems to be missing from its storage. Perhaps it ran out of space?`] },
             },
             endstage: [
