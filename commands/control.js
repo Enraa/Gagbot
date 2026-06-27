@@ -4,8 +4,11 @@ const path = require("path");
 const { getOption } = require("../functions/getters/config/getOption");
 const { handleTouchEvent } = require("../functions/touchfunctions.js");
 const { messageSendChannel } = require("../functions/messagefunctions");
-const { tryOrgasm } = require("../functions/vibefunctions");
+const { tryOrgasm, setArousalCooldown } = require("../functions/vibefunctions");
 const { isWearingCollar } = require("../functions/getters/collar/isWearingCollar");
+const { getChastity } = require("../functions/getters/chastity/getChastity.js");
+const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
+const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
