@@ -270,39 +270,35 @@ function handleDressProtocol(serverID, userID, dp) {
                 }
                 // Now equip it if we aren't wearing it!
                 if (!isworn) {
+                    let existingchastity;
+                    let existingcollar;
+                    let existingmitten;
+                    let existingcorset;
                     switch(itemcheck) {
                         case "wearable":
                             assignWearable(serverID, userID, dp.items[i]);
                             equippeditem = true;
                             break;
                         case "chastity":
-                            if (getChastity(serverID, userID)) {
-                                getChastity(serverID, userID).chastitytype = dp.items[i]
-                                didswap = true;
-                            }
-                            else {
-                                assignChastity(serverID, userID, dp.keyholder ?? userID, dp.items[i], true);
-                            }
+                            existingchastity = getChastity(serverID, userID)
+                            if (existingchastity) { didswap = true }
+                            assignChastity(serverID, userID, existingchastity?.keyholder ?? dp.keyholder ?? userID, dp.items[i], true);
                             equippeditem = true;
                             break;
                         case "chastitybra":
-                            if (getChastityBra(serverID, userID)) {
-                                getChastityBra(serverID, userID).chastitytype = dp.items[i]
-                                didswap = true;
-                            }
-                            else {
-                                assignChastityBra(serverID, userID, dp.keyholder ?? userID, dp.items[i], true);
-                            }
+                            existingchastity = getChastityBra(serverID, userID)
+                            if (existingchastity) { didswap = true }
+                            assignChastityBra(serverID, userID, existingchastity?.keyholder ?? dp.keyholder ?? userID, dp.items[i], true);
                             equippeditem = true;
                             break;
                         case "collar":
-                            if (getCollar(serverID, userID)) {
-                                getCollar(serverID, userID).collartype = dp.items[i]
-                                didswap = true;
+                            existingcollar = getCollar(serverID, userID)
+                            let perms = {};
+                            if (existingcollar) { 
+                                didswap = true 
+                                perms = { chastity: existingcollar?.chastity, heavy: existingcollar?.heavy, mitten: existingcollar?.mitten, mask: existingcollar?.mask }
                             }
-                            else {
-                                assignCollar(serverID, userID, dp.keyholder ?? userID, {}, true, dp.items[i]);
-                            }
+                            assignCollar(serverID, userID, existingcollar?.keyholder ?? dp.keyholder ?? userID, perms, true, dp.items[i]);
                             equippeditem = true;
                             break;
                         case "gag":
@@ -310,23 +306,15 @@ function handleDressProtocol(serverID, userID, dp) {
                             equippeditem = true;
                             break;
                         case "mitten":
-                            if (getMitten(serverID, userID)) {
-                                getMitten(serverID, userID).mittenname = dp.items[i]
-                                didswap = true;
-                            }
-                            else {
-                                assignMitten(serverID, userID, dp.items[i], dp.keyholder ?? userID);
-                            }
+                            existingmitten = getMitten(serverID, userID)
+                            if (existingmitten) { didswap = true }
+                            assignMitten(serverID, userID, dp.items[i], existingmitten?.origbinder ?? dp.keyholder ?? userID);
                             equippeditem = true;
                             break;
                         case "corset":
-                            if (getCorset(serverID, userID)) {
-                                getCorset(serverID, userID).type = dp.items[i]
-                                didswap = true;
-                            }
-                            else {
-                                assignCorset(serverID, userID, dp.items[i], 5, dp.keyholder ?? userID);
-                            }
+                            existingcorset = getCorset(serverID, userID)
+                            if (existingcorset) { didswap = true }
+                            assignCorset(serverID, userID, dp.items[i], 5, existingcorset?.origbinder ?? dp.keyholder ?? userID);
                             equippeditem = true;
                             break;
                         case "heavy":
@@ -347,9 +335,10 @@ function handleDressProtocol(serverID, userID, dp) {
                             break;*/
                         default:
                             itemcheck = "unknown"
+                            equippeditem = true;
                             break;
                     }
-                    data.textdata.c2 = getItemName(dp.items[i])
+                    data.textdata.c2 = (getItemName(dp.items[i]) ?? dp.items[i])
                 }
 
                 // if we equipped something, break execution from for loop. 

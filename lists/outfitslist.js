@@ -32,7 +32,7 @@ let outfitslist = {
             "straitjacket_maid",
             "legbinder_maid"
         ],
-        outfittags: [],
+        outfittags: ["chastity"],
         outfitsearchtags: ["maid", "monochrome", "extreme", "chastity"]
     },
     "ponygirl": {
@@ -130,6 +130,381 @@ let outfitslist = {
         outfitsearchtags: ["royal", "princess", "nobondage", "lewd"],
         uniformcolor: true
     },
+    "bunnygirl": {
+        name: "Bunny Girl",
+        items: [
+            { item: "outfit_playbunny_headwear", colors: ["Blue"] },
+            { item: "bunnytights", colors: ["White"] },
+            { item: "suit_outfit", colors: ["Playbunny"] },
+            { item: "highheels", colors: ["Blue"] },
+            { item: "cuffswrist_bondage", colors: ["Blue"] },
+            { item: "cuffsankle_bondage", colors: ["Blue"] },
+            { item: "cuffsthigh_bondage", colors: ["Blue"] },
+            "mittens_leather",
+            "ball",
+            "mask_bunny",
+            "belt_seal_fire",
+            "armbinder_leather"
+        ],
+        outfittags: ["chastity", "lether"],
+        outfitsearchtags: ["bunny", "blue", "bondage", "seal"]
+    },
+    "kitsune": {
+        name: "Kitsune",
+        items: [
+            { item: "lingerie", colors: ["Indigo"] },
+            { item: "thighhighs", colors: ["White"] },
+            { item: "kimono", colors: ["Indigo"] },
+            { item: "sleeves_detatched", colors: ["Indigo"] },
+            { item: "bigcute_ribbon", colors: ["White"] },
+            "sandals",
+            { item: "hairpins", colors: ["Jade"] },
+            "mask_kitsune",
+            "mittens_leather",
+            "ball",
+            "collar_inari",
+            "ribbons"
+        ],
+        outfittags: [],
+        outfitsearchtags: ["kitsune", "indigo", "white", "japanese", "mythical"]
+    },
+    "librarien": {
+        name: "Librarien",
+        items: [
+            { item: "rope_karada", colors: ["Red"] },
+            { item: "thighband_leather", colors: ["Brown"] },
+            { item: "pencil_skirt", colors: ["Brown"] },
+            { item: "buttonup_blouse", colors: ["White"] },
+            { item: "ankleboots", colors: ["Brown"] },
+            "mittens_leather",
+            "collar_posture",
+            "silent",
+            "mask_kigu_shy",
+            "glasses_librarian",
+            { item: "tome", colors: ["Tome of Bondage"] },
+            "straitjacket_comfy"
+        ],
+        outfittags: [],
+        outfitsearchtags: ["librarian", "brown", "white"]
+    },
+    "rogue": {
+        name: "",
+        items: [
+            { item: "panties_leather", colors: ["Gray"] },
+            { item: "bra_leather", colors: ["Gray"] },
+            { item: "gloves_fingerlesselbow", colors: ["Gray"] },
+            { item: "bootyshorts_leather", colors: ["Black"] },
+            { item: "top_crop_leather", colors: ["Black"] },
+            { item: "thighhighboots", colors: ["Gray"] },
+            "bandolier_leather",
+            "mittens_leather",
+            "silent",
+            { item: "roguemask_leather", colors: ["Gray"] },
+            "collar_moon",
+            { item: "cloak", colors: ["Gray"] },
+            "boxbinder_hisec"
+        ],
+        outfittags: ["leather"],
+        outfitsearchtags: ["rogue", "gray", "black", "leather"]
+    },
+    "dancer": {
+        name: "Dancer",
+        items: [
+            "blindfold_cloth",
+            "collar_moon",
+            "vibe_pulse",
+            "belt_seal_earth",
+            { item: "armbands", colors: ["Gold"] },
+            { item: "bracelets", colors: ["Gold"] },
+            { item: "anklets", colors: ["Gold"] },
+            { item: "necklace", colors: ["Gold"] },
+            { item: "hairpins", colors: ["Gold"] },
+            { item: "headchain", colors: ["Gold"] },
+            { item: "haremsilks", colors: ["Cyan"] },
+            { item: "sleeves_detatched", colors: ["Cyan"] },
+            "mittens_leather",
+            "ball",
+            { item: "veil", colors: ["Half-Face"] },
+            "pole_dancer"
+        ],
+        outfittags: [],
+        outfitsearchtags: ["dancer", "gold", "cyan"]
+    },
+    "paladin": {
+        name: "Paladin",
+        items: [
+            { item: "bodystocking", colors: ["Black"] },
+            { item: "harness_leather", colors: ["Leather"] },
+            { item: "greaves", colors: ["Steel"] },
+            { item: "gauntlet", colors: ["Steel"] },
+            "belt_tungsten",
+            "bra_tungsten",
+            { item: "armour", colors: ["Holy Knight"] },
+            { item: "circlet", colors: ["Platinum"] },
+            "mittens_leather",
+            "ball",
+            "collar_steel",
+            "yoke"
+        ],
+        outfittags: ["chastity", "metal"],
+        outfitsearchtags: ["paladin", "metal", "holy", "knight"]
+    },
+    "ranger": {
+        name: "Ranger",
+        items: [
+            { item: "bra_lacy", colors: ["Green"] },
+            { item: "panties_lacy", colors: ["Green"] },
+            { item: "thighhighs", colors: ["Green"] },
+            { item: "gloves_fingerlesselbow", colors: ["Green"] },
+            { item: "bootyshorts_leather", colors: ["Brown"] },
+            { item: "top_halter", colors: ["Green"] },
+            { item: "kneehighboots", colors: ["Brown"] },
+            { item: "armour", colors: ["Leather"] },
+            "mittens_leather",
+            "silent",
+            "collar_leather",
+            { item: "cloak", colors: ["Green"] },
+            "rope_hogtie"
+        ],
+        outfittags: ["leather"],
+        outfitsearchtags: ["ranger", "green", "brown"]
+    },
+    "healer": {
+        name: "Healer",
+        items: [
+            "blindfold_cloth",
+            "collar_star",
+            "politeSub",
+            { item: "stockings", colors: ["White"] },
+            "vibe_headpatbattery",
+            "belt_ancient",
+            "bra_ancient",
+            { item: "shrine_maiden", colors: ["White"] },
+            { item: "sleeves_detatched", colors: ["White"] },
+            { item: "bigcute_ribbon", colors: ["Red"] },
+            { item: "headchain", colors: ["Starveiled"] },
+            { item: "balletheels", colors: ["White"] },
+            "mittens_leather",
+            { item: "staff", colors: ["Gohei"] },
+            { item: "leash", colors: ["White"] },
+            "armbinder_ancient"
+        ],
+        outfittags: ["chastity"],
+        outfitsearchtags: ["healer", "white", "red", "ancient", "chastity", "extreme"]
+    },
+    "witch": {
+        name: "Witch",
+        items: [
+            "blindfold_blackout",
+            { item: "bra_lacy", colors: [   ...wearablecolors] },
+            { item: "panties_lacy", colors: [...wearablecolors] },
+            "stockings",
+            { item: "gloves_opera", colors: [...wearablecolors] },
+            { item: "flowy_dress", colors: [...wearablecolors] },
+            { item: "witchhat_normal", colors: [...wearablecolors] },
+            { item: "kneehighboots", colors: ["Black"] },
+            { item: "tome", colors: ["Shadowy Tome"] },
+            "mittens_hardlight",
+            "ball",
+            "collar_runic",
+            "shadowhands"
+        ],
+        outfittags: [],
+        outfitsearchtags: ["witch", "monochrome", "magic"],
+        uniformcolor: true
+    },
+    "angel": {
+        name: "Angel",
+        items: [
+            "blindfold_cloth",
+            { item: "halo", colors: ["Angelic"] },
+            { item: "wings", colors: ["Angelic"] },
+            { item: "armbands", colors: ["Platinum"] },
+            { item: "anklets", colors: ["Platinum"] },
+            { item: "headchain", colors: ["Platinum"] },
+            "belt_featherlight",
+            "bra_featherlight",
+            { item: "nightie_sheer", colors: ["White"] },
+            "mittens_hardlight",
+            "hardlight_fetters",
+            "politeSub",
+            "collar_star",
+            { item: "tome", colors: ["Angelic Tome"] },
+            { item: "wingbinders", colors: ["White"] },
+            { item: "leash", colors: ["White"] },
+            "fiddle"
+        ],
+        outfittags: ["chastity"],
+        outfitsearchtags: ["angel", "white", "extreme"]
+    },
+    "mermaid": {
+        name: "Mermaid",
+        items: [
+            "legbinder_latexmermaidtail",
+            { item: "armbands", colors: ["Cobalt"] },
+            { item: "headchain", colors: ["Crystal"] },
+            { item: "bikini", colors: ["Skimpy"] },
+            { item: "pareo", colors: ["Aqua"] },
+            "mittens_hardlight",
+            "collar_moon",
+            "silent",
+            "armbinder_latex",
+            "mermaid_tank"
+        ],
+        outfittags: ["latex", "confined"],
+        outfitsearchtags: ["mermaid", "blue", "aqua"],
+        uniformcolor: true
+    },
+    "mer_mermaid": {
+        name: "Mer Mermaid",
+        items: [
+            "legbinder_shadowlatexmermaidtail",
+            { item: "bikini", colors: ["Frilly"] },
+            { item: "sleeves_detatched", colors: ["Black"] },
+            "maid_apron",
+            "mittens_maid",
+            "politeSub",
+            "collar_maid",
+            "mask_kigu_sadisticmaid",
+            "maid_headdress",
+            "straitjacket_maid",
+            "mermaid_tank"
+        ],
+        outfittags: ["latex", "confined"],
+        outfitsearchtags: ["mermaid", "extreme", "maid"]
+    },
+    "cheerleader": {
+        name: "Cheerleader",
+        items: [
+            { item: "thighhighs", colors: ["White"] },
+            { item: "gloves_fingerlesselbow", colors: ["White"] },
+            { item: "panties_sidetie", colors: ["Red"] },
+            { item: "nipple_pasties", colors: ["Red"] },
+            { item: "mini_skirt", colors: ["White"] },
+            { item: "top_halter", colors: ["Red"] },
+            { item: "pumps", colors: ["White"] },
+            "mittens_pompom",
+            "collar_moon",
+            "uwu",
+            "vibe_reverb",
+            "mask_kigu_teto"
+        ],
+        outfittags: [],
+        outfitsearchtags: ["cheerleader", "red", "white"]
+    },
+    "dryad": {
+        name: "Dryad",
+        items: [
+            { item: "anklets", colors: ["Floral"] },
+            { item: "bracelets", colors: ["Floral"] },
+            { item: "gloves_fingerlesselbow", colors: ["Green"] },
+            "mittens_leather",
+            { item: "armbands", colors: ["Livingwood"] },
+            "bra_livingwood",
+            "belt_livingwood",
+            "collar_livingwood",
+            "ball",
+            "blindfold_floral",
+            { item: "bikini", colors: ["Leaf"] },
+            { item: "pareo", colors: ["Leafy"] },
+            { item: "sandals_strappy", colors: ["Leafy"] },
+            "entangling_vines"
+        ],
+        outfittags: ["chastity", "living"],
+        outfitsearchtags: ["dryad", "green", "floral", "leafy"],
+        uniformcolor: true
+    },
+    "latex_maid": {
+        name: "Latex Maid",
+        items: [
+            { item: "maiddress_latex", colors: ["Black"] },
+            "maidapron_latex",
+            "maid_headdress",
+            { item: "garters_latex", colors: ["White"] },
+            { item: "stockings", colors: ["White"] },
+            { item: "gloves_latex", colors: ["black"] },
+            "mittens_latex",
+            "collar_latex",
+            "belt_maid",
+            "politeSub",
+            "straitjacket_maid"
+        ],
+        outfittags: ["chastity", "latex"],
+        outfitsearchtags: ["maid", "monochrome"]
+    },
+    "latex_bunny": {
+        name: "Latex Bunnygirl",
+        items: [
+            { item: "outfit_playbunny_headwear", colors: ["black"] },
+            { item: "suit_outfit", colors: ["Playbunny"] },
+            { item: "bunnytights_latex", colors: ["black"] },
+            { item: "balletheels_latex", colors: ["red"] },
+            { item: "cuffswrist_latex", colors: ["red"] },
+            { item: "cuffsankle_latex", colors: ["red"] },
+            { item: "cuffsthigh_latex", colors: ["red"] },
+            "mittens_latex",
+            "ball",
+            "mask_bunny",
+            "armbinder_latex"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["bunny", "latex", "red", "black"]
+    },
+    "latex_kitsune": {
+        name: "Latex Kitsune",
+        items: [
+            { item: "panties_latex", colors: ["Indigo"] },
+            { item: "thighhighs_latex", colors: ["Starry"] },
+            { item: "kimono_latex", colors: ["Shadow"] },
+            { item: "sleeves_detached_latex", colors: ["Starry"] },
+            { item: "bigcute_ribbon", colors: ["purple"] },
+            { item: "balletheels_latex", colors: ["starry"] },
+            { item: "veil", colors: ["Starry"] },
+            "mask_kitsune",
+            "mittens_latex",
+            "ball",
+            "collar_latex",
+            "boxbinder_latex"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["kitsune", "latex", "indigo", "starry", "shadow", "purple"]
+    },
+    "latex_librarien": {
+        name: "Latex Librarien",
+        items: [
+            { item: "rope_karada", colors: ["green"] },
+            { item: "pencil_skirt", colors: ["Latex"] },
+            { item: "buttonup_blouse", colors: ["Latex"] },
+            "glasses_librarian",
+            { item: "highheels_latex", colors: ["Black"] },
+            "mittens_latex",
+            "mask_kigu_shy",
+            "ball",
+            "collar_posture"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["librarien", "latex", "green", "black"]
+    },
+    "latex_witch": {
+        name: "Latex Witch",
+        items: [
+            { item: "bra_latex", colors: ["Purple"] },
+            { item: "panties_latex", colors: ["purple"] },
+            { item: "stockings_latex", colors: ["starry"] },
+            { item: "gloves_opera_latex", colors: ["starry"] },
+            { item: "evening_dress_latex", colors: ["starry"] },
+            { item: "witchhat_normal", colors: ["starry"] },
+            { item: "tome", colors: ["Tome of Bondage"] },
+            { item: "thighhighboots_latex", colors: ["Purple"] },
+            "blindfold_latex",
+            "mittens_latex",
+            "ball",
+            "collar_latex",
+            "shadowhands"
+        ],
+        outfittags: ["latex"],
+        outfitsearchtags: ["witch", "latex", "purple"]
+    }
 }
 
 exports.outfitslist = outfitslist;
