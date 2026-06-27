@@ -272,6 +272,7 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
                 }
             }
             delete process.heldkeytimers[`${serverID}_${wearerid}_${type}`]
+            markForSave("heldkeytimers");
         }
     }
 }

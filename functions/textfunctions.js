@@ -5318,6 +5318,112 @@ const texts_timelock = {
 	},
 };
 
+const texts_dressprotocol = {
+    "costumer_mimic": {
+        // Setup stage, auto advance to stage 1. Further setup stages can be defined by going into negative numbers.
+        stage0: [
+            `The VAR_C1's tentacles toss and turn USER_TAG all around as USER_THEY struggleUSER_S! The teeth of the mimic hold the chest firmly closed while those tentacles run over every single part of USER_THEIR body, deciding *precisely* what USER_THEY should wear today!`
+        ],
+        // Remove all clothing stage. Advance to stage 2 if everything is consumed! 
+        stage1: {
+            nom: {
+                multiple: [
+                    `The VAR_C1 tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C2 that USER_THEY USER_WERE wearing!`,
+                    `The VAR_C1's tentacles rip off the VAR_C2 that USER_TAG is wearing, stuffing them into its gaping maw and storing it away!`,
+                    `The VAR_C1's tentacles snake out to swipe across the VAR_C2 that USER_TAG is wearing, dissolving them away before absorbing the remains!`,
+                    // If they're wearing makeup, tattoos or other "items that require removers,"" have the tentacles note such
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("makeup"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using a gentle substance to remove some items on USER_THEM!`
+                    },
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("tattoo"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using magical removers to remove some permanent items on USER_THEM!`
+                    },
+                ],
+                single: [
+                    `The VAR_C1's tentacles gently swipe over the sole VAR_C2 on USER_TAG's body, removing it swiftly despite USER_THEIR struggles!`,
+                    `Already nearly naked, the VAR_C1's tentacles remove the VAR_C2 on USER_TAG's body, devouring it hungrily!`
+                ]
+            },
+            endstage: [
+                `Satisfied with a freshly naked USER_TAG, the VAR_C1 continues to toss USER_THEM around inside while collecting the outfit pieces it requires to dress USER_THEM!`,
+                `Now that the VAR_C1 has finished removing USER_THEIR outfit USER_TAG is stripped bare, helpless as it begins to dress USER_THEM in one of its preferred costumes.`,
+                `With a satisfied hum, the VAR_C1 finishes consuming USER_TAG's clothes and begins to dress USER_THEM in the costume it has picked out!`
+            ]
+        },
+        // Dress the user up now, while removing offending clothing if necessary!
+        stage2: {
+            nom: {
+                multiple: [
+                    `The VAR_C1 tugs at USER_TAG's outfit hungrily, tearing away and consuming the VAR_C2 that USER_THEY USER_WERE wearing!`,
+                    `The VAR_C1's tentacles rip off the VAR_C2 that USER_TAG is wearing, stuffing them into its gaping maw and storing it away!`,
+                    `The VAR_C1's tentacles snake out to swipe across the VAR_C2 that USER_TAG is wearing, dissolving them away before absorbing the remains!`,
+                    // If they're wearing makeup, tattoos or other "items that require removers,"" have the tentacles note such
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("makeup"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using a gentle substance to remove some items on USER_THEM!`
+                    },
+                    {
+                        only: (t) => {
+                            return (t.nomtags.includes("tattoo"))
+                        },
+                        text: `The VAR_C1's tentacles ravish over USER_TAG's body to remove the VAR_C2, using magical removers to remove some permanent items on USER_THEM!`
+                    },
+                ],
+                single: [
+                    `The VAR_C1's tentacles gently swipe over the sole VAR_C2 on USER_TAG's body, removing it swiftly despite USER_THEIR struggles!`,
+                    `Already nearly naked, the VAR_C1's tentacles remove the VAR_C2 on USER_TAG's body, devouring it hungrily!`
+                ]
+            },
+            equip: {
+                wearable: { add: [`The VAR_C1 pulls out a VAR_C2 from its internal storage and begins to dress USER_TAG in it!`, `The VAR_C1 produces a VAR_C2 from within itself and slips it onto USER_TAG!`, `The VAR_C1's tentacles fish out a VAR_C2 from its storage and begins to dress USER_TAG in it!`] },
+				mitten: { replace: [`The VAR_C1 removes the VAR_C2 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The VAR_C1 grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C2 on USER_THEM and secures them tightly.`] },
+				chastitybelt: { 
+					replace: [
+						`The VAR_C1 rips off the VAR_C2 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The VAR_C1 rips off the VAR_C2 that USER_TAG is wearing, storing it away before applying a VAR_C2 in its place.`,
+						},
+					], 
+					add: [
+						`The VAR_C1 locks a VAR_C2 onto USER_TAG, sealing away USER_THEIR chastity.`,
+						{
+							only: (t) => {
+								return t.c2.includes("seal");
+							},
+							text: `The VAR_C1 presses a VAR_C2 onto USER_TAG, activating it and sealing away USER_THEIR chastity.`,
+						},
+					] 
+				},
+				chastitybra: { replace: [`The VAR_C1 picks the locking mechanism on USER_TAG's VAR_C2, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`], add: [`The VAR_C1 wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`] },
+				collar: { replace: [`The VAR_C1 forces USER_TAG to lean forward as it removes USER_THEIR VAR_C2, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the VAR_C1 moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
+				headwear: { add: [`The VAR_C1 produces a VAR_C2 from within itself and secures it onto USER_TAG's head.`] },
+				gag: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and secures it into USER_TAG's mouth.`] },
+				toy: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and applies it to USER_TAG.`] },
+				heavyrestraint: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and securely binds USER_TAG with it.`] },
+				unknown: { add: [`The VAR_C1 tries to dress USER_TAG in a VAR_C2... but it seems to be missing from its storage. Perhaps it ran out of space?`] },
+            },
+            endstage: [
+                `Finished with the outfit, the VAR_C1 tosses USER_TAG around a bit more inside, having it's last bit of fun before its ready to spit USER_THEM out!`,
+                `The VAR_C1 lets out another satisfied hum - USER_TAG's outfit looks so amazing now! It tosses USER_THEM around a bit more inside for now.`
+            ]
+        },
+        stage3: [
+            `The VAR_C1 finally spits USER_TAG out - the tentacles giving USER_THEM one final fleeting tease as it returns to a dormant state. USER_THEIR_CAP breath shudders as USER_THEY findUSER_S USER_THEMSELF haunted by the feelings...`
+        ]
+    },
+}
+
 const texts_eventfunctions = {
 	heavy: {
 		doll_processing: {
@@ -5550,6 +5656,7 @@ const textarrays = {
 	texts_wear: texts_wear,
 	texts_timelock: texts_timelock,
 	texts_eventfunctions: texts_eventfunctions,
+    texts_dressprotocol: texts_dressprotocol
 };
 
 // Get generic text and spit out a pronoun respecting version YAY

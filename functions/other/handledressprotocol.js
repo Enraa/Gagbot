@@ -1,27 +1,27 @@
-import { clearTimeout } from 'node:timers';
-import { arrayShuffle } from './arrayShuffle';
-import { getItemType } from '../getters/config/getItemType';
-import { getChastity } from '../getters/chastity/getChastity';
-import { getChastityBra } from '../getters/chastity/getChastityBra';
-import { getCollar } from '../getters/collar/getCollar';
-import { getGags } from '../getters/gag/getGags';
-import { getMitten } from '../getters/mitten/getMitten';
-import { getCorset } from '../getters/corset/getCorset';
-import { getHeavyList } from '../getters/heavy/getHeavyList';
-import { getToys } from '../getters/toy/getToys';
-import { assignWearable } from '../setters/wearable/assignWearable';
-import { assignChastity } from '../setters/chastity/assignChastity';
-import { assignChastityBra } from '../setters/chastity/assignChastityBra';
-import { assignCollar } from '../setters/collar/assignCollar';
-import { assignGag } from '../setters/gag/assignGag';
-import { assignMitten } from '../setters/mitten/assignMitten';
-import { assignCorset } from '../setters/corset/assignCorset';
-import { assignHeavy } from '../setters/heavy/assignHeavy';
-import { getBaseHeavy } from '../getters/heavy/getBaseHeavy';
-import { assignHeadwear } from '../setters/headwear/assignHeadwear';
-import { assignToy } from '../setters/toy/assignToy';
-import { getItemName } from '../getters/config/getItemName';
-import { removeHeavy } from '../setters/heavy/removeHeavy';
+const { arrayShuffle } = require('./arrayShuffle');
+const { getItemType } = require('../getters/config/getItemType');
+const { getChastity } = require('../getters/chastity/getChastity');
+const { getChastityBra } = require('../getters/chastity/getChastityBra');
+const { getCollar } = require('../getters/collar/getCollar');
+const { getGags } = require('../getters/gag/getGags');
+const { getMitten } = require('../getters/mitten/getMitten');
+const { getCorset } = require('../getters/corset/getCorset');
+const { getHeavyList } = require('../getters/heavy/getHeavyList');
+const { getToys } = require('../getters/toy/getToys');
+const { assignWearable } = require('../setters/wearable/assignWearable');
+const { assignChastity } = require('../setters/chastity/assignChastity');
+const { assignChastityBra } = require('../setters/chastity/assignChastityBra');
+const { assignCollar } = require('../setters/collar/assignCollar');
+const { assignGag } = require('../setters/gag/assignGag');
+const { assignMitten } = require('../setters/mitten/assignMitten');
+const { assignCorset } = require('../setters/corset/assignCorset');
+const { assignHeavy } = require('../setters/heavy/assignHeavy');
+const { getBaseHeavy } = require('../getters/heavy/getBaseHeavy');
+const { assignHeadwear } = require('../setters/headwear/assignHeadwear');
+const { assignToy } = require('../setters/toy/assignToy');
+const { getItemName } = require('../getters/config/getItemName');
+const { removeHeavy } = require('../setters/heavy/removeHeavy');
+const { getItemTags } = require('../getters/config/getItemTags');
 const { getRecentChannel } = require("../getters/config/getRecentChannel");
 const { getHeadwear } = require("../getters/headwear/getHeadwear");
 const { getLockedHeadgear } = require("../getters/headwear/getLockedHeadgear");
@@ -30,6 +30,7 @@ const { getWearable } = require("../getters/wearable/getWearable");
 const { messageSendChannel } = require("../messagefunctions");
 const { removeWearable } = require("../setters/wearable/removeWearable");
 const { getText } = require("../textfunctions");
+const { getWearableName } = require('../getters/wearable/getWearableName');
 
 /************* 
  * Perform the next step in the dress protocol. 
@@ -54,15 +55,24 @@ function handleDressProtocol(serverID, userID, dp) {
             serverID: serverID,
             interactionuser: { id: userID },
             targetuser: { id: userID },
-            c1: dp.dressprotocolname,
+            c1: dp.dressprotocolname, // Heavy Bondage name,
+        //  c2: (The items removed, or the item equipped
+        //  c3: Not used
+            c4: dp.name // Outfit name,
+        /// nomtags: Array of items' tags if c2 is used!   
         }
     }
+
+    // Tag the heavyrestraintname first
+    data[dp.heavyid] = true;
 
     // If the user does NOT have a recentchannels object, just leave. 
     if (!getRecentChannel(serverID, userID).valid) { return }
 
     // If it's not time to do the next update, also just leave. 
-    if (dp.nextupdate < Date.now()) { return }
+    if (dp.nextupdate > Date.now()) { return }
+
+    // Tag the heavy bondage in question
 
     // Tag the stage first
     data[`stage${dp.stage}`] = true;
@@ -86,13 +96,15 @@ function handleDressProtocol(serverID, userID, dp) {
 
         // Om nom nom nom nom
         let nommed = [];
+        let nomtags = [];
 
         // If any currclothes remain, attempt to remove up to a third of items, until dp.removestages reaches 3 or higher. At 3, remove all remaining items. 
         if (currclothes.length > 0) {
             if (dp.removestages >= 3) {
                 currclothes.forEach((c) => {
+                    nomtags.push(getItemTags(c));
                     removeWearable(serverID, userID, c);
-                    nommed.push(c);
+                    nommed.push(getWearableName(undefined, c) ?? c);
                 })
             }
             else {
@@ -112,8 +124,9 @@ function handleDressProtocol(serverID, userID, dp) {
 
                 // Remove the clothes! 
                 subclothes.forEach((c) => {
+                    nomtags.push(getItemTags(c));
                     removeWearable(serverID, userID, c);
-                    nommed.push(c);
+                    nommed.push(getWearableName(undefined, c) ?? c);
                 })
             }
         }
@@ -121,7 +134,7 @@ function handleDressProtocol(serverID, userID, dp) {
         // If Nommed is of any length, then we need to report it. 
         if (nommed.length > 0) {
             dp.removestages++;
-            return nommed;
+            return { nommed: nommed, nomtags: nomtags };
         }
         else {
             return false;
@@ -129,7 +142,7 @@ function handleDressProtocol(serverID, userID, dp) {
     }
 
     // If the stage is 0, then just increment to 1 and return. 
-    if (dp.stage == 0) { 
+    if (dp.stage <= 0) { 
         messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
         dp.stage++;
         return;
@@ -138,22 +151,25 @@ function handleDressProtocol(serverID, userID, dp) {
     // If the stage is 1, then remove all offending clothing from the wearer. 
     // We will first retrieve all wearables and filter out any that are in locked. 
     if (dp.stage == 1) {
-        let noms = removeSomeClothing();
+        let noms = removeSomeClothing(); // { nommed, nomtags }
 
         // If we removed some clothing, then we should indicate which items were removed. 
         if (noms) {
             // We nommed something. 
             data["nom"] = true;
 
+            // Add the nomtags to the list
+            data.textdata.nomtags = noms.nomtags;
+
             // Join the noms into a string
-            data.textdata.c2 = noms.join(", ");
+            data.textdata.c2 = noms.nommed.join(", ");
             // And then take the last ", " and turn it into ", and "
             if (data.textdata.c2.lastIndexOf(", ") != -1) {
-                data.textdata.c2 = `${data.textdata.c2.substring(0, (data.textdata.c2.lastIndexOf(", ")))}${(noms.length > 2) ? "," : ""} and ${noms[noms.length-1]}`
+                data.textdata.c2 = `${data.textdata.c2.substring(0, (data.textdata.c2.lastIndexOf(", ")))}${(noms.nommed.length > 2) ? "," : ""} and ${noms.nommed[noms.nommed.length-1]}`
             }
 
             // If we removed multiple then tag accordingly. 
-            if (noms.length > 1) { 
+            if (noms.nommed.length > 1) { 
                 data["multiple"] = true
             }
             else {
@@ -186,15 +202,18 @@ function handleDressProtocol(serverID, userID, dp) {
             // We nommed something. 
             data["nom"] = true;
 
+            // Add the nomtags to the list
+            data.textdata.nomtags = noms.nomtags;
+
             // Join the noms into a string
-            data.textdata.c2 = noms.join(", ");
+            data.textdata.c2 = noms.nommed.join(", ");
             // And then take the last ", " and turn it into ", and "
             if (data.textdata.c2.lastIndexOf(", ") != -1) {
-                data.textdata.c2 = `${data.textdata.c2.substring(0, (data.textdata.c2.lastIndexOf(", ")))}${(noms.length > 2) ? "," : ""} and ${noms[noms.length-1]}`
+                data.textdata.c2 = `${data.textdata.c2.substring(0, (data.textdata.c2.lastIndexOf(", ")))}${(noms.nommed.length > 2) ? "," : ""} and ${noms.nommed[noms.nommed.length-1]}`
             }
 
             // If we removed multiple then tag accordingly. 
-            if (noms.length > 1) { 
+            if (noms.nommed.length > 1) { 
                 data["multiple"] = true
             }
             else {
@@ -208,36 +227,37 @@ function handleDressProtocol(serverID, userID, dp) {
         else {
             let equippeditem = false;
             let didswap = false;
+            let itemcheck;
             for(let i = 0; i < dp.items.length; i++) {
-                let itemcheck = getItemType(dp.items[i].name);
+                itemcheck = getItemType(dp.items[i]);
                 let isworn = false;
                 switch(itemcheck) {
                     case "wearable":
-                        isworn = (getWearable(serverID, userID)?.includes(dp.items[i].name));
+                        isworn = (getWearable(serverID, userID)?.includes(dp.items[i]));
                         break;
                     case "chastity":
-                        isworn = (getChastity(serverID, userID)?.chastitytype == dp.items[i].name);
+                        isworn = (getChastity(serverID, userID)?.chastitytype == dp.items[i]);
                         break;
                     case "chastitybra":
-                        isworn = (getChastityBra(serverID, userID)?.chastitytype == dp.items[i].name);
+                        isworn = (getChastityBra(serverID, userID)?.chastitytype == dp.items[i]);
                         break;
                     case "collar":
-                        isworn = (getCollar(serverID, userID)?.collartype == dp.items[i].name);
+                        isworn = (getCollar(serverID, userID)?.collartype == dp.items[i]);
                         break;
                     case "gag":
-                        isworn = (getGags(serverID, userID)?.find((g) => g.gagtype == dp.items[i].name));
+                        isworn = (getGags(serverID, userID)?.find((g) => g.gagtype == dp.items[i]));
                         break;
                     case "mitten":
-                        isworn = (getMitten(serverID, userID)?.mittenname == dp.items[i].name);
+                        isworn = (getMitten(serverID, userID)?.mittenname == dp.items[i]);
                         break;
                     case "corset":
-                        isworn = (getCorset(serverID, userID)?.type == dp.items[i].name);
+                        isworn = (getCorset(serverID, userID)?.type == dp.items[i]);
                         break;
                     case "heavy":
-                        isworn = (getHeavyList(serverID, userID)?.find((h) => h.type == dp.items[i].name));
+                        isworn = (getHeavyList(serverID, userID)?.find((h) => h.type == dp.items[i]));
                         break;
                     case "mask":
-                        isworn = (getHeadwear(serverID, userID)?.includes(dp.items[i].name));
+                        isworn = (getHeadwear(serverID, userID)?.includes(dp.items[i]));
                         break;
                     // assignToy needs a force param to be accurately handled in an outfit. As such this is disabled for now. 
                     /*
@@ -245,67 +265,67 @@ function handleDressProtocol(serverID, userID, dp) {
                         isworn = (getToys(serverID, userID)?.find((t) => t.type == dp.items[i].name));
                         break;*/
                     default:
-                        console.log(`Unknown item type - ${dp.items[i].name}`)
+                        console.log(`Unknown item type - ${dp.items[i]}`)
                         break;
                 }
                 // Now equip it if we aren't wearing it!
                 if (!isworn) {
                     switch(itemcheck) {
                         case "wearable":
-                            assignWearable(serverID, userID, dp.items[i].name);
+                            assignWearable(serverID, userID, dp.items[i]);
                             equippeditem = true;
                             break;
                         case "chastity":
                             if (getChastity(serverID, userID)) {
-                                getChastity(serverID, userID).chastitytype = dp.items[i].name
+                                getChastity(serverID, userID).chastitytype = dp.items[i]
                                 didswap = true;
                             }
                             else {
-                                assignChastity(serverID, userID, dp.keyholder ?? userID, dp.items[i].name, true);
+                                assignChastity(serverID, userID, dp.keyholder ?? userID, dp.items[i], true);
                             }
                             equippeditem = true;
                             break;
                         case "chastitybra":
                             if (getChastityBra(serverID, userID)) {
-                                getChastityBra(serverID, userID).chastitytype = dp.items[i].name
+                                getChastityBra(serverID, userID).chastitytype = dp.items[i]
                                 didswap = true;
                             }
                             else {
-                                assignChastityBra(serverID, userID, dp.keyholder ?? userID, dp.items[i].name, true);
+                                assignChastityBra(serverID, userID, dp.keyholder ?? userID, dp.items[i], true);
                             }
                             equippeditem = true;
                             break;
                         case "collar":
                             if (getCollar(serverID, userID)) {
-                                getCollar(serverID, userID).collartype = dp.items[i].name
+                                getCollar(serverID, userID).collartype = dp.items[i]
                                 didswap = true;
                             }
                             else {
-                                assignCollar(serverID, userID, dp.keyholder ?? userID, {}, true, dp.items[i].name);
+                                assignCollar(serverID, userID, dp.keyholder ?? userID, {}, true, dp.items[i]);
                             }
                             equippeditem = true;
                             break;
                         case "gag":
-                            assignGag(serverID, userID, dp.items[i].name, 5, dp.keyholder ?? userID);
+                            assignGag(serverID, userID, dp.items[i], 5, dp.keyholder ?? userID);
                             equippeditem = true;
                             break;
                         case "mitten":
                             if (getMitten(serverID, userID)) {
-                                getMitten(serverID, userID).mittenname = dp.items[i].name
+                                getMitten(serverID, userID).mittenname = dp.items[i]
                                 didswap = true;
                             }
                             else {
-                                assignMitten(serverID, userID, dp.items[i].name, dp.keyholder ?? userID);
+                                assignMitten(serverID, userID, dp.items[i], dp.keyholder ?? userID);
                             }
                             equippeditem = true;
                             break;
                         case "corset":
                             if (getCorset(serverID, userID)) {
-                                getCorset(serverID, userID).type = dp.items[i].name
+                                getCorset(serverID, userID).type = dp.items[i]
                                 didswap = true;
                             }
                             else {
-                                assignCorset(serverID, userID, dp.items[i].name, 5, dp.keyholder ?? userID);
+                                assignCorset(serverID, userID, dp.items[i], 5, dp.keyholder ?? userID);
                             }
                             equippeditem = true;
                             break;
@@ -313,11 +333,11 @@ function handleDressProtocol(serverID, userID, dp) {
                             // This currently cannot accurately handle heavy bondage with custom name functions.
                             // Probably wont come up for a while, but if it does, we need to rewrite this for async.
                             // Ew. 
-                            assignHeavy(serverID, userID, dp.items[i].name, dp.keyholder ?? userID);
+                            assignHeavy(serverID, userID, dp.items[i], dp.keyholder ?? userID);
                             equippeditem = true;
                             break;
                         case "mask":
-                            assignHeadwear(serverID, userID, dp.items[i].name, dp.keyholder ?? userID);
+                            assignHeadwear(serverID, userID, dp.items[i], dp.keyholder ?? userID);
                             equippeditem = true;
                             break;
                         // assignToy needs a force param to be accurately handled in an outfit. As such this is disabled for now. 
@@ -326,9 +346,10 @@ function handleDressProtocol(serverID, userID, dp) {
                             equippeditem = true;
                             break;*/
                         default:
+                            itemcheck = "unknown"
                             break;
                     }
-                    data.textdata.c2 = getItemName(dp.items[i].name)
+                    data.textdata.c2 = getItemName(dp.items[i])
                 }
 
                 // if we equipped something, break execution from for loop. 
@@ -340,10 +361,11 @@ function handleDressProtocol(serverID, userID, dp) {
             // If we successfully equipped something, notify the user
             if (equippeditem) {
                 data["equip"] = true
+                data[itemcheck] = true
 
                 // If we modified the item in place or not
                 if (didswap) {
-                    data["swap"] = true
+                    data["replace"] = true
                 }
                 else {
                     data["add"] = true;
@@ -351,6 +373,7 @@ function handleDressProtocol(serverID, userID, dp) {
             }
             else {
                 data["endstage"] = true;
+                dp.stage++;
             }
 
             messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
@@ -366,3 +389,5 @@ function handleDressProtocol(serverID, userID, dp) {
         return;
     }
 }
+
+exports.handleDressProtocol = handleDressProtocol;

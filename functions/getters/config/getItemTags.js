@@ -50,11 +50,15 @@ function getItemTags(items) {
         }
 
         let i = typeofcheck(item);
-        if (i.tags && Array.isArray(i.tags)) {
+        if (i == undefined) {
+            console.log(`Error finding item`)
+            console.log(item);
+        }
+        if (i && i.tags && Array.isArray(i.tags)) {
             i.tags.forEach((tag) => {
                 outtags[tag] = true;
             })
-        } else if (i.tags) {
+        } else if (i && i.tags) {
             Object.keys(i.tags).forEach((tagkey) => {
                 outtags[tagkey] = true;
             })
@@ -64,3 +68,5 @@ function getItemTags(items) {
     // Return a string list of tags given the item names. 
     return Object.keys(outtags);
 }
+
+exports.getItemTags = getItemTags;

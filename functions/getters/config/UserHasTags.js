@@ -10,7 +10,7 @@ const { getOption } = require("./getOption");
  * ---
  * ##### Returns true if the user has blocked any of the tags supplied, or true if the user has preferred AND not blocked any tag if preferred.
  **********/
-function UserHasTags(serverID, userID, tags, preferred = false) {
+function userHasTags(serverID, userID, tags, preferred = false) {
     let tagsarr = tags;
     if (!Array.isArray(tags)) {
         tagsarr = [tags]
@@ -40,3 +40,5 @@ function UserHasTags(serverID, userID, tags, preferred = false) {
         return false;
     }
 }
+
+exports.userHasTags = userHasTags

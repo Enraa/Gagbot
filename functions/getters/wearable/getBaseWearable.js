@@ -16,14 +16,16 @@ const { wearabletypes } = require("../../wearablefunctions");
  **********/
 function getBaseWearable(type) {
     try {
-        let returnval = wearabletypes.find((w) => w.value == type)
-        if (!returnval) {
+        let returnval = process.wearabletypes.find((w) => w.value == type)
+        /*if (!returnval) {
             let colortosearch = type.split("_").slice(0,-1).join("_"); // remove the last element which should only be the color
-            returnval = wearabletypes.find((w) => w.value == colortosearch)
-        }
+            returnval = process.wearabletypes.find((w) => w.value == colortosearch)
+        }*/
         return returnval;
     }
     catch (err) {
+        console.log(type)
+        console.log(`Searching for ${type}!`)
         console.log(err);
     }
 }
