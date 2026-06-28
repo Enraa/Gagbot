@@ -43,7 +43,8 @@ const garbleText = (text, parent, intensity) => {
         // Anything else
         outtext = `${outtext}${text[i]}`
     }
-    console.log(outtext)
+    
+    return outtext;
 }
 
 exports.garbleText = garbleText;
