@@ -149,9 +149,6 @@ const heavytypes = [
     { name: "Bondage Exosuit", value: "exosuit_bondage", tags: ["metal"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	{ name: "Sticky Glue", value: "stickyglue_bondage", tags: ["slime"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
     { name: "Dolly", value: "dolly", tags: ["metal"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
-    { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined",], denialCoefficient: 5, heavytags: ["arms", "legs"] },
-	//{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
-    //{ name: "Costumer Mimic (Chaos) BROKEN", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"], noself: true, noother: true }, // Currently MASSIVELY broken!
     { name: "Capture Sphere", value: "capture_sphere", tags: ["confined", "dimensional"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Love Sphere", value: "capture_sphere_love", tags: ["confined", "dimensional"], denialCoefficient: 3, heavytags: ["arms", "legs"] },
     { name: "Great Sphere", value: "capture_sphere_great", tags: ["confined", "dimensional"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
@@ -185,6 +182,12 @@ const heavytypes = [
 	{ name: "Duffel Bag", value: "duffel_bag", tags: ["confined"], denialCoefficient: 2, heavytags: ["container"] },
     { name: "Magic Binding Circle", value: "bindingcircle", tags: ["magic"], denialCoefficient: 1, heavytags: ["container"] },
     { name: "Cuddle Puddle", value: "cuddlepuddle", denialCoefficient: 0.5, heavytags: ["container"] }, // Yes, cuddlepuddle makes it EASIER
+
+    // Dress Protocols (heavy bondage that equips other heavy bondage)
+    { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+	//{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
+    //{ name: "Costumer Mimic (Chaos) BROKEN", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"], noself: true, noother: true }, // Currently MASSIVELY broken!
+    { name: "Wardrobe Device", value: "wardrobe_device", tags: ["confined", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 
 	// Heavy Restraints with unique name functions
 	{
