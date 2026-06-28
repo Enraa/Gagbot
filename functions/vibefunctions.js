@@ -628,13 +628,28 @@ function updateSharedBreath() {
 function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCoefficient) {
 	const tickScale = getBotOption("bot-timetickrate") / 60000;
 
+    //console.log(arguments);
+
 	// first increase it due to vibe effect
-	const growth = tickScale * bounded(traits.minGrowth, traits.timescale * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos(traits.timescale * time * AROUSAL_PERIOD_A) * Math.cos(traits.timescale * time * AROUSAL_PERIOD_B)) * growthCoefficient * ((RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1)), traits.maxGrowth);
+	const growth = tickScale * bounded(traits.minGrowth ?? -999999, (traits.timescale ?? 1) * (1 + AROUSAL_PERIOD_AMPLITUDE * Math.cos((traits.timescale ?? 1) * time * AROUSAL_PERIOD_A) * Math.cos((traits.timescale ?? 1) * time * AROUSAL_PERIOD_B)) * growthCoefficient * ((RANDOM_BIAS + Math.random()) / (RANDOM_BIAS + 1)), traits.maxGrowth ?? 999999);
 	const noDecay = (arousal ?? 0) + growth;
 	// then reduce it based on decay
-	const decay = tickScale * bounded(traits.minDecay, traits.timescale * decayCoefficient * Math.max((arousal ?? 0) + prev / 2, 0.1), traits.maxDecay);
+    // Decay based on decay coefficient times the average of (arousal + prev), 2% of the total, or 0.05, whichever is the highest. 
+	let decay = tickScale * bounded(traits.minDecay ?? -999999, (traits.timescale ?? 1) * Math.max(decayCoefficient * Math.max(((arousal ?? 0) + prev) / 2, 0.1), 0.05), traits.maxDecay ?? 999999);
+    
+    // If arousal + growth is higher than 1000, remove an additional 5% per minute until it is below that again.
+    // 1000 is *far* beyond the original intended reasonable maxima of the system, so making a tax here makes sense. 
+    // While not chaste, this isn't super relevant - the tax is approximately an additional 20% of the decay.
+    // While chaste, this practically doubles the natural decay rate. 
+    if ((arousal + growth) > 1000) {
+        decay = (decay + ((tickScale * 0.05) * (arousal + growth)))
+    }
+
+    console.log(`Gained arousal: ${growth}`)
+    console.log(`Removed arousal: ${decay}`)
+    console.log(`Net gain on arousal: ${growth - decay}`)
     //logConsole(`calcNextArousal: ${growth}, ${noDecay}, ${decay}`, 1);
-    logConsole(`calcNextArousal: ${bounded(traits.minArousal, noDecay - decay, traits.maxArousal)}`, 1);
+    logConsole(`calcNextArousal: ${bounded((traits.minArousal ?? 0), noDecay - decay, (traits.maxArousal ?? 9999999))}`, 1);
     return bounded(traits.minArousal, noDecay - decay, traits.maxArousal);
 }
 

@@ -17,7 +17,6 @@ module.exports = {
         }
     },
     async interactionresponse(interaction) {
-        console.log(interaction)
         let options = interaction.customId.split("_")
         let menu = options[1]
         let choiceinput = options[2]

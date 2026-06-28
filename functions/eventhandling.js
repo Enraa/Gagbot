@@ -8,6 +8,8 @@ const { getCollar } = require("./getters/collar/getCollar");
 const { getGags } = require("./getters/gag/getGags");
 const { getMitten } = require("./getters/mitten/getMitten");
 const { getHeavyList } = require("./getters/heavy/getHeavyList");
+const { getChastity } = require("./getters/chastity/getChastity");
+const { getChastityBra } = require("./getters/chastity/getChastityBra");
 
 
 /*********
@@ -48,6 +50,22 @@ async function emitEvent(type, userid, serverid, data, delay = 0) {
         if (getMitten(serverid, userid)) {
             if (process.eventfunctions && process.eventfunctions.mitten && process.eventfunctions.mitten[getMitten(serverid, userid).mittenname] && process.eventfunctions.mitten[process.mitten[userid].mittenname][type]) {
                 process.eventfunctions.mitten[getMitten(serverid, userid).mittenname][type](serverid, userid, data);
+            }
+        }
+	}
+    // Chastity
+	if (getChastity(serverid, userid)) {
+        if (getChastity(serverid, userid)) {
+            if (process.eventfunctions && process.eventfunctions.mitten && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype] && process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype][type]) {
+                process.eventfunctions.chastity[getChastity(serverid, userid).chastitytype][type](serverid, userid, data);
+            }
+        }
+	}
+    // Chastity Bra
+	if (getChastityBra(serverid, userid)) {
+        if (getChastityBra(serverid, userid)) {
+            if (process.eventfunctions && process.eventfunctions.mitten && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype] && process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype][type]) {
+                process.eventfunctions.chastitybra[getChastityBra(serverid, userid).chastitytype](serverid, userid, data);
             }
         }
 	}
