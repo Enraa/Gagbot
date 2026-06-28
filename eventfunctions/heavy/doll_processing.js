@@ -150,14 +150,14 @@ let tick = async (serverID, userID, datain) => {
             if (!getMitten(serverID, userID) || (getMitten(serverID, userID) && (getMitten(serverID, userID).mittenname != "mittens_cyberdoll"))) {
                 data.mitten = true;
                 if (getMitten(serverID, userID)) {
-                    data.textdata.c1 = getMittenName(undefined, getMitten(serverID, userID).mittenname) ?? "mittens", // mitten name
+                    data.textdata.c1 = getMittenName(serverID, undefined, getMitten(serverID, userID).mittenname) ?? "mittens", // mitten name
                         assignMitten(serverID, userID, "mittens_cyberdoll", getMitten(serverID, userID).origbinder)
                     data.replace = true;
                     appliedrestraint = true;
                 }
                 else {
                     assignMitten(serverID, userID, "mittens_cyberdoll", targetobject.id)
-                    data.textdata.c1 = getMittenName(undefined, "mittens_cyberdoll") ?? "mittens", // mitten name
+                    data.textdata.c1 = getMittenName(serverID, undefined, "mittens_cyberdoll") ?? "mittens", // mitten name
                         data.add = true;
                     appliedrestraint = true;
                 }
