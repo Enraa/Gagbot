@@ -239,7 +239,7 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
             targetuser: { id: wearerid },
         }
         messageSendChannel(getTextGeneric("given_key", data), getRecentChannel(serverID, wearerid).channelid)
-        let addedtime = Math.floor(Math.max(Math.random(), 0.4) * getOption(serverID, wearerid, "gagbotholdtimer")); // 40-100% of the time
+        let addedtime = generateTimeForGagbotKey(serverID, wearerid); // 40-100% of the time
         process.heldkeytimers[`${serverID}_${wearerid}_${type}`] = {
             releasetime: Date.now() + addedtime
         }
@@ -275,6 +275,23 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
             markForSave("heldkeytimers");
         }
     }
+}
+
+/**********
+ * Generates a random time for Gagbot to hold a key, based on the users gagbotholdtimer option.
+ * This is a random time between 40% and 100% and shouldn't prefer the 40% like the old approach did.
+ * 
+ * - (server id) serverID - The server this is running on
+ * - (wearer id) wearer - The user id of the person wearing the locked device
+ * ---
+ * ##### Return the time in milliseconds that Gagbot should hold onto the key.
+ **********/
+function generateTimeForGagbotKey(serverID, wearerid){
+	traceFirstParam(arguments[0]);
+	let maxTime = getOption(serverID, wearerid, "gagbotholdtimer");
+	let randomFactor = Math.random() * 0.6 + 0.4; // Random factor between 0.4 and 1. Does not prefer 0.4 like the old approach did.
+	let addedtime = Math.floor(maxTime * randomFactor);
+	return addedtime;
 }
 
 exports.timelockChastity = timelockChastity;
