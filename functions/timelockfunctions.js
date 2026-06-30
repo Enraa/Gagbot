@@ -256,8 +256,8 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
                 interactionuser: process.client.user,
                 targetuser: { id: wearerid },
             }
-            messageSendChannel(getTextGeneric(`return_key_${type}`, data), getRecentChannel(serverID, wearerid).channelid)
             if (process[type] && process[type][serverID] && process[type][serverID][wearerid] && process[type][serverID][wearerid].keyholder == process.client.user.id) {
+                messageSendChannel(getTextGeneric(`return_key_${type}`, data), getRecentChannel(serverID, wearerid).channelid)
                 if (type == "collar") { 
                     transferCollarKey(serverID, wearerid, wearerid) 
                     markForSave("collar");
