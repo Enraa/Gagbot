@@ -189,6 +189,28 @@ const heavytypes = [
     //{ name: "Costumer Mimic (Chaos) BROKEN", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"], noself: true, noother: true }, // Currently MASSIVELY broken!
     { name: "Wardrobe Device", value: "wardrobe_device", tags: ["confined", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 
+    // Heavy Bondage that is NOT binding, such as chairs. 
+    // These can be added as a heavy, but will NOT impede the wearer in any way. 
+    { name: "Royal Chair", value: "furniture_chair_royal", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Leather Couch", value: "furniture_couch_leather", tags: ["leather"], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Latex Couch", value: "furniture_couch_latex", tags: ["latex"], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Couch", value: "furniture_couch", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Bed with Silk Sheets", value: "furniture_bed_silk", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Bed", value: "furniture_bed", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfortable Blanket Throw", value: "furniture_blanket", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Footstool", value: "furniture_footstool", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Rocking Chair", value: "furniture_chair_rocking", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Royal Seneschal's Throne", value: "furniture_throne_seneschal", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Royal Princess's Throne", value: "furniture_throne_princess", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Seat of the Queen", value: "furniture_throne_queen", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Seat of the King", value: "furniture_throne_king", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Moonlit Altar", value: "furniture_altar_moonlit", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Suncrested Seat", value: "furniture_throne_sun", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Wooden Chair", value: "furniture_chair_wooden", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Metal Chair", value: "furniture_chair_metal", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Computer Chair", value: "furniture_chair_computer", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Table", value: "furniture_table", tags: [], denialCoefficient: 1, heavytags: [] },
+
 	// Heavy Restraints with unique name functions
 	{
 		name: "Dominant's Lap",

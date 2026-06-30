@@ -1080,6 +1080,9 @@ const texts_heavy = {
                         },
                         text: `USER_TAG walks towards the VAR_C2! It envelops USER_THEM in a neverending cascade of cuddles!`,
                     },
+                ],
+                furniture: [
+                    `USER_TAG pulls up a VAR_C2, planting USER_THEIR body comfortably on it!`
                 ]
             },
             nocanwear: {
@@ -1091,6 +1094,9 @@ const texts_heavy = {
                 ],
                 container: [
                     `USER_TAG tries to step into a VAR_C3, but since USER_THEY USER_ISARE already in a VAR_C4, USER_THEY would need some kind of spacial magic!`
+                ],
+                furniture: [
+                    `USER_TAG walks up to a VAR_C3, but cannot maneuver USER_THEIR bound body into it!`
                 ]
             }
         },
@@ -1333,6 +1339,9 @@ const texts_heavy = {
                         },
                         text: `USER_TAG pulls TARGET_TAG into the VAR_C2! It welcomes TARGET_THEM as one of its own!`,
                     },
+                ],
+                furniture: [
+                    `USER_TAG guides TARGET_TAG over to a VAR_C3, before offering TARGET_THEM to make TARGET_THEMSELF comfortable!`
                 ]
             },
             nocanwear: {
@@ -1344,6 +1353,9 @@ const texts_heavy = {
                 ],
                 container: [
                     `USER_TAG tries to toss TARGET_TAG into a VAR_C3, but TARGET_THEY are already trapped in a VAR_C4!`
+                ],
+                furniture: [
+                    `USER_TAG tries to guide TARGET_TAG to a VAR_C3, but fails to direct TARGET_THEM appropriately because of USER_THEIR bound body.`
                 ]
             }
         },
@@ -1369,6 +1381,9 @@ const texts_heavy = {
                             },
                             text: `USER_TAG grins as TARGET_TAG attempts to pull it into TARGET_THEIR lap. Obviously TARGET_THEY wantTARGET_S to be in someone's lap, so it gently pulls TARGET_THEM into its own instead with a gentle headpat. A happy sound can be heard from TARGET_THEM!`
                         }
+                    ],
+                    furniture: [
+                        `TARGET_TAG tries to offer USER_TAG a nice comfy place to relax. But USER_THEY USER_ISARE too nice and direct TARGET_THEM to the VAR_C2 instead!`
                     ]
                 },
                 nocanwear: {

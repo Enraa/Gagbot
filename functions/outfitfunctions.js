@@ -603,7 +603,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getToys(serverID, inspectuserID).map((vibe) => `${getBaseToy(vibe.type).toyname} (${vibe.intensity})`).join(", ")}**`
         }
         // Heavy Bondage
-        if (getHeavy(serverID, inspectuserID)) {
+        if (getHeavy(serverID, inspectuserID, undefined, true)) {
             wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(serverID, inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
             let heavyrestrictions = getHeavyRestrictions(serverID, inspectuserID);
             wearingtext = `${wearingtext}\n-# ‎   ⤷ ⛓️ Restrictions - **Touch Self: ${heavyrestrictions.touchself ? "✅" : "⛔"}, Touch Others: ${heavyrestrictions.touchothers ? "✅" : "⛔"}, Container: ${!heavyrestrictions.touchlist ? "✅" : "⛔"}**`
@@ -794,7 +794,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             wearingtext = `${wearingtext}\n${process.emojis.wand} Toys: **${getToys(serverID, inspectuserID).map((vibe) => `${getBaseToy(vibe.type).toyname} (${vibe.intensity})`).join(", ")}**`
         }
         // Heavy Bondage
-        if (getHeavy(serverID, inspectuserID)) {
+        if (getHeavy(serverID, inspectuserID, undefined, true)) {
             wearingtext = `${wearingtext}\n${process.emojis.armbinder} Heavy Bondage: **${getHeavyList(serverID, inspectuserID).map((heavy) => heavy.displayname).join(", ")}**`
             let heavyrestrictions = getHeavyRestrictions(serverID, inspectuserID);
             wearingtext = `${wearingtext}\n-# ‎   ⤷ ⛓️ Restrictions - **Touch Self: ${heavyrestrictions.touchself ? "✅" : "⛔"}, Touch Others: ${heavyrestrictions.touchothers ? "✅" : "⛔"}, Container: ${!heavyrestrictions.touchlist ? "✅" : "⛔"}**`

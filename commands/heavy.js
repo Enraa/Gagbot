@@ -148,7 +148,12 @@ module.exports = {
                     if (canwear) {
                         data.canwear = true
                         if (getBaseHeavy(heavychoice).heavytags) {
-                            data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                            if (getBaseHeavy(heavychoice).heavytags?.length == 0) {
+                                data["furniture"] = true
+                            }
+                            else {
+                                data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                            }
                         }
                         await handleMajorRestraint(interaction.guildId, interaction.user, targetuser, "heavy", heavychoice).then(async () => {
                             await handleExtremeRestraint(interaction.guildId, interaction.user, targetuser, "heavy", heavychoice).then(
@@ -202,7 +207,12 @@ module.exports = {
                     if (canwear) {
                         data.canwear = true
                         if (getBaseHeavy(heavychoice).heavytags) {
-                            data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                            if (getBaseHeavy(heavychoice).heavytags?.length == 0) {
+                                data["furniture"] = true
+                            }
+                            else {
+                                data[getBaseHeavy(heavychoice).heavytags[0]] = true; // Categorize this by the FIRST tag. 
+                            }
                         }
                         await handleExtremeRestraint(interaction.guildId, interaction.user, targetuser, "heavy", heavychoice).then(
                             async (success) => {

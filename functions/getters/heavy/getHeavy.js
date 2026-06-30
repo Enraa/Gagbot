@@ -7,6 +7,7 @@ const { getBaseHeavy } = require("./getBaseHeavy");
  * - (server ID) serverID - The server this is running on
  * - (user id) user - The user wearing the heavy bondage
  * - (string) type? - If specified, get specific bondage 
+ * - (boolean) includenonbinding? - If true, heavies without a heavytag (such as a chair) can be returned. 
  * ---
  * ##### Returns a heavy bondage object. All Heavy Bondage has:
  * - type: The item ID of the heavy bondage
@@ -14,7 +15,7 @@ const { getBaseHeavy } = require("./getBaseHeavy");
  * - displayname: The display name of this heavy bondage
  * - namedcontainerowner?: User ID included in container checks
  *********/
-function getHeavy(serverID, user, type) {
+function getHeavy(serverID, user, type, includenonbinding) {
     traceFirstParam(arguments[0]);
     if (process.heavy == undefined) {
         process.heavy = {};
@@ -25,6 +26,7 @@ function getHeavy(serverID, user, type) {
     let returnarms;
     let returnlegs;
     let returncontainer;
+    let nonbinding;
     let returnedval;
     if (process.heavy[serverID][user] && (process.heavy[serverID][user].length > 0)) {
         if (!type) {
@@ -48,6 +50,13 @@ function getHeavy(serverID, user, type) {
                     returncontainer = process.heavy[serverID][user].find((heavy) => heavy.type === h.value)
                 }
             })
+            if (includenonbinding) {
+                mapped.forEach((h) => {
+                    if (!h.heavytags || (h.heavytags?.length == 0)) {
+                        nonbinding = process.heavy[serverID][user].find((heavy) => heavy.type === h.value)
+                    }
+                })
+            }
             if (returnarms) {
                 returnedval = returnarms;
             }
@@ -56,6 +65,9 @@ function getHeavy(serverID, user, type) {
             }
             else if (returncontainer) {
                 returnedval = returncontainer;
+            }
+            else if (nonbinding) {
+                returnedval = nonbinding;
             }
         }
         else {
