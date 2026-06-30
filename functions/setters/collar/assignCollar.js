@@ -1,3 +1,4 @@
+const { getCollar } = require("../../getters/collar/getCollar");
 const { markForSave } = require("../../other/markForSave");
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
 
@@ -21,6 +22,7 @@ function assignCollar(serverID, user, keyholder, restraints, only, customcollar)
     if (process.collar[serverID] == undefined) {
 		process.collar[serverID] = {};
 	}
+    let existingcollar = getCollar(serverID, user)
 	process.collar[serverID][user] = { 
         keyholder: keyholder, 
         keyholder_only: only, 
@@ -29,7 +31,8 @@ function assignCollar(serverID, user, keyholder, restraints, only, customcollar)
         heavy: restraints?.heavy, 
         mask: restraints?.mask, 
         collartype: customcollar,
-        timestamp: Date.now()
+        timestamp: existingcollar?.timestamp ?? Date.now(),
+        additionalcollars: existingcollar?.additionalcollars
     };
 	markForSave("collar");
 }

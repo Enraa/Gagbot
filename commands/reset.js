@@ -27,7 +27,7 @@ module.exports = {
                 deleteMitten(interaction.guildId, resetuser.id);
                 removeChastity(interaction.guildId, resetuser.id, undefined, true);
                 removeChastityBra(interaction.guildId, resetuser.id, undefined, true);
-                removeToy(interaction.guildId, resetuser.id, undefined, true)
+                removeToy(interaction.guildId, resetuser.id, undefined, undefined, true)
                 removeCollar(interaction.guildId, resetuser.id);
                 removeHeavy(interaction.guildId, resetuser.id, undefined, true);
                 removeCorset(interaction.guildId, resetuser.id);
@@ -37,7 +37,7 @@ module.exports = {
             } else {
                 if (getServerOption(interaction.guildId, "server-safewordroleid") === "") {
                     // no safeword role was setup. Make the user talk to a mod.
-                    await interaction.reply({ content: "Gagbot looks at your pleas for freedom and smirks as you squirm helplessly. (DM a mod)", flags: MessageFlags.Ephemeral });
+                    await interaction.reply({ content: "Gagbot looks at your pleas for freedom and smirks as you squirm helplessly. It awaits your safeword (from your roles) before it will ever consider listening to them.", flags: MessageFlags.Ephemeral });
                 } else if (getServerOption(interaction.guildId, "server-safewordroleid") && interaction.member.roles.cache.has(getServerOption(interaction.guildId, "server-safewordroleid"))) {
                     // User has the safeword role, we should remove all their restraints because they safeworded
                     await interaction.reply({ content: "Resetting all of your restraints because you are safeworded.", flags: MessageFlags.Ephemeral });
@@ -45,7 +45,7 @@ module.exports = {
                     deleteMitten(interaction.guildId, interaction.user.id);
                     removeChastity(interaction.guildId, interaction.user.id, undefined, true);
                     removeChastityBra(interaction.guildId, interaction.user.id, undefined, true);
-                    removeToy(interaction.guildId, resetuser.id, undefined, true)
+                    removeToy(interaction.guildId, resetuser.id, undefined, undefined, true)
                     removeCollar(interaction.guildId, interaction.user.id);
                     removeHeavy(interaction.guildId, interaction.user.id, undefined, true);
                     removeCorset(interaction.guildId, interaction.user.id);
