@@ -3,9 +3,10 @@
  * 
  ******/
 const garbleText = (text, parent, intensity) => {
+    let removechars = [" ", ",", ".", "'"]
     let output = ""; // radio!
     for(let i = 0; i < text.length; i++) {
-        if (text.charAt(i) != " ") {
+        if (!removechars.includes(text.charAt(i))) {
             output = `${output}${text.charAt(i)}`
         }
     }
