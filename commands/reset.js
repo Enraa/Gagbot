@@ -37,7 +37,7 @@ module.exports = {
             } else {
                 if (getServerOption(interaction.guildId, "server-safewordroleid") === "") {
                     // no safeword role was setup. Make the user talk to a mod.
-                    await interaction.reply({ content: "Gagbot looks at your pleas for freedom and smirks as you squirm helplessly. It awaits your safeword (from your roles) before it will ever consider listening to them.", flags: MessageFlags.Ephemeral });
+                    await interaction.reply({ content: "Gagbot looks at your pleas for freedom and smirks as you squirm helplessly. It awaits your safeword (from your roles) before it will ever consider listening to them, however the moderators have not set up such a role. Contact them about correcting this injustice!", flags: MessageFlags.Ephemeral });
                 } else if (getServerOption(interaction.guildId, "server-safewordroleid") && interaction.member.roles.cache.has(getServerOption(interaction.guildId, "server-safewordroleid"))) {
                     // User has the safeword role, we should remove all their restraints because they safeworded
                     await interaction.reply({ content: "Resetting all of your restraints because you are safeworded.", flags: MessageFlags.Ephemeral });
@@ -54,7 +54,7 @@ module.exports = {
                     setArousalCooldown(interaction.guildId, interaction.user.id);
                 } else {
                     // User does not have the permission, send an error message, but only if they don't have the safeworded role. If they do, then
-                    await interaction.reply({ content: "Please DM a mod about this command if someone needs to be reset.", flags: MessageFlags.Ephemeral });
+                    await interaction.reply({ content: "Gagbot looks at your pleas for freedom and smirks as you squirm helplessly. It awaits your safeword (from your roles) before it will ever consider listening to them.", flags: MessageFlags.Ephemeral });
                 }
             }
         }
