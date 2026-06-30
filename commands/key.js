@@ -1187,7 +1187,7 @@ module.exports = {
                     else {
                         data.textdata.c1 = getBaseCollar(collartype).name
                     }
-                    discardKey(wearertodiscard.id, interaction.user.id, "collar");
+                    discardKey(interaction.guildId, wearertodiscard.id, interaction.user.id, "collar");
                 }
 
                 interaction.reply(getText(data));

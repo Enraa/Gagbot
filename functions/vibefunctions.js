@@ -29,6 +29,7 @@ const { isWearingCollar } = require("./getters/collar/isWearingCollar.js");
 const { messageSendChannel } = require("./messagefunctions.js");
 const { getPronouns } = require("./getters/config/getPronouns.js");
 const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
+const { getProcessVariable } = require("./getters/config/getProcessVariable.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -592,29 +593,29 @@ function updateSharedBreath() {
         let minadjustment = 0.1 * (getBotOption("bot-timetickrate") / 60000)
         for (const serverID in process.headwear) {
             for (const user in process.headwear[serverID]) {
-                if (process.headwear && process.headwear[serverID] && process.headwear[serverID][user] && process.headwear[serverID][user].sharedbreathhose && !processed.includes(process.headwear[serverID][user].sharedbreathhose) && !processed.includes(user)) {
+                if (getProcessVariable(serverID, user, "headwear").sharedbreathhose && !processed.includes(getProcessVariable(serverID, user, "headwear").sharedbreathhose) && !processed.includes(user)) {
                     //console.log(`Adjusting horniness for ${user} to ${process.headwear[user].sharedbreathhose}`)
                     // If both people are wearing the linked gasmask AND have each other designated to share breath...
-                    if (getHeadwear(serverID, user).includes("gasmasklinked") && getHeadwear(serverID, process.headwear[user].sharedbreathhose).includes("gasmasklinked") && 
-                        (user == process.headwear[serverID][process.headwear[user].sharedbreathhose].sharedbreathhose)) {  
+                    if (getHeadwear(serverID, user).includes("gasmasklinked") && getHeadwear(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose).includes("gasmasklinked") && 
+                        (user == getProcessVariable(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose, "headwear").sharedbreathhose)) {  
                         let personA = getArousal(serverID, user)
-                        let personB = getArousal(serverID, process.headwear[user].sharedbreathhose)
+                        let personB = getArousal(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose)
                         let diff = personA - personB;
                         let delta = Math.max(arousalscale * Math.abs(diff), minadjustment);
                         if (diff < 0) {
                             // Person B is hornier, so person A should gain, person B should lose. 
                             addArousal(serverID, user, delta);
-                            addArousal(serverID, process.headwear[serverID][user].sharedbreathhose, -delta)
-                            console.log(`${process.headwear[serverID][user].sharedbreathhose} sharing ${delta} arousal to ${user}`)
+                            addArousal(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose, -delta)
+                            console.log(`${getProcessVariable(serverID, user, "headwear").sharedbreathhose} sharing ${delta} arousal to ${user}`)
                         }
                         else {
                             // Person A is hornier, so person B should gain, person A should lose. 
-                            addArousal(serverID, process.headwear[serverID][user].sharedbreathhose, delta);
+                            addArousal(serverID, getProcessVariable(serverID, user, "headwear").sharedbreathhose, delta);
                             addArousal(serverID, user, -delta)
-                            console.log(`${user} sharing ${delta} arousal to ${process.headwear[serverID][user].sharedbreathhose}`)
+                            console.log(`${user} sharing ${delta} arousal to ${getProcessVariable(serverID, user, "headwear").sharedbreathhose}`)
                         }
                         processed.push(user)
-                        processed.push(process.headwear[serverID][user].sharedbreathhose)
+                        processed.push(getProcessVariable(serverID, user, "headwear").sharedbreathhose)
                     }
                 }
             }
@@ -644,10 +645,6 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
     if ((arousal + growth) > 1000) {
         decay = (decay + ((tickScale * 0.05) * (arousal + growth)))
     }
-
-    console.log(`Gained arousal: ${growth}`)
-    console.log(`Removed arousal: ${decay}`)
-    console.log(`Net gain on arousal: ${growth - decay}`)
     //logConsole(`calcNextArousal: ${growth}, ${noDecay}, ${decay}`, 1);
     logConsole(`calcNextArousal: ${bounded((traits.minArousal ?? 0), noDecay - decay, (traits.maxArousal ?? 9999999))}`, 1);
     return bounded(traits.minArousal, noDecay - decay, traits.maxArousal);
