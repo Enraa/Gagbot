@@ -17,6 +17,7 @@ function cloneChastityKey(serverID, chastityuser, newKeyholder) {
     if (!chastity.clonedKeyholders) {
         chastity.clonedKeyholders = [];
     }
+    chastity.clonedKeyholders.push(newKeyholder);
     markForSave("chastity");
 };
 
