@@ -9,7 +9,7 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  * ##### Returns an array of cloned chastity bra keys in the format "0000000000000000_00000000000000000" where the first set of 0s 
  * ##### is the person wearing the restraint, and the second set is the person holding the key clone.
  **********/
-function getOtherKeysChastityBra(userID) {
+function getOtherKeysChastityBra(serverID, userID) {
     traceFirstParam(arguments[0]);
     if (process.chastitybra == undefined) {
 		process.chastitybra = {};
