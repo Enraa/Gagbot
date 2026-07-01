@@ -6,6 +6,7 @@ const { getUserTags } = require("./getters/config/getUserTags.js");
 const { getGag } = require("./getters/gag/getGag.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
 const { getHeavy } = require("./getters/heavy/getHeavy.js");
+const { getWearable } = require("./getters/wearable/getWearable.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
 
 const texts_chastity = {

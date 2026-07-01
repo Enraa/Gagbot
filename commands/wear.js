@@ -67,6 +67,7 @@ module.exports = {
                 serverID: interaction.guildId, 
 				textarray: "texts_wear",
 				textdata: {
+                    serverID: interaction.guildId,
 					interactionuser: interaction.user,
 					targetuser: wearableuser,
 					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
