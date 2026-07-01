@@ -4,7 +4,7 @@ const { calculatecapture, checkUserEventsForSpheres, doSphereTick } = require(".
 
 let tick = async (serverID, userID, datain) => {
     checkUserEventsForSpheres(serverID, userID);
-    doSphereTick(serverID, userID, "capture_sphere_ultra", 2.0);
+    await doSphereTick(serverID, userID, "capture_sphere_ultra", 2.0);
 }
 
 // Called when the item is removed. Only implemented for heavy bondage presently.

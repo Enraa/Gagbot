@@ -11,7 +11,7 @@ const { calculatecapture } = require("./capture_sphere.js") // reuse the calcula
 
 let tick = async (serverID, userID, datain) => {
     checkUserEventsForSpheres(serverID, userID);
-    doSphereTick(serverID, userID, "capture_sphere_master", 10000.0);
+    await doSphereTick(serverID, userID, "capture_sphere_master", 10000.0);
 }
 
 // Called when the item is removed. Only implemented for heavy bondage presently.

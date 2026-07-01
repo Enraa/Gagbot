@@ -92,7 +92,7 @@ function calculatecapture(serverID, userid, ballbonusnum = 1.0) {
 
 let tick = async (serverID, userID, datain) => {
     checkUserEventsForSpheres(serverID, userID);
-    doSphereTick(serverID, userID, "capture_sphere", 1.0);
+    await doSphereTick(serverID, userID, "capture_sphere", 1.0);
 }
 
 /**********
@@ -121,7 +121,7 @@ function checkUserEventsForSpheres(serverID, userID){
  * ---
  * ##### No return value.
  **********/
-function doSphereTick(serverID, userID, sphereType, captureRate){
+async function doSphereTick(serverID, userID, sphereType, captureRate) {
     if (getProcessVariable(serverID, userID, "userevents").capturesphere == undefined) {
         getProcessVariable(serverID, userID, "userevents").capturesphere = { 
             capture: calculatecapture(serverID, userID, captureRate), 
