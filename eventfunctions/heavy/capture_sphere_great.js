@@ -9,6 +9,9 @@ const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy")
 const { getText } = require("../../functions/textfunctions")
 const { calculatecapture } = require("./capture_sphere.js") // reuse the calculation!
 
+// This is because I wanted to keep the code somewhat equal. but needed to differentiate the capture sphere types.
+const CAPTURE_SPHERE_CODE_NAME = "capture_sphere_great";
+
 let tick = async (serverID, userID, datain) => {
     if (getProcessVariable(serverID, userID, "userevents") == undefined) {
         setProcessVariable(serverID, userID, "userevents", {});
@@ -43,6 +46,7 @@ let tick = async (serverID, userID, datain) => {
     let data = {
         textarray: "texts_eventfunctions",
         textdata: {
+            serverID: serverID,
             interactionuser: userobject,
             targetuser: targetobject,
             c1: getProcessVariable(serverID, userID, "userevents").capturesphere.ballname
@@ -65,7 +69,7 @@ let tick = async (serverID, userID, datain) => {
             else {
                 data[`wigglefail${getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress}`] = true
                 messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
-                removeHeavy(serverID, userID, "capture_sphere");
+                removeHeavy(serverID, userID, CAPTURE_SPHERE_CODE_NAME);
                 return;
             }
         }
@@ -102,7 +106,7 @@ let tick = async (serverID, userID, datain) => {
                 // This broke free on the third wiggle. 
                 data.wigglefail2 = true;
                 messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
-                removeHeavy(serverID, userID, "capture_sphere");
+                removeHeavy(serverID, userID, CAPTURE_SPHERE_CODE_NAME);
                 return;
             }
         }
@@ -120,6 +124,7 @@ let functiononremove = async (serverID, userID) => {
     setUserVar(serverID, userID, "captureSphereCaptured", undefined)
     delete getProcessVariable(serverID, userID, "userevents").capturesphere;
 }
+
 
 exports.tick = tick;
 exports.functiononremove = functiononremove;

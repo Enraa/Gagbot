@@ -123,6 +123,7 @@ let tick = async (serverID, userID, datain) => {
     let data = {
         textarray: "texts_eventfunctions",
         textdata: {
+            serverID: serverID,
             interactionuser: userobject,
             targetuser: targetobject,
             c1: getProcessVariable(serverID, userID, "userevents").capturesphere.ballname
