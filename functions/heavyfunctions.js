@@ -210,6 +210,12 @@ const heavytypes = [
     { name: "Metal Chair", value: "furniture_chair_metal", tags: [], denialCoefficient: 1, heavytags: [] },
     { name: "Computer Chair", value: "furniture_chair_computer", tags: [], denialCoefficient: 1, heavytags: [] },
     { name: "Table", value: "furniture_table", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Comfy Cloud", value: "furniture_cloud_comfy", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Beanbag Chair", value: "furniture_chair_beanbag", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Pony Stable", value: "furniture_ponystable", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Unicycle", value: "furniture_unicycle", tags: [], denialCoefficient: 1, heavytags: [] }, // but why tho
+    { name: "Hover Chair", value: "furniture_chair_hover", tags: [], denialCoefficient: 1, heavytags: [] },
+    { name: "Crane Arm", value: "furniture_crane_arm", tags: [], denialCoefficient: 1, heavytags: [] }, // Is this really... non-restrictive?
 
 	// Heavy Restraints with unique name functions
 	{
