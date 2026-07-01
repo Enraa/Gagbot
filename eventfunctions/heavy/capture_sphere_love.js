@@ -13,12 +13,13 @@ const { setProcessVariable } = require("../../functions/setters/config/setProces
 const { setUserVar } = require("../../functions/setters/config/setUserVar")
 const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy")
 const { getText } = require("../../functions/textfunctions")
-const { calculatecapture } = require("./capture_sphere.js") // reuse the calculation!
+const { calculatecapture, checkUserEventsForSpheres } = require("./capture_sphere.js") // reuse the calculation!
 
+
+// I can't think of a really clean way to use the doSphereTick function here, so I'll leave this for now.
 let tick = async (serverID, userID, datain) => {
-    if (getProcessVariable(serverID, userID, "userevents") == undefined) {
-        setProcessVariable(serverID, userID, "userevents", {});
-    }
+    checkUserEventsForSpheres(serverID, userID);
+
     if (getProcessVariable(serverID, userID, "userevents").capturesphere == undefined) {
         let capturerate = 1.0;
         let origbinder = getHeavy(serverID, userID)?.origbinder ?? 0;
@@ -85,7 +86,7 @@ let tick = async (serverID, userID, datain) => {
             else {
                 data[`wigglefail${getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress}`] = true
                 messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
-                removeHeavy(serverID, userID, "capture_sphere");
+                removeHeavy(serverID, userID, "capture_sphere_love");
                 return;
             }
         }
@@ -122,7 +123,7 @@ let tick = async (serverID, userID, datain) => {
                 // This broke free on the third wiggle. 
                 data.wigglefail2 = true;
                 messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
-                removeHeavy(serverID, userID, "capture_sphere");
+                removeHeavy(serverID, userID, "capture_sphere_love");
                 return;
             }
         }
