@@ -111,15 +111,15 @@ function checkUserEventsForSpheres(serverID, userID){
 }
 
 /**********
- * Generates a random time for Gagbot to hold a key, based on the users gagbotholdtimer option.
- * This is a random time between 40% and 100% and shouldn't prefer the 40% like the old approach did.
+ * Does the actual tick logic for the capture sphere. Used by nearly all capture sphere types to remove code duplication.
+ * Needs the sphere type and capture rate only on the first tick, as the rest of the ticks will use the stored data in the process variable.
  * 
  * - (server id) serverID - The server this is running on
  * - (user id) userID - The user this is running for
  * - (string) sphereType - The code name for the sphere.
  * - (number) captureRate - Used to calculate the capture chance for the sphere.
  * ---
- * ##### No return value.
+ * ##### Async, No return value.
  **********/
 async function doSphereTick(serverID, userID, sphereType, captureRate) {
     if (getProcessVariable(serverID, userID, "userevents").capturesphere == undefined) {
