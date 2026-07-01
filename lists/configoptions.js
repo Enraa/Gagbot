@@ -224,6 +224,13 @@ const configoptions = {
 					style: ButtonStyle.Secondary,
 				},
                 {
+					name: "Pet",
+					helptext: "Good **Pet!**",
+					select_function: (serverID, userID) => { return true },
+					value: "pet",
+					style: ButtonStyle.Secondary,
+				},
+                {
 					name: "Doll",
 					helptext: "Good **Doll.**",
 					select_function: (serverID, userID) => { return true },
