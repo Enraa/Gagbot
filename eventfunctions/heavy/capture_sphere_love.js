@@ -9,6 +9,7 @@ const { getRecentChannel } = require("../../functions/getters/config/getRecentCh
 const { getUserVar } = require("../../functions/getters/config/getUserVar")
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy")
 const { messageSendChannel } = require("../../functions/messagefunctions")
+const { setProcessVariable } = require("../../functions/setters/config/setProcessVariable.js")
 const { setUserVar } = require("../../functions/setters/config/setUserVar")
 const { removeHeavy } = require("../../functions/setters/heavy/removeHeavy")
 const { getText } = require("../../functions/textfunctions")
