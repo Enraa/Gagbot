@@ -21,17 +21,17 @@ let tick = async (serverID, userID, datain) => {
     }
     if (getProcessVariable(serverID, userID, "userevents").capturesphere == undefined) {
         let capturerate = 1.0;
-        let origbinder = getHeavy(userID)?.origbinder ?? 0;
+        let origbinder = getHeavy(serverID, userID)?.origbinder ?? 0;
         // If the person who bound this person has a key to the target, do the original
         // love sphere effect. Not doing gender shenanigans. Too gay for that.
         // Only apply this if they did NOT capture themselves with it lol 
         if (origbinder != userID) {
-            if (getChastity(userID)?.keyholder == origbinder) { capturerate = 8.0 }
-            if (getChastityBra(userID)?.keyholder == origbinder) { capturerate = 8.0 }
-            if (getCollar(userID)?.keyholder == origbinder) { capturerate = 8.0 }
-            if (getClonedChastityKey(userID).includes(origbinder)) { capturerate = 8.0 }
-            if (getClonedChastityBraKey(userID).includes(origbinder)) { capturerate = 8.0 }
-            if (getClonedCollarKey(userID).includes(origbinder)) { capturerate = 8.0 }
+            if (getChastity(serverID, userID)?.keyholder == origbinder) { capturerate = 8.0 }
+            if (getChastityBra(serverID, userID)?.keyholder == origbinder) { capturerate = 8.0 }
+            if (getCollar(serverID, userID)?.keyholder == origbinder) { capturerate = 8.0 }
+            if (getClonedChastityKey(serverID, userID).includes(origbinder)) { capturerate = 8.0 }
+            if (getClonedChastityBraKey(serverID, userID).includes(origbinder)) { capturerate = 8.0 }
+            if (getClonedCollarKey(serverID, userID).includes(origbinder)) { capturerate = 8.0 }
         }
         getProcessVariable(serverID, userID, "userevents").capturesphere = { 
             capture: calculatecapture(serverID, userID, capturerate), 
