@@ -5974,7 +5974,7 @@ function getTextGeneric(type, data_in) {
         ],
         remotecontrolshock_self_playful: [
             `USER_TAG presses a button and gasps in delight as USER_THEIR collar gives a telltale sound and an adrenaline inducing shock!`,
-            `USER_TAG twists USER_THEIR body at the sensation as USER_THEY pressUSER_S the button on USER_THEIR shock collar!`,
+            `USER_TAG twists USER_THEIR body at the sensation as USER_THEY pressUSER_ES the button on USER_THEIR shock collar!`,
             {
                 required: (t) => {
                     !getGag(t.serverID, t.interactionuser.id)
