@@ -15,6 +15,7 @@ const { getCorset } = require("../../functions/getters/corset/getCorset")
 const { getGag } = require("../../functions/getters/gag/getGag")
 const { getHeadwearRestrictions } = require("../../functions/getters/headwear/getHeadwearRestrictions")
 const { getHeavy } = require("../../functions/getters/heavy/getHeavy")
+const { getHeavyName } = require("../../functions/getters/heavy/getHeavyName")
 const { getMitten } = require("../../functions/getters/mitten/getMitten")
 const { messageSendChannel } = require("../../functions/messagefunctions")
 const { setProcessVariable } = require("../../functions/setters/config/setProcessVariable")
@@ -93,10 +94,25 @@ let tick = async (serverID, userID, datain) => {
     if (getProcessVariable(serverID, userID, "userevents") == undefined) {
         setProcessVariable(serverID, userID, "userevents", {});
     }
+    await doSphereTick(serverID, userID, "capture_sphere", 1.0);
+}
+
+/**********
+ * Does the actual tick logic for the capture sphere. Used by nearly all capture sphere types to remove code duplication.
+ * Needs the sphere type and capture rate only on the first tick, as the rest of the ticks will use the stored data in the process variable.
+ * 
+ * - (server id) serverID - The server this is running on
+ * - (user id) userID - The user this is running for
+ * - (string) sphereType - The code name for the sphere.
+ * - (number) captureRate - Used to calculate the capture chance for the sphere.
+ * ---
+ * ##### Async, No return value.
+ **********/
+async function doSphereTick(serverID, userID, sphereType, captureRate) {
     if (getProcessVariable(serverID, userID, "userevents").capturesphere == undefined) {
         getProcessVariable(serverID, userID, "userevents").capturesphere = { 
-            capture: calculatecapture(serverID, userID, 1.0), 
-            ballname: "Capture Sphere",
+            capture: calculatecapture(serverID, userID, captureRate), 
+            ballname: getHeavyName(sphereType),
             captureprogress: -1,
             nextupdate: Date.now() + 2000
         } 
@@ -123,6 +139,7 @@ let tick = async (serverID, userID, datain) => {
     let data = {
         textarray: "texts_eventfunctions",
         textdata: {
+            serverID: serverID,
             interactionuser: userobject,
             targetuser: targetobject,
             c1: getProcessVariable(serverID, userID, "userevents").capturesphere.ballname
@@ -145,7 +162,7 @@ let tick = async (serverID, userID, datain) => {
             else {
                 data[`wigglefail${getProcessVariable(serverID, userID, "userevents").capturesphere.captureprogress}`] = true
                 messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid)
-                removeHeavy(serverID, userID, "capture_sphere");
+                removeHeavy(serverID, userID, sphereType);
                 return;
             }
         }
@@ -182,7 +199,7 @@ let tick = async (serverID, userID, datain) => {
                 // This broke free on the third wiggle. 
                 data.wigglefail2 = true;
                 messageSendChannel(getText(data), getRecentChannel(serverID, userID).channelid);
-                removeHeavy(serverID, userID, "capture_sphere");
+                removeHeavy(serverID, userID, sphereType);
                 return;
             }
         }
@@ -204,3 +221,4 @@ let functiononremove = async (serverID, userID) => {
 exports.calculatecapture = calculatecapture;
 exports.tick = tick;
 exports.functiononremove = functiononremove;
+exports.doSphereTick = doSphereTick;
