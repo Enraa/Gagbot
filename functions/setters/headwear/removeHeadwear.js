@@ -12,7 +12,7 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  * ---
  * ##### *No return value*
  **********/
-function deleteHeadwear(serverID, userID, headwear, force = true) {
+function deleteHeadwear(serverID, userID, headwear, force = false) {
     traceFirstParam(arguments[0]);
     if (process.headwear == undefined) {
         process.headwear = {};
