@@ -23,12 +23,17 @@ function removeHeavy(serverID, user, type, force) {
         if (type) {
             let find = process.heavy[serverID][user].findIndex((h) => h.type === type)
             if (find > -1) {
-                tryToCallOnRemoveFunction(serverID, user, type);
+                if (type && process.eventfunctions && process.eventfunctions.heavy && process.eventfunctions.heavy[type] && process.eventfunctions.heavy[type].functiononremove) {
+                    process.eventfunctions.heavy[type].functiononremove(serverID, user);
+                }
                 process.heavy[serverID][user].splice(find,1);
             }
         }
         else {
-            tryToCallOnRemoveFunction(serverID, user, process.heavy[serverID][user][0].type);
+            let itype = process.heavy[serverID][user][0].type;
+            if (itype && process.eventfunctions && process.eventfunctions.heavy && process.eventfunctions.heavy[itype] && process.eventfunctions.heavy[itype].functiononremove) {
+                process.eventfunctions.heavy[itype].functiononremove(serverID, user);
+            }
             process.heavy[serverID][user].splice(0,1);
         }
     }
@@ -37,7 +42,10 @@ function removeHeavy(serverID, user, type, force) {
         // Let's check if there is still heavy bondage on the user and if it's force. If so, let's call the functiononremove for each heavy bondage still here.
         if(process.heavy[serverID][user]?.length != 0 && force) {
             for(let i = 0; i < process.heavy[serverID][user]?.length; i++) {
-                tryToCallOnRemoveFunction(serverID, user, process.heavy[serverID][user][i].type);
+                let itype = process.heavy[serverID][user][i].type;
+                if (itype && process.eventfunctions && process.eventfunctions.heavy && process.eventfunctions.heavy[itype] && process.eventfunctions.heavy[itype].functiononremove) {
+                    process.eventfunctions.heavy[itype].functiononremove(serverID, user);
+                }
             }
         }
 
@@ -45,11 +53,5 @@ function removeHeavy(serverID, user, type, force) {
     }
 	markForSave("heavy");
 };
-
-function tryToCallOnRemoveFunction(serverID, user, type) {
-    if (type && process.eventfunctions && process.eventfunctions.heavy && process.eventfunctions.heavy[type] && process.eventfunctions.heavy[type].functiononremove) {
-        process.eventfunctions.heavy[type].functiononremove(serverID, user);
-    }
-}
 
 exports.removeHeavy = removeHeavy;

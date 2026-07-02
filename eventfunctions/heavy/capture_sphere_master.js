@@ -1,9 +1,12 @@
-const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js")
+const { getProcessVariable } = require("../../functions/getters/config/getProcessVariable.js");
+const { setProcessVariable } = require("../../functions/setters/config/setProcessVariable.js");
 const { setUserVar } = require("../../functions/setters/config/setUserVar")
-const { calculatecapture, checkUserEventsForSpheres, doSphereTick } = require("./capture_sphere.js") // reuse the calculation!
+const { calculatecapture, doSphereTick } = require("./capture_sphere.js") // reuse the calculation!
 
 let tick = async (serverID, userID, datain) => {
-    checkUserEventsForSpheres(serverID, userID);
+    if (getProcessVariable(serverID, userID, "userevents") == undefined) {
+        setProcessVariable(serverID, userID, "userevents", {});
+    }
     await doSphereTick(serverID, userID, "capture_sphere_master", 10000.0);
 }
 

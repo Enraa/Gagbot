@@ -91,23 +91,10 @@ function calculatecapture(serverID, userid, ballbonusnum = 1.0) {
 }
 
 let tick = async (serverID, userID, datain) => {
-    checkUserEventsForSpheres(serverID, userID);
-    await doSphereTick(serverID, userID, "capture_sphere", 1.0);
-}
-
-/**********
- * Check the "userevents" process variable for the user and create it if it doesn't exist.
- * This is used to track the capture sphere events for the user.
- * 
- * - (server id) serverID - The server this is running on
- * - (user id) userID - The user this is running for
- * ---
- * ##### No return value.
- **********/
-function checkUserEventsForSpheres(serverID, userID){
     if (getProcessVariable(serverID, userID, "userevents") == undefined) {
         setProcessVariable(serverID, userID, "userevents", {});
     }
+    await doSphereTick(serverID, userID, "capture_sphere", 1.0);
 }
 
 /**********
@@ -234,5 +221,4 @@ let functiononremove = async (serverID, userID) => {
 exports.calculatecapture = calculatecapture;
 exports.tick = tick;
 exports.functiononremove = functiononremove;
-exports.checkUserEventsForSpheres = checkUserEventsForSpheres;
 exports.doSphereTick = doSphereTick;
