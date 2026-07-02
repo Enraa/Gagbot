@@ -34,14 +34,14 @@ exports.fumble = (data) => { return 0 };
 exports.discard = (data) => { return () => { return false }}
 
 // Action when equipping
-exports.onEquip = (data) => { addArousal(data.serverID, data.userID, 0.2) }; // hopefully enough to jumpstart, if not oh well
+exports.onEquip = (data) => { addArousal(data.serverID, data.userID, 1.0) }; // hopefully enough to jumpstart, if not oh well
 
 // Calculation for effective arousal
 // Note, this should be used for checks more focused around the vibe - it will be
 // further multiplied by the chastity's checks for this, if applicable. 
 exports.calcVibeEffect = function (data) { 
     if (getChastity(data.serverID, data.userID)) {
-        return data.intensity * (this.vibescale() * 0.25) // 25% effectiveness if in chastity
+        return data.intensity * (this.vibescale() * 0.35) // 25% effectiveness if in chastity
     }
     else {
         return data.intensity * this.vibescale()

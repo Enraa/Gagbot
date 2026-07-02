@@ -58,7 +58,6 @@ function getHeavyRestrictions(serverID, user) {
                 if (heavy.namedcontainerowner) { returnobject.touchlist.push(heavy.namedcontainerowner) }
             }
         })
-        console.log(returnobject.touchlist);
         return returnobject;
     }
 }

@@ -10,7 +10,7 @@ const { getChastity } = require("../../functions/getters/chastity/getChastity")
 exports.calcVibeEffect = function (data) { 
     if (getChastity(data.serverID, data.userID)) {
         // 25% effectiveness if in chastity
-        return (data.intensity * (this.vibescale() * 0.25) * 3.0 * ((performance.now() % 300000) / 300000))
+        return (data.intensity * (this.vibescale() * 0.35) * 3.0 * ((performance.now() % 300000) / 300000))
     }
     else {
         return (data.intensity * this.vibescale() * 3.0 * ((performance.now() % 300000) / 300000))

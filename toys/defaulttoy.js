@@ -40,6 +40,9 @@ function Toy() {
     // Action when equipping
     this.onEquip = (data) => { return true };
 
+    // Action when unequipping
+    this.onUnequip = (data) => { return true };
+
     // Calculation for effective arousal change
     // Note, this should be used for checks more focused around the vibe - it will be
     // further multiplied by the chastity's checks for this, if applicable. 

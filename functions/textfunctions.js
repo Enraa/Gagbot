@@ -2530,7 +2530,13 @@ const texts_toy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off...`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG boops USER_THEIR head on a VAR_C2, but can't get it on USER_THEIR head...`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -2567,7 +2573,13 @@ const texts_toy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG bats around a piece of ice, but can't fanagle it onto USER_THEMSELF to cool off... (this is a bug, please report)`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG boops USER_THEIR head on a VAR_C2, but can't get it on USER_THEIR head... (this is a bug, please report)`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to add it! (This is a bug, report)`
@@ -2594,7 +2606,13 @@ const texts_toy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG bats around a piece of ice, but can't fanagle it onto TARGET_TAG to cool TARGET_THEM off...`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG boops USER_THEIR head on a VAR_C2, but can't get it on TARGET_TAG's head...`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to add a VAR_C2 to TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -2689,7 +2707,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, moaning in delight at the sensations!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -2729,7 +2753,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to place some ice but... can't? (this is a bug, please report)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head - but some dimensional imp steals it away! (this is a bug, please report)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to adjust USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -2755,7 +2785,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a new piece of ice onto USER_THEIR crotch!`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, shivering in delight at the wonderful sensations!`,
+                        },
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting USER_THEIR VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -2842,7 +2878,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, shivering in delight at the wonderful sensations!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -2888,7 +2930,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG takes a piece of ice to apply to USER_THEMSELF, but can't? (This is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, but a magical demon stops them (this is a bug, report)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to add a VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -2914,7 +2962,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a piece of ice onto USER_THEIR crotch, cooling USER_THEM off harshly, but effectively...`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on USER_THEIR head, shivering in delight at the wonderful sensations!`,
+                        },
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting on a VAR_C2 at VAR_C3 power! (This is a bug, report!)`
@@ -2991,7 +3045,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -3031,7 +3091,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG grabs a new piece of ice to put on TARGET_TAG, but can't because of unforeseen magic. (this is a bug, report)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, but a hot dog truck distracted both of them. (this is a bug, report)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to adjust TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -3057,7 +3123,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a new piece of ice onto TARGET_TAG's crotch, the cruel coldness briskly bringing clarity back...`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                        },
                     ],
                     default: [
                         `USER_TAG causes fuzzy shifting in the universe adjusting TARGET_TAG's VAR_C2 to VAR_C3! (This is a bug, report!)`
@@ -3132,7 +3204,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -3172,7 +3250,13 @@ const texts_toy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to place a piece of ice on TARGET_TAG, but can't! (this is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head... but some unseen force stops USER_THEM. (this is a bug report!)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to add a VAR_C2 to TARGET_TAG, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -3198,7 +3282,13 @@ const texts_toy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG places a piece of ice onto TARGET_TAG's crotch, cooling TARGET_THEM off...`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly lowers a VAR_C2 on TARGET_TAG's head, smiling as TARGET_THEY makeTARGET_S soft sounds of pleasure!`,
+                        },
                     ],
                     default: [
                         `USER_TAG potentially summons a black hole putting a VAR_C2 on TARGET_TAG at VAR_C3! (This is a bug, report!)`
@@ -4121,7 +4211,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice on USER_THEIR crotch... but can't grip it without hands!`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG tries to put a VAR_C2 on TARGET_TAG's head, but fumbles and drops the tool!`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to take off USER_THEIR VAR_C2, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -4152,7 +4248,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG attempts to remove the VAR_C2 but... something stops USER_THEM? (this is a bug!)`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove USER_THEIR VAR_C2 from USER_THEMSELF, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -4179,7 +4281,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice on TARGET_TAG's crotch... but can't grip it without hands!`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG tries to remove the VAR_C2 from TARGET_TAG's head but fails to get a good grip on it.`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove the VAR_C2 on TARGET_TAG, but can't because of USER_THEIR VAR_C1! (This is a bug, report)`
@@ -4204,7 +4312,13 @@ const texts_untoy = {
                             return (t.c2 == "Ice")
                         },
                         text: `USER_TAG tries to remove the ice, but is blocked for some reason?! (this is a bug, report!)`,
-                    }
+                    },
+                    {
+                        only: (t) => {
+                            return (t.c2 == "Scalp Massager")
+                        },
+                        text: `USER_TAG tries to remove the VAR_C2 but a hot dog truck stops USER_THEM. (this is a bug, report!)`,
+                    },
                 ],
                 default: [
                     `USER_TAG attempts to use reality defying magic to remove a VAR_C2 from TARGET_TAG, but even if USER_THEY USER_WERE not in a VAR_C1, USER_THEY wouldn't be able to remove it! (This is a bug, report)`
@@ -4282,7 +4396,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG slowly removes the VAR_C2 from atop USER_THEIR head.`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -4334,7 +4454,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to remove the ice but can't?! (This is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG attempts to displace the VAR_C2, but some magic said no. (This is a bug, report!)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to remove USER_THEIR VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -4360,7 +4486,13 @@ const texts_untoy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG removes the frigid ice from USER_THEIR crotch!`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG slowly removes the VAR_C2 from atop USER_THEIR head.`,
+                        },
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from USER_THEM! (This is a bug, report)`
@@ -4440,7 +4572,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG finally removes the amazing feeling VAR_C2 from TARGET_TAG's head.`,
+                            },
                         ],
                         default: {
                             fumble: {
@@ -4480,7 +4618,13 @@ const texts_untoy = {
                                     return (t.c2 == "Ice")
                                 },
                                 text: `USER_TAG tries to remove the ice from TARGET_TAG... but can't access it somehow. (this is a bug, report!)`,
-                            }
+                            },
+                            {
+                                only: (t) => {
+                                    return (t.c2 == "Scalp Massager")
+                                },
+                                text: `USER_TAG tries to remove the VAR_C2 from TARGET_TAG but somehow can't touch it. (report!)`,
+                            },
                         ],
                         default: [
                             `USER_TAG tries to remove TARGET_TAG's VAR_C2, but some kind of reality-defying magic prevents USER_THEM! (This is a bug, report)`
@@ -4506,7 +4650,13 @@ const texts_untoy = {
                                 return (t.c2 == "Ice")
                             },
                             text: `USER_TAG removes the frigid ice from TARGET_TAG's crotch!`,
-                        }
+                        },
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Scalp Massager")
+                            },
+                            text: `USER_TAG finally removes the amazing feeling VAR_C2 from TARGET_TAG's head.`,
+                        },
                     ],
                     default: [
                         `USER_TAG materializes a tear in reality to remove the VAR_C2 from TARGET_TAG! (This is a bug, report)`

@@ -28,7 +28,6 @@ module.exports = {
             const focusedValue = interaction.options.getFocused();
             let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
             let autocompletes = process.autocompletes.toys;
-            console.log(autocompletes)
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
@@ -335,7 +334,6 @@ module.exports = {
                     }
                 }
             }
-            console.log(data);
         }
         catch (err) {
             console.log(err);

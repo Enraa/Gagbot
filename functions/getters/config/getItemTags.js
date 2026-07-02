@@ -15,7 +15,7 @@ const { getBaseWearable } = require("../wearable/getBaseWearable");
  * ---
  * ##### Returns an array of string tags that at least one item contains. 
  ***********/
-function getItemTags(items) {
+function getItemTags(items, suppresserror = false) {
     let itemarr = items;
     if (!Array.isArray(items)) {
         itemarr = [items]
