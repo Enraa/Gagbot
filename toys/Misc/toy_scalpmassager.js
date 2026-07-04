@@ -3,7 +3,7 @@
 const { getHeadwearRestrictions } = require("../../functions/getters/headwear/getHeadwearRestrictions")
 
 // Provides a relaxing sensation but only if the wearer is not wearing a full head covering gear (canEmote)
-exports.vibescale = (data) => { return 0.35 }
+exports.vibescale = (data) => { return 0.18 }
 
 exports.calcVibeEffect = function (data) { 
     if (!getHeadwearRestrictions(data.serverID, data.userID).canEmote) {
