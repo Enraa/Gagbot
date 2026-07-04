@@ -1,4 +1,5 @@
 const { SlashCommandBuilder, MessageFlags } = require("discord.js");
+const { modifymessage } = require("../functions/gagfunctions");
 
 let ballanswers = [
     `It is certain`,
@@ -34,6 +35,7 @@ module.exports = {
             // Validate that the choice we received is on the premade autocompletes list!
 			let questiontext = interaction.options.getString("question");
             if (questiontext && questiontext.length > 0) {
+                questiontext = await modifymessage({ content: questiontext, guildId: interaction.guildId, author: interaction.user, member: interaction.member, guild: interaction.guild }, undefined, true)
                 questiontext = `${interaction.user} asked the question: ${questiontext}\n\n`
             }
             else {
