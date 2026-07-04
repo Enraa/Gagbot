@@ -584,7 +584,7 @@ const assignMemeImages = () => {
 			memeimages.push({ name: i.slice(0, -4), value: i.slice(0, -4) });
 		}
 	});
-	process.memes = memeimages;
+	process.autocompletes.memes = memeimages;
 };
 
 // Returns a blocking function which can be awaited

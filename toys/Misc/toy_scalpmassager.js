@@ -7,10 +7,10 @@ exports.vibescale = (data) => { return 0.35 }
 
 exports.calcVibeEffect = function (data) { 
     if (!getHeadwearRestrictions(data.serverID, data.userID).canEmote) {
-        return data.intensity * 0.4 * (this.vibescale(data) * 0.40) // 40% effectiveness if wearing covering headgear. 
+        return (10 * (this.vibescale(data) * 0.40)) // 40% effectiveness if wearing covering headgear. 
     }
     else {
-        return data.intensity * 0.4 * this.vibescale(data)
+        return (10 * this.vibescale(data))
     }
 }
 
