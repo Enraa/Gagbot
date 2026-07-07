@@ -777,7 +777,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             if (process.headwear[serverID][inspectuserID]) { lockedheadgears = Object.keys(process.headwear[serverID][inspectuserID]) }
             lockedheadgears.forEach((lh) => {
                 if (process.headwear[serverID][inspectuserID][lh] && process.headwear[serverID][inspectuserID][lh]?.lockable && process.headwear[serverID][inspectuserID][lh]?.origbinder) {
-                    wearingtext = `${wearingtext}\n-# ‎   - **${process.headtypes[lh].name}** key held by <@${process.headwear[inspectuserID][lh].origbinder}>`
+                    wearingtext = `${wearingtext}\n-# ‎   - **${process.headtypes[lh].name}** key held by <@${process.headwear[serverID][inspectuserID][lh].origbinder}>`
                 }
             })
         }
