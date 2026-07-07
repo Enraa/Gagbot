@@ -2,7 +2,7 @@ const { collartypes } = require("../../collarfunctions.js");
 const { outfitslist } = require("./../../../lists/outfitslist.js");
 const { getItemName } = require("./getItemName.js");
 const { getItemTags } = require("./getItemTags.js");
-const { userHasTags } = require("./UserHasTags.js");
+const { userHasTags } = require("./userHasTags.js");
 
 /***********
  * Outputs a random outfit, with colors assigned for each wearable, if specified. Will check for and respect user tags.
