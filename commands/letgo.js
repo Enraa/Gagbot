@@ -9,7 +9,7 @@ const { getChastity } = require("../functions/getters/chastity/getChastity.js");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
 const { isWearingCollar } = require("../functions/getters/collar/isWearingCollar.js");
 const { getCurrentHoliday } = require("../functions/events/getCurrentHoliday.js");
-const { holidayNNNLetGoPrompt } = require("../functions/events/holidayNNNletgoprompt.js");
+const { holidayNNNLetGoPrompt } = require("../functions/events/holidayNNNLetGoPrompt.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
