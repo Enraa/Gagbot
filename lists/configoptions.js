@@ -191,6 +191,31 @@ const configoptions = {
 				return false;
 			}, // if true, button is greyed out
 		},
+        holidayevents: {
+			name: "Holiday Events",
+			desc: "Would you want to participate in holiday events such as Locktober or No Nut November?",
+			choices: [
+				{
+					name: "Yes",
+					helptext: "Participating in holiday events",
+					select_function: (serverID, userID) => { return true },
+					value: "participate",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "No",
+					helptext: "Not interested in holiday events",
+					select_function: (serverID, userID) => { return true },
+					value: "noholidays",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "participate",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
         praiseobject: {
 			name: "Praise Object",
 			desc: "When the bot praises you, what noun should it use?",

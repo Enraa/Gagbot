@@ -5,4 +5,4 @@ exports.denialCoefficient = (data) => { return 6 }
 exports.name = "Ancient Chastity Bra"
 
 // Tags
-exports.tags = ["chastity"]
+exports.tags = ["chastity", "metal"]

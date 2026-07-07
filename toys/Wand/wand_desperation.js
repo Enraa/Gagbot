@@ -11,7 +11,7 @@ exports.vibescale = (data) => { return 0.4 }
 exports.calcVibeEffect = function (data) { 
     if (getChastity(data.serverID, data.userID)) {
         // Can be 0, 1, 2, 4, all the way up to 20x. This makes this do the full function at 1 full day if 20x.
-        let frustrationmult = getOption(serverID, user, "frustration");
+        let frustrationmult = getOption(data.serverID, data.user, "frustration");
         if (frustrationmult == 0) {
             frustrationmult = 1;
         }

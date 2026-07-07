@@ -8,6 +8,8 @@ const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
 const { getChastity } = require("../functions/getters/chastity/getChastity.js");
 const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js");
 const { isWearingCollar } = require("../functions/getters/collar/isWearingCollar.js");
+const { getCurrentHoliday } = require("../functions/events/getCurrentHoliday.js");
+const { holidayNNNLetGoPrompt } = require("../functions/events/holidayNNNletgoprompt.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -32,33 +34,72 @@ module.exports = {
 				},
 			};
 
+            let nonut = false;
+            if (getCurrentHoliday("NNN")) {
+                await holidayNNNLetGoPrompt(interaction).then(
+                    async (accepted) => {
+                        // Bad girl for accepting the attempt to let go! 
+                        // Mark their shame accordingly.
+                    },
+                    async (rejected) => {
+                        nonut = true;
+                    }
+                )
+            }
+
+            if (nonut) { return };
 			if (tryOrgasm(interaction.guildId, interaction.user.id)) {
 				// User was able to orgasm!
 				data.orgasm = true;
-				interaction.reply(getText(data));
+                if (getCurrentHoliday("NNN")) { 
+                    interaction.followUp(getText(data)) 
+                }
+                else {
+                    interaction.reply(getText(data));
+                }
 			} else {
                 if (isWearingCollar(interaction.guildId, interaction.user.id, "collar_orgasmcontrol")) {
                     data.orgasmcontrolled = true;
-                    interaction.reply(getText(data))
+                    if (getCurrentHoliday("NNN")) { 
+                        interaction.followUp(getText(data)) 
+                    }
+                    else {
+                        interaction.reply(getText(data));
+                    }
                     return;
                 }
 
 				if (getChastity(interaction.guildId, interaction.user.id)) {
 					data.chastity = true;
-					interaction.reply(getText(data));
+					if (getCurrentHoliday("NNN")) { 
+                        interaction.followUp(getText(data)) 
+                    }
+                    else {
+                        interaction.reply(getText(data));
+                    }
 					return;
 				}
 
 				const heavy = !getHeavyBound(interaction.guildId, interaction.user.id, interaction.user.id);
 				if (heavy) {
 					data.heavy = true;
-					interaction.reply(getText(data));
+					if (getCurrentHoliday("NNN")) { 
+                        interaction.followUp(getText(data)) 
+                    }
+                    else {
+                        interaction.reply(getText(data));
+                    }
 					return;
 				}
 
 				// cool off response, replace with something good
 				data.free = true;
-				interaction.reply(getText(data));
+				if (getCurrentHoliday("NNN")) { 
+                    interaction.followUp(getText(data)) 
+                }
+                else {
+                    interaction.reply(getText(data));
+                }
 				setArousalCooldown(interaction.guildId, interaction.user.id);
 			}
 		} catch (err) {

@@ -14,4 +14,4 @@ exports.vibelevel = (data) => { return 1 };
 exports.name = "Featherlight Belt"
 
 // Tags
-exports.tags = ["chastity"]
+exports.tags = ["chastity", "metal"]
