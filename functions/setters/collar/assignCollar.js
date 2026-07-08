@@ -32,7 +32,8 @@ function assignCollar(serverID, user, keyholder, restraints, only, customcollar)
         mask: restraints?.mask, 
         collartype: customcollar,
         timestamp: existingcollar?.timestamp ?? Date.now(),
-        additionalcollars: existingcollar?.additionalcollars
+        additionalcollars: existingcollar?.additionalcollars,
+        clonedKeyholders: existingcollar?.clonedKeyholders
     };
 	markForSave("collar");
 }
