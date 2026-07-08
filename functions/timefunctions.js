@@ -524,7 +524,8 @@ async function scavengeUsers(client) {
                         catch (err) {
                             console.log(`Crashed while fetching ${person} lol`);
                             if (err.code == 10007) {
-                                console.log(`WE WOULD DELETE THIS`)
+                                console.log(`Deleting!`)
+                                delete process[v][server][person] // This person did NOT fetch successfully, so get rid of them. 
                             }
                             else {
                                 console.log(err);

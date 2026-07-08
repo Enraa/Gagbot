@@ -5574,15 +5574,15 @@ const texts_dressprotocol = {
             },
             equip: {
                 wearable: { add: [`The VAR_C1 pulls out a VAR_C2 from its internal storage and begins to dress USER_TAG in it!`, `The VAR_C1 produces a VAR_C2 from within itself and slips it onto USER_TAG!`, `The VAR_C1's tentacles fish out a VAR_C2 from its storage and begins to dress USER_TAG in it!`] },
-				mitten: { replace: [`The VAR_C1 removes the VAR_C2 from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The VAR_C1 grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C2 on USER_THEM and secures them tightly.`] },
+				mitten: { replace: [`The VAR_C1 removes the mittens from USER_TAG's hands, replacing it with a pair of VAR_C2 and securing them tightly.`], add: [`The VAR_C1 grabs USER_TAG's wrists, holding them steady as it installs a pair of VAR_C2 on USER_THEM and secures them tightly.`] },
 				chastity: { 
 					replace: [
-						`The VAR_C1 rips off the VAR_C2 that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`,
+						`The VAR_C1 rips off the chastity belt that USER_TAG is wearing, storing it away before locking a VAR_C2 in its place.`,
 						{
 							only: (t) => {
 								return t.c2.includes("seal");
 							},
-							text: `The VAR_C1 rips off the VAR_C2 that USER_TAG is wearing, storing it away before applying a VAR_C2 in its place.`,
+							text: `The VAR_C1 rips off the chastity that USER_TAG is wearing, storing it away before applying a magic VAR_C2 in its place.`,
 						},
 					], 
 					add: [
@@ -5595,8 +5595,8 @@ const texts_dressprotocol = {
 						},
 					] 
 				},
-				chastitybra: { replace: [`The VAR_C1 picks the locking mechanism on USER_TAG's VAR_C2, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`], add: [`The VAR_C1 wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`] },
-				collar: { replace: [`The VAR_C1 forces USER_TAG to lean forward as it removes USER_THEIR VAR_C2, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the VAR_C1 moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
+				chastitybra: { replace: [`The VAR_C1 picks the locking mechanism on USER_TAG's chastity bra, dragging it into its storage. But USER_THEY gets no moment to enjoy the freedom as the mimic traps USER_THEIR breasts in a VAR_C2.`], add: [`The VAR_C1 wraps a VAR_C2 around USER_TAG's chest, locking away USER_THEIR breasts.`] },
+				collar: { replace: [`The VAR_C1 forces USER_TAG to lean forward as it removes USER_THEIR collar, consuming it as it instead secures a VAR_C2 around USER_THEIR throat.`], add: [`USER_TAG is forced to lean forward as the VAR_C1 moves USER_THEIR hair out of the way and wraps a VAR_C2 around USER_THEIR throat.`] },
 				mask: { add: [`The VAR_C1 produces a VAR_C2 from within itself and secures it onto USER_TAG's head.`] },
 				gag: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and secures it into USER_TAG's mouth.`] },
 				toy: { add: [`The VAR_C1 pulls a VAR_C2 from its storage and applies it to USER_TAG.`] },
