@@ -523,7 +523,12 @@ async function scavengeUsers(client) {
                         }
                         catch (err) {
                             console.log(`Crashed while fetching ${person} lol`);
-                            console.log(err);
+                            if (err.code == 10007) {
+                                console.log(`WE WOULD DELETE THIS`)
+                            }
+                            else {
+                                console.log(err);
+                            }
                         }
                     } 
                     else {
