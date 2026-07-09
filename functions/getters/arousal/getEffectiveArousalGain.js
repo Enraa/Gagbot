@@ -1,5 +1,5 @@
 const { getArousal } = require(`./getArousal`);
-const { initialcoefficient, belltightnessfactor, arousalpercentagebonus } = require(`../../../lists/arousalconsts`);
+const { initialcoefficient, arousalpercentagebonus } = require(`../../../lists/arousalconsts`);
 const { getTargetArousal } = require("./getTargetArousal");
 
 /*******
