@@ -34,7 +34,7 @@ async function tick(serverID, userid, datain) {
     }
     if (getUserVar(serverID, userid, "windupcharge") > 0.0 && (newcharge <= 0.0)) {
         // They JUST ran out of charge...
-        messageSendChannel(`<@${userid}> becomes dormant as the clockwork key stops ticking...`, getRecentChannel(serverID, userID).channelid)
+        messageSendChannel(`<@${userid}> becomes dormant as the clockwork key stops ticking...`, getRecentChannel(serverID, userid).channelid)
     }
     setUserVar(serverID, userid, "windupcharge", newcharge);
 }
