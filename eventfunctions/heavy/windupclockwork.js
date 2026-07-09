@@ -24,7 +24,7 @@ function headpatfunction(serverID, recipient, data) {
 async function tick(serverID, userid, datain) {
     let newcharge = 0.0
     if (getUserVar(serverID, userid, "windupcharge")) {
-        newcharge = getUserVar(userid, "windupcharge") - (1/180) * (getBotOption("bot-timetickrate") / 60000)
+        newcharge = getUserVar(serverID, userid, "windupcharge") - (1/180) * (getBotOption("bot-timetickrate") / 60000)
     }
     if (getUserVar(serverID, userid, "windupcharge") > 1.0) { 
         newcharge = 1.0
