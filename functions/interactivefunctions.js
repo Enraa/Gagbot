@@ -38,6 +38,7 @@ const { getChastityName } = require("./getters/chastity/getChastityName.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 const { canAccessChastityBra } = require("./getters/chastity/canAccessChastityBra.js");
 const { getChastityBraName } = require("./getters/chastity/getChastityBraName.js");
+const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
@@ -66,6 +67,10 @@ Finally, you should review settings found in **/config** concerning effects from
 
 // check with getConsent, then pipe to await handleConsent and return.
 const handleConsent = async (interaction, user) => {
+    if (!getRecentChannel(interaction.guildId, user)?.valid) {
+        await interaction.reply({ content: `<@${user}> has not spoken recently or interacted with the bot. They must say something or use these commands themself.`, flags: MessageFlags.Ephemeral })
+        return;
+    }
 	let testusertarget = user;
 	let consentform = consentMessage(interaction, testusertarget);
 	const collectorFilter = (i) => i.user.id === testusertarget;
