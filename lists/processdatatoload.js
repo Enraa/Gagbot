@@ -23,6 +23,7 @@ const processdatatoload = [
     { textname: "wearables.txt", processvar: "wearable", default: {}, rts: "wearable", hasusers: true },
     { textname: "webhooks.txt", processvar: "webhookstoload", default: {}, rts: "webhooks", },
     { textname: "recordedmessages.txt", processvar: "recordedmessages", default: {}, rts: "recordedmessages", },
+    { textname: "recentmessages.txt", processvar: "recentmessages", default: {}, rts: "recentmessages", },
     { textname: "delveuserdata.txt", processvar: "delveuserdata", default: {}, rts: "delveuserdata", hasusers: true },
     { textname: "userstats.txt", processvar: "userstats", default: {}, rts: "userstats", hasusers: true },
     { textname: "memberavatars.txt", processvar: "memberavatars", default: {}, rts: "memberavatars", hasusers: true },
