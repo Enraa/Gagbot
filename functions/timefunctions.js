@@ -224,6 +224,10 @@ const saveFiles = () => {
 					filepath = `${process.GagbotSavedFileDirectory}/recordedmessages.txt`;
 					processvar = "recordedmessages";
 					break;
+                case "recentmessages":
+					filepath = `${process.GagbotSavedFileDirectory}/recentmessages.txt`;
+					processvar = "recentmessages";
+					break;
                 case "delveuserdata":
 					filepath = `${process.GagbotSavedFileDirectory}/delveuserdata.txt`;
 					processvar = "delveuserdata";
