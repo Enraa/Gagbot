@@ -9,7 +9,7 @@
  * 
  * - (any) serverID - Hopefully a server ID
  * ---
- * ##### Returns true if it is a server ID, crashes if it's not. 
+ * ##### Returns nothing if it is a server ID, crashes the bot (on purpose) if it's not. 
  *******/
 function traceFirstParam(serverID) {
     if (serverID === "NoServer") { return } // Explicitly aware that we're passing an invalid server
