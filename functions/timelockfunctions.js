@@ -38,9 +38,9 @@ function timelockChastity(serverID, client, wearer, keyholder, unlockTime, acces
 	chastity.unlockTime = unlockTime;
 	chastity.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
-	setTimeout(() => {
+	/*setTimeout(() => {
 		unlockTimelockChastity(serverID, client, wearer);
-	}, unlockTime - now);
+	}, unlockTime - now);*/
     markForSave("chastity");
 	return true;
 }
@@ -99,9 +99,9 @@ function timelockChastityBra(serverID, client, wearer, keyholder, unlockTime, ac
 	chastitybra.unlockTime = unlockTime;
 	chastitybra.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
-	setTimeout(() => {
+	/*setTimeout(() => {
 		unlockTimelockChastityBra(serverID, client, wearer);
-	}, unlockTime - now);
+	}, unlockTime - now);*/
 	markForSave("chastitybra");
 	return true;
 }
@@ -160,9 +160,9 @@ function timelockCollar(serverID, client, wearer, keyholder, unlockTime, access,
 	collar.unlockTime = unlockTime;
 	collar.access = access;
 	console.log(`timelock set to unlock in ${unlockTime - now} ms`);
-	setTimeout(() => {
+	/*setTimeout(() => {
 		unlockTimelockCollar(serverID, client, wearer);
-	}, unlockTime - now);
+	}, unlockTime - now);*/
 	markForSave("collar");
 	return true;
 }
