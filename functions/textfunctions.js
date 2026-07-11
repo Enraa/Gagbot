@@ -1511,6 +1511,11 @@ const texts_key = {
             ]
         }
     },
+    returnkey: {
+        other: [
+            `USER_TAG decides to return the key for TARGET_TAG's VAR_C1 early. TARGET_THEY_CAP lookTARGET_S at USER_THEM gratefully!`
+        ]
+    },
     additionalcollar: {
         self: {
             add: [

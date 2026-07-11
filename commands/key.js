@@ -103,6 +103,13 @@ module.exports = {
                 .setDescription("Intentionally lose someone's keys...")
                 .addUserOption((opt) => opt.setName("wearer").setDescription(`Whose restraint to "lose" the key for?`))
 				.addStringOption((opt) => opt.setName("restraint").setDescription(`Which restraint of theirs to "lose" the key?`).setAutocomplete(true))
+        )
+        .addSubcommand((subcommand) => 
+            subcommand
+                .setName("return")
+                .setDescription("Return a key you discovered...")
+                .addUserOption((opt) => opt.setName("wearer").setDescription(`Whose restraint to "lose" the key for?`))
+				.addStringOption((opt) => opt.setName("restraint").setDescription(`Which restraint of theirs to return the key for?`).setAutocomplete(true))
         ),
 	async autoComplete(interaction) {
 		const focusedValue = interaction.options.getFocused();
@@ -316,24 +323,24 @@ module.exports = {
                     })
                     interaction.respond(newsorted.slice(0,25))
 				}
-			} else if (subcommand == "discardkey") {
+            } else if (subcommand == "return") {
                 // We need to know if we're holding the primary keys to throw them away. 
                 let chosenuserid = interaction.options.get("wearer")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-                let collarkeyholder = getCollar(interaction.guildId, chosenuserid) && (getCollar(interaction.guildId, chosenuserid).keyholder == interaction.user.id) && !getCollar(interaction.guildId, chosenuserid)?.fumbled && !canAccessCollar(interaction.guildId, chosenuserid, interaction.user.id, true).public
-                let chastitykeyholder = getChastity(interaction.guildId, chosenuserid) && (getChastity(interaction.guildId, chosenuserid).keyholder == interaction.user.id) && !getChastity(interaction.guildId, chosenuserid)?.fumbled && !canAccessChastity(interaction.guildId, chosenuserid, interaction.user.id, true).public
-                let chastitybrakeyholder = getChastityBra(interaction.guildId, chosenuserid) && (getChastityBra(interaction.guildId, chosenuserid).keyholder == interaction.user.id) && !getChastityBra(interaction.guildId, chosenuserid)?.fumbled && !canAccessChastityBra(interaction.guildId, chosenuserid, interaction.user.id, true).public
+                let holdingcollarkey = (getCollar(interaction.guildId, chosenuserid)?.temporarykeyholder == interaction.user.id);
+                let holdingchastitykey = (getChastity(interaction.guildId, chosenuserid)?.temporarykeyholder == interaction.user.id)
+                let holdingchastitybrakey = (getChastityBra(interaction.guildId, chosenuserid)?.temporarykeyholder == interaction.user.id)
 
                 let choices = [];
-                if (!collarkeyholder && !chastitykeyholder && !chastitybrakeyholder) {
-                    choices = [{ name: "No Keys Available", value: "nokeys" }];
+                if (!holdingcollarkey && !holdingchastitykey && !holdingchastitybrakey) {
+                    choices = [{ name: "Not holding any temporary keys", value: "nokeys" }];
                 }
-                if (collarkeyholder) {
+                if (holdingcollarkey) {
                     choices.push({ name: "Collar", value: "collar" });
                 }
-                if (chastitykeyholder) {
+                if (holdingchastitykey) {
                     choices.push({ name: "Chastity Belt", value: "chastitybelt" });
                 }
-                if (chastitybrakeyholder) {
+                if (holdingchastitybrakey) {
                     choices.push({ name: "Chastity Bra", value: "chastitybra" });
                 }
 
@@ -1188,6 +1195,89 @@ module.exports = {
                         data.textdata.c1 = getBaseCollar(collartype).name
                     }
                     discardKey(interaction.guildId, wearertodiscard.id, interaction.user.id, "collar");
+                }
+
+                interaction.reply(getText(data));
+
+            }
+            if (subcommand == "return") {
+				let wearertodiscard = interaction.options.getUser("wearer") ?? interaction.user;
+				let chosenrestrainttoclone = interaction.options.getString("restraint");
+
+				// We're missing info, back to the start!
+				if (!wearertodiscard || !chosenrestrainttoclone) {
+					interaction.reply({ content: `Something went wrong. The command was parsed as:\nReturn ${wearertodiscard}'s key for ${chosenrestrainttoclone}!`, flags: MessageFlags.Ephemeral });
+					return;
+				}
+
+				// Check if the interaction user has access to discard the key for target restraint.
+				let candiscard = false;
+				if (chosenrestrainttoclone == "collar" && getCollar(interaction.guildId, wearertodiscard.id) && (getCollar(interaction.guildId, wearertodiscard.id).temporarykeyholder == interaction.user.id)) {
+                    candiscard = true
+				}
+				if (chosenrestrainttoclone == "chastitybelt" && getChastity(interaction.guildId, wearertodiscard.id) && (getChastity(interaction.guildId, wearertodiscard.id).temporarykeyholder == interaction.user.id)) {
+					candiscard = true
+				}
+				if (chosenrestrainttoclone == "chastitybra" && getChastityBra(interaction.guildId, wearertodiscard.id) && (getChastityBra(interaction.guildId, wearertodiscard.id).temporarykeyholder == interaction.user.id)) {
+					candiscard = true
+				}
+				if (!candiscard) {
+                    if (wearertodiscard.id == interaction.user.id) {
+                        // This should NEVER occur!
+                        interaction.reply({ content: `You do not have keys for your restraint to lose.`, flags: MessageFlags.Ephemeral });
+                    }
+                    else {
+                        interaction.reply({ content: `You do not have any keys for ${wearertodiscard}'s restraint to return.`, flags: MessageFlags.Ephemeral });
+                    }
+					return;
+				}
+
+                let data = { 
+                    textarray: "texts_key", 
+                    textdata: {
+                        serverID: interaction.guildId, 
+                        interactionuser: interaction.user,
+                        targetuser: wearertodiscard,
+                    },
+                };
+                data.returnkey = true;
+
+                if (wearertodiscard.id == interaction.user.id) {
+                    // SHOULD NEVER HAPPEN
+                    data.self = true;
+                }
+                else {
+                    data.other = true;
+                }
+
+                if ((chosenrestrainttoclone == "chastitybelt")) {
+                    data.textdata.c1 = getBaseChastity(getChastity(interaction.guildId, wearertodiscard.id)?.chastitytype ?? `belt_silver`).name
+                    let chastity = getChastity(interaction.guildId, wearertodiscard.id)
+                    delete chastity.fumbled;
+                    delete chastity.temporarykeyholdertime;
+                    delete chastity.temporarykeyholder;
+                }
+                else if ((chosenrestrainttoclone == "chastitybra")) {
+                    data.textdata.c1 = getBaseChastity(getChastityBra(interaction.guildId, wearertodiscard.id)?.chastitytype ?? `bra_silver`).name
+                    let chastity = getChastityBra(interaction.guildId, wearertodiscard.id)
+                    delete chastity.fumbled;
+                    delete chastity.temporarykeyholdertime;
+                    delete chastity.temporarykeyholder;
+                }
+                else if (chosenrestrainttoclone == "collar") {
+                    // Why the fuck is .collartype ever storing a string value named "null"!?
+                    let collartype = getCollar(interaction.guildId, wearertodiscard.id).collartype
+                    if (collartype == "null") {
+                        collartype = `collar_leather`
+                        data.textdata.c1 = `collar`
+                    }
+                    else {
+                        data.textdata.c1 = getBaseCollar(collartype).name
+                    }
+                    let collar = getCollar(interaction.guildId, wearertodiscard.id)
+                    delete collar.fumbled;
+                    delete collar.temporarykeyholdertime;
+                    delete collar.temporarykeyholder;
                 }
 
                 interaction.reply(getText(data));
