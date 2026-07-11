@@ -20,18 +20,66 @@ module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("heavy")
 		.setDescription(`Put heavy bondage on, preventing the use of any command`)
-        .addUserOption((opt) => opt.setName("user").setDescription("Who to bind in heavy bondage..."))
-		.addStringOption((opt) =>
-			opt
-				.setName("type")
-				.setDescription("What flavor of helpless restraint to wear...")
-				.setAutocomplete(true),
-		),
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName("arms")
+                .setDescription("Prevent using any action on self or others")
+                .addUserOption((opt) => opt.setName("user").setDescription("Who to bind in heavy bondage..."))
+                .addStringOption((opt) =>
+                    opt
+                        .setName("type")
+                        .setDescription("What flavor of helpless restraint to wear...")
+                        .setAutocomplete(true),
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName("legs")
+                .setDescription("Prevent using actions on others")
+                .addUserOption((opt) => opt.setName("user").setDescription("Who to bind in heavy bondage..."))
+                .addStringOption((opt) =>
+                    opt
+                        .setName("type")
+                        .setDescription("What flavor of helpless restraint to wear...")
+                        .setAutocomplete(true),
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName("container")
+                .setDescription("Prevent actions outside of this container")
+                .addUserOption((opt) => opt.setName("user").setDescription("Who to put in a box..."))
+                .addStringOption((opt) =>
+                    opt
+                        .setName("type")
+                        .setDescription("What flavor of helpless restraint to wear...")
+                        .setAutocomplete(true),
+                )
+        )
+        .addSubcommand((subcommand) =>
+            subcommand
+                .setName("furniture")
+                .setDescription("Sit or lay on something comfy, nonbinding")
+                .addUserOption((opt) => opt.setName("user").setDescription("Who to sit on furniture..."))
+                .addStringOption((opt) =>
+                    opt
+                        .setName("type")
+                        .setDescription("What flavor of helpless restraint to wear...")
+                        .setAutocomplete(true),
+                )
+        ),
 	async autoComplete(interaction) {
         try {
             const focusedValue = interaction.options.getFocused();
+            let subcommand = interaction.options.getSubcommand();
             let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-            let autocompletes = process.heavytypes/*.filter((f) => !getBaseHeavy(f.value).noself);*/
+            let autocompletes = process.heavytypes;
+            if (subcommand != "furniture") {
+                autocompletes = autocompletes.filter((f) => getBaseHeavy(f.value).heavytags.includes(subcommand));
+            }
+            else {
+                autocompletes = autocompletes.filter((f) => getBaseHeavy(f.value).heavytags.length == 0);
+            }
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input
