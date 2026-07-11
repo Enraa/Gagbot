@@ -51,7 +51,7 @@ module.exports = {
         .addStringOption((opt) => opt.setName("question").setDescription("What specific question to ask?")),
 	async execute(interaction) {
 		try {
-			// We really dont need consent for posting images lol
+			// We really dont need consent for 8ball responses lol
             // Validate that the choice we received is on the premade autocompletes list!
 			let questiontext = interaction.options.getString("question");
             if (questiontext && questiontext.length > 0) {
