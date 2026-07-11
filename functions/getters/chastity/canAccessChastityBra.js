@@ -47,6 +47,10 @@ function canAccessChastityBra(serverID, chastityuser, keyholder, unlock, cloning
         if (getChastityBra(serverID, chastityuser)?.access == undefined && clonedkeys.includes(keyholder)) {
             accessval.access = true;
         }
+        // Allow temporary keys to unlock or swap the item 
+        if (getChastityBra(serverID, chastityuser)?.temporarykeyholder && (getChastityBra(serverID, chastityuser)?.temporarykeyholder == keyholder) && (getChastityBra(serverID, chastityuser)?.temporarykeyholdertime > Date.now())) {
+            accessval.access = true;
+        }
         // Else, return false.
 
         return accessval;

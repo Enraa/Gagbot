@@ -47,6 +47,10 @@ function canAccessChastity(serverID, chastityuser, keyholder, unlock, cloning) {
         if (getChastity(serverID, chastityuser)?.access == undefined && clonedkeys.includes(keyholder)) {
             accessval.access = true;
         }
+        // Allow unlock/swap by someone who finds the key!
+        if (getChastity(serverID, chastityuser)?.temporarykeyholder && (getChastity(serverID, chastityuser)?.temporarykeyholder == keyholder) && (getChastity(serverID, chastityuser)?.temporarykeyholdertime > Date.now())) {
+            accessval.access = true;
+        }
         // Else, return false.
 
         return accessval;

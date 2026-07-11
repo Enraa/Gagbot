@@ -188,7 +188,7 @@ let outfitslist = {
         outfitsearchtags: ["librarian", "brown", "white"]
     },
     "rogue": {
-        name: "",
+        name: "Rogue",
         items: [
             { item: "panties_leather", colors: ["Gray"] },
             { item: "bra_leather", colors: ["Gray"] },

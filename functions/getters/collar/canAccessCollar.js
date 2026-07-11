@@ -47,6 +47,10 @@ function canAccessCollar(serverID, collaruser, keyholder, unlock, cloning) {
         if (getCollar(serverID, collaruser)?.access == undefined && clonedkeys.includes(keyholder)) {
             accessval.access = true;
         }
+        // Allow temporary keys to unlock or swap the collar
+        if (getCollar(serverID, collaruser)?.temporarykeyholder && (getCollar(serverID, collaruser)?.temporarykeyholder == keyholder) && (getCollar(serverID, collaruser)?.temporarykeyholdertime > Date.now())) {
+            accessval.access = true;
+        }
         // Else, return false.
 
         return accessval;
