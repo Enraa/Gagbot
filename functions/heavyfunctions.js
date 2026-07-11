@@ -186,7 +186,7 @@ const heavytypes = [
     // Dress Protocols (heavy bondage that equips other heavy bondage)
     { name: "Costumer Mimic", value: "costumer_mimic", tags: ["confined", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 	//{ name: "Costumer Mimic (Latex)", value: "costumer_mimic_latex", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
-    { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", tags: ["confined", "latex"], denialCoefficient: 5, heavytags: ["arms", "legs"] }, 
+    { name: "Costumer Mimic (Chaos)", value: "costumer_mimic_chaos", tags: ["confined", "latex", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] }, 
     { name: "Wardrobe Device", value: "wardrobe_device", tags: ["confined", "dressprotocol"], denialCoefficient: 5, heavytags: ["arms", "legs"] },
 
     // Heavy Bondage that is NOT binding, such as chairs. 
