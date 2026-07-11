@@ -106,7 +106,13 @@ module.exports = {
 	async execute(interaction) {
 		try {
             let targetuser = interaction.options.getUser("user") ? interaction.options.getUser("user") : interaction.user;
-            let heavychoice = interaction.options.getString("type") ? interaction.options.getString("type") : "armbinder_latex";
+            let heavychoice = interaction.options.getString("type");
+            if (!heavychoice) {
+                if (interaction.options.getSubcommand() == "arms") { heavychoice = "armbinder_latex" }
+                if (interaction.options.getSubcommand() == "legs") { heavychoice = "legbinder_latex" }
+                if (interaction.options.getSubcommand() == "container") { heavychoice = "pole_dancer" }
+                if (interaction.options.getSubcommand() == "furniture") { heavychoice = "furniture_couch" }
+            }
             if ((interaction.user.id == targetuser.id) && (getBaseHeavy(heavychoice)?.noself)) {
                 interaction.reply({ content: `You can't bind yourself with that item!`, flags: MessageFlags.Ephemeral })
                 return;
