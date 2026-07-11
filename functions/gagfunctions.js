@@ -614,7 +614,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 			let attachments = [];
 			let promisearr = [];
 			for (let attach of msg.attachments) {
-				console.log(attach[1]);
+                let isspoiler = attach[1].flags?.has(8) // Spoilered images apparently have the 8 bitfield??
 				promisearr.push(
 					new Promise((res, rej) => {
 						// Download it, as a promise, and then Promise.all to grab all of the files once they've all finished.
@@ -631,7 +631,7 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 									file.close();
 									console.log(`Downloaded file: ./downloaded/${attach[1].name}`);
 									//attachments.push({ name: attach[1].name, spoiler: attach[1].spoiler });
-									res({ name: attach[1].name, spoiler: attach[1].spoiler });
+									res({ name: attach[1].name, spoiler: isspoiler });
 								});
 							})
 							.on("error", (err) => {

@@ -95,7 +95,10 @@ const messageSendImg = async (msg, str, avatarURL, username, threadId, attachs, 
             }
             let attachments = [];
             attachs.forEach((f) => {
-                attachments.push(new AttachmentBuilder(`./downloaded/${f.name}`, { name: f.name, spoiler: f.spoiler }));
+                let attachmentt = new AttachmentBuilder(`./downloaded/${f.name}`)
+                attachmentt.setName(f.name);
+                attachmentt.setSpoiler(f.spoiler);
+                attachments.push(attachmentt);
             });
 
             webhookClient.send({ threadId: threadId, content: str, username: username, avatarURL: avatarURL, files: attachments, allowedMentions: { parse: [] } }).then((webmess) => {
