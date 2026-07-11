@@ -685,10 +685,10 @@ async function sendTheMessage(msg, outtext, dollIDDisplay, threadID, dollProtoco
 						// If the doll was actually punished
 						if (dollPunishment.punish) {
 							// Build data tree for finding string.
-							let data = { textarray: "texts_dollprotocol", textdata: { serverID: interaction.guildId, interactionuser: msg.author, targetuser: msg.author } };
+							let data = { textarray: "texts_dollprotocol", textdata: { serverID: msg.guild.id, interactionuser: msg.author, targetuser: msg.author } };
 							data[`level${dollPunishment.punishmentLevel}`] = true;
 							//data.skipped = dollPunishment.skipped;
-							messageSendChannel(getText(data), msg.channel.id);
+							messageSendChannel(getText(data), msg.channel.id); 
 						}
 					}
 				});
