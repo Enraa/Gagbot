@@ -5,7 +5,7 @@
 // traceFirstParam(arguments[0]);
 
 /*******
- * Test first param to see if it is on process.serversjoined. If it is not, do a client.guilds.fetch() on it. If that fails, throw. 
+ * Test first param to see if it is in the bot's guild cache. If it's not, throws an error. 
  * 
  * - (any) serverID - Hopefully a server ID
  * ---
