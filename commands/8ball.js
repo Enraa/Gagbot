@@ -21,7 +21,27 @@ let ballanswers = [
     `My reply is no`,
     `My sources say no`,
     `Outlook not so good`,
-    `Very doubtful`
+    `Very doubtful`,
+    `Perhaps if you wear these handcuffs`,
+    `Too many chains, ask later`,
+    `Muffled moans point to yes`,
+    `It is locked in!`,
+    `Only if you behave`,
+    `Maybe if you're good`,
+    `Wear a gag for me to find out`,
+    `Perhaps if I feel like it`,
+    `The future is unclear, wear a blindfold`,
+    `Bind your arms for good luck`,
+    `Almost certainly`,
+    `My reply is mmmph~!`,
+    `My sources say mmmph~!`,
+    `Maybe if you get permission`,
+    `No`,
+    `Only if I permit it`,
+    `Answer is gagged, ask again`,
+    `If you squirm while asking again, maybe`,
+    `I think not`,
+    `Ask again after a timelock`,
 ]
 
 module.exports = {
