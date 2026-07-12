@@ -768,14 +768,10 @@ async function handleExtremeRestraint(serverID, user, target, type, restraint) {
 				collector.on("collect", async (i) => {
 					console.log(i);
 					if (i.customId == "acceptButton") {
-						await mess.delete().then(() => {
-							i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`);
-						});
+						await mess.edit({ content: `Confirmed - ${restraintfullname} will be equipped on you.`, components: [] })
 						res(true);
 					} else {
-						await mess.delete().then(() => {
-							i.reply(`Rejected - ${restraintfullname} will NOT be equipped on you.`);
-						});
+						await mess.edit({ content: `Rejected - ${restraintfullname} will NOT be equipped on you.`, components: [] })
 						rej(true);
 					}
 				});
@@ -783,9 +779,7 @@ async function handleExtremeRestraint(serverID, user, target, type, restraint) {
 				collector.on("end", async (collected) => {
 					// timed out
 					if (collected.length == 0) {
-						await mess.delete().then(() => {
-							i.reply(`Timed out - ${restraintfullname} will NOT be equipped on you.`);
-						});
+						await mess.edit({ content: `Timed out - ${restraintfullname} will NOT be equipped on you.`, components: [] })
 						rej(true);
 					}
 				});
@@ -926,14 +920,10 @@ async function handleMajorRestraint(serverID, user, target, type, restraint) {
                             process.recentlypromptedmajor[target.id] = Date.now() + 86400000
                         }
                         if (i.customId == "acceptButton") {
-                            await mess.delete().then(() => {
-                                i.reply(`Confirmed - ${restraintfullname} will be equipped on you.`);
-                            });
+                            await mess.edit({ content: `Confirmed - ${restraintfullname} will be equipped on you.`, components: [] })
                             res(true);
                         } else {
-                            await mess.delete().then(() => {
-                                i.reply(`Rejected - ${restraintfullname} will NOT be equipped on you.`);
-                            });
+                            await mess.edit({ content: `Rejected - ${restraintfullname} will NOT be equipped on you.`, components: [] })
                             rej(true);
                         }
                     });
@@ -941,9 +931,7 @@ async function handleMajorRestraint(serverID, user, target, type, restraint) {
                     collector.on("end", async (collected) => {
                         // timed out
                         if (collected.length == 0) {
-                            await mess.delete().then(() => {
-                                i.reply(`Timed out - ${restraintfullname} will NOT be equipped on you.`);
-                            });
+                            await mess.edit({ content: `Timed out - ${restraintfullname} will NOT be equipped on you.`, components: [] })
                             rej(true);
                         }
                     });
