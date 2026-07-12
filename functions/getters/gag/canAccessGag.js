@@ -14,7 +14,7 @@ const { getHeadwear } = require("../headwear/getHeadwear");
  *********/
 function canAccessGag(serverID, userID, item) {
     traceFirstParam(arguments[0]);
-    let currentheadwearlocks = getProcessVariable(serverID, userID, "headwear");
+    let currentheadwearlocks = getProcessVariable(serverID, userID, "headwear") ?? {};
     let canaccess = true;
 
     // Check if the user is wearing a harness for that specific gag

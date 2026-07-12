@@ -2701,7 +2701,7 @@ const configoptions = {
 				return false;
 			},
 		},
-        "extreme-mask-gagharness": {
+        /*"extreme-mask-gagharness": {
 			name: "Mask - Lockable Gag Harness",
 			desc: "Prevents removing the associated gag and is locked to the person who puts it on.",
 			prompttext: `The Lockable Gag Harness will prevent removing the specific gag it's associated with until the keyholder removes it. This key cannot be transferred by any means, and the gag can only be adjusted while it is worn.`,
@@ -2748,7 +2748,7 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			},
-		},
+		},*/
         "extreme-collar-collarheadpatvuln": {
 			name: "Collar - Headpat Vulnerability",
 			desc: "Sets to Free Use when headpatted",
@@ -3141,6 +3141,54 @@ const configoptions = {
 				{
 					name: "Disabled",
 					helptext: "*Headpat Slut Gag is disabled*",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Disabled",
+					style: ButtonStyle.Danger,
+				},
+				{
+					name: "Prompt",
+					helptext: "You will be prompted when this is put on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Prompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Prompt (Others)",
+					helptext: "You will be prompted when others put this on you",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "PromptOthers",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Enabled",
+					helptext: "⚠️ You will automatically accept this restraint",
+					select_function: (interaction, serverID) => {
+						return false;
+					},
+					value: "Enabled",
+					style: ButtonStyle.Secondary,
+				},
+			],
+			menutype: "choice",
+			default: "Prompt",
+			disabled: () => {
+				return false;
+			},
+		},
+        "extreme-tag-lockableheadwear": {
+			name: "Tag - Lockable Headwear",
+			desc: "Headwear that is locked with only the keyholder able to remove",
+			prompttext: `Lockable headwear can ONLY be removed by the person who holds the key, which is the person who puts it on you. Be aware that this may prevent you from changing gags or seeing or other effects until this headwear is removed by that person.`,
+			choices: [
+				{
+					name: "Disabled",
+					helptext: "*Lockable masks are disabled*",
 					select_function: (interaction, serverID) => {
 						return false;
 					},

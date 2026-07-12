@@ -39,6 +39,7 @@ const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
 const { canAccessChastityBra } = require("./getters/chastity/canAccessChastityBra.js");
 const { getChastityBraName } = require("./getters/chastity/getChastityBraName.js");
 const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
+const { getItemTags } = require("./getters/config/getItemTags.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
@@ -701,11 +702,22 @@ async function handleExtremeRestraint(serverID, user, target, type, restraint) {
         let origrestraint = restraint
         let extrahelptextoverride;
         // Gag Harness
-        if (restraint && restraint.startsWith("gagharness")) { 
+        /*if (restraint && restraint.startsWith("gagharness")) { 
             extrahelptextoverride = configoptions["Extreme"][`extreme-mask-gagharness`]?.prompttext
             restraint = "gagharness"
-        }
+        }*/
+        let istag = ``;
 		let hasOption = getOption(serverID, target.id, `extreme-${type}-${restraint}`);
+        if (!hasOption) {
+            // Check if we have an option tag that matches the type of restraint.
+            let tags = getItemTags(restraint);
+            tags.forEach((t) => {
+                if (getOption(serverID, target.id, `extreme-tag-${t}`)) {
+                    hasOption = getOption(serverID, target.id, `extreme-tag-${t}`);
+                    istag = t;
+                }
+            })
+        }
 		if (!hasOption || hasOption == "Enabled" || (hasOption == "PromptOthers" && user.id == target.id)) {
 			res(true);
 			return;
@@ -740,7 +752,7 @@ async function handleExtremeRestraint(serverID, user, target, type, restraint) {
 		}
 
 		// We need to ASK
-		let extrahelptext = extrahelptextoverride ?? configoptions["Extreme"][`extreme-${type}-${restraint}`]?.prompttext ?? "Something went wrong retrieving this text.";
+		let extrahelptext = extrahelptextoverride ?? configoptions["Extreme"][`extreme-${type}-${restraint}`]?.prompttext ?? configoptions["Extreme"][`extreme-tag-${istag}`]?.prompttext ?? "Something went wrong retrieving this text.";
 		let prompttext = `## ${user} would like to place a ${type} restraint on you: **${restraintfullname}**\n***This is considered an __extreme__ restraint and comes with the following warning label:***\n\n${extrahelptext}\n\nDo you wish to allow this action?`;
 		if (user.id == target.id) {
 			prompttext = `## You are attempting to wear the following restraint: **${restraintfullname}**\n***This is considered an __extreme__ restraint and comes with the following warning label:***\n\n${extrahelptext}\n\nDo you wish to allow this action?`;
