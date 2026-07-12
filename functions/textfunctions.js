@@ -4,6 +4,7 @@ const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
 const { getCollar } = require("./getters/collar/getCollar.js");
 const { getUserTags } = require("./getters/config/getUserTags.js");
 const { getGag } = require("./getters/gag/getGag.js");
+const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
 const { getHeavy } = require("./getters/heavy/getHeavy.js");
 const { getWearable } = require("./getters/wearable/getWearable.js");
@@ -556,203 +557,233 @@ const texts_gag = {
 		nomitten: {
 			self: {
 				gag: {
-					changetightness: [
-						`USER_TAG adjusts USER_THEIR VAR_C3, undoing the straps before pulling them VAR_C2 around USER_THEIR head again.`,
-                        `USER_TAG flexes USER_THEIR jaw holding the VAR_C3 in place, carefully adjusting the straps VAR_C2 around USER_THEIR head. It sits more comfortably now!`,
-                        `USER_TAG undoes the straps on USER_THEIR VAR_C3, holding the gag carefully between USER_THEIR teeth as USER_THEY adjust it and pull the straps VAR_C2 around USER_THEIR head.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts USER_THEIR VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over USER_THEIR mouth again.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts USER_THEIR VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around USER_THEIR head and under USER_THEIR hair again.`,
-						},
-                        {
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("OTN");
-							},
-							text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
-						},
-                        {
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("OTN");
-							},
-							text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
-						},
+                    canaccess: {
+                        changetightness: [
+                            `USER_TAG adjusts USER_THEIR VAR_C3, undoing the straps before pulling them VAR_C2 around USER_THEIR head again.`,
+                            `USER_TAG flexes USER_THEIR jaw holding the VAR_C3 in place, carefully adjusting the straps VAR_C2 around USER_THEIR head. It sits more comfortably now!`,
+                            `USER_TAG undoes the straps on USER_THEIR VAR_C3, holding the gag carefully between USER_THEIR teeth as USER_THEY adjust it and pull the straps VAR_C2 around USER_THEIR head.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over USER_THEIR mouth again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around USER_THEIR head and under USER_THEIR hair again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts USER_THEIR VAR_C3, pulling the material VAR_C2 around USER_THEIR head and securing it!`,
+                            },
 
-						//`USER_TAG carefully undoes the straps on USER_THEIR VAR_C4, allowing just a moment to let the drool fall out before replacing it with a VAR_C3, pulling the straps on it VAR_C2 before buckling.`
-					],
-					newgag: [
-						`USER_TAG sucks in what breath USER_THEY can, before adding a VAR_C3 over top of USER_THEIR VAR_C4, pulling the straps VAR_C2 before buckling.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before pressing a strip of tape VAR_C2 over USER_THEIR mouth in a loose VAR_C3.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before wrapping tape VAR_C2 around USER_THEIR head and under USER_THEIR hair.`,
-						},
-                        {
-							only: (t) => {
-								return t.c3.includes("OTN");
-							},
-							text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before placing a VAR_C3 VAR_C2 over top of USER_THEIR gags, making it that much harder to breathe!`,
-						},
-					],
+                            //`USER_TAG carefully undoes the straps on USER_THEIR VAR_C4, allowing just a moment to let the drool fall out before replacing it with a VAR_C3, pulling the straps on it VAR_C2 before buckling.`
+                        ],
+                        newgag: [
+                            `USER_TAG sucks in what breath USER_THEY can, before adding a VAR_C3 over top of USER_THEIR VAR_C4, pulling the straps VAR_C2 before buckling.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before pressing a strip of tape VAR_C2 over USER_THEIR mouth in a loose VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before wrapping tape VAR_C2 around USER_THEIR head and under USER_THEIR hair.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG sucks in what breath USER_THEY can around USER_THEIR VAR_C4, before placing a VAR_C3 VAR_C2 over top of USER_THEIR gags, making it that much harder to breathe!`,
+                            },
+                        ],
+                    },
+                    noaccess: {
+                        changetightness: [
+                            `USER_TAG tries to claw at the VAR_C3 around USER_THEIR mouth to adjust it, but can't reach it because of USER_THEIR facewear!`
+                        ],
+                        newgag: [
+                            `USER_TAG holds a VAR_C3 up to USER_THEIR mouth, but USER_THEIR facewear fully prevents adding it. USER_THEIR_CAP words will remain... less garbled.`
+                        ],
+                    }
 				},
-				nogag: [
-					`USER_TAG picks up a VAR_C3, takes a deep breath, and then pushes it between USER_THEIR teeth and pulling the straps VAR_C2 behind USER_THEIR head.`,
-					{
-						only: (t) => {
-							return t.c2.includes("loosely") && t.c3.includes("Tape");
-						},
-						text: `USER_TAG picks up a roll of tape, takes a deep breath, and then presses a strip VAR_C2 over USER_THEIR mouth and smoothing it down across USER_THEIR cheeks.`,
-					},
-					{
-						only: (t) => {
-							return t.c2.includes("tightly") && t.c3.includes("Tape");
-						},
-						text: `USER_TAG picks up a roll of tape, takes a deep breath, and then begins to wrap it VAR_C2 around USER_THEIR head and under USER_THEIR hair in a wraparound VAR_C3.`,
-					},
-                    {
-						only: (t) => {
-							return t.c3.includes("OTN");
-						},
-						text: `USER_TAG picks up a VAR_C3, positioning it over USER_THEIR lips before pulling it VAR_C2 behind USER_THEIR head and then securing it firmly.`,
-					},
-				],
+				nogag: {
+                    canaccess: [
+                        `USER_TAG picks up a VAR_C3, takes a deep breath, and then pushes it between USER_THEIR teeth and pulling the straps VAR_C2 behind USER_THEIR head.`,
+                        {
+                            only: (t) => {
+                                return t.c2.includes("loosely") && t.c3.includes("Tape");
+                            },
+                            text: `USER_TAG picks up a roll of tape, takes a deep breath, and then presses a strip VAR_C2 over USER_THEIR mouth and smoothing it down across USER_THEIR cheeks.`,
+                        },
+                        {
+                            only: (t) => {
+                                return t.c2.includes("tightly") && t.c3.includes("Tape");
+                            },
+                            text: `USER_TAG picks up a roll of tape, takes a deep breath, and then begins to wrap it VAR_C2 around USER_THEIR head and under USER_THEIR hair in a wraparound VAR_C3.`,
+                        },
+                        {
+                            only: (t) => {
+                                return t.c3.includes("OTN");
+                            },
+                            text: `USER_TAG picks up a VAR_C3, positioning it over USER_THEIR lips before pulling it VAR_C2 behind USER_THEIR head and then securing it firmly.`,
+                        },
+                    ],
+                    noaccess: [
+                        `USER_TAG picks up a VAR_C3 but struggles to put it on past USER_THEIR facewear. USER_THEY_CAP will just have to remain ungagged!`
+                    ]
+                },
 			},
 			other: {
 				gag: {
-					changetightness: [
-						`USER_TAG adjusts TARGET_TAG's VAR_C3, undoing the straps before pulling them VAR_C2 around TARGET_THEIR head again.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over TARGET_THEIR mouth again.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair again.`,
-						},
-                        {
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("OTN");
-							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
-						},
-                        {
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("OTN");
-							},
-							text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
-						},
-						//`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
-					],
-					newgag: [
-						`USER_TAG places a VAR_C3 against TARGET_TAG's mouth over top of TARGET_THEIR VAR_C4. The buckles are pulled VAR_C2 around TARGET_THEIR head before they are buckled again.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, winding a roll of tape VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair.`,
-						},
-                        {
-							only: (t) => {
-								return t.c3.includes("OTN");
-							},
-							text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, covering TARGET_THEIR lips and nose with the new material as USER_THEY secureUSER_S the straps VAR_C2 behind TARGET_THEIR head.`,
-						},
-					],
-				},
+                    canaccess: {
+                        changetightness: [
+                            `USER_TAG adjusts TARGET_TAG's VAR_C3, undoing the straps before pulling them VAR_C2 around TARGET_THEIR head again.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, peeling away the tape before pressing fresh strips VAR_C2 over TARGET_THEIR mouth again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, unwinding the tape before wrapping a fresh roll VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair again.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG adjusts TARGET_TAG's VAR_C3, pulling the material VAR_C2 around TARGET_THEIR head and securing it!`,
+                            },
+                            //`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
+                        ],
+                        newgag: [
+                            `USER_TAG places a VAR_C3 against TARGET_TAG's mouth over top of TARGET_THEIR VAR_C4. The buckles are pulled VAR_C2 around TARGET_THEIR head before they are buckled again.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, winding a roll of tape VAR_C2 around TARGET_THEIR head and under TARGET_THEIR hair.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG applies a VAR_C3 over TARGET_TAG's VAR_C4, covering TARGET_THEIR lips and nose with the new material as USER_THEY secureUSER_S the straps VAR_C2 behind TARGET_THEIR head.`,
+                            },
+                        ],
+                    },
+                    noaccess: {
+                        changetightness: [
+                            `USER_TAG runs USER_THEIR fingers over TARGET_TAG's face, teasing TARGET_THEM with the thoughts of adjusting TARGET_THEIR VAR_C3. Alas, TARGET_THEIR facewear is in the way. Oh well!`
+                        ],
+                        newgag: [
+                            `USER_TAG boops a VAR_C3 into TARGET_TAG's face, but since TARGET_THEY TARGET_ISARE wearing some facewear covering TARGET_THEIR mouth, it's quite hard to reach TARGET_THEIR lips!`
+                        ]
+                    }
+                },
 				nogag: {
-					gentle: [
-						`USER_TAG uses a finger to gently pry open TARGET_TAG's lips before inserting a VAR_C3 between TARGET_THEIR teeth, secured VAR_C2 behind TARGET_THEIR head. A muted meep follows soon after from TARGET_THEM!`,
-                        `USER_TAG uses a fingernail to gently tickle TARGET_TAG's chin before carefully inserting a VAR_C3 between TARGET_THEIR teeth, pulling the straps VAR_C2 behind TARGET_THEIR head.`,
-                        `USER_TAG uses USER_THEIR thumb and gently rubs TARGET_TAG's cheek before pushing the VAR_C3 into TARGET_THEIR mouth. The straps are then slowly pulled VAR_C2 behind TARGET_THEIR head.`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG places a finger gently on TARGET_TAG's lips and waits for them to stop talking before gently pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth, sealing it shut.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG taps a finger gently on TARGET_TAG's lips and waits for them to stop talking before carefully winding a roll of tape VAR_C2 around TARGET_THEIR head to form a VAR_C3.`,
-						},
-                        {
-							only: (t) => {
-								return t.c3.includes("OTN");
-							},
-							text: `USER_TAG holds up a VAR_C3, gently massaging TARGET_TAG's lips before placing it VAR_C2 over them, securing the straps behind TARGET_THEIR head.`,
-						},
-					],
-					forceful: [
-						`USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY goTARGET_ES to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`,
-						`USER_TAG holds up a VAR_C3, pressing it against TARGET_TAG's lips with ever increasing force until they part, taking away TARGET_THEIR ability to speak coherently! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled under TARGET_THEIR hair!`,
-                        `USER_TAG takes a VAR_C3 and pries TARGET_TAG's lips apart to put it into TARGET_THEIR mouth. TARGET_THEY_CAP barely has time to react as the straps are pulled VAR_C2 behind TARGET_THEIR head!`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 sealing them with strips of tape.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
-						},
-                        {
-							only: (t) => {
-								return t.c3.includes("OTN");
-							},
-							text: `USER_TAG uses a hand to cover TARGET_TAG's lips and silence TARGET_THEIR protest *forcefully* before covering them with a VAR_C3 and pulling the straps VAR_C2 behind TARGET_THEIR head!`,
-						},
-					],
-					requesting: [
-						`USER_TAG taps TARGET_TAG's lips, silently suggesting to say "ahh" before pushing a VAR_C3 VAR_C2 between TARGET_THEIR lips!`,
-                        `USER_TAG wraps an arm around TARGET_TAG, with a finger brushing the back of TARGET_THEIR cheek as a VAR_C3 is proffered to TARGET_THEM. USER_THEY_CAP waitUSER_S for TARGET_THEM to bite it before pulling the straps VAR_C2 behind TARGET_THEIR head.`,
-                        `USER_TAG holds up a VAR_C3, grinning as TARGET_TAG eyes it with a hint of desire as TARGET_THEY openTARGET_S TARGET_THEIR mouth and bites it! USER_THEY_CAP then pulls the straps VAR_C2 behind TARGET_THEIR head and buckles them!`,
-						{
-							only: (t) => {
-								return t.c2.includes("loosely") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 sealing them with strips of tape.`,
-						},
-						{
-							only: (t) => {
-								return t.c2.includes("tightly") && t.c3.includes("Tape");
-							},
-							text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
-						},
-                        {
-							only: (t) => {
-								return t.c3.includes("OTN");
-							},
-							text: `USER_TAG gives TARGET_TAG a moment to finish speaking before gently placing a VAR_C3 over TARGET_THEIR lips, securing the straps of the gag VAR_C2 behind TARGET_THEIR head!`,
-						},
-					],
+                    canaccess: {
+                        gentle: [
+                            `USER_TAG uses a finger to gently pry open TARGET_TAG's lips before inserting a VAR_C3 between TARGET_THEIR teeth, secured VAR_C2 behind TARGET_THEIR head. A muted meep follows soon after from TARGET_THEM!`,
+                            `USER_TAG uses a fingernail to gently tickle TARGET_TAG's chin before carefully inserting a VAR_C3 between TARGET_THEIR teeth, pulling the straps VAR_C2 behind TARGET_THEIR head.`,
+                            `USER_TAG uses USER_THEIR thumb and gently rubs TARGET_TAG's cheek before pushing the VAR_C3 into TARGET_THEIR mouth. The straps are then slowly pulled VAR_C2 behind TARGET_THEIR head.`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG places a finger gently on TARGET_TAG's lips and waits for them to stop talking before gently pressing fresh strips of tape VAR_C2 over TARGET_THEIR mouth, sealing it shut.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG taps a finger gently on TARGET_TAG's lips and waits for them to stop talking before carefully winding a roll of tape VAR_C2 around TARGET_THEIR head to form a VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG holds up a VAR_C3, gently massaging TARGET_TAG's lips before placing it VAR_C2 over them, securing the straps behind TARGET_THEIR head.`,
+                            },
+                        ],
+                        forceful: [
+                            `USER_TAG takes a VAR_C3 out and brushes the hair out of TARGET_TAG's face, before pinching TARGET_THEIR nose for a moment and shoving the gag between TARGET_THEIR teeth when TARGET_THEY goTARGET_ES to breathe! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled shut!`,
+                            `USER_TAG holds up a VAR_C3, pressing it against TARGET_TAG's lips with ever increasing force until they part, taking away TARGET_THEIR ability to speak coherently! The straps are pulled VAR_C2 behind TARGET_THEIR head and buckled under TARGET_THEIR hair!`,
+                            `USER_TAG takes a VAR_C3 and pries TARGET_TAG's lips apart to put it into TARGET_THEIR mouth. TARGET_THEY_CAP barely has time to react as the straps are pulled VAR_C2 behind TARGET_THEIR head!`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 sealing them with strips of tape.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG pinches TARGET_TAG's lips shut before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG uses a hand to cover TARGET_TAG's lips and silence TARGET_THEIR protest *forcefully* before covering them with a VAR_C3 and pulling the straps VAR_C2 behind TARGET_THEIR head!`,
+                            },
+                        ],
+                        requesting: [
+                            `USER_TAG taps TARGET_TAG's lips, silently suggesting to say "ahh" before pushing a VAR_C3 VAR_C2 between TARGET_THEIR lips!`,
+                            `USER_TAG wraps an arm around TARGET_TAG, with a finger brushing the back of TARGET_THEIR cheek as a VAR_C3 is proffered to TARGET_THEM. USER_THEY_CAP waitUSER_S for TARGET_THEM to bite it before pulling the straps VAR_C2 behind TARGET_THEIR head.`,
+                            `USER_TAG holds up a VAR_C3, grinning as TARGET_TAG eyes it with a hint of desire as TARGET_THEY openTARGET_S TARGET_THEIR mouth and bites it! USER_THEY_CAP then pulls the straps VAR_C2 behind TARGET_THEIR head and buckles them!`,
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("loosely") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 sealing them with strips of tape.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c2.includes("tightly") && t.c3.includes("Tape");
+                                },
+                                text: `USER_TAG taps on TARGET_TAG's lips, silently suggesting they keep them closed before VAR_C2 winding a roll of tape around TARGET_THEIR head to form a VAR_C3.`,
+                            },
+                            {
+                                only: (t) => {
+                                    return t.c3.includes("OTN");
+                                },
+                                text: `USER_TAG gives TARGET_TAG a moment to finish speaking before gently placing a VAR_C3 over TARGET_THEIR lips, securing the straps of the gag VAR_C2 behind TARGET_THEIR head!`,
+                            },
+                        ],
+                    },
+                    noaccess: [
+                        `USER_TAG holds a VAR_C3 up to TARGET_TAG's pretty lips. But since TARGET_THEY TARGET_ISARE wearing something over them, USER_THEY USER_ISARE unable to put the gag on TARGET_THEM. TARGET_THEIR_CAP speech remains unbound!`
+                    ]
 				},
 			},
 		},
@@ -772,16 +803,26 @@ const texts_gag = {
 			nomitten: {
 				other: {
 					gag: {
-						changetightness: [
+                        canaccess: {
+                            changetightness: [
 							`TARGET_TAG is cheeky and tries to gag USER_TAG, but USER_TAG gets the upper hand and adjusts the tightness on the VAR_C4 that TARGET_THEY TARGET_ISARE wearing, pulling the straps VAR_C2.`,
 							//`USER_TAG runs USER_THEIR hands behind TARGET_TAG's head, unbuckling the straps on TARGET_THEIR VAR_C4 and then gently pressing a VAR_C3 between TARGET_THEIR lips again. The straps are then pulled VAR_C2 and buckled again!`
-						],
-						newgag: [`USER_TAG looks at TARGET_TAG flatly as it instead takes the VAR_C3 and puts it on TARGET_THEM over top of the VAR_C4.`],
+                            ],
+                            newgag: [`USER_TAG looks at TARGET_TAG flatly as it instead takes the VAR_C3 and puts it on TARGET_THEM over top of the VAR_C4.`],
+                        },
+                        noaccess: [
+                            `USER_TAG looks at TARGET_TAG sternly as TARGET_THEY go to gag USER_THEM. USER_THEY_CAP considerUSER_S putting the gag on TARGET_THEM instead, but there is a muzzle in the way. TARGET_THEY_CAP TARGET_ISARE spared USER_THEIR wrath.`
+                        ]
 					},
 					nogag: {
-						gentle: [`USER_TAG grabs the VAR_C3 and then uses a robotic arm to gently caress TARGET_TAG's cheek, before putting it on TARGET_THEM, pulling the straps VAR_C2 and buckling them.`],
-						forceful: [`TARGET_TAG tries to gag USER_TAG, but USER_TAG's deft agility allows it to wrestle the gag out of TARGET_THEIR hands before shoving it into TARGET_THEIR mouth instead.`],
-						requesting: [`TARGET_TAG presents a gag to USER_TAG. It is somewhat unamused and points at TARGET_THEM to wear it instead. TARGET_THEY_CAP feelTARGET_S compelled to obey the order.`],
+                        canaccess: {
+                            gentle: [`USER_TAG grabs the VAR_C3 and then uses a robotic arm to gently caress TARGET_TAG's cheek, before putting it on TARGET_THEM, pulling the straps VAR_C2 and buckling them.`],
+						    forceful: [`TARGET_TAG tries to gag USER_TAG, but USER_TAG's deft agility allows it to wrestle the gag out of TARGET_THEIR hands before shoving it into TARGET_THEIR mouth instead.`],
+						    requesting: [`TARGET_TAG presents a gag to USER_TAG. It is somewhat unamused and points at TARGET_THEM to wear it instead. TARGET_THEY_CAP feelTARGET_S compelled to obey the order.`],
+                        },
+						noaccess: [
+                            `USER_TAG looks at TARGET_TAG sternly as TARGET_THEY go to gag USER_THEM. USER_THEY_CAP considerUSER_S putting the gag on TARGET_THEM instead, but there is a muzzle in the way. TARGET_THEY_CAP TARGET_ISARE spared USER_THEIR wrath.`
+                        ]
 					},
 				},
 			},
@@ -3593,9 +3634,25 @@ const texts_ungag = {
 			self: {
 				gag: {
                     failed: [
-                        `USER_TAG tugs at USER_THEIR VAR_C2, but the straps on head harness hold it firmly to USER_THEIR head. USER_THEY_CAP twiddleUSER_S with the little locks on it.`,
-                        `It's not for lack of trying, but the straps circling USER_TAG's vision remind USER_THEM of the futility in trying to remove USER_THEIR locked gag.`,
-                        `USER_TAG paws at the head harness on USER_THEIR head, clearly forgetting that USER_THEY USER_ISARE meant to be gagged until USER_THEIR head harness is unlocked.`
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `USER_TAG tugs at USER_THEIR VAR_C2, but the straps on head harness hold it firmly to USER_THEIR head. USER_THEY_CAP twiddleUSER_S with the little locks on it.`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `It's not for lack of trying, but the straps circling USER_TAG's vision remind USER_THEM of the futility in trying to remove USER_THEIR locked gag.`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `USER_TAG paws at the head harness on USER_THEIR head, clearly forgetting that USER_THEY USER_ISARE meant to be gagged until USER_THEIR head harness is unlocked.`
+                        },
+                        `USER_TAG paws at USER_THEIR facewear, helplessly unable to touch or remove the gags firmly garbling USER_THEIR words. Silence is *golden.*`
                     ],
 					single: [
                         `USER_TAG has taken USER_THEIR VAR_C2 out!`, 
@@ -3619,8 +3676,19 @@ const texts_ungag = {
 			other: {
 				gag: {
                     failed: [
-                        `USER_TAG tugs at the VAR_C2 on TARGET_TAG's face, but fails miserably in removing the head harness holding the gag securely in TARGET_THEIR mouth.`,
-                        `Despite USER_TAG's best efforts, TARGET_TAG's speech remains stolen from TARGET_THEM. A shame. Maybe someone should unlock the harness on TARGET_THEM!`
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `USER_TAG tugs at the VAR_C2 on TARGET_TAG's face, but fails miserably in removing the head harness holding the gag securely in TARGET_THEIR mouth.`
+                        },
+                        {
+                            required: (t) => {
+                                return (t.c3 && getHeadwear(t.serverID, t.targetuser.id).includes(`gagharness_${t.c3}`))
+                            },
+                            text: `Despite USER_TAG's best efforts, TARGET_TAG's speech remains stolen from TARGET_THEM. A shame. Maybe someone should unlock the harness on TARGET_THEM!`
+                        },
+                        `USER_TAG dances USER_THEIR fingers over TARGET_TAG's impenetrable facewear, the gags underneath completely safe from any nefarious removal. TARGET_THEIR_CAP speech remains safely sealed away.`
                     ],
 					single: [
                         `USER_TAG undoes the straps holding TARGET_TAG's VAR_C2 on TARGET_THEIR face, letting it fall out from between TARGET_THEIR teeth.`, 

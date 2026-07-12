@@ -10,6 +10,7 @@ const { getGag } = require("../functions/getters/gag/getGag.js");
 const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
 const { getMitten } = require("../functions/getters/mitten/getMitten.js");
 const { deleteGag } = require("../functions/setters/gag/removeGag.js");
+const { canAccessGag } = require("../functions/getters/gag/canAccessGag.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -72,6 +73,7 @@ module.exports = {
 					targetuser: gaggeduser,
 					c1: getHeavy(interaction.guildId, interaction.user.id)?.displayname, // heavy bondage type
 					c2: process.gagtypes.find((t) => t.value == gagtoremove)?.name ?? "gag",
+                    c3: gagtoremove
 				},
 			};
 
@@ -147,7 +149,7 @@ module.exports = {
                             // Now check if we have any gags that are locked on!
                             let lockedheadgears = [];
                             if (process.headwear[interaction.guildId][gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[interaction.guildId][gaggeduser.id]) }
-                            if (gagtoremove && process.headwear[interaction.guildId][gaggeduser.id] && process.headwear[interaction.guildId][gaggeduser.id][`gagharness_${gagtoremove}`]) {
+                            if (!canAccessGag(interaction.guildId, gaggeduser.id, gagtoremove)) {
                                 data.failed = true
                                 interaction.reply(getText(data));
                             }
@@ -178,7 +180,7 @@ module.exports = {
                             // Now check if we have any gags that are locked on!
                             let lockedheadgears = [];
                             if (process.headwear[interaction.guildId][gaggeduser.id]) { lockedheadgears = Object.keys(process.headwear[interaction.guildId][gaggeduser.id]) }
-                            if (gagtoremove && process.headwear[interaction.guildId][gaggeduser.id] && process.headwear[interaction.guildId][gaggeduser.id][`gagharness_${gagtoremove}`]) {
+                            if (!canAccessGag(interaction.guildId, gaggeduser.id, gagtoremove)) {
                                 data.failed = true
                                 interaction.reply(getText(data));
                                 return;
