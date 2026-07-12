@@ -962,7 +962,12 @@ async function handleMajorRestraint(serverID, user, target, type, restraint) {
                             .setStyle(ButtonStyle.Danger)*/
                     ]
 
-                    mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })
+                    try {
+                        mess.edit({ content: prompttext, components: [new ActionRowBuilder().addComponents(...editedbuttons)] })
+                    }
+                    catch (err) {
+                        console.log(err)
+                    }
                 })
                 .catch((err) => {
                     console.log(`Error sending message to major bind ${user}.`);
