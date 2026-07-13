@@ -28,6 +28,8 @@ const { removeMitten } = require("../setters/mitten/removeMitten");
 const { assignToy } = require("../setters/toy/assignToy");
 const { removeToy } = require("../setters/toy/removeToy");
 const { getText } = require("../textfunctions");
+const { userHasTags } = require("../getters/config/userHasTags");
+const { getItemTags } = require("../getters/config/getItemTags");
 
 /************
  * Attempts to perform an action on a user, if they are eligible. Actions are on a per restraint basis with a randomized cooldown based on config. 
@@ -111,7 +113,7 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                     data.textdata.c2 = getMittenName(serverID, userID, chosenmitten) ?? "mittens"
 
                     // Now check if it's allowed with an extreme
-                    if (getAllowedExtreme(serverID, interactionuser, targetuser, "mittens", chosenmitten)) {
+                    if (getAllowedExtreme(serverID, interactionuser, targetuser, "mittens", chosenmitten) && !userHasTags(serverID, userID, getItemTags(chosenmitten, true))) {
                         messageSendChannel(getText(data), getRecentChannel(serverID, userID).messagechannelid)
                         assignMitten(serverID, userID, chosenmitten, interactionuser.id);
                         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
@@ -137,7 +139,7 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                     data.textdata.c2 = getChastityName(serverID, userID, chosenchastity) ?? "chastity belt"
 
                     // Now check if it's allowed with an extreme
-                    if (getAllowedExtreme(serverID, interactionuser, targetuser, "chastity", chosenchastity)) {
+                    if (getAllowedExtreme(serverID, interactionuser, targetuser, "chastity", chosenchastity) && !userHasTags(serverID, userID, getItemTags(chosenchastity, true))) {
                         messageSendChannel(getText(data), getRecentChannel(serverID, userID).messagechannelid)
                         assignChastity(serverID, userID, interactionuser.id, chosenchastity);
                         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
@@ -160,7 +162,7 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                     data.textdata.c2 = getChastityBraName(serverID, userID, chosenchastity) ?? "chastity bra"
 
                     // Now check if it's allowed with an extreme
-                    if (getAllowedExtreme(serverID, interactionuser, targetuser, "chastity", chosenchastity)) {
+                    if (getAllowedExtreme(serverID, interactionuser, targetuser, "chastity", chosenchastity) && !userHasTags(serverID, userID, getItemTags(chosenchastity, true))) {
                         messageSendChannel(getText(data), getRecentChannel(serverID, userID).messagechannelid)
                         assignChastityBra(serverID, userID, interactionuser.id, chosenchastity);
                         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
@@ -198,7 +200,7 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                 }
 
                 // Now check if it's allowed with an extreme and if we're not wearing it already
-                if (getAllowedExtreme(serverID, interactionuser, targetuser, "heavy", chosenheavy) && !getHeavy(serverID, userID, chosenheavy)) {
+                if (getAllowedExtreme(serverID, interactionuser, targetuser, "heavy", chosenheavy) && !getHeavy(serverID, userID, chosenheavy) && !userHasTags(serverID, userID, getItemTags(chosenheavy, true))) {
                     messageSendChannel(getText(data), getRecentChannel(serverID, userID).messagechannelid)
                     assignHeavy(serverID, userID, chosenheavy, interactionuser.id, data.textdata.c3);
                     heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
@@ -221,7 +223,7 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                 data.textdata.c2 = getHeadwearName(serverID, userID, chosenmask)
 
                 // Now check if it's allowed with an extreme and if we're not wearing it already. Also omit any lockable masks. 
-                if (getAllowedExtreme(serverID, interactionuser, targetuser, "mask", chosenmask) && !getHeadwear(serverID, userID).includes(chosenmask) && !getBaseHeadwear(chosenmask).lockable) {
+                if (getAllowedExtreme(serverID, interactionuser, targetuser, "mask", chosenmask) && !getHeadwear(serverID, userID).includes(chosenmask) && !getBaseHeadwear(chosenmask).lockable && !userHasTags(serverID, userID, getItemTags(chosenmask, true))) {
                     messageSendChannel(getText(data), getRecentChannel(serverID, userID).messagechannelid)
                     assignHeadwear(serverID, userID, chosenmask, interactionuser.id);
                     heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
