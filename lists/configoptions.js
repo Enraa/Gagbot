@@ -1484,6 +1484,71 @@ const configoptions = {
 				return false;
 			}, // if true, button is greyed out
         },
+        gagbotheldkeyaction: {
+            name: "Gagbot Actions on Held Keys",
+            desc: "If your keys are found in Gagbot's possession, how frequently is Gagbot allowed to do things to you? Actions will only be performed while you are active.",
+            choices: [
+                {
+                    name: "Disabled",
+                    helptext: "*Gagbot will not perform any actions on you while holding your keys*",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: "disabled",
+                    style: ButtonStyle.Danger
+                },
+                {
+                    name: "2.5-5 Minutes",
+                    helptext: "Actions every 2.5-5 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 300000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "5-10 Minutes",
+                    helptext: "Actions every 5-10 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 600000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "15-30 Minutes",
+                    helptext: "Actions every 15-30 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 1800000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "30-60 Minutes",
+                    helptext: "Actions every 30-60 minutes",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 3600000,
+                    style: ButtonStyle.Secondary
+                },
+                {
+                    name: "1-2 Hours",
+                    helptext: "Actions every 1-2 hours",
+                    select_function: (serverID, userID) => {
+                        return false;
+                    },
+                    value: 7200000,
+                    style: ButtonStyle.Secondary
+                }
+            ],
+            menutype: "choice",
+			default: 600000,
+			disabled: (userID) => {
+				return false;
+			}, // if true, button is greyed out
+        },
 		revokeconsent: {
 			name: "Revoke Consent",
 			desc: "Revoke your consent from the bot? You will need to consent again to bondage in the future.",

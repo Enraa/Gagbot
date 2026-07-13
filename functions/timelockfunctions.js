@@ -17,7 +17,8 @@ const { getChastity } = require("./getters/chastity/getChastity.js");
 const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
 const { getCollar } = require("./getters/collar/getCollar.js");
 const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
-const fs = require("fs");
+const { rollGagbotKeyAction } = require("./timebased/rollGagbotKeyAction.js");
+const { deleteHeldKeyTimers } = require("./setters/config/deleteHeldKeyTimers.js");
 
 // returns whether the locking was successful
 function timelockChastity(serverID, client, wearer, keyholder, unlockTime, access, keyholderAfter, webhookchannel) {
@@ -223,6 +224,7 @@ function checkGagbotKeys() {
     
     if (process.heldkeytimers) {
         Object.keys(process.heldkeytimers).forEach((k) => {
+            rollGagbotKeyAction(...k.split("_"));
             gagbotHeldKeyTime(...k.split("_"));
         })
     }
@@ -246,8 +248,8 @@ function gagbotHeldKeyTime(serverID, wearerid, type) {
         markForSave("heldkeytimers");
     }
     else {
-        if (process[type] && process[type][serverID] && process[type][serverID][wearerid] && process[type][serverID][wearerid].keyholder != process.client.user.id) { // Key somehow returned to the wearer, or the device was removed
-            delete process.heldkeytimers[`${serverID}_${wearerid}_${type}`]
+        if ((process[type] && process[type][serverID] && process[type][serverID][wearerid] && (process[type][serverID][wearerid].keyholder != process.client.user.id)) || (process[type][serverID][wearerid] == undefined)) { // Key somehow returned to the wearer, or the device was removed
+            deleteHeldKeyTimers(serverID, wearerid, type);
             return;
         }
         if (process.heldkeytimers[`${serverID}_${wearerid}_${type}`].releasetime < Date.now()) {

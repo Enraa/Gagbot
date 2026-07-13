@@ -13,7 +13,7 @@ const { getProcessVariable } = require("../config/getProcessVariable");
  * - collartype: The collar ID of this collar
  * - timestamp: The time this collar was applied to the wearer
  * - mitten: Permission to mitten the user
- * - chastity: Permission to apply chasitity devices to the user
+ * - chastity: Permission to apply chastity devices to the user
  * - heavy: Permission to apply heavy bondage to the user
  * - mask: Permission to apply headwear to the user
  * ###### Additional properties may be added by other functions

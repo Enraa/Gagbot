@@ -11,6 +11,7 @@ const { deleteWearable } = require("../functions/setters/wearable/removeWearable
 const { deleteHeadwear } = require("../functions/setters/headwear/removeHeadwear.js");
 const { getServerOption } = require("../functions/getters/config/getServerOption.js");
 const { removeToy } = require("../functions/setters/toy/removeToy.js");
+const { deleteHeldKeyTimers } = require("../functions/setters/config/deleteHeldKeyTimers.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -34,13 +35,14 @@ module.exports = {
                 removeCorset(interaction.guildId, resetuser.id);
                 deleteWearable(interaction.guildId, resetuser.id);
                 deleteHeadwear(interaction.guildId, resetuser.id, undefined, true);
+                deleteHeldKeyTimers(interaction.guildId, resetuser.id);
                 setArousalCooldown(interaction.guildId, resetuser.id);
             } else {
                 await interaction.reply({ content: "Gagbot looks at you quizzically, as it does not recognize who you're trying to reset or if you have the power to.", flags: MessageFlags.Ephemeral });
             }
         }
 		catch (err) {
-            console.log(err);
+            console.log(err); 
         }
 	},
 };

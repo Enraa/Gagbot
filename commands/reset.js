@@ -11,6 +11,7 @@ const { deleteWearable } = require("../functions/setters/wearable/removeWearable
 const { deleteHeadwear } = require("../functions/setters/headwear/removeHeadwear.js");
 const { getServerOption } = require("../functions/getters/config/getServerOption.js");
 const { removeToy } = require("../functions/setters/toy/removeToy.js");
+const { deleteHeldKeyTimers } = require("../functions/setters/config/deleteHeldKeyTimers.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()
@@ -35,6 +36,7 @@ module.exports = {
                 removeCorset(interaction.guildId, interaction.user.id);
                 deleteWearable(interaction.guildId, interaction.user.id);
                 deleteHeadwear(interaction.guildId, interaction.user.id, undefined, true);
+                deleteHeldKeyTimers(interaction.guildId, interaction.user.id);
                 setArousalCooldown(interaction.guildId, interaction.user.id);
             } else {
                 // User does not have the permission, send an error message, but only if they don't have the safeworded role. If they do, then
