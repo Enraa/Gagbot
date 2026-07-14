@@ -9,7 +9,9 @@ const { convertPronounsText } = require("../../functions/other/convertPronounsTe
 function headpatfunction(serverID, recipient, data) {
     if (data.returnedobject.hit) {
         if (!getUserVar(serverID, recipient, "fluster") && getRecentChannel(serverID, recipient).valid) {
-            messageSendChannel(convertPronounsText(`As USER_THEY USER_ISARE given the headpat, USER_TAG's cheeks flush a bright red and USER_THEY can't help but stammer!`, { serverID: serverID, interactionuser: { id: recipient }, targetuser: { id: recipient }}), getRecentChannel(serverID, recipient).channelid)
+            setTimeout(() => {
+                messageSendChannel(convertPronounsText(`As USER_THEY USER_ISARE given the headpat, USER_TAG's cheeks flush a bright red and USER_THEY can't help but stammer!`, { serverID: serverID, interactionuser: { id: recipient }, targetuser: { id: recipient }}), getRecentChannel(serverID, recipient).channelid)
+            }, 3000);
         }
         setUserVar(serverID, recipient, "fluster", Date.now() + (300000 * getOption(serverID, recipient, "headpatrestraintpotency")));
     }
