@@ -62,6 +62,7 @@ const ballanswers = [
     `Good USER_PRAISEOBJECTs wait patiently`,
     `Perhaps, for a thoroughly bound USER_PRAISEOBJECT`,
     `Ask again after showing me what a good USER_PRAISEOBJECT you are`,
+    `The correct way to ask is "Miss Gagbot please"`,
     {
         required: (t) => {
             return !getChastity(t.serverID, t.targetuser.id)
