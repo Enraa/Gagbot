@@ -1,4 +1,3 @@
-const { collartypes } = require("../../functions/collarfunctions.js");
 const { mittentypes } = require("../../functions/gagfunctions.js");
 const { getChastity } = require("../../functions/getters/chastity/getChastity.js");
 const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra.js");
@@ -113,8 +112,7 @@ let tick = async (serverID, userID, datain) => {
                 outfitpieces.push({ category: "mittens", itemtowear: choice.value, color: null })
             } 
             else if ((randomchoice == 2) && !blocks.includes("collar")) {
-                arr = [...collartypes]
-                arr = arr.filter((f) => {
+                arr = process.collartypes.entries().filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
                         if (f.tags && f.tags.includes(t)) {

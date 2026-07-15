@@ -293,7 +293,6 @@ const loadHeavyTypes = () => {
     }
 
     process.autocompletes.heavy = heavyautocompletes;
-
 	process.heavytypes = heavytypes;
 };
 

@@ -10,7 +10,7 @@
  * - special?: If true, shows in list for /key additionalcollar. Optional.
  **********/
 function getBaseCollar(type) {
-    return process.collartypes.find((c) => c.value == type)
+    return process.collartypes[type];
 }
 
 exports.getBaseCollar = getBaseCollar;

@@ -1,4 +1,5 @@
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getBaseCollar } = require("./getBaseCollar");
 const { getCollar } = require("./getCollar");
 
 /************
@@ -15,14 +16,10 @@ const { getCollar } = require("./getCollar");
  ************/
 function getCollarName(serverID, userID, collarid) {
     traceFirstParam(arguments[0]);
-    let convertcollararr = {};
-    for (let i = 0; i < process.collartypes.length; i++) {
-        convertcollararr[process.collartypes[i].value] = process.collartypes[i].name;
-    }
     if (collarid) {
-        return convertcollararr[collarid];
+        return getBaseCollar(collarid)?.name
     } else {
-        return convertcollararr[getCollar(serverID, userID)?.collartype];
+        return getBaseCollar(getCollar(serverID, userID)?.collartype)?.name;
     }
 }
 

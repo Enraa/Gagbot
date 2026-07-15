@@ -41,10 +41,22 @@ const collartypes = [
 ];
 
 function loadCollarTypes() {
+    // Grab all the command files from the commands directory
+    let collarautocompletes = [];
+    let collartypes = {};
+    const commandsPath = path.join(__dirname, "..", "collar");
+    const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+
+    // Push the gag name over to the choice array.
+    for (const file of commandFiles) {
+        const collar = require(`${commandsPath}/${file}`);
+        collartypes[file.replace(".js", "")] = collar;
+        collartypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        if (!collar.hidden) { collarautocompletes.push({ name: collar.name, value: file.replace(".js", "") }) };
+    }
     if (process.autocompletes == undefined) { process.autocompletes = {} }
-    process.autocompletes.collar = collartypes.map((c) => {
-        return { name: c.name, value: c.value }
-    })
+
+    process.autocompletes.collar = collarautocompletes;
     process.collartypes = collartypes;
 }
 
@@ -136,7 +148,6 @@ async function promptTransferCollarKey(serverID, user, target, newKeyholder) {
 	});
 }
 
-exports.collartypes = collartypes;
 exports.promptCloneCollarKey = promptCloneCollarKey;
 exports.promptTransferCollarKey = promptTransferCollarKey;
 

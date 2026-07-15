@@ -1,0 +1,2 @@
+exports.name = "Handcuff Amulet"
+

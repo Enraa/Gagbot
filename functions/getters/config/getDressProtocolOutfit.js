@@ -1,4 +1,3 @@
-const { collartypes } = require("../../collarfunctions.js");
 const { outfitslist } = require("./../../../lists/outfitslist.js");
 const { getItemName } = require("./getItemName.js");
 const { getItemTags } = require("./getItemTags.js");

@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { collartypes } = require("./../functions/collarfunctions.js");
 const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");

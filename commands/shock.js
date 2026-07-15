@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { collartypes } = require("./../functions/collarfunctions.js");
 const { handleConsent, collarPermModal } = require("./../functions/interactivefunctions.js");
 const { getTextGeneric } = require("./../functions/textfunctions.js");
 const { handleTouchEvent, shockUser } = require("../functions/touchfunctions.js");
