@@ -8,7 +8,6 @@ const { getUserTags } = require("../../functions/getters/config/getUserTags.js")
 const { getLockedWearable } = require("../../functions/getters/wearable/getLockedWearable.js");
 const { getWearable } = require("../../functions/getters/wearable/getWearable.js");
 const { getBaseWearable } = require("../../functions/getters/wearable/getBaseWearable.js");
-const { mittentypes } = require("../../functions/gagfunctions.js");
 
 /**********
  * Event for Dress Protocol. This is a subclass of tick events, but comes with the heavy bondage object in question. 
@@ -65,8 +64,7 @@ let dressprotocoltick = async (serverID, userID, heavy) => {
             }
             else if ((randomchoice == 1) && !blocks.includes("mitten")) {
                 // Mitten
-                arr = [...mittentypes]
-                arr = arr.filter((f) => {
+                arr = process.mittentypes.entries().filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
                         if (f.tags && f.tags.includes(t)) {

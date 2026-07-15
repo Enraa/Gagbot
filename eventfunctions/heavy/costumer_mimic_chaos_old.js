@@ -1,4 +1,3 @@
-const { mittentypes } = require("../../functions/gagfunctions.js");
 const { getChastity } = require("../../functions/getters/chastity/getChastity.js");
 const { getChastityBra } = require("../../functions/getters/chastity/getChastityBra.js");
 const { getChastityBraName } = require("../../functions/getters/chastity/getChastityBraName.js");
@@ -85,8 +84,7 @@ let tick = async (serverID, userID, datain) => {
             }
             else if ((randomchoice == 1) && !blocks.includes("mitten")) {
                 // Mitten
-                arr = [...mittentypes]
-                arr = arr.filter((f) => {
+                arr = process.mittentypes.entries().filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {
                         if (f.tags && f.tags.includes(t)) {

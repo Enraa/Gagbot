@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags } = require("discord.js");
-const { gagtypes, mittentypes } = require("./../functions/gagfunctions.js");
 const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { wearabletypes } = require("./../functions/wearablefunctions.js");
 
@@ -7,8 +6,8 @@ const PAGE_SIZE = 10;
 
 const restraints = [
 	["Heavy", process.heavytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
-	["Mittens", mittentypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
-	["Gags", gagtypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
+	["Mittens", process.mittentypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
+	["Gags", process.gagtypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "-# *No description*", inline: false }))],
 	//["Chastity Belts", chastitytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
 	//["Chastity Bras", chastitybratypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}`, inline: false }))],
 	["Masks", headweartypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: heavy.blockinspect || heavy.blockemote ? `Restricts: ${heavy.blockinspect ? `Inspect, ` : ``}${heavy.blockemote ? `Emote, ` : ``}`.slice(0, -2) : `-# *No description*`, inline: false }))],

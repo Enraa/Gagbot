@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, ComponentType, ButtonStyle, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { gagtypes, mittentypes } = require("./../functions/gagfunctions.js");
 const { headweartypes } = require("./../functions/headwearfunctions.js");
 const { wearabletypes } = require("./../functions/wearablefunctions.js");
 const { ButtonBuilder } = require("discord.js");

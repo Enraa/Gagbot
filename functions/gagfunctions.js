@@ -79,10 +79,23 @@ const mittentypes = [
 ];
 
 function loadMittenTypes() {
+    // Grab all the command files from the commands directory
+    let mittenautocompletes = [];
+    let mittentypes = {};
+    const commandsPath = path.join(__dirname, "..", "mitten");
+    const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+
+    // Push the gag name over to the choice array.
+    for (const file of commandFiles) {
+        const mitten = require(`${commandsPath}/${file}`);
+        mittentypes[file.replace(".js", "")] = mitten;
+        mittentypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        if (!mitten.hidden) { mittenautocompletes.push({ name: mitten.name, value: file.replace(".js", "") }) };
+    }
+
     if (process.autocompletes == undefined) { process.autocompletes = {} }
-    process.autocompletes.mitten = mittentypes.map((m) => {
-        return { name: m.name, value: m.value }
-    })
+    process.autocompletes.mitten = mittenautocompletes;
+    process.mittentypes = mittentypes;
 }
 
 /**********************************************
@@ -703,6 +716,4 @@ exports.setUpGags = setUpGags;
 exports.loadMittenTypes = loadMittenTypes;
 
 exports.modifymessage = modifymessage;
-exports.mittentypes = mittentypes;
 exports.gagtypes = gagtypesout;
-exports.mittentypes = mittentypes;

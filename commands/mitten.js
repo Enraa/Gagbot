@@ -1,5 +1,4 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
-const { mittentypes } = require("./../functions/gagfunctions.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
 const { handleConsent, handleMajorRestraint, handleExtremeRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");

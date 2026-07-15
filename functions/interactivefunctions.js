@@ -2,7 +2,6 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 const { SlashCommandBuilder, UserSelectMenuBuilder, MessageFlags, TextInputBuilder, TextInputStyle, ModalBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle, LabelBuilder, StringSelectMenuBuilder, StringSelectMenuOptionBuilder, TextDisplayBuilder, ComponentType, SectionBuilder, CheckboxGroupBuilder, User } = require("discord.js");
-const { mittentypes } = require("./../functions/gagfunctions.js");
 const { wearabletypes } = require("./wearablefunctions.js");
 const { assignConsent } = require("./setters/config/assignConsent.js");
 const { getPronouns } = require("./getters/config/getPronouns.js");
@@ -1009,7 +1008,7 @@ async function generateHelpModal(userid, section, page) {
 function generateListTexts() {
     const restraints = {
         Heavy: Object.values(process.heavytypes).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
-        Mitten: mittentypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
+        Mitten: Object.values(process.mittentypes).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
         Gag: Object.entries(process.gagtypes).filter((f) => !f[1].hidden).map((f) => f[1]).sort((a, b) => a.choicename.localeCompare(b.choicename)).map((heavy) => ({ name: heavy.choicename, value: "" })),
         "Chastity Belt": Object.entries(process.chastitytypes).filter((f) => f[1].category == "Chastity Belt").map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),
         "Chastity Bra": Object.entries(process.chastitytypes).filter((f) => f[1].category == "Chastity Bra").map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),

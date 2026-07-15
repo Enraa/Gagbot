@@ -1,5 +1,6 @@
-const { mittentypes } = require("../../gagfunctions");
 const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
+const { getBaseMitten } = require("./getBaseMitten");
+const { getMitten } = require("./getMitten");
 
 /************
  * Gets the full mitten name of the User ID. Optionally will get the full mitten name of mittens by ID.
@@ -15,20 +16,10 @@ const { traceFirstParam } = require("../../other/TESTS/traceFirstParam");
  ************/
 function getMittenName(serverID, userID, mittenname) {
     traceFirstParam(arguments[0]);
-    if (process.mitten == undefined) {
-        process.mitten = {};
-    }
-    if (process.mitten[serverID] == undefined) {
-        process.mitten[serverID] = {};
-    }
-    let convertmittenarr = {};
-    for (let i = 0; i < mittentypes.length; i++) {
-        convertmittenarr[mittentypes[i].value] = mittentypes[i].name;
-    }
     if (mittenname) {
-        return convertmittenarr[mittenname];
-    } else if (process.mitten[serverID][userID]?.mittenname) {
-        return convertmittenarr[process.mitten[serverID][userID]?.mittenname];
+        return getBaseMitten(mittenname).name;
+    } else if (getMitten(serverID, userID)?.mittenname) {
+        return getBaseMitten(getMitten(serverID, userID)?.mittenname)?.name
     } else {
         return undefined;
     }
