@@ -184,7 +184,7 @@ let tick = async (serverID, userID, datain) => {
             else if (!getChastityBra(serverID, userID) || (getChastityBra(serverID, userID) && (getChastityBra(serverID, userID).chastitytype != "bra_cyberdoll"))) {
                 data.chastitybra = true;
                 if (getChastityBra(serverID, userID)) {
-                    data.textdata.c1 = getChastityBraName(serverID, undefined, getChastityBra(userID).chastitytype) ?? "chastity bra", // mitten name
+                    data.textdata.c1 = getChastityBraName(serverID, undefined, getChastityBra(serverID, userID).chastitytype) ?? "chastity bra", // mitten name
                         getChastityBra(serverID, userID).chastitytype = "bra_cyberdoll"
                     data.replace = true;
                     appliedrestraint = true;
