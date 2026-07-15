@@ -42,3 +42,4 @@ const garbleText = (text, parent, locarr, intensity) => {
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 12;
 exports.choicename = "Silent Panel Gag";
+
