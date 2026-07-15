@@ -1,4 +1,4 @@
-function garbleText(text, parent, intensity) {
+function garbleText(text, parent, locarr, intensity) {
 	let prefix = "";
 	let out = [];
 	let ignore = false;

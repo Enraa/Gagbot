@@ -42,7 +42,7 @@ class MessageAST {
 	callFunc(inFunction, icOnly = true, type = "rawText", args = []) {
 		if(!inFunction){return;}
 		// Call a helper due to scope issues with recursive functions
-		modifyMessage(this, this, inFunction, icOnly, type, args);
+		modifyMessage(this, this, inFunction, icOnly, type, [], args);
 		return this; // Allow chaining
 	}
 	// Remove all triple-backtick codeblocks
@@ -67,6 +67,60 @@ class MessageAST {
 		}
 		return this; // Allow chaining.
 	}
+    /*********************************************************************************
+     * Insert a segment of text at location. This should generally be the location 
+     * of the current text segment, so it pushes that segment down. Offset by +1 to 
+     * the second to last location to insert AFTER. 
+     * 
+     * This can be used to insert an ooc segment as a result of a modifying function
+     * @param locarr - The location in the AST data tree as an array of integers
+     * @param context - IC or OOC. IC can be further modified. OOC will be skipped
+     * @param text - The actual text string to put into the new segment
+     *********************************************************************************/
+    insertSegment(locarr, context = "OOC", text) {
+        if (this.data && locarr && (typeof text === "string") && text.length > 0) {
+            let modifylocation = [...locarr]; 
+            // Remove last segment as that is the rawtext bit. We want the parent IC/OOC.
+            modifylocation.pop();
+
+            // Remove the final spot too, but save it. This will be used after reducing.
+            let finalspot = modifylocation.pop();
+            
+            // Now iterate over each location, nesting deeper with a reducer. 
+            if (modifylocation.length > 0) {
+                let nested = modifylocation.reduce((prev, curr) => {
+                    console.log(`This is current prev:`)
+                    console.log(prev)
+                    console.log(`Its data is: `)
+                    console.log(prev.data)
+                    console.log(`data ${curr}`);
+                    console.log(prev.data[curr]);
+                    if (prev.data[curr]) {
+                        return prev.data[curr];
+                    }
+                }, this)
+
+                // Create the new segment to add
+                let newsegment = { type: context, parent: nested }
+
+                // Create the new subsegment to add
+                let newsubsegment = { type: "rawText", text: text, parent: newsegment }
+
+                // And then join the subsegments up.
+                newsegment.data = [newsubsegment];
+
+                // Finally, splice our new segment in. 
+                if (nested.data.length >= finalspot) {
+                    nested.data.push(newsegment)
+                }
+                else {
+                    nested.data.splice(finalspot, 0, newsegment)
+                }
+                
+            }
+        }
+        return this;
+    }
 	// Output AST as a string.
 	toString() {
 		let output = "";
@@ -355,15 +409,16 @@ const unpackMessage = (message) => {
  * @param inFunction - Function to run on the text
  * @param icOnly - Run on only IC parts? Default true.
  * @param type - rawText, but can be emoji, etc.
+ * @param locarr - Array of indexes to find where we are
  *************************************************/
-const modifyMessage = (message, parent, inFunction, icOnly = true, type = "rawText", args) => {
+const modifyMessage = (message, parent, inFunction, icOnly = true, type = "rawText", locarr, args) => {
 	// Handle lowest-level node by modifying text.
 	if(message.text && !message.data){
 		// Do we edit this message?
 		let modify = Array.isArray(type) ? (type.includes(message.type)) : (type == message.type)
 		if (modify) {
 			//console.log(args)
-			let ret = inFunction(message.text, parent, ...args);
+			let ret = inFunction(message.text, parent, locarr, ...args);
 			if(ret !== undefined){message.text = ret}
 		}
 	// Drop into lower levels.
@@ -372,7 +427,7 @@ const modifyMessage = (message, parent, inFunction, icOnly = true, type = "rawTe
 		// For each line
 		for (x in message.data) {
 			if (message.data[x].text || message.data[x].type == "IC" || message.data[x].type == "line"  || (!icOnly && message.data[x].type == "OOC")) {
-				modifyMessage(message.data[x], message, inFunction, icOnly, type, args);
+				modifyMessage(message.data[x], message, inFunction, icOnly, type, [...locarr, x], args);
 			}
 		}
 		// Filter out empty stuff

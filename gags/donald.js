@@ -4,7 +4,7 @@ const { processChunks } = require("./../functions/gag_utilities.js");
 const DONALDSOUNDS = ["pwah", "muawh", "ghuaw", "haa", "puahh", "bwahh", "phwahh", "phahhh", "mwaahhh", "mah", "pah", "bhahh", "bah", "ghhaa", "gahh", "ghah", "bwahh"];
 const DONALDFACES = [" :V ", " :V ", " >:V ", " :V ", " >:V ", " o<o ", " º<º "];
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	//https://stackoverflow.com/questions/49403285/splitting-word-into-syllables-in-javascript
 	const syllableRegex = /[^aeiouy]*[aeiouy]+(?:[^aeiouy]*$|[^aeiouy](?=[^aeiouy]))?/gi;
 

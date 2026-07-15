@@ -1,4 +1,5 @@
 const { getUserVar } = require("../functions/getters/config/getUserVar");
+const { insertIntoAST } = require("../functions/other/insertIntoAST");
 const { setUserVar } = require("../functions/setters/config/setUserVar");
 
 const honorifictitles = [
@@ -84,10 +85,11 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 };
 
 // Replace the first rawText field with a silenttitle, then purge all others.
-const impoliteSub = (text, parent, silent) => {
+const impoliteSub = (text, parent, locarr, silent) => {
 	if(!silent.isSilenced){
 		silent.isSilenced = true;
-		return silenttitles[Math.floor(Math.random() * silenttitles.length)];
+        insertIntoAST(parent, locarr, silenttitles[Math.floor(Math.random() * silenttitles.length)]);
+		return "";
 	}else{
 		return "";
 	}

@@ -1,7 +1,7 @@
 const nlp = require("compromise");
 
 // This is called after parsing the message tree, just after the emoji. 
-const pregarble = (text, parent, intensity, msg) => {
+const pregarble = (text, parent, locarr, intensity, msg) => {
     let outtext = text;
 
     // Set up sentence array. 

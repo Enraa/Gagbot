@@ -2,7 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const https = require("https");
 
-const heavytypes = [
+/*const heavytypes = [
 	// Armbinders
 	{ name: "Ancient Armbinder", value: "armbinder_ancient", tags: ["metal"], denialCoefficient: 3.5, heavytags: ["arms"] },
 	{ name: "Latex Armbinder", value: "armbinder_latex", tags: ["latex"], denialCoefficient: 2, heavytags: ["arms"] },
@@ -269,7 +269,7 @@ const heavytypes = [
 			}
 		},
 	},
-];
+];*/
 
 
 

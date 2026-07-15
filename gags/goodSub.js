@@ -1,7 +1,7 @@
 const { convertPronounsText } = require("../functions/other/convertPronounsText");
 
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let inputNumber = text.length;
 	let output = ""; // Empty target output, dont change
 	//Replacement lines

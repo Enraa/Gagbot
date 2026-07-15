@@ -16,7 +16,7 @@ function messagebegin (msg, msgTree, msgTreeMods, intensity) {
 }
 
 // Replace the first rawText field with a silenttitle, then purge all others.
-const outOfTime = (text, parent, silent) => {
+const outOfTime = (text, parent, locarr, silent) => {
 	if(!silent.isSilenced){
 		silent.isSilenced = true;
 		return `\n${outOfTimeMessages[Math.floor(Math.random() * outOfTimeMessages.length)]}`;

@@ -22,7 +22,7 @@ const totalAlphas = (text) => {
 };
 
 // Helper function to garble a text segment.
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	//console.log("Text Seg: " + text)
 
 	let output = "";

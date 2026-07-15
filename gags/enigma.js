@@ -1,6 +1,6 @@
 const lockedCharacters = "\\'\",.?~!()[]{}<>*-#";
 
-function garbleText(text, parent, intensity) {
+function garbleText(text, parent, locarr, intensity) {
 	return text
 		.split("")
 		.map((subtext, idx) => {

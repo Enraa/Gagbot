@@ -49,7 +49,7 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 };
 
 // Replace the first rawText field with a silenttitle, then purge all others.
-const impoliteSub = (text, parent, silent) => {
+const impoliteSub = (text, parent, locarr, silent) => {
 	if(!silent.isSilenced){
 		silent.isSilenced = true;
 		return affirmations[Math.floor(Math.random() * affirmations.length)];

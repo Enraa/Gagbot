@@ -1,5 +1,6 @@
 const { getUserVar } = require("../functions/getters/config/getUserVar");
 const { convertPronounsText } = require("../functions/other/convertPronounsText");
+const { insertIntoAST } = require("../functions/other/insertIntoAST");
 
 const headpatlines = [
     `USER_TAG needs a headpat...`,
@@ -18,10 +19,11 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
     }
 }
 
-const garble = (text, parent, silent) => {
+const garble = (text, parent, locarr, silent) => {
     if (!silent.isSilenced){
         silent.isSilenced = true
-        return convertPronounsText(headpatlines[Math.floor(Math.random() * headpatlines.length)], { interactionuser: { id: silent.id }, serverID: silent.guildid })
+        insertIntoAST(parent, locarr, convertPronounsText(headpatlines[Math.floor(Math.random() * headpatlines.length)], { interactionuser: { id: silent.id }, serverID: silent.guildid }));
+        return ``
     }
     else {
         return ``;

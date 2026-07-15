@@ -3,7 +3,7 @@ const nlp = require("compromise");
 const nlpSpeech = require("compromise-speech");
 nlp.extend(nlpSpeech);
 
-const garbleText = async (text, parent, intensity, msg) => {
+const garbleText = async (text, parent, locarr, intensity, msg) => {
     // Determine how many syllables to include in output. 
     let syllablecount = 0;
     let textsplit = text.split(" ");

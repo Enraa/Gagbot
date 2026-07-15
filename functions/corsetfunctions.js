@@ -132,7 +132,7 @@ const silenceReplacers = [" ", ".", ",", ""];
 const silenceMessages = ["-# *Panting heavily*", "-# *Completely out of breath*", "-# *Desperately gasping for air*", "-# *About to pass out*"];
 
 // Consumes breath and returns possibly modified text
-function corsetLimitWords(text, parent, user, msgModified, serverID) {
+function corsetLimitWords(text, parent, locarr, user, msgModified, serverID) {
 	// just do nothing if no text
 	if (text.length == 0 || text.match(/^\s*$/)) return text;
 

@@ -518,7 +518,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
 	return { modifiedmessage: modified, outtext: outtext, dollIDDisplay: dollIDDisplay, dollProtocolViolations: dollProtocolViolations };
 }
 
-function textGarbleDrone(text, parent, msg, msgTreeMods) {
+function textGarbleDrone(text, parent, locarr, msg, msgTreeMods) {
     if (getHeadwear(msg.guild.id, msg.member.id).includes("drone_visor")) {
         //let supplieddronespeech = (text.startsWith(`${getOption(msg.member.id, "dronevisorname")}`))
         let outtext = `${getOption(msg.guild.id, msg.member.id, "dronevisorname")} :: Code ${(msg.type == "19") ? "250" : "050"} :: ${(msg.type == "19") ? "Response" : "Statement"}, ${text}`

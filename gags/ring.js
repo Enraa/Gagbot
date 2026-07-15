@@ -27,7 +27,7 @@ const totalAlphas = (text) => {
 	return count;
 };
 
-const garbleText = (text, parent, intensity, msg) => {
+const garbleText = (text, parent, locarr, intensity, msg) => {
 	let output = "";
 	//splits by regex of any whitespace char so we have word arra
 	let words = text.split(/\s/);

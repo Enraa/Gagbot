@@ -17,7 +17,7 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
     }
 }
 
-const garble = (text, parent, silent) => {
+const garble = (text, parent, locarr, silent) => {
 	const parsed = nlp(text)
 		.compute("syllables")
 		.terms()

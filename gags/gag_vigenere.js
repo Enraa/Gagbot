@@ -7,7 +7,7 @@
  *********/
 const vigenerekey = "GAGBOT" // This will always be the key for now. 
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
     const alphabet = `ABCDEFGHIJKLMNOPQRSTUVWXYZ`
 
     let vigpos = 0;

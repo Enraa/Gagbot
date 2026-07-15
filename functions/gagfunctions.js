@@ -65,7 +65,7 @@ const setUpGags = () => {
 // Only used for the /list command.
 const gagtypesout = [{ name: "Ball Gag" }, { name: "Bast Gag" }, { name: "Bweh Gag" }, { name: "Cat Gag" }, { name: "Code Gag" }, { name: "Enchanted Dog Gag" }, { name: "Donald Gag" }, { name: "Good Sub Gag" }, { name: "Polite Sub Gag" }, { name: "Ring Gag" }, { name: "Silent Panel Gag" }, { name: "Stuff Gag" }, { name: "Tape Gag" }, { name: "UwU Gag" }, { name: "Enchanted Wolf Gag" }, { name: "L337 Gag" }, { name: "Enigma Gag" }];
 
-const mittentypes = [
+/*const mittentypes = [
 	{ name: "Kitty Paws", value: "mittens_kitty", tags: ["pet"] },
 	{ name: "Oversized Fluffy Paw Mittens", value: "mittens_oversized_fluff", tags: ["pet"] },
 	{ name: "Pom Pom Mittens", value: "mittens_pompom" },
@@ -76,7 +76,7 @@ const mittentypes = [
 	{ name: "Taped Fists", value: "mittens_tape" },
 	{ name: "Good Maid Mittens", value: "mittens_maid" },
     { name: "Steel Ball Fists", value: "mittens_steelball", tags: ["metal"] }
-];
+];*/
 
 function loadMittenTypes() {
     // Grab all the command files from the commands directory
@@ -304,7 +304,7 @@ function handleLinkExceptions(messagein) {
 
 
 
-const replaceStutter = (text, parent, msg, msgModified, intensity, arousedtexts) => {
+const replaceStutter = (text, parent, locarr, msg, msgModified, intensity, arousedtexts) => {
 	try {
 		let garbledtext = stutterText(msg, text, intensity, arousedtexts);
 		if (garbledtext.stuttered) {

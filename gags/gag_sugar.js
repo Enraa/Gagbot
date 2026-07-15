@@ -2,7 +2,7 @@
  * This gag removes all spaces from the wearer's words. Nothing more, nothing less. 
  * 
  ******/
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
     let removechars = [" ", ",", ".", "'"]
     let output = ""; // radio!
     for(let i = 0; i < text.length; i++) {

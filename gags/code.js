@@ -147,7 +147,7 @@ const codingConstruct = (lang) => {
 	return readtext;
 };
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let lang = determineLang(intensity);
 	let newtextparts = text.split(" ");
 	let outtext = "";

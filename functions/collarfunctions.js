@@ -5,7 +5,7 @@ const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, But
 const { getCollarPerm } = require("./getters/collar/getCollarPerm");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
 
-const collartypes = [
+/*const collartypes = [
 	{ name: "Latex Collar", value: "collar_latex", tags: ["latex"] },
 	{ name: "Leather Collar", value: "collar_leather", tags: ["leather"] },
 	{ name: "Cyber Doll Collar", value: "collar_cyberdoll" },
@@ -38,7 +38,7 @@ const collartypes = [
     { name: "Collar Bell", value: "collarbell", special: true, specialonly: true },
     { name: "Dampened Collar Bell", value: "collarbell_dampened", special: true, specialonly: true },
     { name: "Orgasm Control Module", value: "collar_orgasmcontrol", special: true, specialonly: true, tags: ["autonomy"] },
-];
+];*/
 
 function loadCollarTypes() {
     // Grab all the command files from the commands directory

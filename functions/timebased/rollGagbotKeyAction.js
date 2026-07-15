@@ -43,6 +43,15 @@ const { getProcessVariable } = require("../getters/config/getProcessVariable");
 async function rollGagbotKeyAction(serverID, userID, type) {
     traceFirstParam(arguments[0]);
     let heldkeys = process.heldkeytimers ?? {};
+    if (type == "chastity" && !getChastity(serverID, userID)) {
+        return;
+    }
+    if (type == "chastitybra" && !getChastityBra(serverID, userID)) {
+        return;
+    }
+    if (type == "collar" && !getCollar(serverID, userID)) {
+        return;
+    }
     if (getOption(serverID, userID, "gagbotheldkeyaction") == "disabled") { 
         // The user has disabled Gagbot held key actions, leave immediately
         return;
@@ -51,9 +60,13 @@ async function rollGagbotKeyAction(serverID, userID, type) {
         // This user has not spoken recently. Ignore them for now. 
         return;
     }
+    if (heldkeys[`${serverID}_${userID}_${type}`] == undefined) {
+        return;
+    }
     if (heldkeys[`${serverID}_${userID}_${type}`].lastaction == undefined) {
         // No timer to start with, so lets add some random time up to 5 minutes to the held key timer. 
         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + Math.floor(Math.random() * 300000))
+        return;
     }
     if ((process.recentgagbotaction ?? 0) > (Date.now())) {
         // Only allowed to perform up to one action per 15 seconds, globally

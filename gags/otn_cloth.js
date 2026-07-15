@@ -48,7 +48,7 @@ const tapeCharMap = new Map([
 	["z", "g"],
 ]);
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
 	let output = "";
 
 	// Split the string into words using ANY whitespace/control characters present. Double-spaces may occur, handle it gracefully with a '+'.

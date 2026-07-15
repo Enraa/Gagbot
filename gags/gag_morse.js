@@ -60,7 +60,7 @@ const punctuationMap = new Map([
     ['`',"`"],
 ])
 
-const garbleText = (text, parent, intensity) => {
+const garbleText = (text, parent, locarr, intensity) => {
     let output = "📻 "; // radio!
     for(let i = 0; i < text.length; i++) {
         if (morseCharMap.get(text.charAt(i).toLowerCase())) {
