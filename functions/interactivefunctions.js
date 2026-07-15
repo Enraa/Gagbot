@@ -21,7 +21,6 @@ const { getCollar } = require("./getters/collar/getCollar.js");
 const { getHeadwearName } = require("./getters/headwear/getHeadwearName.js");
 const { getMittenName } = require("./getters/mitten/getMittenName.js");
 const { getBaseChastity } = require("./getters/chastity/getBaseChastity.js");
-const { heavytypes } = require("./heavyfunctions.js");
 const { getChastity } = require("./getters/chastity/getChastity.js");
 const { getChastityBra } = require("./getters/chastity/getChastityBra.js");
 const { getChastityTimelock } = require("./getters/chastity/getChastityTimelock.js");
@@ -1010,7 +1009,7 @@ async function generateHelpModal(userid, section, page) {
 
 function generateListTexts() {
     const restraints = {
-        Heavy: heavytypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
+        Heavy: Object.values(process.heavytypes).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `Denial coefficient: ${heavy.denialCoefficient}` })),
         Mitten: mittentypes.sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: "" })),
         Gag: Object.entries(process.gagtypes).filter((f) => !f[1].hidden).map((f) => f[1]).sort((a, b) => a.choicename.localeCompare(b.choicename)).map((heavy) => ({ name: heavy.choicename, value: "" })),
         "Chastity Belt": Object.entries(process.chastitytypes).filter((f) => f[1].category == "Chastity Belt").map((f) => f[1]).sort((a, b) => a.name.localeCompare(b.name)).map((heavy) => ({ name: heavy.name, value: `` })),

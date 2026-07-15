@@ -16,6 +16,7 @@ const { assignGag } = require("../functions/setters/gag/assignGag.js");
 const { getOption } = require("../functions/getters/config/getOption.js");
 const { getTaggedList } = require("../functions/getters/config/getTaggedList.js");
 const { canAccessGag } = require("../functions/getters/gag/canAccessGag.js");
+const { getBaseHeavy } = require("../functions/getters/heavy/getBaseHeavy.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

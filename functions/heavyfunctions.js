@@ -271,16 +271,30 @@ const heavytypes = [
 	},
 ];
 
+
+
 /**************
  * Discord API Requires an array of objects in form:
  * { name: "Latex Armbinder", value: "armbinder_latex" }
  ********************/
 const loadHeavyTypes = () => {
-	process.heavytypes = heavytypes.map((item) => {
-		return { name: item.name, value: item.value };
-	});
+    // Grab all the command files from the commands directory
+    let heavyautocompletes = [];
+    let heavytypes = {};
+    const commandsPath = path.join(__dirname, "..", "heavy");
+    const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith(".js"));
+
+    // Push the gag name over to the choice array.
+    for (const file of commandFiles) {
+        const heavy = require(`${commandsPath}/${file}`);
+        heavytypes[file.replace(".js", "")] = heavy;
+        heavytypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        if (!heavy.hidden) { heavyautocompletes.push({ name: heavy.name, value: file.replace(".js", "") }) };
+    }
+
+    process.autocompletes.heavy = heavyautocompletes;
+
+	process.heavytypes = heavytypes;
 };
 
 exports.loadHeavyTypes = loadHeavyTypes;
-exports.heavytypes = heavytypes;
-exports.commandsheavy = heavytypes;

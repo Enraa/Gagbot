@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { commandsheavy, heavytypes } = require("./../functions/heavyfunctions.js");
 const { handleConsent, handleExtremeRestraint, handleMajorRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
@@ -18,7 +17,7 @@ module.exports = {
 	async autoComplete(interaction) {
         try {
             const focusedValue = interaction.options.getFocused();
-            let autocompletes = process.heavytypes.filter((f) => !getBaseHeavy(f.value).noself);
+            let autocompletes = process.autocompletes.heavy.filter((f) => !getBaseHeavy(f.value).noself);
             let matches = didYouMean(focusedValue, autocompletes, {
                 matchPath: ['name'], 
                 returnType: ReturnTypeEnums.ALL_SORTED_MATCHES, // Returns any match meeting 20% of the input

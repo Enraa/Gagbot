@@ -193,7 +193,7 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                 data.canwear = true;
 
                 // Choose a random heavy bondage, then validate if it's okay or not. 
-                let heavytypes = process.heavytypes.map((f) => f.value);
+                let heavytypes = process.autocompletes.heavy.map((f) => f.value);
                 let chosenheavy = heavytypes[Math.floor(Math.random() * heavytypes.length)]
 
                 data.textdata.c2 = getBaseHeavy(chosenheavy).name

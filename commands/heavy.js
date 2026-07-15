@@ -1,6 +1,5 @@
 const { SlashCommandBuilder, MessageFlags, TextDisplayBuilder } = require("discord.js");
 const { calculateTimeout } = require("./../functions/timefunctions.js");
-const { heavytypes } = require("./../functions/heavyfunctions.js");
 const { handleConsent, handleExtremeRestraint, handleMajorRestraint } = require("./../functions/interactivefunctions.js");
 const { getText } = require("./../functions/textfunctions.js");
 const { default: didYouMean, ReturnTypeEnums } = require("didyoumean2");
@@ -73,7 +72,7 @@ module.exports = {
             const focusedValue = interaction.options.getFocused();
             let subcommand = interaction.options.getSubcommand();
             let chosenuserid = interaction.options.get("user")?.value ?? interaction.user.id; // Note we can only retrieve the user ID here!
-            let autocompletes = process.heavytypes;
+            let autocompletes = process.autocompletes.heavy;
             if (subcommand != "furniture") {
                 autocompletes = autocompletes.filter((f) => getBaseHeavy(f.value).heavytags.includes(subcommand));
             }

@@ -19,7 +19,6 @@ const { getMittenName } = require("../../functions/getters/mitten/getMittenName.
 const { getLockedWearable } = require("../../functions/getters/wearable/getLockedWearable.js");
 const { getWearable } = require("../../functions/getters/wearable/getWearable.js");
 const { getWearableName } = require("../../functions/getters/wearable/getWearableName.js");
-const { heavytypes } = require("../../functions/heavyfunctions.js");
 const { logConsole } = require("../../functions/logfunctions.js");
 const { messageSendChannel } = require("../../functions/messagefunctions.js");
 const { assignChastity } = require("../../functions/setters/chastity/assignChastity.js");
@@ -200,7 +199,7 @@ let tick = async (serverID, userID, datain) => {
             }
             else if ((randomchoice == 5) && !blocks.includes("heavy")) {
                 // This one has to go to the end, so it is pushed to the heavyend option.
-                arr = [...heavytypes]
+                arr = [...process.heavytypes]
                 arr = arr.filter((f) => {
                     let goodtoreturn = true;
                     tags.forEach((t) => {

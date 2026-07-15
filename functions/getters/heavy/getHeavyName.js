@@ -1,5 +1,3 @@
-const { heavytypes } = require("../../heavyfunctions");
-
 /**********
  * Gets the heavy bondage full name from its item ID
  * 
@@ -8,7 +6,7 @@ const { heavytypes } = require("../../heavyfunctions");
  * ##### Returns a string with the heavy bondage's name
  **********/
 function getHeavyName(type) {
-    return heavytypes.find((h) => h.value === type)?.name
+    return process.heavytypes[type]?.name
 }
 
 exports.getHeavyName = getHeavyName;
