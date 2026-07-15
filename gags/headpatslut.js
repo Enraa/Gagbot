@@ -32,3 +32,5 @@ const garble = (text, parent, locarr, silent) => {
 
 exports.messagebegin = messagebegin;
 exports.choicename = "Headpat Slut Gag";
+
+exports.itemdescription = `The **Headpat Slut Gag** will make you beg for headpats when speaking. When receiving a headpat, you will be able to speak freely for 5 minutes. This duration is configurable in **/config** under **General**.`

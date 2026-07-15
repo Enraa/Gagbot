@@ -176,3 +176,5 @@ const garbleText = (text, parent, locarr, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "Code Gag";
+
+exports.itemdescription = `The **Code Gag** inserts your speech into pseudo code blocks of various languages.`

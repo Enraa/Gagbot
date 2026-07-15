@@ -106,3 +106,5 @@ const pregarble = (text, parent, locarr, intensity, msg) => {
 
 exports.pregarble = pregarble;
 exports.choicename = "Deferential Gag";
+
+exports.itemdescription = `The **Deferential Gag** will modify your speech such that personal and first person pronouns will be replaced with a third person pronoun. This is configurable in **/config** under **Restraint Options.**`

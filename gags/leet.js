@@ -32,6 +32,8 @@ const garbleText = (text, parent, locarr, intensity) => {
 exports.garbleText = garbleText;
 exports.choicename = "L337 Gag";
 
+exports.itemdescription = `The **L337 Gag** will transform your speech to match the cringy hacker aesthetic of the early 2000s!`
+
 // Unit Tests
 
 //Test Gag Intensities

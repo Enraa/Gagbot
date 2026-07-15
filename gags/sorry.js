@@ -59,3 +59,5 @@ const impoliteSub = (text, parent, locarr, silent) => {
 //exports.garbleText = garbleText;
 exports.messagebegin = messagebegin;
 exports.choicename = "Sorry Gag";
+
+exports.itemdescription = `The **Sorry Gag** will forbid any kind of apologies. The following phrases will result in the entire message being discarded and replaced with a self affirmation.\n\n**Apology phrases:**\n${apologies.join(", ")}`

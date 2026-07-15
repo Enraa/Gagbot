@@ -52,4 +52,4 @@ const garbleText = (text, parent, locarr, intensity) => {
 exports.garbleText = garbleText;
 exports.choicename = "Cat Gag";
 
-// export const choicename = "Cat Gag";
+exports.itemdescription = `The **Cat Gag** makes you speak with cat faces and 'nya's occasionally.`

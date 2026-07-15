@@ -29,3 +29,5 @@ exports.name = "Petals of Anguish"
 
 // Tags
 exports.tags = ["chastity"]
+
+exports.itemdescription = `The **Petals of Anguish** is modelled after https://www.reddit.com/r/femalechastity/comments/1rbjaqq/fantasy_device_20/#lightbox and will only permit each person to touch it once, including the wearer. Once put on, someone else will have to remove it.`

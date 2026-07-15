@@ -50,3 +50,5 @@ const garbleText = (text, parent, locarr, intensity) => {
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Vigenère Cipher Gag";
+
+exports.itemdescription = `The **Vigenère Cipher Gag** will apply a Vigenère cipher to your speech using the key GAGBOT.`

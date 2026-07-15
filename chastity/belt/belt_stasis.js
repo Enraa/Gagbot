@@ -24,3 +24,5 @@ exports.name = "Stasis Prison"
 
 // Tags
 exports.tags = ["chastity"]
+
+exports.itemdescription = `The **Stasis Prison** is modelled after the similarly named unique item in Path of Exile. It will restore the user's arousal to what it was after each successful **/letgo.**`

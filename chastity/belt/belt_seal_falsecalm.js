@@ -28,3 +28,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["seal", "chastity"]
 // Name
 exports.name = "Seal of False Calm"
+
+exports.itemdescription = `The **Seal of False Calm** will lock the user's arousal at 0, and track the highest arousal gaining toy and store all arousal it generates. When removed, all of that arousal is added immediately.`

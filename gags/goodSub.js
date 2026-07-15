@@ -75,3 +75,5 @@ const messageend = (msg, intensity) => {
 exports.garbleText = garbleText;
 exports.messageend = messageend;
 exports.choicename = "Good Sub Gag";
+
+exports.itemdescription = `The **Good Sub Gag** will replace any speech said with a phrase about servitude and being a good sub, regardless of what was said.`

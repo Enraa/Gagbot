@@ -33,3 +33,5 @@ function garbleText(text, parent, locarr, intensity) {
 
 exports.garbleText = garbleText;
 exports.choicename = "Enigma Gag";
+
+exports.itemdescription = `The **Enigma Gag** scrambles all the letters in each word, shuffling them around within the words.`

@@ -27,3 +27,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["seal", "chastity"]
 // Name
 exports.name = "Seal of Cyclical Time"
+
+exports.itemdescription = `The **Seal of Cyclical Time** will track the initial arousal level of the wearer, and revert their arousal back to that every 3 minutes.`

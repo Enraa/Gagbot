@@ -38,3 +38,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["seal", "chastity"]
 // Name
 exports.name = "Seal of the Pleasurable Descent"
+
+exports.itemdescription = `The **Seal of the Pleasurable Descent** will increase arousal growth and add a level of vibe every time the wearer does a successful **/letgo.**`

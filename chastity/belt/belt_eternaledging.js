@@ -21,3 +21,5 @@ exports.name = "Chastity Belt of Eternal Edging"
 
 // Tags
 exports.tags = ["chastity"]
+
+exports.itemdescription = `The **Chastity Belt of Eternal Edging** will constantly adjust itself such that your denial is always 0.5% higher than your arousal. You will never successfully **/letgo** while wearing this.`

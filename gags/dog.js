@@ -41,3 +41,5 @@ const garbleText = (text, parent, locarr, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "Enchanted Dog Gag";
+
+exports.itemdescription = `The **Enchanted Dog Gag** makes the wearer speak with dog sounds.`

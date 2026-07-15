@@ -72,3 +72,5 @@ const garble = (text, parent, locarr, silent) => {
 
 exports.messagebegin = messagebegin;
 exports.choicename = "Flustered Gag";
+
+exports.itemdescription = `The **Flustered Gag** will cause you to keysmash for a period of time after receiving a headpat. The duration of the effect can be configured in **/config** under **General**.`

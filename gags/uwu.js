@@ -15,3 +15,5 @@ const garbleText = (text, parent, locarr, intensity) => {
 
 exports.garbleText = garbleText;
 exports.choicename = "UwU Gag";
+
+exports.itemdescription = `The **UwU Gag** inserts many cutesy uwu type texts into your speech randomly.`

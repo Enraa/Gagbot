@@ -86,6 +86,8 @@ exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Chocolate Gag";
 
+exports.itemdescription = `The **Chocolate Gag** functions like a regular ball gag, but will shrink every 2 minutes, lowering in intensity until it hits 0 and the gag is removed.`
+
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {
 	setUserVar(data.serverID, data.userID, "confectionaryDissolveTimer", undefined)

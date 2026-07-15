@@ -15,3 +15,5 @@ exports.name = "Belt of Undying Ardour"
 
 // Tags
 exports.tags = ["chastity"]
+
+exports.itemdescription = `The **Belt of Undying Ardour** has a significantly higher arousal growth from toys as well as a minimum strength vibrator. It will also heavily reduce the arousal cooldown time and give back some of the arousal immediately when letting go.`

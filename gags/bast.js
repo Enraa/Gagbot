@@ -80,3 +80,5 @@ function iscatnoise(word) {
 
 exports.garbleText = garbleText;
 exports.choicename = "Bast Gag";
+
+exports.itemdescription = `The **Bast Gag** is a more advanced form of the **Cat Gag**, aimed at even more speech to turn the wearer into a cat.`

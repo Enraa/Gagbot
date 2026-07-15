@@ -178,3 +178,5 @@ const messagebegin = (msg, msgTree, msgTreeMods, intensity) => {
 
 exports.messagebegin = messagebegin;
 exports.choicename = "Dice Gag";
+
+exports.itemdescription = `The **Dice Gag** rolls a 1d20 each time you speak with a modifier. Lower numbers are more intensely garbled, while higher ones less so. A Nat 1 discards the entire text, while a Nat 20 permits it without garbling.`

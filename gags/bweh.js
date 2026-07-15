@@ -110,6 +110,8 @@ const garbleText = (text, parent, locarr, intensity) => {
 exports.garbleText = garbleText;
 exports.choicename = "Bweh Gag";
 
+exports.itemdescription = `The **Bweh Gag** will replace words randomly with "Bweh!"`
+
 /****************************************
  * Unit Tests
  * Comment out this entire section before putting into live.

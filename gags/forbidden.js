@@ -29,3 +29,5 @@ exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 
 exports.choicename = "Forbidden Gag";
+
+exports.itemdescription = `The **Forbidden Gag** will censor words that are configured in **/config** under **Restraint Options**, replacing them with an equivalent length of ✦.`

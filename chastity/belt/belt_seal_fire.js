@@ -34,3 +34,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["seal", "chastity"]
 // Name
 exports.name = "Seal of the Ardent Flame"
+
+exports.itemdescription = `The **Seal of the Ardent Flame** will lock the user's arousal at the current level and reduce the cooldown after a successful **/letgo**.`

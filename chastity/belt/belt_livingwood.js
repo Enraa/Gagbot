@@ -37,3 +37,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["living", "chastity"]
 // Name
 exports.name = "Livingwood Belt"
+
+exports.itemdescription = `The **Livingwood Belt** will progressively become harder to **/letgo** for each failed attempt, as well as for every 15 minutes without success.`

@@ -9,3 +9,5 @@ const garbleText = (text, parent, locarr, intensity) => {
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 60;
 exports.choicename = "Eldritch Gag";
+
+exports.itemdescription = `The **Eldritch Gag** inserts a bunch of diacritics into your speech, making it increasingly difficult to read across lines. Has a unique interaction with the **Doll Visor.**`

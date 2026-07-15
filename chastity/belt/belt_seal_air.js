@@ -20,3 +20,5 @@ exports.onOrgasm = (data) => {
 exports.tags = ["seal", "chastity"]
 // Name
 exports.name = "Seal of the Capricious Breeze"
+
+exports.itemdescription = `The **Seal of the Capricious Breeze** will randomly add 0-100% arousal on a successful **/letgo.**`

@@ -73,3 +73,5 @@ const garbleText = (text, parent, locarr, intensity) => {
 exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Morse Code Gag";
+
+exports.itemdescription = `The **Morse Code Gag** will change your entire speech to match the syntax for Morse Code. Review https://en.wikipedia.org/wiki/Morse_code#/media/File:International_Morse_Code.svg to see how to read it.`

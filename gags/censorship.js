@@ -45,3 +45,5 @@ function garbleText(text, parent, locarr, intensity) {
 
 exports.garbleText = garbleText;
 exports.choicename = "Censorship Gag";
+
+exports.itemdescription = `The **Censorship Gag** replaces various letters in your speech with full blackout blocks such as ████.`

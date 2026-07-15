@@ -37,3 +37,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["seal", "chastity"]
 // Name
 exports.name = "Seal of the Unmoving Stone"
+
+exports.itemdescription = `The **Seal of the Unmoving Stone** will make it difficult for the wearer's arousal to change over time, with a higher rate of change the more it drifts from the median.`

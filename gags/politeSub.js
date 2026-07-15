@@ -98,3 +98,5 @@ const impoliteSub = (text, parent, locarr, silent) => {
 //exports.garbleText = garbleText;
 exports.messagebegin = messagebegin;
 exports.choicename = "Polite Sub Gag";
+
+exports.itemdescription = `**Polite Sub Gag** will force you to use any of the following titles to speak. When using one, you will be permitted speech for 30 seconds. Not using a title will result in your speech discarded for an emote about stammering.\n\n**Permitted Honorific Titles:**\n${honorifictitles.join(", ")}`

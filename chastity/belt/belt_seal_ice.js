@@ -38,3 +38,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["seal", "chastity"]
 // Name
 exports.name = "Seal of the Enduring Ice"
+
+exports.itemdescription = `The **Seal of the Enduring Ice** will make it difficult to gain arousal while equipped.`

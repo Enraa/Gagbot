@@ -13,3 +13,5 @@ exports.name = "Timekeeper's Belt"
 
 // Tags
 exports.tags = ["chastity"]
+
+exports.itemdescription = `The **Timekeeper's Belt** has a low growth and decay coefficient, as well as reduced timescale. This effectively makes all changes significantly slower. `

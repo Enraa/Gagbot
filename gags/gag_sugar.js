@@ -17,3 +17,5 @@ exports.garbleText = garbleText;
 exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Sugar Rush Gag";
 exports.tags = ["drug"]
+
+exports.itemdescription = `The **Sugar Rush Gag** will remove all spaces, periods and commas from your speech.`
