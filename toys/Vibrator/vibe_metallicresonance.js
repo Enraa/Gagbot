@@ -7,7 +7,7 @@ exports.toyname = "Metallic Resonance Egg"
 exports.vibescale = (data) => { return 1.8 }
 
 exports.calcVibeEffect = function (data) { 
-    if (getChastity(data.serverID, data.userID) && getItemTags(getChastity(data.serverID, data.userID).chastitytype)?.includes("metal")) {
+    if (getChastity(data.serverID, data.userID) && getItemTags(getChastity(data.serverID, data.userID)?.chastitytype, true)?.includes("metal")) {
         return data.intensity * (this.vibescale())
     }
     else {

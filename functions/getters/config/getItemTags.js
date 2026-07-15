@@ -50,9 +50,10 @@ function getItemTags(items, suppresserror = false) {
         }
 
         let i = typeofcheck(item);
-        if (i == undefined) {
+        if ((i == undefined) && !suppresserror) {
             console.log(`Error finding item`)
             console.log(item);
+            console.trace()
         }
         if (i && i.tags && Array.isArray(i.tags)) {
             i.tags.forEach((tag) => {

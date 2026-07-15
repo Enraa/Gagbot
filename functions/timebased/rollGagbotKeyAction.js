@@ -30,6 +30,9 @@ const { removeToy } = require("../setters/toy/removeToy");
 const { getText } = require("../textfunctions");
 const { userHasTags } = require("../getters/config/userHasTags");
 const { getItemTags } = require("../getters/config/getItemTags");
+const { setProcessVariable } = require("../setters/config/setProcessVariable");
+const { getItemType } = require("../getters/config/getItemType");
+const { getProcessVariable } = require("../getters/config/getProcessVariable");
 
 /************
  * Attempts to perform an action on a user, if they are eligible. Actions are on a per restraint basis with a randomized cooldown based on config. 
@@ -51,6 +54,10 @@ async function rollGagbotKeyAction(serverID, userID, type) {
     if (heldkeys[`${serverID}_${userID}_${type}`].lastaction == undefined) {
         // No timer to start with, so lets add some random time up to 5 minutes to the held key timer. 
         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + Math.floor(Math.random() * 300000))
+    }
+    if ((process.recentgagbotaction ?? 0) > (Date.now())) {
+        // Only allowed to perform up to one action per 15 seconds, globally
+        return;
     }
     if (heldkeys[`${serverID}_${userID}_${type}`] && ((heldkeys[`${serverID}_${userID}_${type}`].lastaction ?? 0) < Date.now())) {
         let guild = process.client.guilds.cache.get(serverID);
@@ -76,7 +83,8 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                 // Their collar does not have any permissions. Oh well. 
                 return 
             }
-            else if (actiontotake == "mitten") {
+            // If the last action was NOT mittens, then we can do mittens again
+            else if (actiontotake == "mitten" && (!getProcessVariable(serverID, userID, "recentgagbotactionitem") || (getItemType(getProcessVariable(serverID, userID, "recentgagbotactionitem")) != "mitten"))) {
                 if (getMitten(serverID, userID)) {
                     // Remove their mittens!
                     data.textarray = "texts_unmitten"
@@ -118,6 +126,8 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                         assignMitten(serverID, userID, chosenmitten, interactionuser.id);
                         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                         markForSave("heldkeytimers");
+                        process.recentgagbotaction = (Date.now() + 15000)
+                        setProcessVariable(serverID, userID, "recentgagbotactionitem", chosenmitten)
                     }
                 }
             }
@@ -144,6 +154,8 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                         assignChastity(serverID, userID, interactionuser.id, chosenchastity);
                         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                         markForSave("heldkeytimers");
+                        process.recentgagbotaction = (Date.now() + 15000)
+                        setProcessVariable(serverID, userID, "recentgagbotactionitem", chosenchastity)
                     }
                 }
                 else if (!getChastityBra(serverID, userID) && (coinflip == 1)) {
@@ -167,6 +179,8 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                         assignChastityBra(serverID, userID, interactionuser.id, chosenchastity);
                         heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                         markForSave("heldkeytimers");
+                        process.recentgagbotaction = (Date.now() + 15000)
+                        setProcessVariable(serverID, userID, "recentgagbotactionitem", chosenchastity)
                     }
                 }
             }
@@ -205,6 +219,8 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                     assignHeavy(serverID, userID, chosenheavy, interactionuser.id, data.textdata.c3);
                     heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                     markForSave("heldkeytimers");
+                    process.recentgagbotaction = (Date.now() + 15000)
+                    setProcessVariable(serverID, userID, "recentgagbotactionitem", chosenheavy)
                 }
             }
             else if (actiontotake == "mask") {
@@ -228,11 +244,13 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                     assignHeadwear(serverID, userID, chosenmask, interactionuser.id);
                     heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                     markForSave("heldkeytimers");
+                    process.recentgagbotaction = (Date.now() + 15000)
+                    setProcessVariable(serverID, userID, "recentgagbotactionitem", chosenmask)
                 }
             }
         }
         else if ((type == "chastity") || (type == "chastitybra")) {
-            let coinflip = (Math.floor(Math.random() * 100) % 2); // 50% chance for adding or removing
+            let coinflip = (Math.floor(Math.random() * 100) % 4); // 25% chance for removing, 75% adding
             let intensity = Math.min(1 + Math.floor(20 - (20 * (Math.random() * Math.random()))), 20) // 1-20, weighted higher towards higher numbers. 
 
             let eligibletoystoadd = allEligibleToys(serverID, userID, interactionuser.id);
@@ -246,9 +264,14 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                 }
             }
 
-            if ((coinflip == 0) && (eligibletoystoadd.length > 0)) {
+            if ((coinflip != 0) && (eligibletoystoadd.length > 0)) {
                 // Add a toy at some random intensity!
                 let chosentoy = eligibletoystoadd[Math.floor(Math.random() * eligibletoystoadd.length)]
+
+                // Dont use the same toy twice in a row.
+                if (getProcessVariable(serverID, userID, "recentgagbotactionitem") == chosentoy) {
+                    return;
+                }
 
                 data.textarray = "texts_toy",
                 data.textdata.c1 = getHeavy(serverID, userID)?.displayname // heavy bondage type
@@ -272,10 +295,17 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                 assignToy(serverID, userID, interactionuser.id, intensity, chosentoy, interactionuser.id);
                 heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                 markForSave("heldkeytimers");
+                process.recentgagbotaction = (Date.now() + 15000)
+                setProcessVariable(serverID, userID, "recentgagbotactionitem", chosentoy)
             }
-            else if ((coinflip == 1) && (eligibletoystoremove.length > 0)) {
+            else if ((eligibletoystoremove.length > 0)) {
                 // Remove a toy!
                 let chosentoy = eligibletoystoremove[Math.floor(Math.random() * eligibletoystoremove.length)]
+
+                // Dont use the same toy twice in a row.
+                if (getProcessVariable(serverID, userID, "recentgagbotactionitem") == chosentoy) {
+                    return;
+                }
 
                 data.textarray = "texts_untoy",
                 data.textdata.c1 = getHeavy(serverID, userID)?.displayname // heavy bondage type
@@ -299,6 +329,8 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                 removeToy(serverID, userID, interactionuser.id, intensity, chosentoy, interactionuser.id);
                 heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                 markForSave("heldkeytimers");
+                process.recentgagbotaction = (Date.now() + 15000)
+                setProcessVariable(serverID, userID, "recentgagbotactionitem", chosentoy)
             }
         }
     }
