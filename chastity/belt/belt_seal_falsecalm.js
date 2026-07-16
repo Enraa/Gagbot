@@ -20,7 +20,7 @@ exports.onEquip = (data) => {
 
 exports.onUnequip = (data) => {
     //  Add All Stored Arousal at once
-    addArousal(data.serverID, data.userID, getUserVar(data.serverID, data.userID, "base_arousal"));
+    addArousal(data.serverID, data.userID, Math.min(getUserVar(data.serverID, data.userID, "base_arousal") ?? 0, 2000));
     setUserVar(data.serverID, data.userID, "base_arousal", undefined);
 }
 

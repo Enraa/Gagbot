@@ -30,6 +30,7 @@ const { messageSendChannel } = require("./messagefunctions.js");
 const { getPronouns } = require("./getters/config/getPronouns.js");
 const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
 const { getProcessVariable } = require("./getters/config/getProcessVariable.js");
+const { getArousalGenerationFromToys } = require("./getters/arousal/getArousalGenerationFromToys.js");
 
 // NOTE: canUnequip is currently checked in functions that remove/assign chastity and those functions return if it succeeded, but the text responses are not yet updated
 // probably makes more sense to make custom text responses for the belts/bras that use this that explain why it failed
@@ -558,10 +559,7 @@ function updateArousalValues() {
                 const vibes = getToys(server, user);
                 // if no vibe effect, growth coefficient will be 0
                 // otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
-                let vibegains = vibes.reduce((prev, currVibe) => { 
-                    let vibedata = { intensity: currVibe.intensity, userID: user, serverID: server }
-                    return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
-                }, 0)
+                let vibegains = getArousalGenerationFromToys(server, user);
                 // Calculate any arousal gain purely from the chastity devices worn. Add to vibearousal change. 
                 let chastityvibegains = traits.calcVibeEffect({ serverID: server, userID: user });
                 let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0
@@ -638,12 +636,13 @@ function calcNextArousal(traits, time, arousal, prev, growthCoefficient, decayCo
     // Decay based on decay coefficient times the average of (arousal + prev), 2% of the total, or 0.05, whichever is the highest. 
 	let decay = tickScale * bounded(traits.minDecay ?? -999999, (traits.timescale ?? 1) * Math.max(decayCoefficient * Math.max(((arousal ?? 0) + prev) / 2, 0.1), 0.05), traits.maxDecay ?? 999999);
     
-    // If arousal + growth is higher than 1000, remove an additional 5% per minute until it is below that again.
+    // If arousal + growth is higher than 1000, remove an additional 5% per minute, scaling +1% per 50 up to a +50% per minute tax. 
     // 1000 is *far* beyond the original intended reasonable maxima of the system, so making a tax here makes sense. 
     // While not chaste, this isn't super relevant - the tax is approximately an additional 20% of the decay.
     // While chaste, this practically doubles the natural decay rate. 
+    // Users should not be going above 1000 arousal anymore. 
     if ((arousal + growth) > 1000) {
-        decay = (decay + ((tickScale * 0.05) * (arousal + growth)))
+        decay = (decay + ((tickScale * Math.min(0.05 + ((((arousal + growth) - 1000) / 50) * 0.01), 0.5)) * (arousal + growth)))
     }
     //logConsole(`calcNextArousal: ${growth}, ${noDecay}, ${decay}`, 1);
     logConsole(`calcNextArousal: ${bounded((traits.minArousal ?? 0), noDecay - decay, (traits.maxArousal ?? 9999999))}`, 1);
