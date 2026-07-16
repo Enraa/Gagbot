@@ -15,3 +15,5 @@ exports.calcVibeEffect = function (data) {
 }
 
 exports.toyname = "Scalp Massager"
+
+exports.itemdescription = `The **Scalp Massager** can be applied to anyone and will raise the user's arousal. Has a lowered effectiveness on users wearing any kind of headgear.`

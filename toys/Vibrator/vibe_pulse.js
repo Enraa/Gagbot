@@ -6,3 +6,5 @@ exports.calcVibeEffect = function (data) {
 }
 
 exports.toyname = "Pulse Vibe"
+
+exports.itemdescription = `The **Pulse Vibe** applies its vibrating effect in 30 second intervals, with 30 seconds on, 30 seconds off.`

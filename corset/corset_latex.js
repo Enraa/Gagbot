@@ -6,3 +6,5 @@ exports.breathRecovery = [2000, 4.4, 3.6, 3, 2.4, 1.8, 1.5, 1.2, 0.9, 0.7, 0.5, 
 
 exports.tags = ['latex']
 exports.name = "Latex Corset"
+
+exports.itemdescription = `The **Latex Corset** has a higher max breath, but a lower breath recovery rate.`

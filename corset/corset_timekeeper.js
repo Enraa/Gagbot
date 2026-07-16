@@ -8,3 +8,5 @@ exports.gaspLimit = [1333, 112, 96, 80, 68, 59, 48, 40, 32, 26, 20, 14, 8, 6, 4,
 exports.minWords = [10, 3, 3, 2, 2, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 exports.name = "Timekeeper's Corset"
+
+exports.itemdescription = `The **Timekeeper's Corset** has a substantially lower breath recovery rate.`

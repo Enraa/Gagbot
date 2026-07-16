@@ -10,3 +10,5 @@ exports.minWords = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
 
 exports.tags = ['leather']
 exports.name = "Masterwork Corset"
+
+exports.itemdescription = `The **Masterwork Corset** has a significantly more punishing effect overall.`

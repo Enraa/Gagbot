@@ -20,3 +20,5 @@ exports.onEquip = (data) => {
 }
 
 exports.toyname = "Headpat Capacitor Vibe"
+
+exports.itemdescription = `The **Headpat Capacitor Vibe** will activate when receiving a headpat, providing a vibrating sensation that can stack up as the battery is charged. The current battery gauge can be displayed in **/inspect**.`

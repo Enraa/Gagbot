@@ -1,57 +1,7 @@
 const { getUserVar } = require("../functions/getters/config/getUserVar");
 const { insertIntoAST } = require("../functions/other/insertIntoAST");
 const { setUserVar } = require("../functions/setters/config/setUserVar");
-
-const honorifictitles = [
-	// Oh god its hard to type these without caps
-	"miss",
-    "missus",
-    "mister",
-	"master",
-	"masters",
-	"sir",
-    "ser",
-	"sirs",
-	"ma\'am",
-	"maam",
-    "madame",
-    "madam",
-    "milady",
-    "milord",
-	"lady",
-	"ladies",
-	"lord",
-	"lords",
-	"queen",
-	"queens",
-	"king",
-	"kings",
-	"mistress",
-	"mistresses",
-	"goddess",
-	"goddesses",
-	"maitresse",
-	"administrator",
-	"administrators",
-	"mommy",
-	"mommies",
-	"daddy",
-	"daddies",
-	"mxtress",
-	"overseer",
-	"headmaid",
-	"head\ maid",
-	"mx",
-	"duke",
-	"dukes",
-	"dame",
-	"count",
-	"overlord",
-	"(\\w|\\d)+-sama",
-	"(\\w|\\d)+-sensei",
-	"(\\w|\\d)+-san",
-	"(\\w|\\d)+-senpai",
-];
+const { honorifictitles } = require("../lists/politetitles");
 
 const silenttitles = [`*looks down silently*`, `*tries to speak, but no words come out*`, `*nods without a word*`, `*looks down and to the side*`, `*twiddles thumbs meekly*`, `*pouts as the gag stops impolite speech*`, `*goes mute without an honorific*`, `*meeps but produces no audible words*`, `*casts eyes downward, like a good sub*`, `*blushes and mumbles something*`];
 

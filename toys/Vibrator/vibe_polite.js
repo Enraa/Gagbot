@@ -1,6 +1,6 @@
 const { getUserVar } = require("../../functions/getters/config/getUserVar")
 const { setUserVar } = require("../../functions/setters/config/setUserVar")
-
+const { honorifictitles } = require("../../lists/politetitles");
 
 // This vibrator will only function if getUserVar(userID, "politeSubVibeTime") has any value
 exports.vibescale = (data) => { return 3.0 } // Not a mistake. Very arousing to be compliant!
@@ -18,3 +18,5 @@ exports.onEquip = function (data) {
 }
 
 exports.toyname = "Polite Vibe"
+
+exports.itemdescription = `The **Polite Vibe** will activate whenever the user uses an honorific title in their speech, providing a vibrating effect for a few minutes.\n\n**Permitted Honorific Titles:**\n${honorifictitles.join(", ")}`

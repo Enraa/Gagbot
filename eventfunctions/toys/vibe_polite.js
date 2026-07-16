@@ -2,52 +2,9 @@ const { getRecentChannel } = require("../../functions/getters/config/getRecentCh
 const { getUserVar } = require("../../functions/getters/config/getUserVar");
 const { messageSendChannel } = require("../../functions/messagefunctions");
 const { setUserVar } = require("../../functions/setters/config/setUserVar");
+const { honorifictitles } = require("../../lists/politetitles");
 
 function msgfunction(serverID, userid, data) {
-    const honorifictitles = [
-        // Oh god its hard to type these without caps
-        "miss",
-        "master",
-        "masters",
-        "sir",
-        "sirs",
-        "ma\'am",
-        "maam",
-        "lady",
-        "ladies",
-        "lord",
-        "lords",
-        "queen",
-        "queens",
-        "king",
-        "kings",
-        "mistress",
-        "mistresses",
-        "goddess",
-        "goddesses",
-        "maitresse",
-        "administrator",
-        "administrators",
-        "mommy",
-        "mommies",
-        "daddy",
-        "daddies",
-        "mxtress",
-        "overseer",
-        "headmaid",
-        "head\ maid",
-        "mx",
-        "duke",
-        "dukes",
-        "dame",
-        "count",
-        "overlord",
-        "(\\w|\\d)+-sama",
-        "(\\w|\\d)+-sensei",
-        "(\\w|\\d)+-san",
-        "(\\w|\\d)+-senpai",
-    ];
-
     let honorificsmap = honorifictitles.join("|");
 	let regexpattern = new RegExp(`\\b(${honorificsmap})\\b`, "i");
 

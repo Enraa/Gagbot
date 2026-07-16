@@ -38,4 +38,4 @@ exports.tags = ["living", "chastity"]
 // Name
 exports.name = "Livingwood Belt"
 
-exports.itemdescription = `The **Livingwood Belt** will progressively become harder to **/letgo** for each failed attempt, as well as for every 15 minutes without success.`
+exports.itemdescription = `The **Livingwood Belt** has a higher growth coefficient and will progressively set a higher vibration strength on each failed **/letgo**, as well as for every 15 minutes. Letting go reduces this amount by up to 10 stages.`

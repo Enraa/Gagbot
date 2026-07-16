@@ -25,3 +25,5 @@ exports.calcVibeEffect = function (data) {
         return data.intensity * (this.vibescale()) // Regular effect if NOT in chastity.
     }
 }
+
+exports.itemdescription = `The **Wand of Desperation** will have an increased effect the longer you have worn a chastity belt, up to 500 hours.`

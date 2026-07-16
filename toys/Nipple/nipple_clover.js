@@ -29,3 +29,5 @@ exports.onUnequip = function (data) {
     addArousal(data.serverID, data.userID, 10 * (12 * delta * this.vibescale())) 
     setUserVar(data.serverID, data.userID, "cloverclamptime", undefined)
 }
+
+exports.itemdescription = `**Clover Clamps** will apply a high arousal gain that slowly diminishes over 5 minutes. When removed, then provides a massive arousal gain based on time worn (up to 5 minutes).`

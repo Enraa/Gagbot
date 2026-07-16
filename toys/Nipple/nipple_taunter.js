@@ -21,3 +21,5 @@ exports.onUnequip = function (data) {
 exports.onEquip = function (data) {
     setUserVar(data.serverID, data.userID, "helplesslytaunted", undefined);
 }
+
+exports.itemdescription = `**Helpless Taunting Massagers** will activate when the wearer's hands become mittened or placed into heavy bondage.`

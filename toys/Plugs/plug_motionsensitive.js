@@ -16,3 +16,5 @@ exports.onEquip = function (data) {
 }
 
 exports.toyname = "Motion Sensitive Plug"
+
+exports.itemdescription = `The **Motion Sensitive Plug** will activate a vibration whenever the user speaks.`

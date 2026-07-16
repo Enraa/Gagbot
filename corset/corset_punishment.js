@@ -10,3 +10,5 @@ exports.afterUsingBreath = function (data) {
 };
 
 exports.name = "Punishment Corset";
+
+exports.itemdescription = `The **Punishment Corset** will tighten whenever you utilize all of your breath, causing a gasp.`

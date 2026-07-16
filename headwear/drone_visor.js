@@ -7,3 +7,5 @@ exports.tags = [];
 
 exports.blockemote = true // Emotes only! 
 exports.forcedtextemoji = true;
+
+exports.itemdescription = `The **Drone Visor** will attempt to override your speech to follow the syntax dictated by Hexcorp at https://www.hexcorp.net/drone-status-codes-v2. It will also adjust the user's name to follow a ⬡-Drone designation.`

@@ -6,3 +6,5 @@ exports.tags = [];
 
 exports.blockemote = true // Emotes only! 
 exports.forcedtextemoji = true;
+
+exports.itemdescription = `The **Doll Visor** will adjust your speech such that you speak in the third person and in code blocks with a doll designation. These can be configured for speech color and more in **/config** under **Restraint Options**.`

@@ -14,3 +14,5 @@ exports.calcVibeEffect = function (data) {
         return data.intensity * (this.vibescale() * 0.08) // Very low effect if NOT in a metal chastity. 
     }
 }
+
+exports.itemdescription = `The **Metallic Resonance Egg** has a significantly reduced effect compared to other vibrators, but is amplified when placed inside a metallic chastity belt.`

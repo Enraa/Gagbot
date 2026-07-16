@@ -27,3 +27,5 @@ exports.onEquip = (data) => {
 }
 
 exports.toyname = "Reverb Vibe"
+
+exports.itemdescription = `The **Reverb Vibe** will have an increasing vibration effect the more you speak.`

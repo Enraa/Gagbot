@@ -14,3 +14,5 @@ exports.calcVibeEffect = function (data) {
 }
 
 exports.toyname = "Ice"
+
+exports.itemdescription = `**Ice** will lower your arousal by a percentage over time.`

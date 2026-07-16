@@ -9,3 +9,5 @@ exports.calcVibeEffect = function (data) {
 }
 
 exports.toyname = "Rising Vibe"
+
+exports.itemdescription = `The **Rising Vibe** will have a progressively increasing vibration effect across 5 minute intervals.`
