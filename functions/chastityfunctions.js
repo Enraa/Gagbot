@@ -35,6 +35,8 @@ function setUpChastity() {
                     if (process.chastitytypes == undefined) { process.chastitytypes = {} };
                     // Push to chastitytypes for reference by chastity functions
                     process.chastitytypes[t.replace(".js", "")] = newchastity;
+                    process.chastitytypes[t.replace(".js", "")].itemdescription = `### ${newchastity.name}\n- Denial Multiplier: ${(Number(newchastity.denialCoefficient.toString().match(/^\(data\)\s*=>\s*\{\s*return\s+(\d+(?:\.\d+)?)\s*\}/)?.[1]) || "*Special*")}\n-# Tags: ${newchastity.tags ? `${newchastity.tags.join(", ")}\n` : ""}\n${newchastity.itemdescription ? newchastity.itemdescription : ""}`
+
                     // Push to autocompletes system for reference in /chastity and /unchastity
                     if (process.autocompletes == undefined) { process.autocompletes = {} }
                     if (process.autocompletes[`chastity${foldertype}`] == undefined) { process.autocompletes[`chastity${foldertype}`] = [] }

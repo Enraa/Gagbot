@@ -24,3 +24,5 @@ exports.namefunction = async (interaction, data) => {
         return datatoreturn;
     }
 }
+
+exports.itemdescription = `The **Engulfing Slime** will devour your bottom into you. This will be renamed to your current display name at the time it is applied. It cannot be applied to yourself. `

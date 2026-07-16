@@ -13,7 +13,8 @@ exports.setupfunction = (data) => {
             lockable: true,
             tags: ["lockableheadwear"],
             // Only show in autocomplete if the user is currently wearing the gag. 
-            showfunction: (serverID, targetuser) => { return (process.gags[serverID] && process.gags[serverID][targetuser] && process.gags[serverID][targetuser].find((ga) => ga.gagtype == g)) }
+            showfunction: (serverID, targetuser) => { return (process.gags[serverID] && process.gags[serverID][targetuser] && process.gags[serverID][targetuser].find((ga) => ga.gagtype == g)) },
+            itemdescription: `**Gag Harnesses** prevent removing the associated gag when worn. Can only be equipped when wearing the gag. Can only be removed by the person who applies the head harness.`
         })
     })
     return returnheadwear;

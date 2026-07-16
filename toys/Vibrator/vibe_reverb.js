@@ -4,13 +4,10 @@ const { setUserVar } = require("../../functions/setters/config/setUserVar");
 
 // This vibrator will only function if getUserVar(userID, "reverbEndTime") has any value
 exports.vibescale = (data) => { 
-    //console.log(`${data.userID}`)
-    //console.log(`${getUserVar(data.userID, "reverbVibeIntensity")/10}`);
     return (isNaN(Math.max(0, Math.min(getUserVar(data.serverID, data.userID, "reverbVibeIntensity")/10, 2))) ? 0 : Math.max(0, Math.min(getUserVar(data.serverID, data.userID, "reverbVibeIntensity")/10, 2)));
 } // Ranging between 0 and 2
 
 exports.calcVibeEffect = function(data) { 
-    //console.log(`${data.userID}`)
     return (getUserVar(data.serverID, data.userID, "reverbEndTime") ? data.intensity * this.vibescale(data) : 0)
 }
 

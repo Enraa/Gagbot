@@ -22,3 +22,5 @@ exports.namefunction = async (interaction, data) => {
         return datatoreturn;
     }
 }
+
+exports.itemdescription = `The **Dominant's Lap** will pull the bottom into your lap. This will be renamed to your current display name at the time it is applied. It cannot be applied to yourself. `

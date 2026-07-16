@@ -11,4 +11,6 @@ exports.onUnlock = (data) => {
     }
 }
 
+exports.itemdescription = `The **Gasmask (Linked)** will share your arousal over time with the person you give your hose to so you both balance out. They must also give their hose to you to link them.`
+
 exports.hidden = false; // Disable it from showing in the list!

@@ -39,3 +39,5 @@ exports.onUnequip = (data) => {
 exports.tags = ["living", "chastity"]
 // Name
 exports.name = "Livingwood Bra"
+
+exports.itemdescription = `The **Livingwood Bra** has a higher growth coefficient and will progressively set a higher vibration strength on each failed **/letgo**, as well as for every 15 minutes. Letting go reduces this amount by up to 10 stages.`

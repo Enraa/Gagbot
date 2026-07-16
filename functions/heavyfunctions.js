@@ -289,6 +289,9 @@ const loadHeavyTypes = () => {
         const heavy = require(`${commandsPath}/${file}`);
         heavytypes[file.replace(".js", "")] = heavy;
         heavytypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        // Adjust item description with how this will bind the user. 
+        heavytypes[file.replace(".js", "")].itemdescription = `### ${heavy.name}\n${heavy.heavytags.includes("arms") ? "- Binds Arms 💪\n" : ""}${heavy.heavytags.includes("legs") ? "- Binds Legs 🦵\n" : ""}${heavy.heavytags.includes("legs") ? "- Container 📦\n" : ""}-# Tags: ${heavy.tags ? `${heavy.tags.join(", ")}\n` : ""}\n${heavy.itemdescription ? heavy.itemdescription : ""}`
+
         if (!heavy.hidden) { heavyautocompletes.push({ name: heavy.name, value: file.replace(".js", "") }) };
     }
 

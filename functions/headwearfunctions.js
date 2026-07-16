@@ -91,10 +91,12 @@ const loadHeadwearTypes = () => {
             if (!Array.isArray(setupreturn) && setupreturn) { setupreturn = [setupreturn] }
             setupreturn.forEach((h) => {
                 headweartypes[h.type] = h
-                if (h.type && h.name && !h.hidden) { headwearautocompletes.push({ name: h.name, value: h.type }) };
+                if (h.type && h.name && !h.hidden) { headwearautocompletes.push({ name: h.name, value: h.type }) }; 
             })
         }
         headweartypes[file.replace(".js", "")] = head;
+        headweartypes[file.replace(".js", "")].itemdescription = `### ${head.name}\n${head.blockinspect ? `- Blinding 🕶️\n` : ""}${head.blockinspect ? `- Blocks Emotes 🎭\n`: ""}${head.blockgag ? `- Prevents Changing Gags 👄\n` : ""}-# Tags: ${head.tags ? `${head.tags.join(", ")}\n` : ""}\n${head.itemdescription ? head.itemdescription : ""}`
+
         if (!head.hidden && !head.setupfunction) { headwearautocompletes.push({ name: head.name, value: file.replace(".js", "") }) };
     }
 

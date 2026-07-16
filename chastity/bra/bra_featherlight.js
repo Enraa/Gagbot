@@ -15,3 +15,5 @@ exports.name = "Featherlight Bra"
 
 // Tags
 exports.tags = ["chastity", "metal"]
+
+exports.itemdescription = `The **Featherlight Bra** has an exceptionally high denial coefficient as well as a moderate built-in vibrator.`

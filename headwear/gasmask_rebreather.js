@@ -3,3 +3,5 @@
 exports.name = "Gasmask (Rebreather)";
 
 exports.tags = ["latex", "gasmask"];
+
+exports.itemdescription = `The **Gasmask (Rebreather)** has a significantly reduced breath recovery rate when wearing a corset. `
