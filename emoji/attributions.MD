@@ -1,6 +1,7 @@
 #### Kinky Dungeon - Ada18980
 The following emoji have been used with permission from Ada18980 and are from the game, [Kinky Dungeon](https://ada18980.itch.io/kinky-dungeon-free):
 - armbinder
+- blindfold
 - chastity
 - chastitybra
 - epicentercursed
