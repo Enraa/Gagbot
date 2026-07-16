@@ -4,6 +4,7 @@ const https = require("https");
 const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags } = require("discord.js");
 const { getCollarPerm } = require("./getters/collar/getCollarPerm");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
+const { removeCollar } = require("./setters/collar/removeCollar");
 
 /*const collartypes = [
 	{ name: "Latex Collar", value: "collar_latex", tags: ["latex"] },
@@ -52,6 +53,8 @@ function loadCollarTypes() {
         const collar = require(`${commandsPath}/${file}`);
         collartypes[file.replace(".js", "")] = collar;
         collartypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        // Add a remover function that can be called on the item itself!
+        collartypes[file.replace(".js", "")].removeItem = function (data) { removeCollar(data.serverID, data.userID) }
         if (!collar.hidden) { collarautocompletes.push({ name: collar.name, value: file.replace(".js", "") }) };
     }
     if (process.autocompletes == undefined) { process.autocompletes = {} }

@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { removeToy } = require("./setters/toy/removeToy");
 
 // Imports each toy in ./toys and makes them accessible as objects
 // in process.toyslist mapped to their respective ids.
@@ -31,6 +32,8 @@ function setUpToys() {
                     if (process.toytypes == undefined) { process.toytypes = {} };
                     // Push to toytypes for reference by toy functions
                     process.toytypes[t.replace(".js", "")] = newtoy;
+                    process.toytypes[t.replace(".js", "")].value = process.toytypes[t.replace(".js", "")];
+                    process.toytypes[t.replace(".js", "")].removeItem = function (data) { removeToy(data.serverID, data.userID, data.keyholderID, this.value) }
                     // Push to autocompletes system for reference in /toy and /untoy
                     if (process.autocompletes == undefined) { process.autocompletes = {} }
                     if (process.autocompletes.toys == undefined) { process.autocompletes.toys = [] }

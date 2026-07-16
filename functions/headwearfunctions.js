@@ -7,6 +7,7 @@ const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestr
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getHeadwearBlocks } = require("./getters/headwear/getBaseHeadwear.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { removeHeadwear } = require("./setters/headwear/removeHeadwear.js");
 
 /* // This can probably be retired - leaving here for reference
 const headweartypes = [
@@ -96,6 +97,8 @@ const loadHeadwearTypes = () => {
         }
         headweartypes[file.replace(".js", "")] = head;
         headweartypes[file.replace(".js", "")].itemdescription = `### ${head.name}\n${head.blockinspect ? `- Blinding 🕶️\n` : ""}${head.blockinspect ? `- Blocks Emotes 🎭\n`: ""}${head.blockgag ? `- Prevents Changing Gags 👄\n` : ""}-# Tags: ${head.tags ? `${head.tags.join(", ")}\n` : ""}\n${head.itemdescription ? head.itemdescription : ""}`
+        headweartypes[file.replace(".js", "")].value = headweartypes[file.replace(".js", "")] // Compatibility with old .value code
+        headweartypes[file.replace(".js", "")].removeItem = function (data) { removeHeadwear(data.serverID, data.userID, this.value) }
 
         if (!head.hidden && !head.setupfunction) { headwearautocompletes.push({ name: head.name, value: file.replace(".js", "") }) };
     }

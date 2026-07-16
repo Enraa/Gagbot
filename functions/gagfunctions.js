@@ -29,6 +29,8 @@ const { setUserVar } = require("./setters/config/setUserVar.js");
 const { getGags } = require("./getters/gag/getGags.js");
 const { statsAddCounter } = require("./setters/config/statsAddCounter.js");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam.js");
+const { removeGag } = require("./setters/gag/removeGag.js");
+const { removeMitten } = require("./setters/mitten/removeMitten.js");
 
 // Grab all the command files from the commands directory
 const gagtypes = [];
@@ -53,6 +55,8 @@ const setUpGags = () => {
 	for (const file of commandFiles) {
 		const gag = require(`./../gags/${file}`);
         gagtypes[file.replace(".js", "")] = gag;
+        gagtypes[file.replace(".js", "")].value = gagtypes[file.replace(".js", "")];
+        gagtypes[file.replace(".js", "")].removeItem = function (data) { removeGag(data.serverID, data.userID, this.value, data.forceremove) }
         if (!gag.hidden) { gagautocompletes.push({ name: gag.choicename, value: file.replace(".js", "") }) };
 	}
 
@@ -90,6 +94,7 @@ function loadMittenTypes() {
         const mitten = require(`${commandsPath}/${file}`);
         mittentypes[file.replace(".js", "")] = mitten;
         mittentypes[file.replace(".js", "")].value = file.replace(".js", "") // Compatibility with old .value code
+        mittentypes[file.replace(".js", "")].removeItem = function (data) { removeMitten(data.serverID, data.userID) }
         if (!mitten.hidden) { mittenautocompletes.push({ name: mitten.name, value: file.replace(".js", "") }) };
     }
 

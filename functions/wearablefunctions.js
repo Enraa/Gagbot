@@ -1,5 +1,6 @@
 const fs = require("fs");
 const path = require("path");
+const { removeWearable } = require("./setters/wearable/removeWearable");
 
 let wearabletypes = [
 	// Aesthetic Body Parts
@@ -438,6 +439,11 @@ const loadWearables = async () => {
 	}
     // Add the full wearables list to the process vars. 
     process.wearabletypes = Array.from(wearablestoadd);
+    process.wearabletypes.forEach((w) => {
+        // Add a remover function that can be called on the item itself!
+        w.removeItem = function (data) { removeWearable(data.serverID, data.userID, this.value) }
+    })
+
     // Add to autocompletes. 
     if (process.autocompletes == undefined) { process.autocompletes = {} }
 	process.autocompletes.wearables = Array.from(outmap.values());

@@ -92,6 +92,9 @@ function Chastity() {
     // Event: Fired after corset is changed. Needs further Implementation. 
     this.onCorsetChange = (data) => { return true }
 
+    // Function: Called to remove this item.
+    this.removeItem = function (data) { true }
+
     // Calculate Arousal change
     this.calcVibeEffect = function (data) { return (this.vibelevel() * this.vibeScaling()) }
 

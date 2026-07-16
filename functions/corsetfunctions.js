@@ -7,6 +7,7 @@ const { getCorset } = require("./getters/corset/getCorset");
 const { getHeadwear } = require("./getters/headwear/getHeadwear");
 const { markForSave } = require("./other/markForSave");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
+const { removeCorset } = require("./setters/corset/removeCorset");
 
 nlp.extend(nlpSpeech);
 
@@ -115,6 +116,9 @@ function setUpCorsets() {
 			}
 			// Push to corsettypes for reference by corset functions
 			process.corsettypes[foldertype.replace(".js", "")] = newcorset;
+            process.corsettypes[foldertype.replace(".js", "")].value = foldertype.replace(".js", "");
+            process.corsettypes[foldertype.replace(".js", "")].removeItem = function (data) { removeCorset(data.serverID, data.userID) }
+            
 			if (process.autocompletes == undefined) {
 				process.autocompletes = {};
 			}

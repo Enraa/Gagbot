@@ -8,6 +8,7 @@ const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js")
 const { deleteWearable } = require("../functions/setters/wearable/removeWearable.js");
 const { getWearableName } = require("../functions/getters/wearable/getWearableName.js");
 const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
+const { getBaseWearable } = require("../functions/getters/wearable/getBaseWearable.js");
 
 module.exports = {
 	data: new SlashCommandBuilder()

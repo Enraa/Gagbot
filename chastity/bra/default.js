@@ -1,6 +1,7 @@
 const { canAccessChastityBra } = require("../../functions/getters/chastity/canAccessChastityBra")
 const { getOption } = require("../../functions/getters/config/getOption")
 const { rollKeyFumble, discardKey } = require("../../functions/keyfindingfunctions")
+const { removeChastityBra } = require("../../functions/setters/chastity/removeChastityBra");
 
 // These values are used whenever they're unspecified on the bra in this folder.
 // Growth Coefficient. Higher = more growth, this is a multiplier(?) on arousal gains
@@ -33,6 +34,9 @@ exports.discard = (data) => {
 exports.canUnequip = (data) => { return canAccessChastityBra(data.serverID, data.userID, data.keyholderID, true).access }
 
 exports.canAccessToys = (data) => { return (canAccessChastityBra(data.serverID, data.userID, data.keyholderID).access) }
+
+// Add a remover function that can be called on the item itself!
+exports.removeItem = function (data) { removeChastityBra(data.serverID, data.userID, data.keyholderID, data.forceremove) }
 
 // Category
 exports.category = "Chastity Bra"
