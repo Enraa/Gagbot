@@ -1084,6 +1084,12 @@ const texts_heavy = {
 					    },
 					    text: `USER_TAG wanders around for a while, then decides to flop into a VAR_C2 trap!`,
 					},
+                    {
+                        only: (t) => {
+                            return t.c2.includes("Lockdown Virus");
+                        },
+                        text: `USER_TAG taps a few too many pop-ups on USER_THEIR tablet and suddenly finds USER_THEIR joints seizing up! USER_THEIR_CAP OS Daemon processes are locked up from a rogue virus USER_THEY 'accidentally' allowed!`,
+                    },
                 ],
                 legs: [
                     `USER_TAG pulls out a VAR_C2 and wraps it over USER_THEIR legs! USER_THEY_CAP will be quite unable to move now!`,
@@ -1313,6 +1319,12 @@ const texts_heavy = {
 					    },
 					    text: `USER_TAG pushes TARGET_TAG from behind as TARGET_THEY TARGET_ISARE looking away, causing TARGET_THEM to fall into a VAR_C3 trap!`,
 					},
+                    {
+                        only: (t) => {
+                            return t.c3.includes("Lockdown Virus");
+                        },
+                        text: `USER_TAG uses a tablet to upload a malicious zero-day code to TARGET_TAG! TARGET_THEIR_CAP joints seize up instantly as the Daemon takes hold of TARGET_THEIR OS!`,
+                    },
                 ],
                 legs: [
                     `USER_TAG grabs TARGET_TAG's legs and wraps a VAR_C3 over them, pulling the restraint tightly around and securing it.`,
@@ -1362,12 +1374,6 @@ const texts_heavy = {
                             return t.c3.includes("Dancer's Pole");
                         },
                         text: `USER_TAG helps TARGET_TAG climb onto the stage and pushes TARGET_THEM gently towards the VAR_C3, swatting TARGET_THEM on the ass before climbing down and settling into a comfortable seat to watch TARGET_TAG dancing sensually for USER_THEIR enjoyment!`,
-                    },
-                    {
-                        only: (t) => {
-                            return t.c3.includes("Lockdown Virus");
-                        },
-                        text: `USER_TAG uses a tablet to upload a malicious zero-day code to TARGET_TAG! TARGET_THEIR_CAP joints seize up instantly as the Daemon takes hold of TARGET_THEIR OS!`,
                     },
                     {
                         only: (t) => {
@@ -1884,7 +1890,13 @@ const texts_struggle = {
 				return t.c1.includes("Sticky Glue");
 		    },
 		    text: `USER_TAG squirms helplessly like a cute mouse in USER_THEIR VAR_C1 trap!`,
-		}
+		},
+        {
+            only: (t) => {
+                return t.c1.includes("Lockdown Virus");
+            },
+            text: `USER_TAG tries to move USER_THEIR body, but the VAR_C1 continues causing USER_THEIR movement processes to hang! USER_THEY_CAP should update USER_THEIR firewalls!`,
+        },
 	],
 	gag: {
 		heavy: [`Try as USER_THEY might, USER_TAG cannot spit out the VAR_C2 USER_THEY USER_ISARE wearing!`, `USER_TAG noms on USER_THEIR VAR_C2, trying to loosen it and maybe get it out of USER_THEIR mouth!`, `USER_TAG tries to push USER_THEIR VAR_C2 out with USER_THEIR tongue! It had no effect!`],
@@ -4419,6 +4431,12 @@ const texts_untoy = {
                                 ]
                             },
                             nofumble: [
+                                {
+                                    only: (t) => {
+                                        return (t.c2 == "Clover Clamps")
+                                    },
+                                    text: `USER_TAG puts the key in USER_THEIR bra, unlocking it for just a moment before gently pinching the VAR_C2, gasping in hazy delight as the blood rushes back to USER_THEIR nipples! After a brief moment of repose, USER_THEY lockUSER_S USER_THEIR bra back up!`
+                                },
                                 `USER_TAG puts the key in USER_THEIR bra, unlocking it and removing USER_THEIR VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S USER_THEMSELF back up.`
                             ]
                         },
@@ -4542,7 +4560,13 @@ const texts_untoy = {
                 },
                 noblocker: {
                     "Nipple Vibrator": [
-                        `USER_TAG removes the teasing VAR_C2 from USER_THEIR breasts. The sensation continues to haunt USER_THEM as USER_THEY putUSER_S them away.`
+                        `USER_TAG removes the teasing VAR_C2 from USER_THEIR breasts. The sensation continues to haunt USER_THEM as USER_THEY putUSER_S them away.`,
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Clover Clamps")
+                            },
+                            text: `USER_TAG carefully reaches up and unclasps the VAR_C2 from USER_THEIR nipples, letting out a moan mixed with delight and adrenaline as the blood rushes back to them!`
+                        },
                     ],
                     "Vibrator": [
                         `USER_TAG gently removes the VAR_C2 from inside USER_THEM and puts it away. `
@@ -4595,6 +4619,12 @@ const texts_untoy = {
                                 ]
                             },
                             nofumble: [
+                                {
+                                    only: (t) => {
+                                        return (t.c2 == "Clover Clamps")
+                                    },
+                                    text: `USER_TAG puts the key into TARGET_TAG's bra, unlocking it and carefully pinching the VAR_C2 to slip them off, giggling as TARGET_TAG meeps from the sensations of the blood rushing back to USER_THEIR nipples! While distracted, USER_THEY lockUSER_S the bra back onto TARGET_THEM.`
+                                },
                                 `USER_TAG puts the key in TARGET_TAG's bra, unlocking it and removing the VAR_C2! USER_THEY_CAP then closeUSER_S and lockUSER_S TARGET_THEM back up.`
                             ]
                         },
@@ -4706,6 +4736,12 @@ const texts_untoy = {
                 },
                 noblocker: {
                     "Nipple Vibrator": [
+                        {
+                            only: (t) => {
+                                return (t.c2 == "Clover Clamps")
+                            },
+                            text: `USER_TAG runs USER_THEIR fingers over TARGET_TAG's breasts, removing the VAR_C2 carefully with a smile as TARGET_THEIR face twists in a variety of pleasurable sensations!`
+                        },
                         `USER_TAG removes the teasing VAR_C2 from TARGET_TAG's breasts. The sensation continues to haunt TARGET_THEM as USER_THEY putUSER_S them away.`
                     ],
                     "Vibrator": [
