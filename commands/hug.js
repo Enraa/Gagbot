@@ -51,7 +51,7 @@ module.exports = {
                         data.other = true;
                     }
 
-                    if (!getHeavyRestrictions(interaction.guildId, interaction.user.id).touchself && data.self) {
+                    if (!getHeavyRestrictions(interaction.guildId, interaction.user.id).touchself) {
                         data.heavy = true;
                     }
                     else {
