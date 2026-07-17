@@ -2570,13 +2570,13 @@ const texts_touch = {
             masked: [
                 {
                     required: (t) => {
-                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
                     },
                     text: `USER_TAG tries to nibble on USER_THEMSELF, but only succeeds in rubbing USER_THEIR mask on USER_THEIR arm. How *cute!*`,
                 },
                 {
                     required: (t) => {
-                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
                     },
                     text: `USER_TAG absentmindedly massages USER_THEIR masked lips on USER_THEIR arm. Not much else USER_THEY could do anyway.`
                 },
@@ -2587,24 +2587,24 @@ const texts_touch = {
             gagged: [
                 {
                     required: (t) => {
-                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
                     },
                     text: `USER_TAG paws USER_THEIR wrist against USER_THEIR gag, trying to bite somewhere, but the gag does a good job stopping that!`,
                 },
                 {
                     required: (t) => {
-                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
                     },
                     text: `USER_TAG absentmindedly massages USER_THEIR gagged lips on USER_THEIR arm. Not much else USER_THEY could do anyway.`
                 },
                 {
                     required: (t) => {
-                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                        return (getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
                     },
                     text: `USER_TAG decides to act very preciously, and runs USER_THEIR fingers on USER_THEIR face. Oh if only USER_THEY could nom...`
                 },
-                `USER_TAG wants to nibble, USER_TAG wants to *bite!* But the gag in USER_THEIR mouth said no. Oh well. At least it looks good on USER_THEM!`,
-                `USER_TAG giggles as USER_THEY try to nibble on USER_THEMSELF, but the gag does a fine job preventing USER_THEIR teeth from ever coming together on USER_THEIR finger!`,
+                `USER_TAG wants to nibble, USER_THEY wantUSER_S to *bite!* But the gag in USER_THEIR mouth said no. Oh well. At least it looks good on USER_THEM!`,
+                `USER_TAG giggles as USER_THEY aimUSER_S to nibble on USER_THEMSELF, but the gag does a fine job preventing USER_THEIR teeth from ever coming together on USER_THEIR finger!`,
                 `USER_TAG rubs USER_THEIR shoulder against USER_THEIR chin, trying to get a little bit of leverage to nibble. Sadly, no luck there. No nibbling today...`
             ],
             heavy: [
@@ -2613,8 +2613,8 @@ const texts_touch = {
                 `It won't be for lack of trying, USER_THEY supposeUSER_S, but USER_TAG is unable to reach USER_THEIR arms when bound like so. USER_THEY_CAP will have to remain unbitten!`
             ],
             free: [
-                `USER_TAG nibbles on USER_THEIR arm, a cute little smile escaping from USER_THEIR lips as USER_THEY happily and silently noms away!`,
-                `USER_TAG sinks USER_THEIR teeth into USER_THEIR forearm, humming to USER_THEMSELF as USER_THEY absentmindedly nibble and nibble.`,
+                `USER_TAG nibbles on USER_THEIR arm, a cute little smile escaping from USER_THEIR lips as USER_THEY happily and silently nomUSER_S away!`,
+                `USER_TAG sinks USER_THEIR teeth into USER_THEIR forearm, humming to USER_THEMSELF as USER_THEY absentmindedly nibbleUSER_S and nibbleUSER_S.`,
                 `USER_TAG blissfully chews on USER_THEIR finger, unburdened by any other thoughts! Nom nom nom!`,
                 `USER_TAG places USER_THEIR teeth on USER_THEIR fingers and just rests them there. Nom.`,
                 `USER_TAG doesn't want to nom on anyone but USER_THEMSELF apparently as USER_THEY nibbleUSER_S gently on USER_THEIR arm!`
@@ -2635,7 +2635,7 @@ const texts_touch = {
                 `USER_TAG imagines what it would be like to gently sink USER_THEIR teeth into TARGET_TAG's arm. It's a fantasy for after USER_THEY get out of USER_THEIR gag, probably!`,
                 {
                     required: (t) => {
-                        return (!getHeadwearRestrictions(t.serverID, t.interactionuser.id).canEmote);
+                        return (getHeadwearRestrictions(t.serverID, t.interactionuser.id).canEmote);
                     },
                     text: `USER_TAG twists USER_THEIR face into such a cute and adorable look as USER_THEY pleadUSER_S TARGET_TAG to ungag USER_THEM. Why? To *nom.*`
                 },
