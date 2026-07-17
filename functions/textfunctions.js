@@ -7,6 +7,7 @@ const { getGag } = require("./getters/gag/getGag.js");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
 const { getHeavy } = require("./getters/heavy/getHeavy.js");
+const { getHeavyList } = require("./getters/heavy/getHeavyList.js");
 const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions.js");
 const { getWearable } = require("./getters/wearable/getWearable.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
@@ -2249,7 +2250,9 @@ const texts_struggle = {
 	],
 };
 
+//region _touch
 const texts_touch = {
+    //region touch - headpat
     headpat: {
         self: {
             hit: {
@@ -2565,6 +2568,7 @@ const texts_touch = {
             }
         }
     },
+    //region touch - nom
     nom: {
         self: {
             masked: [
@@ -2667,9 +2671,48 @@ const texts_touch = {
                 },
             ]
         }
+    },
+    // region touch - hug
+    hug: {
+        self: {
+            heavy: [
+                {
+                    // If wearing a straitjacket, the user should get some unique self hugging text!
+                    only: (t) => {
+                        return (getHeavyList(t.serverID, t.interactionuser.id).find((h) => h.type.includes("straitjacket")))
+                    },
+                    text: `USER_TAG goes to hug USER_THEMSELF and is happy to realize USER_THEY USER_ISARE already hugging USER_THEMSELF! Yay!`
+                },
+                `USER_TAG wiggles in USER_THEIR bondage, trying to hug USER_THEMSELF but sadly USER_THEY cannot...`,
+                `USER_TAG wants to be hugged but fails at trying to hug USER_THEMSELF. If only someone could hug USER_THEM...`,
+                `USER_TAG wriggles, trying to squirm out of USER_THEIR bondage so USER_THEY can hug USER_THEMSELF. It isn't working.`,
+            ],
+            free: [
+                `USER_TAG wraps USER_THEIR arms around USER_THEMSELF in a gleeful hug. Hehe!`,
+                `USER_TAG giggles as USER_THEY plant USER_THEIR arms around USER_THEMSELF in a cute little hug!`,
+                `USER_TAG clutches USER_THEIR arms to USER_THEIR chest and laughs! Eeeeee!~`
+            ]
+        },
+        other: {
+            heavy: [
+                `USER_TAG goes to hug TARGET_TAG, but without arms USER_THEY can do little more than lay USER_THEIR body against TARGET_THEM!`,
+                `USER_TAG tries to hug TARGET_TAG, but can't quite wrap USER_THEIR arms around TARGET_THEM. The sentiment is there though.`,
+                `USER_TAG brushes up against TARGET_TAG and nuzzles TARGET_THEM since USER_THEIR arms are bound so tightly.`
+            ],
+            free: [
+                `USER_TAG gives TARGET_TAG a big hug!`,
+                `USER_TAG wraps USER_THEIR arms around TARGET_TAG and gives TARGET_THEM a hug!`,
+                `USER_TAG gingerly wraps USER_THEIR arms around TARGET_TAG in a soft embrace!`,
+                `USER_TAG clutches TARGET_TAG around TARGET_THEIR waist, pulling TARGET_THEM closely for a warm hug!`,
+                `USER_TAG giggles as USER_THEY cheerily wrapUSER_S USER_THEIR arms around TARGET_TAG with a soft and sweet hug!`,
+                `USER_TAG grabs TARGET_TAG and pulls TARGET_THEM into a tight hug, not letting go for a bit!`,
+                `USER_TAG pinches TARGET_TAG's sleeve cutely before tugging TARGET_THEM into a hug!`
+            ]
+        }
     }
 }
 
+// region _toy
 const texts_toy = {
     heavy: {
         self: {

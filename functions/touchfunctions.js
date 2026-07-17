@@ -349,6 +349,15 @@ async function handleTouchEvent(serverID, user, target, type, noprompt = false) 
 			case "headpat":
                 touchtext = `${user} would like to headpat you.`
 				break;
+            case "nom":
+                touchtext = `${user} would like to nom on you.`
+				break;
+            case "hug":
+                touchtext = `${user} would like to hug you.`
+				break;
+            case "shock":
+                touchtext = `${user} would like to shock you.`
+				break;
 			default:
 				console.log(`Could not find a touch by that type.`);
 				rej("Error");
