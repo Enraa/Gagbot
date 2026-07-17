@@ -2617,7 +2617,7 @@ const texts_touch = {
                 `USER_TAG sinks USER_THEIR teeth into USER_THEIR forearm, humming to USER_THEMSELF as USER_THEY absentmindedly nibble and nibble.`,
                 `USER_TAG blissfully chews on USER_THEIR finger, unburdened by any other thoughts! Nom nom nom!`,
                 `USER_TAG places USER_THEIR teeth on USER_THEIR fingers and just rests them there. Nom.`,
-                `USER_TAG doesn't want to nom on anyone but USER_THEMSELF apparently as USER_THEY nibble gently on USER_THEIR arm!`
+                `USER_TAG doesn't want to nom on anyone but USER_THEMSELF apparently as USER_THEY nibbleUSER_S gently on USER_THEIR arm!`
             ]
         },
         other: {
