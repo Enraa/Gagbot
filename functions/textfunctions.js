@@ -2655,7 +2655,7 @@ const texts_touch = {
                 `USER_TAG eyes USER_THEIR target - TARGET_TAG! With a deft motion USER_THEY dartUSER_S forward to *nom!* TARGET_THEY_CAP is nibbled!`,
                 `Nibbling is a favorite passtime of USER_TAG, so USER_THEY decideUSER_S to nibble on TARGET_TAG.`,
                 `USER_TAG giggles as USER_THEY quickly move to nibble on TARGET_TAG!`,
-                `USER_TAG must nibble, so USER_THEY_CAP nomUSER_S on TARGET_TAG! Nom nom!`,
+                `USER_TAG must nibble, so USER_THEY nomUSER_S on TARGET_TAG! Nom nom!`,
                 `USER_TAG gently noms on TARGET_TAG's arm. It's a cute little bite. Nom!~`,
                 {
                     // If both parties havent blocked pet tag and the interaction user has targetuser's collar key, this can happen!
