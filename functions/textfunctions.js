@@ -7,6 +7,7 @@ const { getGag } = require("./getters/gag/getGag.js");
 const { getHeadwear } = require("./getters/headwear/getHeadwear.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
 const { getHeavy } = require("./getters/heavy/getHeavy.js");
+const { getHeavyRestrictions } = require("./getters/heavy/getHeavyRestrictions.js");
 const { getWearable } = require("./getters/wearable/getWearable.js");
 const { convertPronounsText } = require("./other/convertPronounsText.js");
 
@@ -2562,6 +2563,109 @@ const texts_touch = {
                     ]
                 }
             }
+        }
+    },
+    nom: {
+        self: {
+            masked: [
+                {
+                    required: (t) => {
+                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG tries to nibble on USER_THEMSELF, but only succeeds in rubbing USER_THEIR mask on USER_THEIR arm. How *cute!*`,
+                },
+                {
+                    required: (t) => {
+                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG absentmindedly massages USER_THEIR masked lips on USER_THEIR arm. Not much else USER_THEY could do anyway.`
+                },
+                `USER_TAG clicks USER_THEIR teeth, trying desperately to nom but can't bite past the mask USER_THEY USER_ISARE wearing!`,
+                `If only USER_TAG remembered that nibbing past masks is a challenging prospect in the best of times...`,
+                `USER_TAG tries to nom but is cruelly stopped by USER_THEIR mask. Who ever was going to be the target?`,
+            ],
+            gagged: [
+                {
+                    required: (t) => {
+                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG paws USER_THEIR wrist against USER_THEIR gag, trying to bite somewhere, but the gag does a good job stopping that!`,
+                },
+                {
+                    required: (t) => {
+                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG absentmindedly massages USER_THEIR gagged lips on USER_THEIR arm. Not much else USER_THEY could do anyway.`
+                },
+                {
+                    required: (t) => {
+                        return (!getHeavyRestrictions(t.serverID, t.interactionuser.id).touchself);
+                    },
+                    text: `USER_TAG decides to act very preciously, and runs USER_THEIR fingers on USER_THEIR face. Oh if only USER_THEY could nom...`
+                },
+                `USER_TAG wants to nibble, USER_TAG wants to *bite!* But the gag in USER_THEIR mouth said no. Oh well. At least it looks good on USER_THEM!`,
+                `USER_TAG giggles as USER_THEY try to nibble on USER_THEMSELF, but the gag does a fine job preventing USER_THEIR teeth from ever coming together on USER_THEIR finger!`,
+                `USER_TAG rubs USER_THEIR shoulder against USER_THEIR chin, trying to get a little bit of leverage to nibble. Sadly, no luck there. No nibbling today...`
+            ],
+            heavy: [
+                `USER_TAG wants to nibble on USER_THEIR arm, but alas, USER_THEIR bondage makes it nearly impossible to connect USER_THEIR mouth with its destination.`,
+                `Trying to place USER_THEIR wrist on USER_THEIR mouth to nom on it is a challenging prospect when wearing such heavy bondage. USER_THEY_CAP should consider fixing that.`,
+                `It won't be for lack of trying, USER_THEY supposeUSER_S, but USER_TAG is unable to reach USER_THEIR arms when bound like so. USER_THEY_CAP will have to remain unbitten!`
+            ],
+            free: [
+                `USER_TAG nibbles on USER_THEIR arm, a cute little smile escaping from USER_THEIR lips as USER_THEY happily and silently noms away!`,
+                `USER_TAG sinks USER_THEIR teeth into USER_THEIR forearm, humming to USER_THEMSELF as USER_THEY absentmindedly nibble and nibble.`,
+                `USER_TAG blissfully chews on USER_THEIR finger, unburdened by any other thoughts! Nom nom nom!`,
+                `USER_TAG places USER_THEIR teeth on USER_THEIR fingers and just rests them there. Nom.`,
+                `USER_TAG doesn't want to nom on anyone but USER_THEMSELF apparently as USER_THEY nibble gently on USER_THEIR arm!`
+            ]
+        },
+        other: {
+            masked: [
+                `USER_TAG rubs USER_THEIR face on TARGET_TAG's arm very cutely. USER_THEY_CAP wantUSER_S to nibble, but sadly, USER_THEIR mask stops USER_THEM.`,
+                `USER_TAG tries to nibble on TARGET_TAG, but TARGET_THEY TARGET_ISARE saved by the protective headgear that USER_THEY USER_ISARE wearing!`,
+                `USER_TAG goes to nibble on TARGET_TAG, but is sadly stopped and reminded of how futile that would be. USER_THEY_CAP needUSER_S to get rid of the mask first!`,
+                `USER_TAG nuzzles USER_THEIR face into TARGET_TAG's chest since USER_THEY can't nibble due to the mask USER_THEY USER_ISARE wearing. Oh well.`,
+                `USER_TAG thinks TARGET_TAG looks very nommable! USER_THEY_CAP goes to nibble and... aw, USER_THEY USER_ISARE stopped by the mask!`,
+                `USER_TAG tries to nom but is cruelly stopped by USER_THEIR mask. Who ever was going to be the target?`,
+            ],
+            gagged: [
+                `USER_TAG rubs USER_THEIR gagged lips against TARGET_TAG's skin. It's absolutely adorable. Good thing USER_THEY USER_ISARE gagged so TARGET_THEY TARGET_ISARE safe!`,
+                `USER_TAG baps USER_THEIR mouth into TARGET_TAG clumsily. USER_THEY_CAP wantUSER_S to nibble, but alas, USER_THEIR gag had other plans. Oh well.`,
+                `USER_TAG imagines what it would be like to gently sink USER_THEIR teeth into TARGET_TAG's arm. It's a fantasy for after USER_THEY get out of USER_THEIR gag, probably!`,
+                {
+                    required: (t) => {
+                        return (!getHeadwearRestrictions(t.serverID, t.interactionuser.id).canEmote);
+                    },
+                    text: `USER_TAG twists USER_THEIR face into such a cute and adorable look as USER_THEY pleadUSER_S TARGET_TAG to ungag USER_THEM. Why? To *nom.*`
+                },
+                `USER_TAG lays USER_THEIR head gently against TARGET_TAG. It would be so nice to nom. USER_THEY_CAP chewUSER_S on USER_THEIR gag in deep thought.`,
+                `USER_TAG smugly stares at TARGET_TAG. TARGET_THEY_CAP TARGET_ISARE lucky afterall. USER_THEY_CAP can't nom! But one day, USER_THEY will nom!`,
+                `USER_TAG sighs as USER_THEY goUSER_ES to nom on TARGET_TAG, but is stopped by USER_THEIR gags. USER_THEY_CAP must nom!`,
+                `USER_TAG tries to nom but is cruelly stopped by USER_THEIR gag! Who ever was going to be the target?`,
+            ],
+            heavy: [
+                `USER_TAG noms on TARGET_TAG, but somehow encounters a GLITCH that USER_THEY should report!`
+            ],
+            free: [
+                `USER_TAG nibbles on TARGET_TAG's arm. Nibble nibble nibble!`,
+                `USER_TAG noms on TARGET_TAG's forearm oh so gently. Nom!`,
+                `USER_TAG brushes USER_THEIR lips along TARGET_TAG's skin before sinking USER_THEIR teeth. Not too hard, mind you. Just a little bit. Just enough to nibble!`,
+                `USER_TAG chews on TARGET_TAG's wrist, trying to get attention!`,
+                `USER_TAG eyes USER_THEIR target - TARGET_TAG! With a deft motion USER_THEY dartUSER_S forward to *nom!* TARGET_THEY_CAP is nibbled!`,
+                `Nibbling is a favorite passtime of USER_TAG, so USER_THEY decideUSER_S to nibble on TARGET_TAG.`,
+                `USER_TAG giggles as USER_THEY quickly move to nibble on TARGET_TAG!`,
+                `USER_TAG must nibble, so USER_THEY_CAP nomUSER_S on TARGET_TAG! Nom nom!`,
+                `USER_TAG gently noms on TARGET_TAG's arm. It's a cute little bite. Nom!~`,
+                {
+                    // If both parties havent blocked pet tag and the interaction user has targetuser's collar key, this can happen!
+                    required: (t) => {
+                        return (!(getUserTags(t.serverID, t.interactionuser.id).includes("pet") && getUserTags(t.serverID, t.targetuser.id).includes("pet")) &&
+                                (getCollar(t.serverID, t.targetuser.id)?.keyholder == t.interactionuser.id) || (getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders && getCollar(t.serverID, t.targetuser.id)?.clonedKeyholders.includes(t.interactionuser.id)));
+                    },
+                    text: `USER_TAG decides to nom on USER_THEIR keyholder. Such a bratty pet!`
+                },
+            ]
         }
     }
 }

@@ -6,6 +6,18 @@ function Lock() {
     // The condition to allow adding this lock to a restraint
     this.canAddLock = (data) => { return true };
 
+    // The condition to allow access to the item this lock is on
+    this.canAccessLock = (data) => { return true };
+
+    // The condition to allow adding or removing clonedKeyholders
+    this.canCloneKeys = (data) => { return true };
+
+    // The condition to allow transferring primary keyholder
+    this.canTransfer = (data) => { return true };
+
+    // The condition to allow unlocking this lock
+    this.canUnlock = (data) => { return true };
+
     // Functions
     // Remove parent device
     this.removeParent = (data) => {

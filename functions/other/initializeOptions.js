@@ -10,7 +10,7 @@ const { markForSave } = require("./markForSave");
  * ##### *No return value*
  **********/
 function initializeOptions(serverID, userID) {
-    let pages = ["Me", "Arousal", "General", "Restraint Options", "Extreme", "Content"];
+    let pages = ["Me", "Arousal", "General", "Touch", "Restraint Options", "Extreme", "Content"];
     pages.forEach((p) => {
         let optionspages = Object.keys(configoptions[p]);
         optionspages.forEach((k) => {

@@ -409,5 +409,50 @@ module.exports = {
 				delete process.recentinteraction[interaction.user.id];
 			}
         }
+        if (optionparts[3] == "allowedorgasmcontrol") {
+            choiceinput = interaction.fields.getSelectedUsers("choiceinput");
+            let choiceusers = Array.from(choiceinput) ?? [];
+            if (choiceusers.length > 0) {
+                choiceusers = choiceusers.map((a) => a[0]).sort()
+            }
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceusers);
+            await interaction.reply({ content: `Updated allowed users to force you to /letgo to ${choiceusers.map((a) => { return `<@${a}>`}).join(", ")}`, flags: MessageFlags.Ephemeral });
+            if (process.recentinteraction) {
+				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], optionparts[4]));
+				}
+				delete process.recentinteraction[interaction.user.id];
+			}
+        }
+        if (optionparts[3] == "allowednom") {
+            choiceinput = interaction.fields.getSelectedUsers("choiceinput");
+            let choiceusers = Array.from(choiceinput) ?? [];
+            if (choiceusers.length > 0) {
+                choiceusers = choiceusers.map((a) => a[0]).sort()
+            }
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceusers);
+            await interaction.reply({ content: `Updated allowed users who can nom on you to ${choiceusers.map((a) => { return `<@${a}>`}).join(", ")}`, flags: MessageFlags.Ephemeral });
+            if (process.recentinteraction) {
+				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], optionparts[4]));
+				}
+				delete process.recentinteraction[interaction.user.id];
+			}
+        }
+        if (optionparts[3] == "allowedhug") {
+            choiceinput = interaction.fields.getSelectedUsers("choiceinput");
+            let choiceusers = Array.from(choiceinput) ?? [];
+            if (choiceusers.length > 0) {
+                choiceusers = choiceusers.map((a) => a[0]).sort()
+            }
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceusers);
+            await interaction.reply({ content: `Updated allowed users who can hug you to ${choiceusers.map((a) => { return `<@${a}>`}).join(", ")}`, flags: MessageFlags.Ephemeral });
+            if (process.recentinteraction) {
+				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], optionparts[4]));
+				}
+				delete process.recentinteraction[interaction.user.id];
+			}
+        }
 	},
 };

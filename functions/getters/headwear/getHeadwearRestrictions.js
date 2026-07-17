@@ -11,10 +11,11 @@ const { getHeadwear } = require("./getHeadwear");
  * ##### Returns an object with the following properties:
  * - canEmote: The user is able to use emotes
  * - canInspect: The user is able to view details in /inspect
+ * - canGag: The user is able to have their gags changed
  ***********/
 function getHeadwearRestrictions(serverID, userID) {
     traceFirstParam(arguments[0]);
-    let allowedperms = { canEmote: true, canInspect: true, forcedtextemoji: false };
+    let allowedperms = { canEmote: true, canInspect: true, canGag: true, forcedtextemoji: false };
     let wornheadwear = getHeadwear(serverID, userID);
     for (let i = 0; i < wornheadwear.length; i++) {
         if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockemote) {
@@ -22,6 +23,9 @@ function getHeadwearRestrictions(serverID, userID) {
         }
         if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockinspect) {
             allowedperms.canInspect = false;
+        }
+        if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).blockgag) {
+            allowedperms.canGag = false;
         }
         if (getHeadwearBlocks(wornheadwear[i]) && getHeadwearBlocks(wornheadwear[i]).forcedtextemoji) {
             allowedperms.forcedtextemoji = true;

@@ -276,85 +276,6 @@ const configoptions = {
 				return false;
 			}, // if true, button is greyed out
 		},
-        receiveheadpat: {
-			name: "Recieve Headpats",
-			desc: "Who is allowed to headpat you?",
-			choices: [
-				{
-					name: "Everyone",
-					helptext: "Everyone is allowed to pat you without prompts",
-					select_function: (serverID, userID) => { return true },
-					value: "everyonenoprompt",
-					style: ButtonStyle.Secondary,
-				},
-				{
-					name: "Everyone (Prompt)",
-					helptext: "Everyone but keyholders will prompt to pat you",
-					select_function: (serverID, userID) => { return true },
-					value: "everyone",
-					style: ButtonStyle.Secondary,
-				},
-				{
-					name: "Keyholders",
-					helptext: "Only Keyholders can pat you and without prompts",
-					select_function: (serverID, userID) => { return true },
-					value: "keyholdernoprompt",
-					style: ButtonStyle.Secondary,
-				},
-                {
-					name: "Keyholders (Prompt)",
-					helptext: "Only Keyholders can pat you with prompts",
-					select_function: (serverID, userID) => { return true },
-					value: "keyholder",
-					style: ButtonStyle.Secondary,
-				},
-                {
-					name: "Nobody",
-					helptext: "Nobody can pat you",
-					select_function: (serverID, userID) => { return true },
-					value: "nobody",
-					style: ButtonStyle.Danger,
-				},
-			],
-			menutype: "choice",
-			default: "everyonenoprompt",
-			disabled: () => {
-				return false;
-			}, // if true, button is greyed out
-		},
-        allowedheadpat: {
-			name: "Headpat Exempt Users",
-			desc: "Set users who can headpat you regardless of your setting above",
-			descmodal: "Select up to 25 users which can headpat you at all times:",
-			choices: [
-				{
-					name: "Set Users",
-					helptext: "Users set to ",
-					helptextnone: "*No Users Set*",
-					select_function: (serverID, userID) => {
-						return false;
-					},
-					value: "None",
-					style: ButtonStyle.Primary,
-				},
-			],
-			customtext: (serverID, userID) => {
-				return `https://discord.gg/`;
-			},
-			placeholder: (serverID, userID) => {
-				return `https://discord.gg/`;
-			},
-            uservaluedisplay: (val) => {
-                return val;
-            },
-			menutype: "choice_userentry",
-			default: (serverID, userID) => {
-				return ``;
-			},
-			disabled: () => {
-				return false;
-			},
-		},
         receiveshock: {
 			name: "Recieve Shocks",
 			desc: "Who is allowed to trigger remote shocks on you?",
@@ -483,78 +404,6 @@ const configoptions = {
 			disabled: () => {
 				return false;
 			}, // if true, button is greyed out
-		},
-        receiveorgasmcontrol: {
-			name: "Orgasm Control",
-			desc: "When wearing the Orgasm Control Module, who is allowed to trigger /letgo on you?",
-			choices: [
-				{
-					name: "Everyone",
-					helptext: "Everyone is allowed to force an orgasm you",
-					select_function: (serverID, userID) => { return true },
-					value: "everyonenoprompt",
-					style: ButtonStyle.Secondary,
-				},
-				{
-					name: "Collar Access",
-					helptext: "Anyone with access to your collar is allowed to force an orgasm on you",
-					select_function: (serverID, userID) => { return true },
-					value: "collaraccess",
-					style: ButtonStyle.Secondary,
-				},
-				{
-					name: "Keyholders",
-					helptext: "Only Keyholders can force an orgasm on you",
-					select_function: (serverID, userID) => { return true },
-					value: "keyholdernoprompt",
-					style: ButtonStyle.Secondary,
-				},
-                {
-					name: "Nobody",
-					helptext: "Nobody can force an orgasm on you",
-					select_function: (serverID, userID) => { return true },
-					value: "nobody",
-					style: ButtonStyle.Danger,
-				},
-			],
-			menutype: "choice",
-			default: "collaraccess",
-			disabled: () => {
-				return false;
-			}, // if true, button is greyed out
-		},
-        allowedorgasmcontrol: {
-			name: "Orgasm Control Exempt Users",
-			desc: "Set users who can always trigger an orgasm on you regardless of the setting above",
-			descmodal: "Select up to 25 users which can /letgo you at all times:",
-			choices: [
-				{
-					name: "Set Users",
-					helptext: "Users set to ",
-					helptextnone: "*No Users Set*",
-					select_function: (serverID, userID) => {
-						return false;
-					},
-					value: "None",
-					style: ButtonStyle.Primary,
-				},
-			],
-			customtext: (serverID, userID) => {
-				return `https://discord.gg/`;
-			},
-			placeholder: (serverID, userID) => {
-				return `https://discord.gg/`;
-			},
-            uservaluedisplay: (val) => {
-                return val;
-            },
-			menutype: "choice_userentry",
-			default: (serverID, userID) => {
-				return ``;
-			},
-			disabled: () => {
-				return false;
-			},
 		},
     },
     "Pishock Config": {
@@ -1571,6 +1420,317 @@ const configoptions = {
 			},
 		},
 	},
+    Touch: {
+        receiveheadpat: {
+			name: "Recieve Headpats",
+			desc: "Who is allowed to headpat you?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to pat you without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Everyone (Prompt)",
+					helptext: "Everyone but keyholders will prompt to pat you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyone",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can pat you and without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Keyholders (Prompt)",
+					helptext: "Only Keyholders can pat you with prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholder",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can pat you",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "everyonenoprompt",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedheadpat: {
+			name: "Headpat Exempt Users",
+			desc: "Set users who can headpat you regardless of your setting above",
+			descmodal: "Select up to 25 users which can headpat you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        receivenom: {
+			name: "Recieve Noms",
+			desc: "Who is allowed to nom on you (playfully)?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to nom you without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Everyone (Prompt)",
+					helptext: "Everyone but keyholders will prompt to nom you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyone",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can nom you and without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Keyholders (Prompt)",
+					helptext: "Only Keyholders can nom you with prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholder",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can nom you",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "everyonenoprompt",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowednom: {
+			name: "Nom Exempt Users",
+			desc: "Set users who can nom on you regardless of your setting above",
+			descmodal: "Select up to 25 users which can nom on you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        receivehug: {
+			name: "Recieve Hugs",
+			desc: "Who is allowed to give you a hug?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to hug you without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Everyone (Prompt)",
+					helptext: "Everyone but keyholders will prompt to hug you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyone",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can hug you and without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Keyholders (Prompt)",
+					helptext: "Only Keyholders can hug you with prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholder",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can hug you :(",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "everyonenoprompt",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedhug: {
+			name: "Hug Exempt Users",
+			desc: "Set users who can hug you regardless of your setting above",
+			descmodal: "Select up to 25 users which can hug you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+        receiveorgasmcontrol: {
+			name: "Orgasm Control",
+			desc: "When wearing the Orgasm Control Module, who is allowed to trigger /letgo on you?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to force an orgasm you",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Collar Access",
+					helptext: "Anyone with access to your collar is allowed to force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "collaraccess",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can force an orgasm on you",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "collaraccess",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedorgasmcontrol: {
+			name: "Orgasm Control Exempt Users",
+			desc: "Set users who can always trigger an orgasm on you regardless of the setting above",
+			descmodal: "Select up to 25 users which can /letgo you at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
+    },
 	"Restraint Options": {
 		dollvisorname: {
 			name: "Doll Visor Name",
