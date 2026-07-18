@@ -2709,7 +2709,32 @@ const texts_touch = {
                 `USER_TAG pinches TARGET_TAG's sleeve cutely before tugging TARGET_THEM into a hug!`
             ]
         }
-    }
+    },
+    // region touch - boop
+    /*boop: {
+        self: {
+            heavy: [
+                
+            ],
+            mitten: [
+
+            ],
+            free: [
+
+            ]
+        },
+        other: {
+            heavy: [
+
+            ],
+            mitten: [
+
+            ],
+            free: [
+
+            ]
+        }
+    }*/
 }
 
 // region _toy

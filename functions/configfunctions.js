@@ -165,6 +165,17 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 							.setDisabled(configoptions[menuset][k].disabled(interaction.user.id)),
 					);
 				pagecomponents.push(buttonsection);
+			} else if (configoptions[menuset][k].menutype == "choice_removemessages") {
+				let buttonsection = new SectionBuilder()
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`))
+					.setButtonAccessory((button) =>
+						button
+							.setCustomId(`config_pageoptpurgemessage_${menuset}`)
+							.setLabel(`Purge Messages`)
+							.setStyle(ButtonStyle.Danger)
+							.setDisabled(false),
+					);
+				pagecomponents.push(buttonsection);
 			} else if (configoptions[menuset][k].menutype == "choice_revokeconsent") {
 				let buttonsection = new SectionBuilder()
 					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}`))

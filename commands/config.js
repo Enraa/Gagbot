@@ -17,6 +17,7 @@ const { configoptions } = require("../lists/configoptions.js");
 const { initializeServerOptions } = require("../functions/other/initializeServerOptions.js");
 const { markForSave } = require("../functions/other/markForSave.js");
 const { getProcessVariable } = require("../functions/getters/config/getProcessVariable.js");
+const { setProcessVariable } = require("../functions/setters/config/setProcessVariable.js");
 
 module.exports = {
 	data: new SlashCommandBuilder().setName("config").setDescription(`Configure settings...`),
@@ -216,14 +217,30 @@ module.exports = {
 					await setCommands(interaction, interaction.guildId);
 				}
 				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
-			} else if (optionparts[1] == "pageoptrevoke") {
-				// Revoke that CONSENT
-				if (getProcessVariable(interaction.guildId, interaction.user.id)) {
-					delete process.consented[interaction.guildId][interaction.user.id];
-					markForSave("consented");
-				}
+			} else if (optionparts[1] == "pageoptpurgemessage") {
+				// Purge those recent messages we're holding onto. 
+				if (process.recordedmessages) {
+                    Object.keys(process.recordedmessages).forEach((mid) => {
+                        if (process.recordedmessages[mid] && process.recordedmessages[mid].authorid && (process.recordedmessages[mid].authorid == interaction.user.id)) {
+                            console.log(`Deleting message ID ${mid}`)
+                            delete process.recordedmessages[mid];
+                        }
+                    })
+                }
+                markForSave("recordedmessages")
 				// Finally, reprompt the user, now with the new choice set.
 				interaction.update(await generateConfigModal(interaction, optionparts[2], 1));
+            } else if (optionparts[1] == "pageoptrevoke") {
+				// Revoke that CONSENT
+				if (getProcessVariable(interaction.guildId, interaction.user.id, "consented")) {
+					delete process.consented[interaction.guildId][interaction.user.id];
+                    if (process.configs && process.configs.users && process.configs.users[interaction.guildId]) {
+                        delete process.configs.users[interaction.guildId][interaction.user.id];
+                    }
+					markForSave("consented");
+                    markForSave("configs")
+				}
+                interaction.reply({ content: `Consent and settings removed for you! You can dismiss these messages now!`, flags: MessageFlags.Ephemeral })
 			} else if (optionparts[1] == "serveroptrole") {
 				if (interaction.values.length > 0) {
 					newrole = interaction.values[0];
