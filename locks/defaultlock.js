@@ -1,5 +1,6 @@
 const { ButtonStyle, ButtonBuilder, ActionRowBuilder, TextDisplayBuilder, MessageFlags } = require("discord.js");
 const { getLockAwaiting } = require("../functions/getters/lock/getLockAwaiting");
+const { removeLockAwaiting } = require("../functions/setters/lock/removeLockAwaiting");
 
 // This is the base definition for a lock that is affixed to a restraint. Any new functionality that references a property
 // should have that reference here to ensure all locks are constructed with a default. 
@@ -74,6 +75,8 @@ function Lock() {
             })
             lock.restraintobject.lock = newlock;
         }
+        // Clear the awaiting object whether we were able to use it or not
+        removeLockAwaiting(data.uuid);
     }
 
     // Initialize lock
