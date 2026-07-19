@@ -87,6 +87,8 @@ exports.breathRecovery = (_user, intensity) => 1 - intensity / 20;
 exports.choicename = "Sensual Jawbreaker Gag";
 exports.tags = ["drug"];
 
+exports.itemdescription = `The **Sensual Jawbreaker Gag** functions like a regular Jawbreaker gag, deteriorating every 20 minutes. It will also add a little bit of arousal each time it shrinks.`
+
 // Clear Dissolve Timer
 exports.onUnlock = (data) => {
 	setUserVar(data.serverID, data.userID, "confectionaryDissolveTimer", undefined)
