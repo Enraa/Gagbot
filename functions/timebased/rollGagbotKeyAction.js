@@ -339,7 +339,7 @@ async function rollGagbotKeyAction(serverID, userID, type) {
                     data[getBaseToy(chosentoy).category] = true;
                 }
                 messageSendChannel(getText(data), getRecentChannel(serverID, userID).messagechannelid)
-                removeToy(serverID, userID, interactionuser.id, intensity, chosentoy, interactionuser.id);
+                removeToy(serverID, userID, interactionuser.id, intensity, chosentoy);
                 heldkeys[`${serverID}_${userID}_${type}`].lastaction = (Date.now() + (Math.floor(getOption(serverID, userID, "gagbotheldkeyaction") * (0.5 + Math.random() * 0.5))))
                 markForSave("heldkeytimers");
                 process.recentgagbotaction = (Date.now() + 15000)
