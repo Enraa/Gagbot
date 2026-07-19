@@ -1,7 +1,8 @@
 const { ButtonStyle, ButtonBuilder, ActionRowBuilder, TextDisplayBuilder, MessageFlags } = require("discord.js");
+const { getLockAwaiting } = require("../functions/getters/lock/getLockAwaiting");
 
 // This is the base definition for a lock that is affixed to a restraint. Any new functionality that references a property
-// MUST have that reference here to ensure all locks are constructed with a default. 
+// should have that reference here to ensure all locks are constructed with a default. 
 // The default values should generally "do nothing" as they will be overwritten by
 // the further lock types as relevant.
 function Lock() {
@@ -12,8 +13,11 @@ function Lock() {
     // The condition to allow access to the item this lock is on
     this.canAccessLock = (data) => { return true };
 
-    // The condition to allow adding or removing clonedKeyholders
+    // The condition to allow adding clonedKeyholders
     this.canCloneKeys = (data) => { return true };
+
+    // The condition to allow removing clonedKeyholders
+    this.canRemoveCloneKeys = (data) => { return true };
 
     // The condition to allow transferring primary keyholder
     this.canTransfer = (data) => { return true };
@@ -38,6 +42,44 @@ function Lock() {
     // Remove parent device
     this.removeParent = (data) => {
         let lockeditem = getRestraintByUUID(data.uuid);
+    }
+
+    // Modify Host Lock
+    // { uuid: uuid, param: string, value: any }
+    this.modifyLock = (data) => {
+        let lock = getRestraintByUUID(data.uuid).lock;
+        if (data.param && data.value) {
+            lock[data.param] = data.value;
+        }
+    }
+
+    // Modify Host Restraint - This generally should NOT be needed.
+    // { uuid: uuid, param: string, value: any }
+    this.modifyRestraint = (data) => {
+        let lock = getRestraintByUUID(data.uuid);
+        if (data.param && data.value) {
+            lock[data.param] = data.value;
+        }
+    }
+
+    // Engage the awaiting lock
+    this.startLock = function (data) {
+        let lock = getLockAwaiting(data.uuid);
+        if (lock.restraintobject) {
+            // Capture all lock props we added during configuration
+            let props = Object.keys(lockobject).filter((p) => !["serverID", "userID", "keyholderID", "restraintobject"])
+            let newlock = {}
+            props.forEach((k) => {
+                newlock[k] = lock[k]
+            })
+            lock.restraintobject.lock = newlock;
+        }
+    }
+
+    // Initialize lock
+    this.initializeLock = function (data) {
+        let lock = getLockAwaiting(data.uuid);
+        return true;
     }
 
     // Base Data
