@@ -275,12 +275,12 @@ module.exports = {
                                 }
                                 else if (getHeadwear(interaction.guildId, headwearuser.id)?.find((h) => h.type == headwearchoice)?.lock) {
                                     data.locked = true
-                                    interaction.reply(getText(data));
 								    // Now lets make sure the wearer wants that.
                                     if (checkBondageRemoval(interaction.guildId, interaction.user.id, headwearuser.id, "headwear", headwearchoice) == true) {
                                         // Allowed immediately, lets go
                                         interaction.reply(getText(data));
                                         deleteHeadwear(interaction.guildId, headwearuser.id, headwearchoice);
+                                        return;
                                     } else {
                                         // We need to ask first.
                                         let datatogeneric = Object.assign({}, data.textdata);
@@ -300,12 +300,12 @@ module.exports = {
                                 }
                                 else {
                                     data.worn = true;
-								    interaction.reply(getText(data));
 								    // Now lets make sure the wearer wants that.
                                     if (checkBondageRemoval(interaction.guildId, interaction.user.id, headwearuser.id, "headwear", headwearchoice) == true) {
                                         // Allowed immediately, lets go
                                         interaction.reply(getText(data));
                                         deleteHeadwear(interaction.guildId, headwearuser.id, headwearchoice);
+                                        return;
                                     } else {
                                         // We need to ask first.
                                         let datatogeneric = Object.assign({}, data.textdata);
@@ -339,6 +339,7 @@ module.exports = {
 									// Allowed immediately, lets go
 									interaction.reply(getText(data));
 									deleteHeadwear(interaction.guildId, headwearuser.id, headwearchoice);
+                                    return;
 								} else {
 									// We need to ask first.
 									let datatogeneric = Object.assign({}, data.textdata);
