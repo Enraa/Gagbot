@@ -2635,6 +2635,16 @@ const texts_lock = {
                 },
             ]
         },
+        // region passwordlock
+        passwordlock: {
+            "self": [
+                `USER_TAG puts a Password Lock on USER_THEIR VAR_C1 and types in a password on the touch screen. Hopefully USER_THEY won't forget it...`
+            ],
+            "other": [
+                `USER_TAG slips a Password Lock onto TARGET_TAG's VAR_C1, typing in a password that USER_THEY kept secret in USER_THEIR mind. Hopefully it doesn't get lost!`
+            ]
+        },
+        // region exclusivelock
         exclusivelock: {
             "self": [
                 `USER_TAG puts an Exclusive Lock on USER_THEIR VAR_C1, locking USER_THEMSELF out of the restraint! Maybe someone can help USER_THEM with it...`
@@ -2706,6 +2716,15 @@ const texts_lock = {
             ],
             "other": [
                 `USER_TAG removes the Exclusive Lock from TARGET_TAG's VAR_C1! Now TARGET_THEY can do stuff with TARGET_THEIR restraint again!`
+            ]
+        },
+        passwordlock: {
+            // This should never happen
+            "self": [
+                `USER_TAG enters the password on USER_THEIR VAR_C1 and takes it off!`
+            ],
+            "other": [
+                `USER_TAG dials in the password on TARGET_TAG's VAR_C1! The lock clicks open and then USER_THEY remove it from the ring!`
             ]
         },
         defaultlock: {

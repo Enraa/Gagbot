@@ -128,10 +128,26 @@ function addLockModal(interaction) {
  *****/
 async function handleRemoveLock(interaction) {
     let locktarget = interaction.options.getUser("wearer") ?? interaction.user;
-    let itemtolock = interaction.options.getString("restraint");
+    let itemtolock = interaction.options.getString("restraint").split("|")[0];
     if (itemtolock == null) {
         await interaction.editReply({ content: `Please select an item to remove!` })
         return;
+    }
+    if ((interaction.options.getString("restraint").split("|").length > 1) && (interaction.options.getString("restraint").split("|")[1] == "unlockSpecial")) {
+        if (getUserWornRestraint(interaction.guildId, locktarget.id, getItemType(itemtolock), itemtolock)) {
+            if (getBaseLock(getUserWornRestraint(interaction.guildId, locktarget.id, getItemType(itemtolock), itemtolock).lock.locktype).unlockSpecialModal) {
+                getBaseLock(getUserWornRestraint(interaction.guildId, locktarget.id, getItemType(itemtolock), itemtolock).lock.locktype).unlockSpecialModal({ 
+                    interaction: interaction,
+                    uuid: getUserWornRestraint(interaction.guildId, locktarget.id, getItemType(itemtolock), itemtolock).lock.uuid,
+                    userID: interaction.user.id,
+                }, true)
+                return;
+            }
+        }
+        else {
+            await interaction.editReply({ content: `Please select an item to remove!` })
+            return;
+        }
     }
     await interaction.editReply({ content: `Attempting to remove lock!`, flags: MessageFlags.Ephemeral })
     let locktoremove = getUserWornRestraint(interaction.guildId, locktarget.id, getItemType(itemtolock), itemtolock)

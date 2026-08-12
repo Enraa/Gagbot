@@ -60,6 +60,9 @@ module.exports = {
                         if (h.lock && getBaseLock(h.lock.locktype).canUnlock({ uuid: h.lock.uuid, userID : interaction.user.id })) {
                             outopts.push({ name: `Heavy Bondage: ${h.displayname}`, value: h.type });
                         }
+                        else if (h.lock && getBaseLock(h.lock.locktype).unlockSpecialType) {
+                            outopts.push({ name: `Heavy Bondage: ${h.displayname} (${getBaseLock(h.lock.locktype).unlockSpecialType})`, value: `${h.type}|unlockSpecial` });
+                        }
                     })
                 }
                 if (gagbondage && (gagbondage.length > 0)) {
@@ -67,29 +70,50 @@ module.exports = {
                         if (g.lock && getBaseLock(g.lock.locktype).canUnlock({ uuid: g.lock.uuid, userID: interaction.user.id })) {
                             outopts.push({ name: `Gag: ${convertGagText(g.gagtype)}`, value: g.gagtype });
                         }
+                        else if (g.lock && getBaseLock(g.lock.locktype).unlockSpecialType) {
+                            outopts.push({ name: `Gag: ${h.displayname} (${getBaseLock(g.lock.locktype).unlockSpecialType})`, value: `${g.type}|unlockSpecial` });
+                        }
                     })
                 }
                 if (mittenbondage && mittenbondage.lock && getBaseLock(mittenbondage.lock.locktype).canUnlock({ uuid: mittenbondage.lock.uuid, userID: interaction.user.id })) {
                     outopts.push({ name: `Mittens: ${getBaseMitten(mittenbondage.mittenname).name}`, value: mittenbondage.mittenname });
                 }
+                else if (mittenbondage && mittenbondage.lock && getBaseLock(mittenbondage.lock.locktype).unlockSpecialType) {
+                    outopts.push({ name: `Mittens: ${getBaseMitten(mittenbondage.mittenname).name} (${getBaseLock(mittenbondage.lock.locktype).unlockSpecialType})`, value: `${mittenbondage.mittenname}|unlockSpecial` });
+                }
                 if (chastitybondage && chastitybondage.lock && getBaseLock(chastitybondage.lock.locktype).canUnlock({ uuid: chastitybondage.lock.uuid, userID: interaction.user.id })) {
                     outopts.push({ name: `Chastity: ${getBaseChastity(chastitybondage.chastitytype).name}`, value: chastitybondage.chastitytype });
                 }
+                else if (chastitybondage && chastitybondage.lock && getBaseLock(chastitybondage.lock.locktype).unlockSpecialType) {
+                    outopts.push({ name: `Chastity: ${getBaseChastity(chastitybondage.chastitytype).name} (${getBaseLock(chastitybondage.lock.locktype).unlockSpecialType})`, value: `${chastitybondage.chastitytype}|unlockSpecial` });
+                }
                 if (chastitybrabondage && chastitybrabondage.lock && getBaseLock(chastitybrabondage.lock.locktype).canUnlock({ uuid: chastitybrabondage.lock.uuid, userID: interaction.user.id })) {
                     outopts.push({ name: `Chastity Bra: ${getBaseChastity(chastitybrabondage.chastitytype).name}`, value: chastitybrabondage.chastitytype });
+                }
+                else if (chastitybrabondage && chastitybrabondage.lock && getBaseLock(chastitybrabondage.lock.locktype).unlockSpecialType) {
+                    outopts.push({ name: `Chastity Bra: ${getBaseChastity(chastitybrabondage.chastitytype).name} (${getBaseLock(chastitybrabondage.lock.locktype).unlockSpecialType})`, value: `${chastitybrabondage.chastitytype}|unlockSpecial` });
                 }
                 if (headbondage && headbondage.length > 0) {
                     headbondage.forEach((h) => {
                         if (h.lock && getBaseLock(h.lock.locktype).canUnlock({ uuid: h.lock.uuid, userID: interaction.user.id })) {
                             outopts.push({ name: `Head Restraints: ${getBaseHeadwear(h.type).name}`, value: h.type });
                         }
+                        else if (h.lock && getBaseLock(h.lock.locktype).unlockSpecialType) {
+                            outopts.push({ name: `Head Restraints: ${h.displayname} (${getBaseLock(h.lock.locktype).unlockSpecialType})`, value: `${h.type}|unlockSpecial` });
+                        }
                     })
                 }
                 if (corsetbondage && corsetbondage.lock && getBaseLock(corsetbondage.lock.locktype).canUnlock({ uuid: corsetbondage.lock.uuid, userID: interaction.user.id })) {
                     outopts.push({ name: `Corset: ${getBaseCorset(corsetbondage.type).name}`, value: corsetbondage.type });
                 }
+                else if (corsetbondage && corsetbondage.lock && getBaseLock(corsetbondage.lock.locktype).unlockSpecialType) {
+                    outopts.push({ name: `Corset: ${getBaseCorset(corsetbondage.type).name} (${getBaseLock(corsetbondage.lock.locktype).unlockSpecialType})`, value: `${corsetbondage.type}|unlockSpecial` });
+                }
                 if (collarbondage && collarbondage.lock && getBaseLock(collarbondage.lock.locktype).canUnlock({ uuid: collarbondage.lock.uuid, userID: interaction.user.id })) {
                     outopts.push({ name: `Collar: ${getBaseCollar(collarbondage.collartype).name}`, value: collarbondage.collartype });
+                }
+                else if (collarbondage && collarbondage.lock && getBaseLock(collarbondage.lock.locktype).unlockSpecialType) {
+                    outopts.push({ name: `Collar: ${getBaseCollar(collarbondage.collartype).name} (${getBaseLock(collarbondage.lock.locktype).unlockSpecialType})`, value: `${collarbondage.collartype}|unlockSpecial` });
                 }
 
                 if (outopts.length == 0) {

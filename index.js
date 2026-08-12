@@ -31,6 +31,7 @@ const { addBellCollarReact } = require('./functions/setters/collar/addBellCollar
 const { setRecentChannel } = require(`./functions/setters/config/setRecentChannel.js`);
 const { setProcessVariable } = require('./functions/setters/config/setProcessVariable.js');
 const { getLockAwaiting } = require('./functions/getters/lock/getLockAwaiting.js');
+const { getRestraintByUUID } = require('./functions/getters/lock/getRestraintByUUID.js');
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -353,6 +354,16 @@ client.on('interactionCreate', async (interaction) => {
                 let configfunc = process.locktypes[lockfromuuid.locktype]
                 configfunc.lockinteractionmodalresponse(interaction); 
             }
+            else if (interactioncommand == "lockspecial") {
+                let lockfromuuid = getRestraintByUUID(interaction.customId.split("_")[1])
+                if (!lockfromuuid) { 
+                    console.log(`Invalid lock`)
+                    console.log(interaction);
+                    return;
+                }
+                let configfunc = process.locktypes[lockfromuuid.restraint.lock.locktype]
+                configfunc.unlockSpecialmodalresponse(interaction); 
+            }
             else if (interactioncommand == "modalevent") {
                 if (process.eventfunctions) {
                     let eventfunctionset = interaction.customId.split("_")[1].split("|")[0]
@@ -416,6 +427,16 @@ client.on('interactionCreate', async (interaction) => {
                 }
                 let configfunc = process.locktypes[lockfromuuid.locktype]
                 configfunc.lockinteractionresponse(interaction); 
+            }
+            else if (interaction.customId.startsWith("lockspecial_")) {
+                let lockfromuuid = getRestraintByUUID(interaction.customId.split("_")[1])
+                if (!lockfromuuid) { 
+                    console.log(`Invalid lock`)
+                    console.log(interaction);
+                    return;
+                }
+                let configfunc = process.locktypes[lockfromuuid.restraint.lock.locktype]
+                configfunc.unlockSpecialresponse(interaction); 
             }
             else if (interaction.customId.startsWith("buttonboard")) {
                 buttonboard(interaction); // The button board reply function is in contextcommands/message/Button Board.js
