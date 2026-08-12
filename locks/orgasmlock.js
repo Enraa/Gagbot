@@ -52,6 +52,7 @@ exports.initializeLock = function(data) {
 exports.name = "Orgasm Lock"
 exports.locktype = "large"
 exports.desc = `A lock that reacts to the wearer's hormonal outputs, opening only when a preconfigured number of endorphins rush over their body. The wearer will need to do **/letgo** a certain number of times to unlock the lock.`
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

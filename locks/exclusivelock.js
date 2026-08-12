@@ -58,6 +58,7 @@ exports.initializeLock = function(data) {
 exports.name = "Exclusive Lock"
 exports.locktype = "small"
 exports.desc = `A lock with a design that is difficult for a wearer to manipulate. While worn, only others will be able to access the restraint underneath. The wearer will *not* have access.`
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

@@ -71,6 +71,7 @@ exports.initializeLock = function(data) {
 exports.name = "Password Lock"
 exports.locktype = "large"
 exports.desc = `A lock with a touch screen password entry. Once a password is set, it must be entered in order to access the lock. Once authenticated, the user is remembered until the lock is removed. `
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

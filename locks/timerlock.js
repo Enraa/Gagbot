@@ -67,6 +67,7 @@ exports.initializeLock = function(data) {
 exports.name = "Timer Lock"
 exports.locktype = "large"
 exports.desc = `A configurable timer that will not unlock until the timer expires. Can be configured to a minimum and maximum time, as well as to hide the display.`
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

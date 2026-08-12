@@ -58,6 +58,7 @@ exports.initializeLock = function(data) {
 exports.name = "Self Lock"
 exports.locktype = "small"
 exports.desc = `A magical lock with a biometric that is automatically configured to the wearer. This lock's key cannot be transferred or lost in any way and can only be accessed by the wearer.`
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

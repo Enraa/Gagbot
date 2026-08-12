@@ -129,6 +129,7 @@ exports.initializeLock = function(data) {
 exports.name = "Simple Padlock"
 exports.locktype = "large"
 exports.desc = `A simple lock that has a key. The key can be cloned for others to have access as well. This lock will not expire until it is unlocked.`
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

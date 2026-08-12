@@ -4,6 +4,7 @@ const { getBaseCorset } = require("../corset/getBaseCorset");
 const { getBaseGag } = require("../gag/getBaseGag");
 const { getBaseHeadwear } = require("../headwear/getBaseHeadwear");
 const { getBaseHeavy } = require("../heavy/getBaseHeavy");
+const { getBaseLock } = require("../lock/getBaseLock");
 const { getBaseMitten } = require("../mitten/getBaseMitten");
 const { getBaseToy } = require("../toy/getBaseToy");
 const { getBaseWearable } = require("../wearable/getBaseWearable");
@@ -42,6 +43,9 @@ function getBaseItem(itemID) {
     }
     if (getBaseToy(itemID)) {
         return getBaseToy(itemID)
+    }
+    if (getBaseLock(itemID)) {
+        return getBaseLock(itemID)
     }
 }
 

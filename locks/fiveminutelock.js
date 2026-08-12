@@ -66,6 +66,7 @@ exports.initializeLock = function(data) {
 exports.name = "5 Minute Lock"
 exports.locktype = "small"
 exports.desc = `A simple lock that is hardcoded with a 5 minute timer. It will automatically unlock and remove itself at the end of the timelock duration. It cannot be accessed in any way by anyone, nor can it be removed early.`
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

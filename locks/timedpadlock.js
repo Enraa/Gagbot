@@ -110,6 +110,7 @@ exports.initializeLock = function(data) {
 exports.name = "Timed Padlock"
 exports.locktype = "large"
 exports.desc = `A configurable timer with a key. The lock will automatically open at the end of the timer if it is still locked. `
+exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
     let pagecomponents = [];

@@ -432,6 +432,76 @@ const delveroomchoices = {
         weightforce: undefined,
         accentcolor: 0x0099ff
     },
+    hangingchainsroom: {
+        name: "Hall of Draping Chains",
+        hintdesc: "Hallway with Chains",
+        shortdesc: "You find a hallway with an infinite number of chains draping from the ceiling.",
+        longdesc: "You walk into a dark hallway, stepping bravely into the inky black void. As the door shuts behind you, it illuminates to reveal a countless number of chains hanging from the ceiling, of varying sizes and colors. Some have padlocks and cuffs on them. In the corner of your eye, you swear you just saw a chain fidget slightly. Whatever you decide to do, it appears these chains are not simply what they appear to be on the surface.",
+        extradesc: (serverID, userID, text, delvedata, resolve) => {
+            return text;
+        },
+        revisitshortdesc: "You return to the room with the moving chains.",
+        revisitlongdesc: "You return to the dark hallway that houses the mysterious moving chains. They still linger there, taunting you to touch them.",
+        revisitextradesc: (serverID, userID, text, delvedata, resolve) => {
+            if (getDelveFloorState(serverID, userID, delvedata.floor).dodged) {
+                // They successfully dodged the chains! 
+                text = `${text} Fortunately, your nimble dodging earlier appears to have convinced them they would probably be unable to bind you anyway.`
+            }
+            else {
+                text = `${text} Your breath shakes slightly as you recall the sensations of the chains wrapping around your body, and the unforgiving clack of the cuffs as they wrapped aroung your wrists...`
+            }
+            return text;
+        },
+        choices: [
+            {
+                name: "Dodge the Chains",
+                shortoutcome_success: "Using careful movements, you manage to slip past all of the wiggly chains!",
+                longoutcome_success: "You weave between all of the wiggly chains, carefully stepping to and from to avoid all of the obviously moving ones. You come close to disturbing a couple of them, but fortunately your limber movements can just barely make it to the end!",
+                shortoutcome_failure: "You try to walk through the .",
+                // region current work
+                longoutcome_failure: "You take a deep breath and attempt to walk through the room, but you lose your concentration as you trip over one of the vines. Your face falls forward and into one of the blooming floors, throwing forth a floating shower of spores that assault your senses. Your mind is racing in the thoughts of being tied up now as you barely manage to crawl the rest of the way to the other side. Perhaps you should keep crawling so you don't trip again...",
+                statweight: {
+                    dexterity: 10,
+                },
+                statspecial: (serverID, userID, delvedata, resolve) => {
+                    if (!getHeavyRestrictions(serverID, userID)?.touchothers) {
+                        // If their legs are bound, they will auto fail this. 
+                        delvedata.stats = {
+                            dexterity: 99
+                        }
+                    }
+                    return delvedata.stats
+                },
+                successfunction: (serverID, userID, delvedata, resolve) => { return true },
+                failurefunction: (serverID, userID, delvedata, resolve) => {
+                    addArousal(serverID, userID, 20)
+                    resolve = Math.max(resolve - 5, 0)
+                }
+            },
+            {
+                name: "Burn it",
+                shortoutcome_success: "You cast a fireball, exploding the room in purging fire and then walk to the other side.",
+                longoutcome_success: "You wave your hands to cast a fireball. A moment later, the room explodes in bright orange fire as it consumes everything, from the vines and leaves all the way to the wretched pink flowers. The haze quickly fades away as the particles are seared into harmless nothingness. Satisfied the room is clear, you continue forth to the other side with a clear mind.",
+                shortoutcome_failure: "You attempt to cast the fireball, but the plant grabs your wrist and fizzles your spell. You make it to the other side, but only after breathing in more of the fumes.",
+                longoutcome_failure: "You wave your hands to cast the fireball spell, but the plant catches your wrist with a stray vine. Your spell fizzles away as it pulls you towards one of it's flowering blooms. It would be so easy to just let it tie you up... but no! You manage to pull away from the sentient vine and barely make your way to the other side of the room. The feeling of the vine holding you captive haunts your thoughts for a brief moment.",
+                statweight: {
+                    intelligence: 10,
+                },
+                statspecial: (serverID, userID, delvedata, resolve) => { return delvedata.stats },
+                successfunction: (serverID, userID, delvedata, resolve) => {
+                    getDelveFloorState(serverID, userID, delvedata.floor).burned = true;
+                },
+                failurefunction: (serverID, userID, delvedata, resolve) => {
+                    addArousal(serverID, userID, 20)
+                    resolve = Math.max(resolve - 5, 0)
+                }
+            }
+        ],
+        weight: 5,
+        weightspecial: (serverID, userID, weight) => { return weight },
+        weightforce: undefined,
+        accentcolor: 0x0099ff
+    }
 }
 
 /*******
