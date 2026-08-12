@@ -23,7 +23,8 @@ function canRemoveLock(serverID, userID, keyholderID, uuid) {
         console.log(`Invalid lock type attempted in canRemoveLock: ${restraintlock.locktype}`)
         return false 
     } 
-    if (getHeavyBound(serverID, keyholderID, userID)) {
+    // If the user is us OR we are not heavy bound...
+    if ((getHeavyBound(serverID, keyholderID, userID)) || (userID == keyholderID)) {
         return lock.canUnlock({ serverID: serverID, userID: keyholderID, uuid: uuid })
     }
 }

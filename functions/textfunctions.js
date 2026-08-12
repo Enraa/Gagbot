@@ -2634,6 +2634,14 @@ const texts_lock = {
                     text: `USER_TAG puts a heat sensing Orgasm Lock on TARGET_TAG's VAR_C1. TARGET_THEY_CAP will need to orgasm at least VAR_C3 times for it to unlock!`,
                 },
             ]
+        },
+        exclusivelock: {
+            "self": [
+                `USER_TAG puts an Exclusive Lock on USER_THEIR VAR_C1, locking USER_THEMSELF out of the restraint! Maybe someone can help USER_THEM with it...`
+            ],
+            "other": [
+                `USER_TAG puts an Exclusive lock on TARGET_TAG's VAR_C1. Now TARGET_THEY will have to ask others for help!`
+            ]
         }
     },
     unlock: {
@@ -2689,6 +2697,15 @@ const texts_lock = {
             // This should never happen
             "other": [
                 `USER_TAG removes the timer lock from TARGET_TAG's VAR_C1 early!`
+            ]
+        },
+        exclusivelock: {
+            // This should never happen
+            "self": [
+                `USER_TAG *somehow* removes the Exclusive Lock from USER_THEIR VAR_C1! This catastrophic event should be reported.`
+            ],
+            "other": [
+                `USER_TAG removes the Exclusive Lock from TARGET_TAG's VAR_C1! Now TARGET_THEY can do stuff with TARGET_THEIR restraint again!`
             ]
         },
         defaultlock: {
