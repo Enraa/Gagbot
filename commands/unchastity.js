@@ -274,7 +274,7 @@ module.exports = {
                                 data.nofumble = true;
                                 interaction.reply(getText(data));
                                 removeChastityBra(interaction.guildId, chastitywearer.id, interaction.user.id);
-							} else if (getChastity(interaction.guildId, chastitywearer.id)?.lock) {
+							} else if (getChastityBra(interaction.guildId, chastitywearer.id)?.lock) {
                                 // We don't have the keys
 								data.nokey = true;
 								interaction.reply(getText(data));
@@ -333,7 +333,7 @@ module.exports = {
                                 data.nofumble = true;
                                 interaction.reply(getText(data));
                                 removeChastityBra(interaction.guildId, chastitywearer.id, interaction.user.id);
-							} else if (getChastity(interaction.guildId, chastitywearer.id)?.lock) {
+							} else if (getChastityBra(interaction.guildId, chastitywearer.id)?.lock) {
                                 // We don't have the keys
 								data.nokey = true;
 								interaction.reply({ content: getText(data), flags: MessageFlags.Ephemeral });
