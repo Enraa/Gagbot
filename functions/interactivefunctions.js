@@ -41,6 +41,7 @@ const { getGagName } = require("./getters/gag/getGagName.js");
 const { getBaseHeavy } = require("./getters/heavy/getBaseHeavy.js");
 const { getHeadwearRestrictions } = require("./getters/headwear/getHeadwearRestrictions.js");
 const { getHeadwearBlocks } = require("./getters/headwear/getBaseHeadwear.js");
+const { getBaseLock } = require("./getters/lock/getBaseLock.js");
 
 // Generates a consent button which the user will have to agree to.
 const consentMessage = (interaction, user) => {
