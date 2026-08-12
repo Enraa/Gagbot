@@ -82,7 +82,7 @@ const texts_chastity = {
                         required: (t) => {
                             return getArousal(t.serverID, t.interactionuser.id) > 10;
                         },
-                        text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touch there. USER_THEY_CAP just needs to put a lock on to protect USER_THEIR chastity...`,
+                        text: `Taking calm, deep breaths, USER_TAG wraps a VAR_C2 on USER_THEIR chest before USER_THEY touchUSER_ES there. USER_THEY_CAP just needs to put a lock on to protect USER_THEIR chastity...`,
                     },
                     {
                         required: (t) => {

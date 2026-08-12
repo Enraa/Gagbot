@@ -796,7 +796,7 @@ async function handleMajorRestraint(serverID, user, target, type, restraint) {
     traceFirstParam(arguments[0]);
 	return new Promise(async (res, rej) => {
 		let hasOption = getOption(serverID, target.id, `majorrestraint`);
-		if (canAccessCollar(serverID, target.id, user.id).access) {
+		/*if (canAccessCollar(serverID, target.id, user.id).access) {
             let bondagetype = type;
             if (type == "chastitybra") { bondagetype = "chastity" }
             if (getCollar(serverID, target.id) && getCollar(serverID, target.id)[bondagetype]) {
@@ -804,7 +804,19 @@ async function handleMajorRestraint(serverID, user, target, type, restraint) {
                 res(true);
 			    return;
             }
-		} 
+		}*/
+
+        if (getCollar(serverID, target.id)) {
+            if ((getCollar(serverID, target.id).lock && (getBaseLock(getCollar(serverID, target.id).lock.locktype).canAccessLock({ uuid: getCollar(serverID, target.id).lock.uuid, userID: user.id }))) || !getCollar(serverID, target.id).keyholder_only) {
+                let bondagetype = type;
+                if (type == "chastitybra") { bondagetype = "chastity" }
+                if (getCollar(serverID, target.id) && getCollar(serverID, target.id)[bondagetype]) {
+                    // User is able to access the collar of the user *and* it has the permission. 
+                    res(true);
+                    return;
+                }
+            }
+        }
 
         // Always approve ourselves. 
         if (user.id === target.id) {
