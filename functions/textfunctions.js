@@ -3167,6 +3167,7 @@ const texts_struggle = {
 			// Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
 			nomitten: [
 				`USER_TAG tugs at the ring on USER_THEIR VAR_C5. It offers a fantastic leash point, but absolutely no hint that USER_THEY can remove it. Someone should leash USER_THEM!`,
+                `USER_TAG plays with the ring on USER_THEIR VAR_C5. USER_THEY wonders what it would feel like if someone were to tug USER_THEM by it~`,
 				`USER_TAG squeezes USER_THEIR fingers under USER_THEIR VAR_C5, then tugging as hard as USER_THEY can. The collar too is made of high quality material and refuses to come off!`,
 				`USER_TAG tries to use a finger or two to pull against USER_THEIR VAR_C5, as if USER_THEYRE sweating, but the air of the dungeon is kept quite cool. `,
 			],
