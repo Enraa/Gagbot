@@ -26,6 +26,6 @@ const garble = (text, parent, locarr, silent) => {
 };
 
 exports.messagebegin = messagebegin;
-exports.choicename = "Totorial Gag";
+exports.choicename = "Tutorial Gag";
 
 exports.itemdescription = `The **Tutorial Gag** will provide helpful hints about using Gagbot! Messages will be something like: "Use **/ungag** to remove your gag!".`
