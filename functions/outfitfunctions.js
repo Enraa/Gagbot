@@ -728,6 +728,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
     }
     else if (menu == "restraints") {
         let headwearrestrictions = getHeadwearRestrictions(serverID, userID);
+        let blindlocktext = "❓**Blind and unable to see the lock!**"
         let wearingtext = `## Worn Restraints:`;
         // Gags
         if (getGag(serverID, inspectuserID)) {
