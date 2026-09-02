@@ -314,7 +314,7 @@ exports.lockinteractionmodalresponse = function (interaction) {
 exports.applyPermissionModal = function (lockawaiting) {
     let trange = lockawaiting?.maxTime ? `until sometime between <t:${Math.floor(lockawaiting?.minTime / 1000)}:f> and <t:${Math.floor(lockawaiting?.maxTime / 1000)}:f>` : `until <t:${Math.floor(lockawaiting?.unlocktime / 1000)}:f>`
     let text = `⏱️ **Timer:** Your lock will be locked ${lockawaiting.hidetimer ? `for an unknown amount of time.` : trange}.`
-    let headpattext = `🫳 **Headpats:** Your lock will be extended ${lockawaiting.hidetimer ? `for an unknown amount of time` : `by ${parseDuration(lockawaiting.headpattime)}`} when recieving a headpat.`
+    let headpattext = `🫳 **Headpats:** Your lock will be extended ${lockawaiting.hidetimer ? `for an unknown amount of time` : `by ${parseDuration(lockawaiting.headpattime)}`} when receiving a headpat.`
     if (lockawaiting.hidetimer) {
         text = `${text}\n🤝 **Hidden:** The timer will not be displayed to you or anyone.`
     }
