@@ -7971,6 +7971,17 @@ function abbreviate(inputtext, minlength = 3) {
     return outtext
 }
 
+/******
+ * For plans, I want to create a new getText that will access the text string at runtime as it is needed. First accesses might be slow, but js caches requires, so we should be fine to do it this way. 
+ * This setup will also ensure any unused text arrays just simply are not loaded, as well as dynamically allowing new text arrays to be added.
+ * 
+ * Next, I want to add an emitEvent function structure for any getText where-in restraints and locks can receive all of the data supplied to getText, and have their output modified accordingly. 
+ * An example might be to have a gag that appends to any struggle message with "*drools*". Obviously, any function that will do this needs to be synchronous. 
+ * 
+ * I also want to explore the possibility of identifying "a" and "an" before an inserted VAR_C and see if I can adjust to respect the proper form. Similarly, pluralized items such as "Wrist Cuffs"
+ * may be handled differently in texts. I do not know if this can be accurately checked or handled. We'll have to see. 
+ ******/
+
 exports.getText = getText;
 exports.getTextGeneric = getTextGeneric;
 exports.abbreviate = abbreviate;
