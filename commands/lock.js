@@ -112,6 +112,8 @@ module.exports = {
                 let autocompletes = process.autocompletes.lock;
                 // If locktarget is specified, filter out all locks to just what is eligible for that restraint target
                 autocompletes = autocompletes.filter((f) => locktarget && getBaseItem(locktarget).locktypes.includes(getBaseLock(f.value).locktype))
+                // For each lock, filter out any locks that do not pass the canAddLock
+                autocompletes = autocompletes.filter((f) => getBaseLock(f.value).canAddLock({ serverID: interaction.guildId, userID: chosenuserid, locktarget: locktarget }))
                 if (autocompletes.length == 0) {
                     interaction.respond([])
                     return;
@@ -131,6 +133,7 @@ module.exports = {
             }
             catch (err) {
                 console.log(err);
+                interaction.respond([]);
             }
         }
 	},

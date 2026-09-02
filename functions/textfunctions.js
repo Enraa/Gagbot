@@ -2652,6 +2652,24 @@ const texts_lock = {
             "other": [
                 `USER_TAG puts an Exclusive lock on TARGET_TAG's VAR_C1. Now TARGET_THEY will have to ask others for help!`
             ]
+        },
+        // region headpatlock
+        headpatlock: {
+            "self": [
+                `USER_TAG puts a Timer Lock on USER_THEIR VAR_C1, locking USER_THEMSELF out of the restraint! It seems like giving USER_THEM headpats will make it longer!`
+            ],
+            "other": [
+                `USER_TAG puts an Exclusive lock on TARGET_TAG's VAR_C1. Now TARGET_THEY will have to ask others for help!`
+            ]
+        },
+        // region headpatlock
+        locktoberlock: {
+            "self": [
+                `USER_TAG places a pumpkin shaped Locktober Lock on USER_THEIR VAR_C1, sealing it until November!`
+            ],
+            "other": [
+                `USER_TAG places a pumpkin shaped Locktober Lock on TARGET_TAG's VAR_C1, sealing it until November!`
+            ]
         }
     },
     unlock: {
@@ -2727,12 +2745,40 @@ const texts_lock = {
                 `USER_TAG dials in the password on TARGET_TAG's VAR_C1! The lock clicks open and then USER_THEY remove it from the ring!`
             ]
         },
+        headpatlock: {
+            "self": [
+                `The timer lock finally falls off of USER_TAG's VAR_C1!`
+            ],
+            // This should never happen
+            "other": [
+                `After USER_TAG's intervention, the timer lock finally falls off of TARGET_TAG's VAR_C1! This should never happen, so please report it!`
+            ]
+        },
+        locktoberlock: {
+            "self": [
+                `Locktober is finally over, and the pumpkin shaped lock fades away from USER_TAG's VAR_C1!`
+            ],
+            // This should never happen
+            "other": [
+                `Locktober is finally over, and the pumpkin shaped lock fades away from USER_TAG's VAR_C1!`
+            ]
+        },
         defaultlock: {
             "self": [
                 `USER_TAG removes the lock from USER_THEIR VAR_C1! Text keys are probably missing and should be fixed though.`
             ],
             "other": [
                 `USER_TAG removes the lock from TARGET_TAG's VAR_C1! Text keys are probably missing and should be fixed though.`
+            ]
+        }
+    },
+    timeAdd: {
+        headpatlock: {
+            "self": [
+                `As USER_TAG receives a headpat, the timer on USER_THEIR VAR_C1 just got a little longer...`
+            ],
+            "other": [
+                `As USER_TAG receives a headpat, the timer on USER_THEIR VAR_C1 just got a little longer...`
             ]
         }
     }
@@ -3700,7 +3746,7 @@ const texts_touch = {
             gagged: [
                 `USER_TAG rubs USER_THEIR gagged lips against TARGET_TAG's skin. It's absolutely adorable. Good thing USER_THEY USER_ISARE gagged so TARGET_THEY TARGET_ISARE safe!`,
                 `USER_TAG baps USER_THEIR mouth into TARGET_TAG clumsily. USER_THEY_CAP wantUSER_S to nibble, but alas, USER_THEIR gag had other plans. Oh well.`,
-                `USER_TAG imagines what it would be like to gently sink USER_THEIR teeth into TARGET_TAG's arm. It's a fantasy for after USER_THEY get out of USER_THEIR gag, probably!`,
+                `USER_TAG imagines what it would be like to gently sink USER_THEIR teeth into TARGET_TAG's arm. It's a fantasy for after USER_THEY getUSER_S out of USER_THEIR gag, probably!`,
                 {
                     required: (t) => {
                         return (getHeadwearRestrictions(t.serverID, t.interactionuser.id).canEmote);
@@ -6738,7 +6784,7 @@ const texts_wear = {
 				`USER_TAG picks up a beautiful VAR_C2 and puts it on! It sits snugly on USER_THEM!`,
                 `USER_TAG decides to put a VAR_C2 on USER_THEMSELF! It fit really well!`,
                 `USER_TAG slips a VAR_C2 on! It seems like it was made just right for USER_THEM!`,
-                `USER_TAG carefully digs through USER_THEIR closet to find a VAR_C2 and put it on!`,
+                `USER_TAG carefully digs through USER_THEIR closet to find a VAR_C2 and puts it on!`,
                 `USER_TAG decides that today is the perfect day to wear a VAR_C2!`,
 				{
 					only: (t) => {
