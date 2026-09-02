@@ -71,7 +71,7 @@ exports.initializeLock = function(data) {
 // Base Data
 exports.name = "Locktober Lock"
 exports.locktype = "small"
-exports.desc = `A mysterious lock in the shape of a carved pumpkin. This lock automatically falls off, but becomes completely unremovable during the month of October. **Note: Nobody will not have access to this restraint until November!**`
+exports.desc = `A mysterious lock in the shape of a carved pumpkin. This lock automatically falls off, but becomes completely unremovable during the month of October. \n\n**Note: Nobody will have access to this restraint until November!**`
 exports.itemdescription = `### ${this.name}\n-# Type: **${this.locktype}**\n\n${this.desc}`
 
 exports.lockinteraction = function (interaction, data, update = false) {
