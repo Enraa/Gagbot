@@ -8,7 +8,7 @@ const { updateLockAwaiting } = require("../../functions/setters/lock/updateLockA
 
 // Increment the timer on the lock when the user is given a headpat!
 exports.headpatfunction = async function(uuid, data) {
-    if (getRestraintByUUID(uuid) && getRestraintByUUID(uuid)?.restraint?.lock && getRestraintByUUID(uuid)?.restraint?.lock?.unlocktime && getRestraintByUUID(uuid)?.restraint?.lock?.headpattime) {
+    if (getRestraintByUUID(uuid) && getRestraintByUUID(uuid)?.restraint?.lock && getRestraintByUUID(uuid)?.restraint?.lock?.unlocktime && getRestraintByUUID(uuid)?.restraint?.lock?.headpattime && data.returnedobject.hit) {
         let restraint = getRestraintByUUID(uuid).restraint
         let newtime = restraint.lock.unlocktime + restraint.lock.headpattime;
         restraint.lock.unlocktime = newtime;
