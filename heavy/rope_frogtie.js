@@ -1,4 +1,4 @@
-exports.name = "Frogtie"
+exports.name = "Rope Frogtie"
 
 exports.denialCoefficient = 2.5
 

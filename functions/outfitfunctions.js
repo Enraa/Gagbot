@@ -728,6 +728,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
     }
     else if (menu == "restraints") {
         let headwearrestrictions = getHeadwearRestrictions(serverID, userID);
+        let blindlocktext = "❓**Blind and unable to see the lock!**"
         let wearingtext = `## Worn Restraints:`;
         // Gags
         if (getGag(serverID, inspectuserID)) {
@@ -736,7 +737,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             let abbreviating = (getGags(serverID, inspectuserID).length > 1)
             getGags(serverID, inspectuserID).forEach((g) => {
                 if (g.lock && (maxgaglockcount > 0)) {
-                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(g.lock.locktype).name}**: ${getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}`}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
                 }
                 if (g.lock) { maxgaglockcount-- }
             })
@@ -752,7 +753,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             let abbreviating = (getHeadwear(serverID, inspectuserID).length > 1)
             getHeadwear(serverID, inspectuserID).forEach((g) => {
                 if (g.lock && (maxmasklockcount > 0)) {
-                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(g.lock.locktype).name}**: ${getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}`}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
                 }
                 if (g.lock) { maxmasklockcount-- }
             })
@@ -763,16 +764,16 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
         }
         // Mittens
         if (getMitten(serverID, inspectuserID)) {
-            wearingtext = `${wearingtext}\n${process.emojis.mitten} Mittens: **${getMittenName(serverID, inspectuserID) ?? "Standard Mittens"}**`
+            wearingtext = `${wearingtext}\n${process.emojis.mitten} Mittens: **${getMittenName(serverID, inspectuserID) ?? "Standard Mittens"}**` 
             if (getMitten(serverID, inspectuserID).lock) {
-                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(getMitten(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getMitten(serverID, inspectuserID).lock.uuid, userID: userID })}`
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(getMitten(serverID, inspectuserID).lock.locktype).name}**: ${getBaseLock(getMitten(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getMitten(serverID, inspectuserID).lock.uuid, userID: userID })}`}`
             }
         }
         // Corset
         if (getCorset(serverID, inspectuserID)) {
             wearingtext = `${wearingtext}\n${process.emojis.corset} Corset: **${getBaseCorset(getCorset(serverID, inspectuserID).type).name} laced with strings at length ${getCorset(serverID, inspectuserID).tightness}**`
             if (getCorset(serverID, inspectuserID).lock) {
-                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(getCorset(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getCorset(serverID, inspectuserID).lock.uuid, userID: userID })}`
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(getCorset(serverID, inspectuserID).lock.locktype).name}**: ${getBaseLock(getCorset(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getCorset(serverID, inspectuserID).lock.uuid, userID: userID })}`}`
             }
         }
         // Vibe
@@ -782,7 +783,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             let abbreviating = (getToys(serverID, inspectuserID).length > 1) 
             getToys(serverID, inspectuserID).forEach((g) => {
                 if (g.lock && (maxtoycount > 0)) {
-                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(g.lock.locktype).name}**: ${getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}`}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
                 }
                 if (g.lock) { maxtoycount-- }
             })
@@ -799,7 +800,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             let abbreviating = (getHeavyList(serverID, inspectuserID).length > 1) 
             getHeavyList(serverID, inspectuserID).forEach((g) => {
                 if (g.lock && (maxheavycount > 0)) {
-                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
+                    wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(g.lock.locktype).name}**: ${getBaseLock(g.lock.locktype).extendedLockStatus({ uuid: g.lock.uuid, userID: userID })}`}${abbreviating ? ` (${abbreviate(getItemName(g))})` : ""}`
                 }
                 if (g.lock) { maxheavycount-- }
             })
@@ -815,7 +816,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             let currentchastitybelt = getChastityName(serverID, inspectuserID) ?? "Standard Chastity Belt"
             wearingtext = `${wearingtext}\n${process.emojis.chastity} Chastity Belt: **${currentchastitybelt}**`
             if (getChastity(serverID, inspectuserID).lock) {
-                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(getChastity(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getChastity(serverID, inspectuserID).lock.uuid, userID: userID })}`
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(getChastity(serverID, inspectuserID).lock.locktype).name}**: ${getBaseLock(getChastity(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getChastity(serverID, inspectuserID).lock.uuid, userID: userID })}`}`
             }
         }
         // Chastity Bra
@@ -823,7 +824,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
             let currentchastitybra = getChastityBraName(serverID, inspectuserID) ?? "Standard Chastity Bra"
             wearingtext = `${wearingtext}\n${process.emojis.chastitybra} Chastity Bra: **${currentchastitybra}**`
             if (getChastityBra(serverID, inspectuserID).lock) {
-                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(getChastityBra(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getChastityBra(serverID, inspectuserID).lock.uuid, userID: userID })}`
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(getChastityBra(serverID, inspectuserID).lock.locktype).name}**: ${getBaseLock(getChastityBra(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getChastityBra(serverID, inspectuserID).lock.uuid, userID: userID })}`}`
             }
         }
         // Collar
@@ -844,7 +845,7 @@ async function inspectModal(serverID, userID, inspectuserIDin, menu, page) {
                 wearingtext = wearingtext.slice(0,-2);
             }
             if (getCollar(serverID, inspectuserID).lock) {
-                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : getBaseLock(getCollar(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getCollar(serverID, inspectuserID).lock.uuid, userID: userID })}`
+                wearingtext = `${wearingtext}\n-# ‎   ⤷ ${!headwearrestrictions.canInspect ? blindlocktext : `**${getBaseLock(getCollar(serverID, inspectuserID).lock.locktype).name}**: ${getBaseLock(getCollar(serverID, inspectuserID).lock.locktype).extendedLockStatus({ uuid: getCollar(serverID, inspectuserID).lock.uuid, userID: userID })}`}`
             }
             
             wearingtext = `${wearingtext}\n-# Mittens: ${getCollarPerm(serverID, inspectuserID, "mitten") ? "✅" : "⛔"}, Chastity: ${getCollarPerm(serverID, inspectuserID, "chastity") ? "✅" : "⛔"}, Heavy: ${getCollarPerm(serverID, inspectuserID, "heavy") ? "✅" : "⛔"}, Masks: ${getCollarPerm(serverID, inspectuserID, "mask") ? "✅" : "⛔"}, Locks: ${getCollarPerm(serverID, inspectuserID, "locks") ? "✅" : "⛔"}`

@@ -174,6 +174,9 @@ let wearabletypes = [
 	{ name: "Button-up Blouse", value: "buttonup_blouse", colorable: true, category: "Upper Body", uniqueColors: ["Witchy", "Latex"] },
 	{ name: "Comfortable Jacket", value: "jacket_comfortable", colorable: true, category: "Upper Body", uniqueColors: ["Leather", "Bomber", "Double-breasted"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "T-shirt", value: "tshirt", colorable: true, category: "Upper Body", uniqueColors: ["Goth Metal", "Plain", "Black", "Alternative", "Grey", "Simple", "Striped"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+    { name: "Bra", value: "top_brawearable", colorable: true, category: "Upper Body", uniqueColors: ["Seashell"] },
+    { name: "Latex Bra", value: "top_bralatexwearable", colorable: true, category: "Upper Body" },
+    { name: "Pasties", value: "top_pastieswearable", colorable: true, category: "Upper Body", uniqueColors: ["Seashell"] },
 
 	// Lower Body
 	{ name: "Pleated Skirt", value: "pleated_skirt", colorable: true, category: "Lower Body", uniqueColors: ["Latex", "Witchy", "Gothic", "Starry", "Shadow"] },

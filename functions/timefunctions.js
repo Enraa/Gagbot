@@ -36,22 +36,76 @@ const parseTime = (text) => {
 			return m ? parseInt(m[1], 10) : 0;
 		};
 
+        let negative = (text.charAt(0) == "-")
+        let weeks = num(/(\d+)\s*w(?:eek|eeks)?/);
 		let days = num(/(\d+)\s*d(?:ay|ays)?/);
 		let hours = num(/(\d+)\s*h(?:our|rs?)?/);
 		let minutes = num(/(\d+)\s*m(?:in|ins?)?/);
+        let seconds = num(/(\d+)\s*s(?:econd|econds?)?/);
 
 		// Create date output
 		let dateout = new Date();
-		// add days
-		dateout.setTime(dateout.getTime() + days * 24 * 60 * 60 * 1000);
-		// add hours
-		dateout.setTime(dateout.getTime() + hours * 60 * 60 * 1000);
-		// add minutes
-		dateout.setTime(dateout.getTime() + minutes * 60 * 1000);
+        // add weeks
+        if (negative) {
+            // add weeks
+            dateout.setTime(dateout.getTime() - weeks * 7 * 24 * 60 * 60 * 1000);
+            // add days
+            dateout.setTime(dateout.getTime() - days * 24 * 60 * 60 * 1000);
+            // add hours
+            dateout.setTime(dateout.getTime() - hours * 60 * 60 * 1000);
+            // add minutes
+            dateout.setTime(dateout.getTime() - minutes * 60 * 1000);
+            // add seconds
+            dateout.setTime(dateout.getTime() - seconds * 1000);
+        }
+		else {
+            // add weeks
+            dateout.setTime(dateout.getTime() + weeks * 7 * 24 * 60 * 60 * 1000);
+            // add days
+            dateout.setTime(dateout.getTime() + days * 24 * 60 * 60 * 1000);
+            // add hours
+            dateout.setTime(dateout.getTime() + hours * 60 * 60 * 1000);
+            // add minutes
+            dateout.setTime(dateout.getTime() + minutes * 60 * 1000);
+            // add seconds
+            dateout.setTime(dateout.getTime() + seconds * 1000);
+        }
 
 		return dateout;
 	} catch (err) {
 		return new Date();
+	}
+};
+
+// Takes input string, outputs a number in milliseconds.
+const parseMS = (text) => {
+	try {
+		let t = text.toLowerCase();
+
+		let num = (regex) => {
+			const m = t.match(regex);
+			return m ? parseInt(m[1], 10) : 0;
+		};
+
+        let negative = (text.charAt(0) == "-")
+        let weeks = num(/(\d+)\s*w(?:eek|eeks)?/);
+		let days = num(/(\d+)\s*d(?:ay|ays)?/) ?? 0;
+		let hours = num(/(\d+)\s*h(?:our|rs?)?/) ?? 0;
+		let minutes = num(/(\d+)\s*m(?:in|ins?)?/) ?? 0;
+        let seconds = num(/(\d+)\s*s(?:econd|econds?)?/) ?? 0;
+
+        let returnedval = 0;
+
+        if (negative) {
+            returnedval = (-1 * ((weeks * 604800000) + (days * 86400000) + (hours * 3600000) + (minutes * 60000) + (seconds * 1000)))
+        }
+        else {
+            returnedval = ((weeks * 604800000) + (days * 86400000) + (hours * 3600000) + (minutes * 60000) + (seconds * 1000))
+        }
+
+        return returnedval;
+	} catch (err) {
+		return 0; 
 	}
 };
 
@@ -668,6 +722,7 @@ async function removeOldLockAwaiting() {
 }
 
 exports.parseTime = parseTime;
+exports.parseMS = parseMS;
 exports.parseDuration = parseDuration;
 exports.calculateTimeout = calculateTimeout;
 exports.getTimestringForZip = getTimestringForZip;
