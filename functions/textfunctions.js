@@ -3223,6 +3223,7 @@ const texts_struggle = {
 			// Able to use fingers. 50% chance to use with free hands, 0% chance to use with mittens
 			nomitten: [
 				`USER_TAG tugs at the ring on USER_THEIR VAR_C5. It offers a fantastic leash point, but absolutely no hint that USER_THEY can remove it. Someone should leash USER_THEM!`,
+                `USER_TAG plays with the ring on USER_THEIR VAR_C5. USER_THEY wonders what it would feel like if someone were to tug USER_THEM by it~`,
 				`USER_TAG squeezes USER_THEIR fingers under USER_THEIR VAR_C5, then tugging as hard as USER_THEY can. The collar too is made of high quality material and refuses to come off!`,
 				`USER_TAG tries to use a finger or two to pull against USER_THEIR VAR_C5, as if USER_THEYRE sweating, but the air of the dungeon is kept quite cool. `,
 			],
@@ -3257,6 +3258,8 @@ const texts_struggle = {
 		`USER_TAG tries to imagine how best to adjust USER_THEIR speech when gagged. Perhaps with practice, USER_THEY can figure it out!`,
 		`All the keys clanging and bondage restraints strewn about makes USER_TAG swim in happy thoughts!`,
 		`USER_TAG twirls USER_THEIR hair absentmindedly. Someone should tie USER_THEM up with more bondage, tehe!~`,
+		`USER_TAG wiggles happily in place. Someone should really give USER_THEM a pat~.`,
+		`USER_TAG leans back and tilts USER_THEIR head invitingly. Perhaps someone should give USER_THEM a pat~.`,
 		{
 			required: (t) => {
 				return !(getGag(t.serverID, t.interactionuser.id) && Math.random() > 0.75);
