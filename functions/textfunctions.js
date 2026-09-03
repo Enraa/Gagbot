@@ -3202,6 +3202,8 @@ const texts_struggle = {
 		`USER_TAG tries to imagine how best to adjust USER_THEIR speech when gagged. Perhaps with practice, USER_THEY can figure it out!`,
 		`All the keys clanging and bondage restraints strewn about makes USER_TAG swim in happy thoughts!`,
 		`USER_TAG twirls USER_THEIR hair absentmindedly. Someone should tie USER_THEM up with more bondage, tehe!~`,
+		`USER_TAG wiggles happily in place. Someone should really give USER_THEM a pat~.`,
+		`USER_TAG leans back and tilts USER_THEIR head invitingly. Perhaps someone should give USER_THEM a pat~.`,
 		{
 			required: (t) => {
 				return !(getGag(t.serverID, t.interactionuser.id) && Math.random() > 0.75);
