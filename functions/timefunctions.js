@@ -36,6 +36,7 @@ const parseTime = (text) => {
 			return m ? parseInt(m[1], 10) : 0;
 		};
 
+        let negative = (text.charAt(0) == "-")
         let weeks = num(/(\d+)\s*w(?:eek|eeks)?/);
 		let days = num(/(\d+)\s*d(?:ay|ays)?/);
 		let hours = num(/(\d+)\s*h(?:our|rs?)?/);
@@ -45,15 +46,30 @@ const parseTime = (text) => {
 		// Create date output
 		let dateout = new Date();
         // add weeks
-		dateout.setTime(dateout.getTime() + weeks * 7 * 24 * 60 * 60 * 1000);
-		// add days
-		dateout.setTime(dateout.getTime() + days * 24 * 60 * 60 * 1000);
-		// add hours
-		dateout.setTime(dateout.getTime() + hours * 60 * 60 * 1000);
-		// add minutes
-		dateout.setTime(dateout.getTime() + minutes * 60 * 1000);
-        // add seconds
-		dateout.setTime(dateout.getTime() + seconds * 1000);
+        if (negative) {
+            // add weeks
+            dateout.setTime(dateout.getTime() - weeks * 7 * 24 * 60 * 60 * 1000);
+            // add days
+            dateout.setTime(dateout.getTime() - days * 24 * 60 * 60 * 1000);
+            // add hours
+            dateout.setTime(dateout.getTime() - hours * 60 * 60 * 1000);
+            // add minutes
+            dateout.setTime(dateout.getTime() - minutes * 60 * 1000);
+            // add seconds
+            dateout.setTime(dateout.getTime() - seconds * 1000);
+        }
+		else {
+            // add weeks
+            dateout.setTime(dateout.getTime() + weeks * 7 * 24 * 60 * 60 * 1000);
+            // add days
+            dateout.setTime(dateout.getTime() + days * 24 * 60 * 60 * 1000);
+            // add hours
+            dateout.setTime(dateout.getTime() + hours * 60 * 60 * 1000);
+            // add minutes
+            dateout.setTime(dateout.getTime() + minutes * 60 * 1000);
+            // add seconds
+            dateout.setTime(dateout.getTime() + seconds * 1000);
+        }
 
 		return dateout;
 	} catch (err) {
@@ -71,15 +87,23 @@ const parseMS = (text) => {
 			return m ? parseInt(m[1], 10) : 0;
 		};
 
-        //let months = num(/(\d+)\s*m(?:onth|onths)?/);
+        let negative = (text.charAt(0) == "-")
         let weeks = num(/(\d+)\s*w(?:eek|eeks)?/);
 		let days = num(/(\d+)\s*d(?:ay|ays)?/) ?? 0;
 		let hours = num(/(\d+)\s*h(?:our|rs?)?/) ?? 0;
 		let minutes = num(/(\d+)\s*m(?:in|ins?)?/) ?? 0;
         let seconds = num(/(\d+)\s*s(?:econd|econds?)?/) ?? 0;
 
-		// Return the number
-        return ((weeks * 604800000) + (days * 86400000) + (hours * 3600000) + (minutes * 60000) + (seconds * 1000))
+        let returnedval = 0;
+
+        if (negative) {
+            returnedval = (-1 * ((weeks * 604800000) + (days * 86400000) + (hours * 3600000) + (minutes * 60000) + (seconds * 1000)))
+        }
+        else {
+            returnedval = ((weeks * 604800000) + (days * 86400000) + (hours * 3600000) + (minutes * 60000) + (seconds * 1000))
+        }
+
+        return returnedval;
 	} catch (err) {
 		return 0; 
 	}

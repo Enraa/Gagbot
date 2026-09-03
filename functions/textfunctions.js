@@ -2781,6 +2781,16 @@ const texts_lock = {
                 `As USER_TAG receives a headpat, the timer on USER_THEIR VAR_C1 just got a little longer...`
             ]
         }
+    },
+    timeRemove: {
+        headpatlock: {
+            "self": [
+                `As USER_TAG receives a headpat, the timer on USER_THEIR VAR_C1 just got a little shorter!`
+            ],
+            "other": [
+                `As USER_TAG receives a headpat, the timer on USER_THEIR VAR_C1 just got a little shorter!`
+            ]
+        }
     }
 }
 

@@ -19,7 +19,7 @@ exports.headpatfunction = async function(uuid, data) {
                 serverID: restraint.lock.serverID, 
                 userID: restraint.lock.userID, 
                 actionuser: restraint.lock.userID, 
-                actiontype: "timeAdd", 
+                actiontype: (restraint.lock.headpattime < 0) ? "timeRemove" : "timeAdd", 
                 locktype: "headpatlock", 
                 restraintname: restraint.lock.restraintname, 
                 restrainttype: getItemType(restraint), 

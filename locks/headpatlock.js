@@ -105,7 +105,7 @@ exports.lockinteraction = function (interaction, data, update = false) {
 
     // Headpat time extension
     let headpattexttitle = `### Time Added when Headpatted`
-    let headpattimeinfo = (`When receiving a headpat, the timer will be extended by ${parseDuration(getLockAwaiting(data.uuid)?.headpattime)}`)
+    let headpattimeinfo = (`When receiving a headpat, the timer will be ${(getLockAwaiting(data.uuid)?.headpattime < 0) ? "reduced" : "extended"} by ${parseDuration(getLockAwaiting(data.uuid)?.headpattime)}`)
     let headpatconfigsection = new SectionBuilder()
         .addTextDisplayComponents((text) => text.setContent(`${headpattexttitle}\n\n${headpattimeinfo}`))
         .setButtonAccessory((button) =>
@@ -192,7 +192,7 @@ exports.lockinteractionresponse = async function(interaction) {
             .setPlaceholder("1h20m")
             .setRequired(true);
 
-        const timertextentryminentry = new LabelBuilder().setLabel(`Time Added on Headpat`).setDescription(`Enter a string such as __h__m to extend by:`).setTextInputComponent(timertextentrymin);
+        const timertextentryminentry = new LabelBuilder().setLabel(`Time Change on Headpat`).setDescription(`Enter a string such as __h__m to add/remove:`).setTextInputComponent(timertextentrymin);
         modal.addLabelComponents(timertextentryminentry);
         interaction.showModal(modal);
     }
