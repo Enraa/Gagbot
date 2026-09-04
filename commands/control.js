@@ -11,6 +11,13 @@ const { getHeavyBound } = require("../functions/getters/heavy/getHeavyBound.js")
 const { getHeavy } = require("../functions/getters/heavy/getHeavy.js");
 const { getText } = require("../functions/textfunctions.js");
 
+// Test for Control Collars
+function TestForOrgasmCollar() {
+    if(isWearingCollar(interaction.guildId, targetuser.id, "collar_orgasmcontrol")) return true
+    if(isWearingCollar(interaction.guildId, targetuser.id, "collar_orgasmassist")) return true
+    return false    
+}
+
 module.exports = {
 	data: new SlashCommandBuilder()
 		.setName("control")
@@ -33,7 +40,7 @@ module.exports = {
                     interaction.reply({ content: "You can't trigger an orgasm on yourself!", flags: MessageFlags.Ephemeral });
                     return;
                 }
-                if (!isWearingCollar(interaction.guildId, targetuser.id, "collar_orgasmcontrol")) {
+                if (!TestForOrgasmCollar) {
                     interaction.reply({ content: `${targetuser} is not wearing an Orgasm Control Module!`, flags: MessageFlags.Ephemeral });
                     return;
                 }
