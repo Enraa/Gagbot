@@ -735,7 +735,7 @@ function calcStaticVibeIntensity(serverID, user) {
 	const vibes = getToys(serverID, user);
 	if (!vibes) return 0;
 	return vibes.reduce((prev, currVibe) => {
-        let vibedata = { intensity: currVibe.intensity }
+        let vibedata = { intensity: currVibe.intensity, serverID: serverID, userID: user }
         return prev + process.toytypes[currVibe.type].calcVibeEffect(vibedata) 
     }, 0)
 }
