@@ -96,7 +96,7 @@ exports.texts_chastity = {
                 nochastity: [
                     `USER_TAG grabs TARGET_TAG and wraps a VAR_C2 around TARGET_THEIR waist and clicking the fastener shut before TARGET_THEY can even react! It just needs a lock to seal the deal!`,
                     `USER_TAG gingerly wraps a VAR_C2 around TARGET_TAG's waist, giggling as USER_THEY lean over TARGET_THEIR shoulder to whisper sweet nothings as TARGET_THEIR pleasure is sealed away...`,
-                    `USER_TAG knows that TARGET_TAG is a good USER_PRAISEOBJECT, and good USER_PRAISEOBJECTs wear chastity. A VAR_C2 is conjured and wrapped around TARGET_THEIR waist to ensure TARGET_THEY TARGET_ISARE good.`
+                    `USER_TAG knows that TARGET_TAG is a good TARGET_PRAISEOBJECT, and good TARGET_PRAISEOBJECTs wear chastity. A VAR_C2 is conjured and wrapped around TARGET_THEIR waist to ensure TARGET_THEY TARGET_ISARE good.`
                 ],
             },
             heavy: {

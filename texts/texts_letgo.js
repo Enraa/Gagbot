@@ -8,7 +8,7 @@ exports.texts_letgo = {
 		`USER_TAG twitches USER_THEIR hips and thighs, finally! USER_THEY_CAP layUSER_S down, basking in the afterglow!`,
 		`Like a dam bursting, USER_TAG thrashes out as USER_THEY finally reachUSER_ES the top!`,
         `USER_TAG twists USER_THEIR hips, finally getting to the peak! The rush of endorphins washes over USER_THEM as the sensations settle down!`,
-        `USER_TAG's vision feels just a tad hazy as USER_THEY finally getUSER_S there! USER_THEY_CAP goUSER_ES limp as USER_THEY bask in the wonderful sensations...`,
+        `USER_TAG's vision feels just a tad hazy as USER_THEY finally getUSER_S there! USER_THEY_CAP goUSER_ES limp as USER_THEY baskUSER_S in the wonderful sensations...`,
         `It all pays off as USER_TAG explodes from the sensations, USER_THEIR body twisting involuntarily as it washes over USER_THEM!`,
         `USER_TAG does a little thrust forward to finally climax, the sensations crashing over USER_THEM in a wave of delight!`,
 	],

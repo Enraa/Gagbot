@@ -176,7 +176,7 @@ exports.texts_gag = {
                     canaccess: {
                         changetightness: {
                             nolockaccess: [
-                                `USER_TAG gently runs USER_THEIR fingers over TARGET_TAG's VAR_C3. TARGET_THEIR speech is so helplessly taken away and not a single thing that USER_THEY could do about it!`
+                                `USER_TAG gently runs USER_THEIR fingers over TARGET_TAG's VAR_C3. TARGET_THEIR_CAP speech is so helplessly taken away and not a single thing that USER_THEY could do about it!`
                             ],
                             lockaccess: [
                                 `USER_TAG adjusts TARGET_TAG's VAR_C3, undoing the straps before pulling them VAR_C2 around TARGET_THEIR head again.`,
