@@ -270,7 +270,7 @@ async function textGarbleDOLL(msg, modifiedmessage, outtextin) {
     let dollProtocolLevel = getOption(msg.guild.id, msg.author.id, "dollforcedprotocol");
     let dollPunishThresh = getOption(msg.guild.id, msg.author.id, "dollpunishthresh");
     let dollmaker = getHeadwear(msg.guild.id, msg.member.id)?.find((headwear) => headwear.type === "dollmaker_visor");
-    let eldritchcorrupted = getGags(msg.guild.id, msg.member.id).find((gag) => gag === "eldritch");
+    let eldritchcorrupted = getGags(msg.guild.id, msg.member.id).find((gag) => gag.gagtype === "eldritch");
 	let dollProtocolViolations = 0;
 	let dollProtocolVioType = undefined;
 	if (dollified) {

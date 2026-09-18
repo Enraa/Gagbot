@@ -1769,7 +1769,7 @@ const texts_letgo = {
 		`USER_TAG twitches USER_THEIR hips and thighs, finally! USER_THEY_CAP layUSER_S down, basking in the afterglow!`,
 		`Like a dam bursting, USER_TAG thrashes out as USER_THEY finally reachUSER_ES the top!`,
         `USER_TAG twists USER_THEIR hips, finally getting to the peak! The rush of endorphins washes over USER_THEM as the sensations settle down!`,
-        `USER_TAG's vision feels just a tad hazy as USER_THEY finally getUSER_S there! USER_THEY_CAP goUSER_ES limp as USER_THEY bask in the wonderful sensations...`,
+        `USER_TAG's vision feels just a tad hazy as USER_THEY finally getUSER_S there! USER_THEY_CAP goUSER_ES limp as USER_THEY baskUSER_S in the wonderful sensations...`,
         `It all pays off as USER_TAG explodes from the sensations, USER_THEIR body twisting involuntarily as it washes over USER_THEM!`,
         `USER_TAG does a little thrust forward to finally climax, the sensations crashing over USER_THEM in a wave of delight!`,
 	],
@@ -7600,6 +7600,45 @@ const textarrays = {
     texts_lock: texts_lock
 };
 
+/******
+ * Get a text key from it's appropriate list, requiring it as necessary. 
+ * 
+ * - (object) data - The text data. Should contain a text array, user ID and target ID. 
+ * ---
+ * ##### Returns an array of strings for that text array. 
+ ******/
+function getTextArrayKey(data) {
+    try {
+		let textarray = data.textarray;
+		let props = [];
+		for (k in data) {
+			if (k != "textarray" && k != "textdata" && k != "serverID") {
+				props.push(k); // Should create the same order.
+			}
+		}
+        let checkingarray = require(`./../texts/${textarray}.js`);
+        if (checkingarray) {
+            let sentencearr = props.reduce((prev, curr) => {
+                return prev[curr];
+            }, checkingarray[textarray]); // Yes, for some reason I named it like this. 
+            if (Array.isArray(sentencearr)) {
+                return sentencearr;
+            }
+            else {
+                console.log(sentencearr);
+                return undefined;
+            }
+        }
+        else {
+            console.log(`${textarray} is not a valid array!`)
+        }
+    }
+    catch (err) {
+        console.log(err);
+        return undefined;
+    }
+}
+
 // Get generic text and spit out a pronoun respecting version YAY
 function getTextGeneric(type, data_in) {
 	let generics = {
@@ -7902,10 +7941,10 @@ function getText(data) {
 		// At first I thought, a reducer might not be good performance.
 		// Then I remembered, javascript passes *objects* and *arrays* by reference.
 		// This is gonna be so clever.
-		console.log(props);
-		let sentencearr = props.reduce((prev, curr) => {
-			return prev[curr];
-		}, textarrays[textarray]);
+		let sentencearr = getTextArrayKey(data);
+        if (!sentencearr) {
+            return `Something went wrong with retrieving the text. Please tell that the text array was ${textarray} and followed this path: ${props.join(", ")}`
+        }
 		/* so what is this thing doing? 
 			It is iterating over each property and then returning the object at the named property.
 			This should always end with an array AS LONG AS THE INPUT OBJECT IS CONSTRUCTED
