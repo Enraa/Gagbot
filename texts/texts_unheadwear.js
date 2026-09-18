@@ -1,3 +1,5 @@
+const { getBaseHeadwear } = require("../functions/getters/headwear/getBaseHeadwear");
+
 exports.texts_unheadwear = {
     noneworn: {
         self: [
@@ -90,19 +92,19 @@ exports.texts_unheadwear = {
                         // Twice as likely on blindfolds. 
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `USER_TAG blinks and squints as USER_THEIR eyes adjust to the light again after being in the darkness from the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `USER_TAG blinks and squints as USER_THEIR eyes adjust to the light again after being in the darkness from the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockemote
+                                return getBaseHeadwear(t.headwearchoice)?.blockemote
                             },
                             text: `USER_TAG's face is no longer hidden as USER_THEY removeUSER_S the VAR_C2!`
                         },
@@ -114,19 +116,19 @@ exports.texts_unheadwear = {
                         // Twice as likely on blindfolds. 
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `USER_TAG blinks and squints as USER_THEIR eyes adjust to the light again after being in the darkness from the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `USER_TAG blinks and squints as USER_THEIR eyes adjust to the light again after being in the darkness from the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockemote
+                                return getBaseHeadwear(t.headwearchoice)?.blockemote
                             },
                             text: `USER_TAG's face is no longer hidden as USER_THEY removeUSER_S the VAR_C2!`
                         },
@@ -152,19 +154,19 @@ exports.texts_unheadwear = {
                         // Twice as likely on blindfolds. 
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again after USER_TAG rescues USER_THEM from the darkness of the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again after USER_TAG rescues USER_THEM from the darkness of the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockemote
+                                return getBaseHeadwear(t.headwearchoice)?.blockemote
                             },
                             text: `TARGET_TAG's face is no longer hidden as USER_TAG removes the VAR_C2!`
                         },
@@ -175,19 +177,19 @@ exports.texts_unheadwear = {
                         // Twice as likely on blindfolds. 
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again after USER_TAG rescues USER_THEM from the darkness of the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockinspect
+                                return getBaseHeadwear(t.headwearchoice)?.blockinspect
                             },
                             text: `TARGET_TAG blinks and squints as TARGET_THEIR eyes adjust to the light again after USER_TAG rescues USER_THEM from the darkness of the VAR_C2!`
                         },
                         {
                             required: (t) => {
-                                return getBaseHeadwear[t.headwearchoice]?.blockemote
+                                return getBaseHeadwear(t.headwearchoice)?.blockemote
                             },
                             text: `TARGET_TAG's face is no longer hidden as USER_TAG removes the VAR_C2!`
                         },
