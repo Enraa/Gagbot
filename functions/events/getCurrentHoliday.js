@@ -16,6 +16,11 @@ function getCurrentHoliday(teststring) {
         return (teststring == "Locktober")
     }
 
+    // Check for the week before Locktober - September 23rd+
+    if ((currtime.getMonth() == 8) && (currtime.getDate() >= 23)) {
+        return (teststring == "LocktoberPrep")
+    }
+
     // Check for NNN - the ENTIRE month of November
     if (currtime.getMonth() == 9) {
         return (teststring == "NNN")

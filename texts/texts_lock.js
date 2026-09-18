@@ -927,6 +927,14 @@ exports.texts_lock = {
                 `Locktober is finally over, and the pumpkin shaped lock fades away from USER_TAG's VAR_C1!`
             ]
         },
+        locktoberpreplock: {
+            "self": [
+                `USER_TAG decides to remove the pumpkin shaped lock before it activates. USER_THEIR VAR_C1 is safe and free! But maybe USER_THEY should put the lock back on...`
+            ],
+            "other": [
+                `USER_TAG removes the pumpkin shaped lock from TARGET_TAG's VAR_C1, freeing TARGET_THEM before it activates!`
+            ]
+        },
         defaultlock: {
             "self": [
                 `USER_TAG removes the lock from USER_THEIR VAR_C1! Text keys are probably missing and should be fixed though.`
