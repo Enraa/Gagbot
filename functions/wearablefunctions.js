@@ -143,7 +143,7 @@ let wearabletypes = [
 	{ name: "Fashionable Suit", value: "suit_fashionable", category: "Cosplay", colorable: true },
 	{ name: "Wool Suit", value: "suit_wool", category: "Cosplay", colorable: true },
 	{ name: "Sukumizu", value: "sukumizu", category: "Cosplay", colorable: true },
-	{ name: "Bikini", value: "bikini", category: "Cosplay", colorable: true, uniqueColors: ["Cow Print", "Skimpy", "Frilly", "Tiger Print", "Leaf", "Dragonscale", "Chainmail", "Yellow Polka-Dot"] },
+	{ name: "Bikini", value: "bikini", category: "Cosplay", colorable: true, uniqueColors: ["Cow Print", "Skimpy", "Frilly", "Tiger Print", "Leaf", "Dragonscale", "Chainmail", "Yellow Polka-Dot", "Seashell", "Starfish"] },
 	{ name: "Latex Bikini", value: "bikini_latex", category: "Cosplay", colorable: true, uniqueColors: ["Starry", "Shadow", "Cow Print"] },
 	{ name: "Armour", value: "armour", category: "Cosplay", colorable: true, uniqueColors: ["Steel", "Cobalt", "Dragon Scale", "Holy Knight", "Black Knight", "Chainmail", "Crystal", "Leather", "Bark"], forbiddenColors: ["Black", "White", "Red", "Purple", "Green", "Orange", "Red", "Pink", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Exhibitionist", value: "exhibitionist", category: "Cosplay" },
