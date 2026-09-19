@@ -1,3 +1,5 @@
+const { markForSave } = require("../../other/markForSave");
+const { setProcessVariable } = require("../../setters/config/setProcessVariable");
 const { getProcessVariable } = require("../config/getProcessVariable");
 
 /*********
@@ -12,7 +14,12 @@ const { getProcessVariable } = require("../config/getProcessVariable");
  * - ... additional properties if necessary
  *********/
 function getInventory(serverID, userID) {
-    return (getProcessVariable(serverID, userID, "inventory") ?? []);
+    let inventory = getProcessVariable(serverID, userID, "inventory");
+    if (!inventory) {
+        setProcessVariable(serverID, userID, "inventory", [])
+        markForSave("inventory");
+    }
+    return (inventory ?? []);
 }
 
 exports.getInventory = getInventory;
