@@ -15,6 +15,7 @@ const processdatatoload = [
     { textname: "pronounsusers.txt", processvar: "pronouns", default: {}, rts: "pronouns", hasusers: true },
     { textname: "usersdata.txt", processvar: "usercontext", default: {}, rts: "usercontext", hasusers: true },
     { textname: "consentusers.txt", processvar: "consented", default: {}, rts: "consented", hasusers: true },
+    { textname: "inventoryusers.txt", processvar: "inventory", default: {}, rts: "inventory", hasusers: true },
     { textname: "corsetusers.txt", processvar: "corset", default: {}, rts: "corset", hasusers: true },
     { textname: "arousal.txt", processvar: "arousal", default: {}, rts: "arousal", hasusers: true },
     { textname: "headwearusers.txt", processvar: "headwear", default: {}, rts: "headwear", hasusers: true },
