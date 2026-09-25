@@ -20,6 +20,8 @@ const honorifictitles = [
     "leader",
     "mistress",
     "mistresses",
+    "madam",
+    "madame",
     "god",
     "gods",
     "goddess",
