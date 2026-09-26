@@ -567,30 +567,36 @@ function updateArousalValues() {
         }
 		for (const server in process.arousal) {
             for (const user in process.arousal[server]) {
-                const arousal = process.arousal[server][user];
-                // if the timestamp is in the future the user is cooling off from an orgasm or similar and should be skipped
-                if (arousal.timestamp > now) continue;
-                const traits = getCombinedTraits(server, user);
-                const vibes = getToys(server, user);
-                // if no vibe effect, growth coefficient will be 0
-                // otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
-                let vibegains = getArousalGenerationFromToys(server, user);
-                // Calculate any arousal gain purely from the chastity devices worn. Add to vibearousal change. 
-                let chastityvibegains = traits.calcVibeEffect({ serverID: server, userID: user });
-                let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0
-                // I want to pull away from using VIBE_SCALING here, may need to change this later. 
-                let minvibegain = traits.minVibe ? (traits.minVibe * VIBE_SCALING) : -9999
-                let maxvibegain = traits.maxVibe ? (traits.maxVibe * VIBE_SCALING) : 9999
-                let vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
-                // If the wearer is wearing Gasmask aphrodisiac, amplify the gain by 2x.
-                if (getHeadwear(server, user)?.some((h) => h.type == "gasmask_hornygas")) { vibearousalchange = vibearousalchange * 2 }
-                const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, vibearousalchange, traits.decayCoefficient * UNBELTED_DECAY);
-                // set the values to the new ones
-                arousal.timestamp = now;
-                arousal.prev = arousal.arousal;
-                // mathematically it would never reach 0 so reset it to 0 if low enough here
-                arousal.arousal = next < RESET_LIMIT ? 0 : next;
-                traits.afterArousalChange({ serverID: server, userID: user, prevArousal: arousal.prev, currArousal: arousal.arousal });
+                try {
+                    const arousal = process.arousal[server][user];
+                    // if the timestamp is in the future the user is cooling off from an orgasm or similar and should be skipped
+                    if (arousal.timestamp > now) continue;
+                    const traits = getCombinedTraits(server, user);
+                    const vibes = getToys(server, user);
+                    // if no vibe effect, growth coefficient will be 0
+                    // otherwise add the effects of the vibes and multiply it with the growth coefficient from belt and bra, and scale it so it ends up in a good range
+                    let vibegains = getArousalGenerationFromToys(server, user);
+                    // Calculate any arousal gain purely from the chastity devices worn. Add to vibearousal change. 
+                    let chastityvibegains = traits.calcVibeEffect({ serverID: server, userID: user });
+                    let growthmult = vibes ? (traits.growthCoefficient ?? 1) : 0
+                    // I want to pull away from using VIBE_SCALING here, may need to change this later. 
+                    let minvibegain = traits.minVibe ? (traits.minVibe * VIBE_SCALING) : -9999
+                    let maxvibegain = traits.maxVibe ? (traits.maxVibe * VIBE_SCALING) : 9999
+                    let vibearousalchange = growthmult * bounded(minvibegain, vibegains + chastityvibegains, maxvibegain);
+                    // If the wearer is wearing Gasmask aphrodisiac, amplify the gain by 2x.
+                    if (getHeadwear(server, user)?.some((h) => h.type == "gasmask_hornygas")) { vibearousalchange = vibearousalchange * 2 }
+                    const next = calcNextArousal(traits, time, arousal.arousal, arousal.prev, vibearousalchange, traits.decayCoefficient * UNBELTED_DECAY);
+                    // set the values to the new ones
+                    arousal.timestamp = now;
+                    arousal.prev = arousal.arousal;
+                    // mathematically it would never reach 0 so reset it to 0 if low enough here
+                    arousal.arousal = next < RESET_LIMIT ? 0 : next;
+                    traits.afterArousalChange({ serverID: server, userID: user, prevArousal: arousal.prev, currArousal: arousal.arousal });
+                }
+                catch (err) {
+                    console.log(`Error while updating ${user} in ${server}:`)
+                    console.log(err);
+                }
             }
 		}
 		markForSave("arousal");
