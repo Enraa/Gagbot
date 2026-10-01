@@ -13,6 +13,7 @@ const { checkLockAwaiting } = require("../functions/getters/lock/checkLockAwaiti
 const { getBaseLock } = require("../functions/getters/lock/getBaseLock");
 const { getCurrentHoliday } = require("../functions/events/getCurrentHoliday");
 const { removeLock } = require("../functions/setters/lock/removeLock");
+const { markForSave } = require("../functions/other/markForSave");
 
 /***********
  * This is a fixed lock that will remain inaccessible for the duration of Locktober.
