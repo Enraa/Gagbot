@@ -58,7 +58,7 @@ exports.checkTimelock = function (data) {
     if (!getCurrentHoliday("LocktoberPrep") && getCurrentHoliday("Locktober")) {
         // End of the timelock!
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
-        this.modifyLock({ uuid: data.uuid, param: "locktype", value: "locktoberlock" });
+        getRestraintByUUID(data.uuid).restraint.lock.locktype = "locktoberlock"
     };
 }
 

@@ -12,6 +12,7 @@ const { parseTime } = require("../functions/timefunctions");
 const { handleApplyLock } = require("../functions/lockfunctions");
 const { checkLockAwaiting } = require("../functions/getters/lock/checkLockAwaiting");
 const { getBaseLock } = require("../functions/getters/lock/getBaseLock");
+const { markForSave } = require("../functions/other/markForSave");
 
 /***********
  * This is a fixed timelock that only operates for five minutes and then removes itself. It can be affixed to small locks.
@@ -45,12 +46,12 @@ exports.canUnlock = (data) => {
 // Timelock specific code
 exports.checkTimelock = function (data) {
     let restraintobject = getRestraintByUUID(data.uuid).restraint
-    if (!restraintobject || (typeof restraintobject.timelock != "number")) {
+    if (!restraintobject || (typeof restraintobject.unlocktime != "number")) {
         // The timelock somehow broke, get out of here. 
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
         this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
     }
-    if (Date.now() > restraintobject.timelock) {
+    if (Date.now() > restraintobject.unlocktime) {
         // End of the timelock!
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
         this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });

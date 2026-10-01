@@ -231,6 +231,10 @@ exports.lockinteractionmodalresponse = function (interaction) {
     }
 }
 
+exports.lockmodifyinteraction = function (data, update = false) {
+    this.unlockSpecialModal(data, update);
+}
+
 /******
  * data has the following structure:
  * { uuid, interaction, userID }

@@ -12,6 +12,7 @@ const { handleApplyLock } = require("../functions/lockfunctions");
 const { checkLockAwaiting } = require("../functions/getters/lock/checkLockAwaiting");
 const { getBaseLock } = require("../functions/getters/lock/getBaseLock");
 const { getCurrentHoliday } = require("../functions/events/getCurrentHoliday");
+const { removeLock } = require("../functions/setters/lock/removeLock");
 
 /***********
  * This is a fixed lock that will remain inaccessible for the duration of Locktober.
@@ -53,12 +54,12 @@ exports.checkTimelock = function (data) {
     if (!restraintobject) {
         // The timelock somehow broke, get out of here. 
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
-        this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
+        removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
     }
     if (!getCurrentHoliday("Locktober")) {
         // End of the timelock!
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
-        this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
+        removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
     };
 }
 

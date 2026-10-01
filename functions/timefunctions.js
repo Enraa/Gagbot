@@ -25,6 +25,7 @@ const { getRecentChannel } = require("./getters/config/getRecentChannel.js");
 const { processdatatoload } = require("../lists/processdatatoload.js");
 const { removeLock } = require("./setters/lock/removeLock.js");
 const { getCorset } = require("./getters/corset/getCorset.js");
+const { getBaseLock } = require("./getters/lock/getBaseLock.js");
 
 // Takes input string, outputs a date object.
 const parseTime = (text) => {
@@ -269,8 +270,8 @@ function processUnlockTimes(client) {
 		Object.keys(process.gags).forEach((serverid) => {
 			Object.keys(process.gags[serverid]).forEach((userid) => {
                 getGags(serverid, userid).forEach((g) => {
-                    if (g.lock && g.lock.unlocktime && (g.lock.unlocktime < now)) {
-                        removeLock(g.lock.uuid, { id: userid })
+                    if (g.lock && getBaseLock(g.lock.locktype) && getBaseLock(g.lock.locktype).checkTimelock) {
+                        getBaseLock(g.lock.locktype).checkTimelock({ uuid: g.lock.uuid })
                     }
                 });
 		    });
@@ -281,8 +282,8 @@ function processUnlockTimes(client) {
 		Object.keys(process.headwear).forEach((serverid) => {
             Object.keys(process.headwear[serverid]).forEach((userid) => {
                 getHeadwear(serverid, userid).forEach((h) => {
-                    if (h.lock && h.lock.unlocktime && (h.lock.unlocktime < now)) {
-                        removeLock(h.lock.uuid, { id: userid })
+                    if (h.lock && getBaseLock(h.lock.locktype) && getBaseLock(h.lock.locktype).checkTimelock) {
+                        getBaseLock(h.lock.locktype).checkTimelock({ uuid: h.lock.uuid })
                     }
                 });
             });
@@ -293,8 +294,9 @@ function processUnlockTimes(client) {
 		Object.keys(process.mitten).forEach((serverid) => {
             Object.keys(process.mitten[serverid]).forEach((userid) => {
                 if (getMitten(serverid, userid)) {
-                    if (getMitten(serverid, userid).lock && getMitten(serverid, userid).lock.unlocktime && (getMitten(serverid, userid).lock.unlocktime < now)) {
-                        removeLock(getMitten(serverid, userid).lock.uuid, { id: userid })
+                    let g = getMitten(serverid, userid)
+                    if (g.lock && getBaseLock(g.lock.locktype) && getBaseLock(g.lock.locktype).checkTimelock) {
+                        getBaseLock(g.lock.locktype).checkTimelock({ uuid: g.lock.uuid })
                     }
                 }
             });
@@ -306,8 +308,8 @@ function processUnlockTimes(client) {
             Object.keys(process.heavy[serverid]).forEach((userid) => {
                 if (getHeavyList(serverid, userid).length > 0) {
                     getHeavyList(serverid, userid).forEach((h) => {
-                        if (h.lock && h.lock.unlocktime && (h.lock.unlocktime < now)) {
-                            removeLock(h.lock.uuid, { id: userid })
+                        if (h.lock && getBaseLock(h.lock.locktype) && getBaseLock(h.lock.locktype).checkTimelock) {
+                            getBaseLock(h.lock.locktype).checkTimelock({ uuid: h.lock.uuid })
                         }
                     })
                 }
@@ -319,8 +321,9 @@ function processUnlockTimes(client) {
 		Object.keys(process.chastity).forEach((serverid) => {
             Object.keys(process.chastity[serverid]).forEach((userid) => {
                 if (getChastity(serverid, userid)) {
-                    if (getChastity(serverid, userid).lock && getChastity(serverid, userid).lock.unlocktime && (getChastity(serverid, userid).lock.unlocktime < now)) {
-                        removeLock(getChastity(serverid, userid).lock.uuid, { id: userid })
+                    let g = getChastity(serverid, userid)
+                    if (g.lock && getBaseLock(g.lock.locktype) && getBaseLock(g.lock.locktype).checkTimelock) {
+                        getBaseLock(g.lock.locktype).checkTimelock({ uuid: g.lock.uuid })
                     }
                 }
             });
@@ -331,8 +334,9 @@ function processUnlockTimes(client) {
 		Object.keys(process.chastitybra).forEach((serverid) => {
             Object.keys(process.chastitybra[serverid]).forEach((userid) => {
                 if (getChastityBra(serverid, userid)) {
-                    if (getChastityBra(serverid, userid).lock && getChastityBra(serverid, userid).lock.unlocktime && (getChastityBra(serverid, userid).lock.unlocktime < now)) {
-                        removeLock(getChastityBra(serverid, userid).lock.uuid, { id: userid })
+                    let g = getChastityBra(serverid, userid)
+                    if (g.lock && getBaseLock(g.lock.locktype) && getBaseLock(g.lock.locktype).checkTimelock) {
+                        getBaseLock(g.lock.locktype).checkTimelock({ uuid: g.lock.uuid })
                     }
                 }
             });
@@ -355,8 +359,8 @@ function processUnlockTimes(client) {
 		Object.keys(process.toys).forEach((serverid) => {
             Object.keys(process.toys[serverid]).forEach((userid) => {
                 getToys(serverid, userid).forEach((h) => {
-                    if (h.lock && h.lock.unlocktime && (h.lock.unlocktime < now)) {
-                        removeLock(h.lock.uuid, { id: userid })
+                    if (h.lock && getBaseLock(h.lock.locktype) && getBaseLock(h.lock.locktype).checkTimelock) {
+                        getBaseLock(h.lock.locktype).checkTimelock({ uuid: h.lock.uuid })
                     }
                 });
             });
@@ -367,8 +371,9 @@ function processUnlockTimes(client) {
 		Object.keys(process.collar).forEach((serverid) => {
             Object.keys(process.collar[serverid]).forEach((userid) => {
                 if (getCollar(serverid, userid)) {
-                    if (getCollar(serverid, userid).lock && getCollar(serverid, userid).lock.unlocktime && (getCollar(serverid, userid).lock.unlocktime < now)) {
-                        removeLock(getCollar(serverid, userid).lock.uuid, { id: userid })
+                    let g = getCollar(serverid, userid)
+                    if (g.lock && getBaseLock(g.lock.locktype) && getBaseLock(g.lock.locktype).checkTimelock) {
+                        getBaseLock(g.lock.locktype).checkTimelock({ uuid: g.lock.uuid })
                     }
                 }
             });
@@ -379,8 +384,9 @@ function processUnlockTimes(client) {
 		Object.keys(process.corset).forEach((serverid) => {
             Object.keys(process.corset[serverid]).forEach((userid) => {
                 if (getCorset(serverid, userid)) {
-                    if (getCorset(serverid, userid).lock && getCorset(serverid, userid).lock.unlocktime && (getCorset(serverid, userid).lock.unlocktime < now)) {
-                        removeLock(getCorset(serverid, userid).lock.uuid, { id: userid })
+                    let g = getCorset(serverid, userid)
+                    if (g.lock && getBaseLock(g.lock.locktype) && getBaseLock(g.lock.locktype).checkTimelock) {
+                        getBaseLock(g.lock.locktype).checkTimelock({ uuid: g.lock.uuid })
                     }
                 }
             });
