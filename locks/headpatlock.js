@@ -13,6 +13,7 @@ const { handleApplyLock } = require("../functions/lockfunctions");
 const { checkLockAwaiting } = require("../functions/getters/lock/checkLockAwaiting");
 const { getBaseLock } = require("../functions/getters/lock/getBaseLock");
 const { markForSave } = require("../functions/other/markForSave");
+const { removeLock } = require("../functions/setters/lock/removeLock");
 
 /***********
  * This is a fixed timelock that only operates for five minutes and then removes itself. It can be affixed to small locks.
