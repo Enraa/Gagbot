@@ -109,16 +109,25 @@ module.exports = {
 				// Finally, reprompt the user, now with the new choice set.
 				interaction.update(await generateConfigModal(interaction, optionparts[2], optionparts[3]));
 			} else if (optionparts[1] == "tentrypageopt") {
+				
+				console.log("TENTRY: ENTERED HANDLER");
+				
 				// Frankly I hate arrays for this but lets break it down. All we need is to throw a modal at them
 				let buttonpressed = configoptions[optionparts[2]][optionparts[3]];
+				
+				console.log("TENTRY: Buttonpressed = ", buttonpressed);
+
 				let data = { title: buttonpressed.name, desctext: buttonpressed.descmodal, placeholder: buttonpressed.placeholder, page: optionparts[2], pagenum: optionparts[4] };
 				if (typeof buttonpressed.customtext == "function") {
 					data.desctext = data.desctext.replace("CUSTOMTEXT", buttonpressed.customtext(interaction.guildId, interaction.user.id));
 				}
+				
 				if (typeof buttonpressed.placeholder == "function") {
 					data.placeholder = buttonpressed.placeholder(interaction.guildId, interaction.user.id);
+				
 				}
-                if (!data.pagenum) { data.pagenum = 1 };
+                		if (!data.pagenum) { data.pagenum = 1 };
+				console.log("TENTRY: data =", data);
 
 				// Generate a new modal to give to the user and pass it along.
 				await interaction.showModal(generateTextEntryModal(interaction, data, optionparts[3]));
@@ -471,5 +480,34 @@ module.exports = {
 				delete process.recentinteraction[interaction.user.id];
 			}
         }
+	if([
+		"pishockusername",
+		"pishockname",
+		"pishockcode",
+		"pishockapikey"
+	].includes(optionparts[3])){
+		choiceinput=interaction.fields.getTextInputValue("choiceinput");
+		setOption(
+			interaction.guildId,
+			interaction.user.id,
+			optionparts[3],
+			choiceinput
+		);
+		const displayName = {
+			pishockusername: "PiShock username",
+			pishockname: "PiShock name",
+			pishockcode: "PiShock share code",
+			pishockapikey: "PiShock api key"
+		}[optionparts[3]];
+
+		await interaction.reply({content: `Updated ${displayName}.`,flags: MessageFlags.Ephemeral
+		});
+		if(process.recentinteraction){
+			if(process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()){
+				await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction,optionparts[2],optionparts[4]));
+			}
+			delete process.recentinteraction[interaction.user.id];
+		}
+	}
 	},
 };

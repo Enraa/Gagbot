@@ -159,16 +159,19 @@ async function shockUser(serverID, user) {
                     },
                 }
 
-                fetch('https://do.pishock.com/api/apioperate', {
+                fetch('https://do.pishock.com/api/apioperate/', {
                     method: 'POST', // Specifying the method
                     headers: {
                         'Content-Type': 'application/json', // Specifying content type as JSON
                     },
                     body: reqdata, // Stringifying the JSON body
                 })
-                .then(response => console.log(response)) // Parsing the JSON response
-                .catch((error) => {
-                    console.error('Error:', error); // Error handling
+                .then(async response => {
+			console.log(`PiShock HTTP: ${response.status} ${response.statusText}` ); // Parsing the JSON response
+                	console.log(await response.text());
+			})
+		.catch((error) => {
+                    console.error('PiShock Error:', error); // Error handling
                 });
         }
         else {
