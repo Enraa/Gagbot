@@ -473,6 +473,33 @@ const configoptions = {
 				return false;
 			},
 		},
+	pishockid: {
+			name: "PiShocker Configuration - Device",
+			desc: "Select The PiShock Device The Bot Should Operate",
+			choices:[
+				{
+				 name: "Choose Device",
+				 helptext: "Selected Device ID: **",
+				 helptextnone: "*No PiShock Device Selected*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+				 value: "None",
+				 sytle: ButtonStyle.Primary,
+				},
+				],
+			textvaluedisplay: (val) => {
+				return `${val}**`;
+			},
+			menutype: "choice_pishockdevice",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+	},
+
         pishockcode: {
 			name: "Pishocker Configuration - Code",
 			desc: "Set the shocker's share code:",
