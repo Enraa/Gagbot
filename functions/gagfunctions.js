@@ -475,6 +475,8 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
         /*** This code is ugly because I couldn't call the functions due to circulars. 
          * 
          * This should ideally be refactored in the future. 
+	 * 20261002
+	 * M0N1KA'S TOY: Updated to function with new PiShock Functionality.
         */
         statsAddCounter(msg.guild.id, msg.member.id, "timesshocked")
         markForSave("userstats");
@@ -483,34 +485,46 @@ async function appendCollarEffects(msg, outtext, msgTreeMods) {
                 getOption(msg.guild.id, msg.member.id, "pishockname") && (typeof getOption(msg.guild.id, msg.member.id, "pishockname") == "string") &&
                 getOption(msg.guild.id, msg.member.id, "pishockcode") && (typeof getOption(msg.guild.id, msg.member.id, "pishockcode") == "string") &&
                 getOption(msg.guild.id, msg.member.id, "pishockapikey") && (typeof getOption(msg.guild.id, msg.member.id, "pishockapikey") == "string")) {
-                    // Set up the https request. 
-                    const reqdata = JSON.stringify({
-                        Username: getOption(msg.guild.id, msg.member.id, "pishockusername"),
-                        Name: getOption(msg.guild.id, msg.member.id, "pishockname"),
-                        Code: getOption(msg.guild.id, msg.member.id, "pishockcode"),
-                        Intensity: 100,
-                        Duration: 2,
-                        Apikey: getOption(msg.guild.id, msg.member.id, "pishockapikey"),
-                        Op: (getOption(msg.guild.id, msg.member.id, "pishockop") ? getOption(msg.guild.id, msg.member.id, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
-                    });
-                    const options = {
-                        hostname: 'do.pishock.com/api/apioperate', // without https://
-                        port: 443, // Default SSL port
-                        path: '/path', // Path after the domain
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                    }
+                    const apiKey = getOption(
+			    	msg.guild.id,
+			    	msg.member.id,
+			    	"pishockapikey"
+		    );
+		    const shockerId = getOption(
+			    	msg.guild.id,
+			    	msg.member.id,
+			    	"pishockid"
+		    );
+		    const operation = Number(
+			    getOption(
+				    msg.guild.id,
+				    msg.member.id,
+				    "pishockop"
+			    ) ?? 0
+		    );
 
-                    fetch('https://do.pishock.com/api/apioperate', {
-                        method: 'POST', // Specifying the method
+		    const reqdata = JSON.stringify({
+			    AgentName: "Gagbot",
+			    Operation: operation,
+			    Duration: 2000,
+			    Intensity: 100,
+			    IntensityAsPercentage: false,
+		    });
+			
+		   fetch(`https://api.pishock.com/Shockers/OperateById/${shockerId}`, {
+			method: 'POST', // Specifying the method
                         headers: {
-                            'Content-Type': 'application/json', // Specifying content type as JSON
+				"X-PiShock-Api-Key": apiKey,  
+				"Content-Type": 'application/json', // Specifying content type as JSON
                         },
                         body: reqdata, // Stringifying the JSON body
                     })
-                    .then(response => console.log(response)) // Parsing the JSON response
+                    .then(async (response) =>{ 
+			    console.log(`PiShock HTTP: ${response.status} ${response.statusText}`);// Parsing the JSON response
+			    if (response.status != 204){
+				    console.log(await response.text());
+			    }
+		    })
                     .catch((error) => {
                         console.error('Error:', error); // Error handling
                     });

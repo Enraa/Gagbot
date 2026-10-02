@@ -135,43 +135,51 @@ function rollPatChance(serverID, user, target) {
  *   M0N1KA'S TOY: Updated to use the new PiShock API!
  ********/
 async function shockUser(serverID, user) {
-    traceFirstParam(arguments[0]);
-    try {
-        if (getOption(serverID, user, "pishockid") && (typeof getOption(serverID, user, "pishockid") == "string") &&
-            getOption(serverID, user, "pishockapikey") && (typeof getOption(serverID, user, "pishockapikey") == "string")) {
-        	const apiKey = getOption(serverID, user, "pishockapikey");
-		const shockerId = getOption(serverID, user, "pishockid");
-		const operation = getOption(serverID, user, "pishockop") ?? 0;
-		
-		const reqdata = JSON.stringify({
-			AgentName: "Gagbot",
-			Operation: operation,
-			Duration: 2000,
-			Intensity: 100,
-			IntensityAsPercentage: false,
-		});
-		fetch(
-			`https://api.pishock.com/Shockers/OperateById/${shockerId}`,
-			{
-				method: "POST",
-				headers: {
-					"X-PiShock-Api-Key": apiKey,
-					"Content-Type":"application/json",
-				},
-				body: reqdata,
-			}
-		)
-		.then(async (response)=>{
-			console.log(
-				`PiShock HTTP: ${response.status} ${response.statusText}`);
-			if(response.status !== 204){
-				console.log(await response.text());
-			}
-		})
-    		.catch((err) => {
+    	traceFirstParam(arguments[0]);
+    	try {
+		if (getOption(serverID, user, "pishockid") && (typeof getOption(serverID, user, "pishockid") == "string") &&
+			getOption(serverID, user, "pishockapikey") && (typeof getOption(serverID, user, "pishockapikey") == "string")) {
+        		const apiKey = getOption(serverID, user, "pishockapikey");
+			const shockerId = getOption(serverID, user, "pishockid");
+			const operation = Number(getOption(serverID, user, "pishockop") ?? 0);
+			
+			const reqdata = JSON.stringify({
+				AgentName: "Gagbot",
+				Operation: operation,
+				Duration: 2000,
+				Intensity: 100,
+				IntensityAsPercentage: false,
+			});
+			fetch(
+				`https://api.pishock.com/Shockers/OperateById/${shockerId}`,
+				{
+					method: "POST",
+					headers: {
+						"X-PiShock-Api-Key": apiKey,
+						"Content-Type":"application/json",
+					},
+					body: reqdata,
+				}
+			)
+			.then(async (response)=>{
+				console.log(
+					`PiShock HTTP: ${response.status} ${response.statusText}`);
+				if(response.status !== 204){
+					console.log(await response.text());
+				}
+			})
+    			.catch((err) => {
+        			console.log("PiShock Error:", err);
+    			});
+			} 
+		else{
+			console.log(`No Shocker or Invalid Shocker Info for ID ${user}.`);
+		}
+	}
+	catch(err){
+		console.log(err);
+	}
 
-        		console.log("PiShock Error:", err);
-    		});
 }
 
 /********
