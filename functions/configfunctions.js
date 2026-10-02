@@ -72,6 +72,32 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 					);
 				pagecomponents.push(buttonsection);
 			}
+			//20261002
+			//M0N1KA'S TOY: Updating PiShock Device Selection Based On New API.
+			else if (configoptions[menuset][k].menutype == "choice_pishockdevice"){
+				const currentDevice = getOption(interaction.guildId,interaction.user.id,k);
+				const helpertext = currentDevice? `Select Device ID: **${currentDevice}**`:`*No PiShock Device Selected!*`;
+				let buttonsection = new SectionBuilder()
+							.addTextDisplayComponents((textdisplay)=>
+								textdisplay.setContent(`## ${configoptions[menuset][k].name}\n` +
+										       `${configoptions[menuset][k].desc}\n` +
+										       `-#	⤷ ${helpertext}`
+								)
+							)
+							.setButtonAccessory((button) =>
+								button.setCustomId(`config_pishockdevice_${menuset}_${page}_${k}`)
+								.setLabel("Choose Device")
+								.setStyle(ButtonStyle.Primary)
+								.setDisabled(
+									configoptions[menuset][k].disabled(
+										interaction.guildId,
+										interaction.user.id
+									)
+								)
+							);
+				pagecomponents.push(buttonsection);
+			}
+
 			if (configoptions[menuset][k].menutype == "choice_dollcolor") {
 				let buttonsection = new SectionBuilder()
 					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\`\`\`ansi\n[1;${getOption(interaction.guildId, interaction.user.id, k)}m${getOption(interaction.guildId, interaction.user.id, "dollvisorname")}: [0mIt is speaking.\`\`\``))
