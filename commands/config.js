@@ -1,4 +1,4 @@
-const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, PermissionsBitField, ApplicationCommandOptionChannelTypesMixin } = require("discord.js");
+const { SlashCommandBuilder, ComponentType, ButtonBuilder, ActionRowBuilder, ButtonStyle, MessageFlags, PermissionsBitField, ApplicationCommandOptionChannelTypesMixin, StringSelectMenuBuilder, StringSelectMenuOptionBuilder } = require("discord.js");
 const { generateConfigModal, } = require("./../functions/configfunctions.js");
 const { removeAllCommands } = require("../functions/configfunctions.js");
 const { setCommands, generateTextEntryModal } = require("../functions/configfunctions.js");
@@ -60,6 +60,75 @@ module.exports = {
 
 				// Finally, reprompt the user, now with the new choice set.
 				interaction.update(await generateConfigModal(interaction, optionparts[2], optionparts[3]));
+			} 
+			  //20261002
+			  //M0N1KA'S TOY: Adding pishockdevice menu option to comply with new PiShock API
+			 else if (optionparts[1] == "pishockdevice"){
+				  const apiKey = getOption(
+					  interaction.guildId,
+					  interaction.user.id,
+					  "pishockapikey"
+				  );
+				  if(!apiKey){
+					  await interaction.reply({
+						  content: "Set Your Api Key First!",
+						  flags: MessageFlags.Ephemeral
+					  });
+					  return;
+				  }
+				  const response = await fetch(
+					  "https://api.pishock.com/Share/GetShared",
+					  {
+						  method: "GET",
+						  headers: { "X-PiShock-Api-Key": apiKey }
+					  }
+				  );
+				  if(!response.ok){
+					  await interaction.reply({
+						  content: `PiShock returned HTTP ${response.status} while retrieving devices.`,
+						  flags: MessageFlags.Ephemeral
+					  })
+					  return;
+				  }
+				  const shockers = await response.json();
+				  if(!shockers.length){
+					  await interaction.reply({
+						  content: "No PiShock Devices Found!",
+						  flags: MessageFlags.Ephemeral
+					  });
+					  return;
+				  }
+				  const selector = new StringSelectMenuBuilder()
+				  			.setCustomId("config_pishockselect")
+				  			.setPlaceholder("Select a PiShock device")
+				  			.addOptions(
+								shockers.slice(0,25).map((shocker)=>
+									new StringSelectMenuOptionBuilder()
+										.setLabel(shocker.Name ?? `PiShock ${shocker.Id}`)
+										.setDescription(shocker.OwnedBy ? `OwnedBy ${shocker.OwnedBy}`:`Device ID ${shocker.Id}`)
+										.setValue(String(shocker.Id))
+								)
+							);
+				  await interaction.reply({
+					  	content: "Select The PiShock Device Gagbot should use:",
+					  	components: [new ActionRowBuilder().addComponents(selector)],
+					  	flags: MessageFlags.Ephemeral
+				  });
+			} else if(optionparts[1] == "pishockselect") {
+				const shockerId = interaction.values[0];
+				
+				setOption(
+					interaction.guildId,
+					interaction.user.id,
+					"pishockid",
+					shockerId
+				);
+				await interaction.update({
+					content: `PiShock Device ${shockerId} selected.`,
+					components: []
+				});
+											
+
 			} else if (optionparts[1] == "spageopt") {
 				// Frankly I hate arrays for this but lets break it down. For servers this time.
 				// We retrieve all of the choices for the given configuration option, mapping their values.
