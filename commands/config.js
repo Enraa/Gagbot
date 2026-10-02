@@ -32,7 +32,7 @@ module.exports = {
 		try {
 			let optionparts = interaction.customId.split("_");
 
-            console.log(optionparts);
+           //console.log(optionparts);
 
 			// We changed page, new page!
 			if (optionparts[1] == "menuselector") {
@@ -40,7 +40,7 @@ module.exports = {
 			} else if (optionparts[1] == "pageopt") {
 				if (optionparts[2] == "Extreme") {
 					optionparts[4] = optionparts.slice(4).join("_");
-					console.log(optionparts);
+					//console.log(optionparts);
 				}
 				// Frankly I hate arrays for this but lets break it down.
 				// We retrieve all of the choices for the given configuration option, mapping their values.
