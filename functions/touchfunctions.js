@@ -131,53 +131,55 @@ function rollPatChance(serverID, user, target) {
  * Attempt to shock the target user ID, if they have configurations set.
  * 
  * - (user id) user - The person to shock!
+ *   20261002
+ *   M0N1KA'S TOY: Updated to use the new PiShock API!
  ********/
 async function shockUser(serverID, user) {
-    traceFirstParam(arguments[0]);
-    try {
-        if (getOption(serverID, user, "pishockusername") && (typeof getOption(serverID, user, "pishockusername") == "string") &&
-            getOption(serverID, user, "pishockname") && (typeof getOption(serverID, user, "pishockname") == "string") &&
-            getOption(serverID, user, "pishockcode") && (typeof getOption(serverID, user, "pishockcode") == "string") &&
-            getOption(serverID, user, "pishockapikey") && (typeof getOption(serverID, user, "pishockapikey") == "string")) {
-                // Set up the https request. 
-                const reqdata = JSON.stringify({
-                    Username: getOption(serverID, user, "pishockusername"),
-                    Name: getOption(serverID, user, "pishockname"),
-                    Code: getOption(serverID, user, "pishockcode"),
-                    Intensity: 100,
-                    Duration: 2,
-                    Apikey: getOption(serverID, user, "pishockapikey"),
-                    Op: (getOption(serverID, user, "pishockop") ? getOption(serverID, user, "pishockop") : "0"), // 0 for shock, 1 for vibrate, 2 for beep
-                });
-                const options = {
-                    hostname: 'do.pishock.com/api/apioperate', // without https://
-                    port: 443, // Default SSL port
-                    path: '/path', // Path after the domain
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                }
+    	traceFirstParam(arguments[0]);
+    	try {
+		if (getOption(serverID, user, "pishockid") && (typeof getOption(serverID, user, "pishockid") == "string") &&
+			getOption(serverID, user, "pishockapikey") && (typeof getOption(serverID, user, "pishockapikey") == "string")) {
+        		const apiKey = getOption(serverID, user, "pishockapikey");
+			const shockerId = getOption(serverID, user, "pishockid");
+			const operation = Number(getOption(serverID, user, "pishockop") ?? 0);
+			
+			const reqdata = JSON.stringify({
+				AgentName: "Gagbot",
+				Operation: operation,
+				Duration: 2000,
+				Intensity: 100,
+				IntensityAsPercentage: false,
+			});
+			fetch(
+				`https://api.pishock.com/Shockers/OperateById/${shockerId}`,
+				{
+					method: "POST",
+					headers: {
+						"X-PiShock-Api-Key": apiKey,
+						"Content-Type":"application/json",
+					},
+					body: reqdata,
+				}
+			)
+			.then(async (response)=>{
+				console.log(
+					`PiShock HTTP: ${response.status} ${response.statusText}`);
+				if(response.status !== 204){
+					console.log(await response.text());
+				}
+			})
+    			.catch((err) => {
+        			console.log("PiShock Error:", err);
+    			});
+			} 
+		else{
+			console.log(`No Shocker or Invalid Shocker Info for ID ${user}.`);
+		}
+	}
+	catch(err){
+		console.log(err);
+	}
 
-                fetch('https://do.pishock.com/api/apioperate', {
-                    method: 'POST', // Specifying the method
-                    headers: {
-                        'Content-Type': 'application/json', // Specifying content type as JSON
-                    },
-                    body: reqdata, // Stringifying the JSON body
-                })
-                .then(response => console.log(response)) // Parsing the JSON response
-                .catch((error) => {
-                    console.error('Error:', error); // Error handling
-                });
-        }
-        else {
-            console.log(`No shocker or invalid shocker information configured for ID ${user}.`)
-        }
-    }
-    catch (err) {
-        console.log(err)
-    }
 }
 
 /********

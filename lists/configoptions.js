@@ -407,106 +407,34 @@ const configoptions = {
 		},
     },
     "Pishock Config": {
-        pishockusername: {
-			name: "Pishocker Configuration - Username",
-			desc: "Set username to display when shocking you:",
-			descmodal: "Write the exact username to shock as:",
-			choices: [
+       	pishockid: {
+			name: "PiShocker Configuration - Device",
+			desc: "Select The PiShock Device The Bot Should Operate",
+			choices:[
 				{
-					name: "Set Username",
-					helptext: "Displaying as **",
-					helptextnone: "*No Shocker Username Set*",
+				 name: "Choose Device",
+				 helptext: "Selected Device ID: **",
+				 helptextnone: "*No PiShock Device Selected*",
 					select_function: (serverID, userID) => {
 						return false;
 					},
-					value: "None",
-					style: ButtonStyle.Primary,
+				 value: "None",
+				 sytle: ButtonStyle.Primary,
 				},
-			],
-			customtext: (serverID, userID) => {
-				return `Gagbot`;
+				],
+			textvaluedisplay: (val) => {
+				return `${val}**`;
 			},
-			placeholder: (serverID, userID) => {
-				return `Gagbot`;
-			},
-            textvaluedisplay: (val) => {
-                return `${val}**`;
-            },
-			menutype: "choice_textentry",
+			menutype: "choice_pishockdevice",
 			default: (serverID, userID) => {
 				return ``;
 			},
 			disabled: () => {
 				return false;
 			},
-		},
-        pishockname: {
-			name: "Pishocker Configuration - Name",
-			desc: "Name of the Pishocker:",
-			descmodal: "Write the exact name of the shocker:",
-			choices: [
-				{
-					name: "Set Name",
-					helptext: "Shocker Name is **",
-					helptextnone: "*No Shocker Name Set*",
-					select_function: (serverID, userID) => {
-						return false;
-					},
-					value: "None",
-					style: ButtonStyle.Primary,
-				},
-			],
-			customtext: (serverID, userID) => {
-				return `Gagbot`;
-			},
-			placeholder: (serverID, userID) => {
-				return `Gagbot`;
-			},
-            textvaluedisplay: (val) => {
-                return `${val}**`;
-            },
-			menutype: "choice_textentry",
-			default: (serverID, userID) => {
-				return ``;
-			},
-			disabled: () => {
-				return false;
-			},
-		},
-        pishockcode: {
-			name: "Pishocker Configuration - Code",
-			desc: "Set the shocker's share code:",
-			descmodal: "Copy-paste the shocker code:",
-			choices: [
-				{
-					name: "Set Shocker Code",
-					helptext: "Shocker Code: **",
-					helptextnone: "*No Shocker Code Set*",
-					select_function: (serverID, userID) => {
-						return false;
-					},
-					value: "None",
-					style: ButtonStyle.Primary,
-				},
-			],
-			customtext: (serverID, userID) => {
-				return `Shocker Code...`;
-			},
-			placeholder: (serverID, userID) => {
-				return `Shocker Code...`;
-			},
-            textvaluedisplay: (val) => {
-                return `${val}**`;
-            },
-			menutype: "choice_textentry",
-			default: (serverID, userID) => {
-				return ``;
-			},
-			disabled: () => {
-				return false;
-			},
-		},
-        pishockapikey: {
+	},
+
+	pishockapikey: {
 			name: "Pishocker Configuration - API Key",
 			desc: "Set the shocker's API Key:",
 			descmodal: "Copy-paste the API Key:",
