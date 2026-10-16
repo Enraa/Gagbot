@@ -180,9 +180,8 @@ async function gambaDeathrollHandle(interaction) {
         let rollrandom = Math.random();
         let initial = false;
         // Third roll after figuring out who won! 
-        if (currentrolls[currentrolls.length-1].initial && currentrolls.length == 2) {
+        if ((currentrolls[currentrolls.length-1].initial) && (currentrolls.length == 2)) {
             rollrandom = Math.floor(rollrandom * 1000) + 1
-            initial = true;
         }
         // Counter initial roll
         else if (currentrolls.length == 1) {
@@ -198,7 +197,7 @@ async function gambaDeathrollHandle(interaction) {
 
         let separator = new SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small);
 
-        if (initial) {
+        if (initial == true) {
             let text2 = new TextDisplayBuilder().setContent(`-# ${(rollrandom > currentrolls[currentrolls.length-1].value) ? `<@${interaction.user.id}>` : currentrolls[currentrolls.length-1].user} to roll 1-1000`);
             let rollbuttonrow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
