@@ -162,7 +162,7 @@ async function gambaDeathrollHandle(interaction) {
         return;
     }
     // This to determine whose turn it is, but we should just look at the text at the end probably
-    else if ((currentrolls.length >= 2) && (interaction.message.components[2].search(`<@${interaction.user.id}>`) == -1)) {
+    else if ((currentrolls.length >= 2) && (interaction.message.components[2].content.search(`<@${interaction.user.id}>`) == -1)) {
         interaction.reply({ content: `Its not your turn yet!`, flags: MessageFlags.Ephemeral })
         return;
     }
