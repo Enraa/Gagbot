@@ -187,7 +187,7 @@ async function gambaDeathrollHandle(interaction) {
             rollrandom = Math.floor(rollrandom * currentrolls[currentrolls.length-1].value) + 1
         }
 
-        let rolltext = initial ? `an initial` : `**1-${(currentrolls.length > 3) ? currentrolls[currentrolls.length-1].value : `1000`}** and rolls a`
+        let rolltext = initial ? `an initial` : `**1-${(currentrolls.length >= 3) ? currentrolls[currentrolls.length-1].value : `1000`}** and rolls a`
         let text1 = `${messagecontent}\n<@${interaction.user.id}> rolls ${rolltext} **${rollrandom}**`
         let text1comp = new TextDisplayBuilder().setContent(text1)
 
@@ -205,7 +205,11 @@ async function gambaDeathrollHandle(interaction) {
             interaction.update({ components: [text1comp, separator, text2, rollbuttonrow], flags: MessageFlags.IsComponentsV2 })
         }
         else if (rollrandom > 1) {
-            let text2 = new TextDisplayBuilder().setContent(`-# ${currentrolls[currentrolls.length-1].user} to roll 1-${rollrandom}`);
+            let nextuser = currentrolls[currentrolls.length-1].user
+            if ((currentrolls.length == 2) && (currentrolls[currentrolls.length-1].user == `<@${interaction.user.id}>`)) {
+                nextuser = currentrolls[0].user
+            }
+            let text2 = new TextDisplayBuilder().setContent(`-# ${nextuser} to roll 1-${rollrandom}`);
             let rollbuttonrow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Primary)
