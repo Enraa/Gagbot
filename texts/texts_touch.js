@@ -488,4 +488,63 @@ exports.texts_touch = {
             ]
         }
     }*/
+    // region touch - handhold
+    // Holy fuck this is so degenerate. 
+    // Anyways, this should probably allow holding hands with anyone as long as neither party's hands are bound. Mittens will get cute flavor text. 
+    holdhands: {
+        self: {
+            heavy: [
+                `Try as USER_TAG might, it is quite challenging to clasp USER_THEIR hands together while bound in a VAR_C1.`,
+                `USER_TAG struggles desperately to scrunch USER_THEIR fingers to hold onto USER_THEIR other hand...`,
+                `Really, if USER_TAG wanted to hold hands, USER_THEY really shouldn't have gotten tied up!`
+            ],
+            mitten: [
+                `USER_TAG baps USER_THEIR mittens together, awkwardly trying to hold USER_THEIR hands but fails miserably.`,
+                `USER_TAG rubs USER_THEIR mittens together. It's kinda cute! Not very effective at holding USER_THEIR hands together though.`,
+                `Maybe USER_TAG forgot USER_THEY USER_ISARE wearing mittens, but without fingers, it's kinda hard to grab USER_THEIR hands.`
+            ],
+            free: [
+                `USER_TAG shyly grabs USER_THEIR fingers behind USER_THEM, and even does a cute little kicking movement!`,
+                `USER_TAG clasps USER_THEIR hands together, holding them firmly together! At least it's not lewd because it's just with USER_THEMSELF.`,
+                `USER_TAG places one palm over USER_THEIR other wrist, holding it while looking around.`,
+                `USER_TAG clearly wants practice holding hands, as depraved as that sounds! USER_THEY practiceUSER_S by holding USER_THEIR own hands...`,
+            ]
+        },
+        other: {
+            // Self heavy!
+            heavy: [
+                `It's a real shame, USER_TAG thinks, but without USER_THEIR hands, it is quite challenging to grab TARGET_TAG's hand!`,
+                `USER_TAG squirms around, trying to grab TARGET_TAG's hand, but fails quite miserably under USER_THEIR VAR_C1...`,
+                `Eventually, USER_TAG's hands will be free and *then* USER_THEY can grab TARGET_TAG's wonderful hand!`
+            ],
+            // Target is heavy!
+            heavyother: [
+                `USER_TAG laughs as USER_THEY goUSER_ES to grab TARGET_TAG's hand, but unfortunately, it is bound away... `,
+                `USER_TAG will just have to pretend since TARGET_TAG's in a bit of bondage and cannot hold USER_THEIR hand right now.`,
+                `It would be quite helpful if USER_TAG *and* TARGET_TAG were free for handholding, but alas, TARGET_THEY is bound away right now...`,
+                `USER_TAG wants to hold TARGET_TAG's beautiful hand, but alas, a bit of bondage cruelly prevents USER_THEM from ever having a chance...`,
+            ],
+            // Self mittens!
+            mitten: [
+                `USER_TAG awkwardly paws USER_THEIR mittens on TARGET_TAG's hand, pinching it between USER_THEIR mittens as USER_THEY wantUSER_S to hold it!`,
+                `USER_TAG prods TARGET_TAG to hold TARGET_THEIR hand, but alas, it's quite challenging to do so without USER_THEIR fingers. Maybe later!`,
+                `It's truly not for lack of effort, but USER_TAG struggles to get any kind of grip on TARGET_TAG's wrist to hold TARGET_THEIR hand. Oh well.`
+            ],
+            // Target is mittened!
+            mittenother: [
+                `USER_TAG grabs TARGET_TAG's mittened hand and holds it! TARGET_THEIR_CAP face now radiates heat from the handholding!`,
+                `USER_TAG deftly grabs TARGET_TAG's not-so-exposed hand and wraps USER_THEIR fingers around TARGET_THEIR mitten!`,
+                `USER_TAG nearly has to settle for grabbing TARGET_TAG's wrist because TARGET_THEIR hand is sealed away in a mitten!`
+            ],
+            free: [
+                `USER_TAG wraps USER_THEIR fingers around TARGET_TAG's hand, holding it gingerly and tenderly.`,
+                `USER_TAG threads USER_THEIR fingers between TARGET_TAG's fingers on TARGET_THEIR hand, forming a tight grip as USER_THEY savor the lewd moment!`,
+                `USER_TAG's fingers rush around TARGET_TAG's wrist and then down to TARGET_THEIR hand. Is there no end to this depravity?`,
+                `Because neither are wearing effective hand chastity, USER_TAG wraps USER_THEIR fingers around TARGET_TAG's hand and laviciously clutches it!`,
+                `USER_TAG pounces on TARGET_TAG and grabs TARGET_THEIR hand! It's USER_THEIRs now!`,
+                `USER_TAG gently runs a finger around and into TARGET_TAG's palm, before following up with another and another before squeezing the hand tightly with USER_THEIR hand!`,
+                `USER_TAG clearly can't keep the horny thoughts away as USER_THEY hold TARGET_TAG's hand!`
+            ]
+        }
+    },
 }

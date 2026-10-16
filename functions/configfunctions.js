@@ -28,7 +28,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 		keys.forEach(async (k) => {
 			if (configoptions[menuset][k].menutype == "choice") {
 				let buttonsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.guildId, interaction.user.id, k))?.helptext}`))
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${(configoptions[menuset][k].choices.find((f) => f.value == getOption(interaction.guildId, interaction.user.id, k))?.helptext).slice(0,300)}`))
 					.setButtonAccessory((button) =>
 						button
 							.setCustomId(`config_pageopt_${menuset}_${page}_${k}`)
@@ -43,7 +43,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 					helpertext = `${configoptions[menuset][k].choices[0].helptextnone}`;
 				}
 				let buttonsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${helpertext}`))
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${(helpertext).slice(0,300)}`))
 					.setButtonAccessory((button) =>
 						button
 							.setCustomId(`config_tentrypageopt_${menuset}_${k}_${page}`)
@@ -62,7 +62,7 @@ function generateConfigModal(interaction, menuset = "General", page, statustext)
 					helpertext = `${configoptions[menuset][k].choices[0].helptextnone}`;
 				}
 				let buttonsection = new SectionBuilder()
-					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${helpertext}`))
+					.addTextDisplayComponents((textdisplay) => textdisplay.setContent(`## ${configoptions[menuset][k].name}\n${configoptions[menuset][k].desc}\n-# ‎   ⤷ ${(helpertext).slice(0,300)}`))
 					.setButtonAccessory((button) =>
 						button
 							.setCustomId(`config_uentrypageopt_${menuset}_${k}_${page}`)

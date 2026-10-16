@@ -1635,6 +1635,85 @@ const configoptions = {
 				return false;
 			},
 		},
+        receiveholdhands: {
+			name: "Recieve Handholding",
+			desc: "Who is allowed to hold your hand?",
+			choices: [
+				{
+					name: "Everyone",
+					helptext: "Everyone is allowed to hold hands with you without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "everyonenoprompt",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Everyone (Prompt)",
+					helptext: "Everyone but keyholders will prompt to hold your hand",
+					select_function: (serverID, userID) => { return true },
+					value: "everyone",
+					style: ButtonStyle.Secondary,
+				},
+				{
+					name: "Keyholders",
+					helptext: "Only Keyholders can hold your hand and without prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholdernoprompt",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Keyholders (Prompt)",
+					helptext: "Only Keyholders can hold your hand with prompts",
+					select_function: (serverID, userID) => { return true },
+					value: "keyholder",
+					style: ButtonStyle.Secondary,
+				},
+                {
+					name: "Nobody",
+					helptext: "Nobody can hold your hand :(",
+					select_function: (serverID, userID) => { return true },
+					value: "nobody",
+					style: ButtonStyle.Danger,
+				},
+			],
+			menutype: "choice",
+			default: "everyonenoprompt",
+			disabled: () => {
+				return false;
+			}, // if true, button is greyed out
+		},
+        allowedholdhands: {
+			name: "Handholding Exempt Users",
+			desc: "Set users who can hold your hand regardless of your setting above",
+			descmodal: "Select up to 25 users which can hold your hand at all times:",
+			choices: [
+				{
+					name: "Set Users",
+					helptext: "Users set to ",
+					helptextnone: "*No Users Set*",
+					select_function: (serverID, userID) => {
+						return false;
+					},
+					value: "None",
+					style: ButtonStyle.Primary,
+				},
+			],
+			customtext: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+			placeholder: (serverID, userID) => {
+				return `https://discord.gg/`;
+			},
+            uservaluedisplay: (val) => {
+                return val;
+            },
+			menutype: "choice_userentry",
+			default: (serverID, userID) => {
+				return ``;
+			},
+			disabled: () => {
+				return false;
+			},
+		},
         receiveorgasmcontrol: {
 			name: "Orgasm Control",
 			desc: "When wearing the Orgasm Control Module, who is allowed to trigger /letgo on you?",

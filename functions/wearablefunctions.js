@@ -4,9 +4,9 @@ const { removeWearable } = require("./setters/wearable/removeWearable");
 
 let wearabletypes = [
 	// Aesthetic Body Parts
-	{ name: "Ears", value: "ears", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Dog", "Floppy Dog", "Wolf", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony", "Cybernetic Cat", "Cybernetic Wolf"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Ears", value: "ears", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Dog", "Floppy Dog", "Wolf", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony", "Cybernetic Cat", "Cybernetic Wolf", "Squirrel"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Eared Headband", value: "earheadband", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Futuristic Cat", "Dog", "Floppy Dog", "Wolf", "Bunny", "Floppy Bunny", "Sheep", "Elf", "Fox", "Pony"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
-	{ name: "Tail", value: "tail", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Dog", "Wolf", "Bunny", "Sheep", "Demon", "Succubus", "Fox", "Pony", "Lizard", "Dragon", "Lamia", "Cybernetic"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
+	{ name: "Tail", value: "tail", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Dog", "Wolf", "Bunny", "Sheep", "Demon", "Succubus", "Fox", "Pony", "Lizard", "Dragon", "Lamia", "Cybernetic", "Squirrel"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Fox Tails", value: "tail", category: "Body Part", colorable: true, uniqueColors: ["Twin", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Cat Tails", value: "tail", category: "Body Part", colorable: true, uniqueColors: ["Twin"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
 	{ name: "Tail Belt", value: "tailbelt", category: "Body Part", colorable: true, uniqueColors: ["Cat", "Dog", "Wolf", "Bunny", "Sheep", "Demon", "Succubus", "Fox", "Pony", "Lizard", "Dragon"], forbiddenColors: ["Black", "Red", "Purple", "Green", "Orange", "Red", "Pink", "White", "Yellow", "Cyan", "Aqua", "Blue", "Indigo", "Gray", "Brown"] },
@@ -108,6 +108,7 @@ let wearabletypes = [
 	{ name: "Cyber Doll Harness", value: "cyberdoll_harness", category: "Doll" },
 	{ name: "Doll Heels", value: "doll_heels", category: "Doll" },
 	{ name: "Doll Barcode", value: "cyberdoll_barcode", category: "Doll" },
+    { name: "Doll Joints", value: "wearabledolljoints", category: "Doll", colorable: true, },
 
 	//Faux Bondage and Non Restrictive Gear
 	{ name: "Harness", value: "harness_leather", colorable: true, category: "Bondage", uniqueColors: ["Ribbon", "Vine", "Leather", "Latex", "Leather", "Rubber", "Shibari"] },

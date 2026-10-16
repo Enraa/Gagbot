@@ -85,7 +85,7 @@ module.exports = {
 				  );
 				  if(!response.ok){
 					  await interaction.reply({
-						  content: `PiShock returned HTTP ${response.status} while retrieving devices.`,
+						  content: `PiShock returned HTTP ${response.status} while retrieving devices. Please try again`,
 						  flags: MessageFlags.Ephemeral
 					  })
 					  return;
@@ -549,34 +549,49 @@ module.exports = {
 				delete process.recentinteraction[interaction.user.id];
 			}
         }
-	if([
-		"pishockusername",
-		"pishockname",
-		"pishockcode",
-		"pishockapikey"
-	].includes(optionparts[3])){
-		choiceinput=interaction.fields.getTextInputValue("choiceinput");
-		setOption(
-			interaction.guildId,
-			interaction.user.id,
-			optionparts[3],
-			choiceinput
-		);
-		const displayName = {
-			pishockusername: "PiShock username",
-			pishockname: "PiShock name",
-			pishockcode: "PiShock share code",
-			pishockapikey: "PiShock api key"
-		}[optionparts[3]];
-
-		await interaction.reply({content: `Updated ${displayName}.`,flags: MessageFlags.Ephemeral
-		});
-		if(process.recentinteraction){
-			if(process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()){
-				await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction,optionparts[2],optionparts[4]));
+        if (optionparts[3] == "allowedholdhands") {
+            choiceinput = interaction.fields.getSelectedUsers("choiceinput");
+            let choiceusers = Array.from(choiceinput) ?? [];
+            if (choiceusers.length > 0) {
+                choiceusers = choiceusers.map((a) => a[0]).sort()
+            }
+            setOption(interaction.guildId, interaction.user.id, optionparts[3], choiceusers);
+            await interaction.reply({ content: `Updated allowed users who can hold your hand to ${choiceusers.map((a) => { return `<@${a}>`}).join(", ")}`, flags: MessageFlags.Ephemeral });
+            if (process.recentinteraction) {
+				if (process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()) {
+					await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction, optionparts[2], optionparts[4]));
+				}
+				delete process.recentinteraction[interaction.user.id];
 			}
-			delete process.recentinteraction[interaction.user.id];
-		}
-	}
+        }
+        if([
+            "pishockusername",
+            "pishockname",
+            "pishockcode",
+            "pishockapikey"
+        ].includes(optionparts[3])){
+            choiceinput=interaction.fields.getTextInputValue("choiceinput");
+            setOption(
+                interaction.guildId,
+                interaction.user.id,
+                optionparts[3],
+                choiceinput
+            );
+            const displayName = {
+                pishockusername: "PiShock username",
+                pishockname: "PiShock name",
+                pishockcode: "PiShock share code",
+                pishockapikey: "PiShock api key"
+            }[optionparts[3]];
+
+            await interaction.reply({content: `Updated ${displayName}.`,flags: MessageFlags.Ephemeral
+            });
+            if(process.recentinteraction){
+                if(process.recentinteraction[interaction.user.id]?.timestamp + 895000 > performance.now()){
+                    await process.recentinteraction[interaction.user.id].interaction.editReply(await generateConfigModal(process.recentinteraction[interaction.user.id].interaction,optionparts[2],optionparts[4]));
+                }
+                delete process.recentinteraction[interaction.user.id];
+            }
+        }
 	},
 };
