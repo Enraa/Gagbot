@@ -233,7 +233,7 @@ async function gambaDeathrollHandle(interaction) {
             interaction.update({ components: [text1comp, separator, text2, rollbuttonrow], flags: MessageFlags.IsComponentsV2 })
         }
         else {
-            let text2 = new TextDisplayBuilder().setContent(`-# <@${interaction.user}> has lost the Deathroll`);
+            let text2 = new TextDisplayBuilder().setContent(`-# <@${interaction.user.id}> has lost the Deathroll`);
             interaction.update({ components: [text1comp, separator, text2], flags: MessageFlags.IsComponentsV2 })
         }
     }

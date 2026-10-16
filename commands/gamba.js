@@ -8,10 +8,10 @@ module.exports = {
         .addSubcommand((subc) => 
             subc.setName("deathroll")
                 .setDescription("Deathroll someone with reducing numbers")
-                .addNumberOption((opt) => 
+                /*.addNumberOption((opt) => 
                     opt.setName("startingvalue")
                        .setDescription("Starting Value? (Optional, defaults to 1000)")
-                )
+                )*/
         ),
     async execute(interaction) {
         try {
