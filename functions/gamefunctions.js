@@ -205,9 +205,11 @@ async function gambaDeathrollHandle(interaction) {
             interaction.update({ components: [text1comp, separator, text2, rollbuttonrow], flags: MessageFlags.IsComponentsV2 })
         }
         else if (rollrandom > 1) {
+            console.log(currentrolls)
             let nextuser = currentrolls[currentrolls.length-1].user
             if ((currentrolls.length == 2) && (currentrolls[currentrolls.length-1].user == `<@${interaction.user.id}>`)) {
                 nextuser = currentrolls[0].user
+                console.log(`que`)
             }
             let text2 = new TextDisplayBuilder().setContent(`-# ${nextuser} to roll 1-${rollrandom}`);
             let rollbuttonrow = new ActionRowBuilder().addComponents(
