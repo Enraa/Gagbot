@@ -143,9 +143,20 @@ async function gambaDeathrollStart(interaction) {
  *******/
 async function gambaDeathrollHandle(interaction) {
     console.log(interaction.message.components[0].content);
-    // Gemini said this matchAll works. I think it looks fine. 
+    // Round two, if AI doesn't know how to regex it this time, I'm gonna write it myself. I hate regex. 
     let messagecontent = interaction.message.components[0].content ?? ``;
-    let currentrolls = [...messagecontent.matchAll(/(.+?) rolls (?:an initial \*\*(\d+)\*\*|(\d+-\d+) and rolls a \*\*(\d+)\*\*)/g)].map(m => ({ user: m[1], initial: !!m[2], value: Number(m[2] || m[4]) }));
+    const currentrolls = messagecontent.trim().split('\n').map(line => {
+        const user = line.match(/(<@\d+>)/)[1];
+        const initial = line.includes('rolls an initial');
+        
+        // Grab all numbers enclosed in markdown bolding (**...**)
+        const boldMatches = [...line.matchAll(/\*\*(\d+)\*\*/g)];
+        // The final roll value is always the last bolded number in the string
+        const roll = parseInt(boldMatches[boldMatches.length - 1][1], 10);
+
+        return { user, initial, roll };
+    });
+    //let currentrolls = [...messagecontent.matchAll(/(.+?) rolls (?:an initial \*\*(\d+)\*\*|(\d+-\d+) and rolls a \*\*(\d+)\*\*)/g)].map(m => ({ user: m[1], initial: !!m[2], value: Number(m[2] || m[4]) }));
     console.log(currentrolls)
     let initialwinner = currentrolls[0].user;
     if (currentrolls.length > 2) {
