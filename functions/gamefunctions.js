@@ -163,7 +163,7 @@ async function gambaDeathrollHandle(interaction) {
         initialwinner = undefined;
     }
     else if (currentrolls.length == 2) {
-        if (currentrolls[1].value > currentrolls[0].value) {
+        if (currentrolls[1].roll > currentrolls[0].roll) {
             initialwinner = currentrolls[1].user
         }
     }
@@ -195,17 +195,17 @@ async function gambaDeathrollHandle(interaction) {
             initial = true;
         }
         else {
-            rollrandom = Math.floor(rollrandom * currentrolls[currentrolls.length-1].value) + 1
+            rollrandom = Math.floor(rollrandom * currentrolls[currentrolls.length-1].roll) + 1
         }
 
-        let rolltext = initial ? `an initial` : `**1-${(currentrolls.length >= 3) ? currentrolls[currentrolls.length-1].value : `1000`}** and rolls a`
+        let rolltext = initial ? `an initial` : `**1-${(currentrolls.length >= 3) ? currentrolls[currentrolls.length-1].roll : `1000`}** and rolls a`
         let text1 = `${messagecontent}\n<@${interaction.user.id}> rolls ${rolltext} **${rollrandom}**`
         let text1comp = new TextDisplayBuilder().setContent(text1)
 
         let separator = new SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small);
 
         if (initial == true) {
-            let text2 = new TextDisplayBuilder().setContent(`-# ${(rollrandom > currentrolls[currentrolls.length-1].value) ? `<@${interaction.user.id}>` : currentrolls[currentrolls.length-1].user} to roll 1-1000`);
+            let text2 = new TextDisplayBuilder().setContent(`-# ${(rollrandom > currentrolls[currentrolls.length-1].roll) ? `<@${interaction.user.id}>` : currentrolls[currentrolls.length-1].user} to roll 1-1000`);
             let rollbuttonrow = new ActionRowBuilder().addComponents(
                 new ButtonBuilder()
                     .setStyle(ButtonStyle.Primary)
