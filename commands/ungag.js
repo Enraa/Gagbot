@@ -227,7 +227,7 @@ module.exports = {
                                             interaction.reply(getText(data));
                                             deleteGag(interaction.guildId, gaggeduser.id, gagtoremove);
                                         }
-										if (gagtoremove) {
+										else if (gagtoremove) {
 											data.single = true;
 											await interaction.followUp(getText(data));
 											deleteGag(interaction.guildId, gaggeduser.id, gagtoremove);

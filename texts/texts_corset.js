@@ -75,6 +75,10 @@ exports.texts_corset = {
 				nocorset: [`USER_TAG wraps a VAR_C4 around USER_THEIR waist, pulling the strings taut, and then further, leaving the length of the strings at VAR_C2!`],
 			},
 			other: {
+                nocorset: [
+                    `USER_TAG opens the busk of a VAR_C4 and wraps it around TARGET_TAG's waist, closing it and then pulling the strings taut to a length of VAR_C2!`,
+                    `Giggling to USER_THEMSELF, USER_TAG spins TARGET_TAG around and suddenly produces a VAR_C4 and puts it on TARGET_THEIR waist. The strings are tugged in increasing intensity until they are knotted when they reach a length of VAR_C2!`
+                ],
                 noaccess: [
                     `USER_TAG baps at the dangling lock on TARGET_TAG's corset, but unfortunately has no means with which to grant TARGET_THEM the freedom to breathe. If only TARGET_THEY had the key...`
                 ],

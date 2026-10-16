@@ -421,6 +421,12 @@ module.exports = {
                         }
                         else {
                             data.noaccess = true;
+                            if (currentgag) {
+                                data.changetightness = true;
+                            }
+                            else {
+                                data.newgag = true;
+                            }
                             interaction.reply(getText(data));
                         }
 					} else {
