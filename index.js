@@ -32,6 +32,7 @@ const { setRecentChannel } = require(`./functions/setters/config/setRecentChanne
 const { setProcessVariable } = require('./functions/setters/config/setProcessVariable.js');
 const { getLockAwaiting } = require('./functions/getters/lock/getLockAwaiting.js');
 const { getRestraintByUUID } = require('./functions/getters/lock/getRestraintByUUID.js');
+const { gambaDeathrollHandle } = require(`./functions/gamefunctions.js`);
 
 // Prevent node from killing us immediately when we do the next line.
 process.stdin.resume();
@@ -440,6 +441,9 @@ client.on('interactionCreate', async (interaction) => {
             }
             else if (interaction.customId.startsWith("buttonboard")) {
                 buttonboard(interaction); // The button board reply function is in contextcommands/message/Button Board.js
+            }
+            else if (interaction.customId.startsWith("gamba_deathroll")) {
+                gambaDeathrollHandle(interaction)
             }
             const [key, ...args] = interaction.customId.split("-");
             componentHandlers.get(key)?.handle(interaction, ...args);

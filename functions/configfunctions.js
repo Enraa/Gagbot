@@ -375,6 +375,10 @@ async function setCommands(interaction, serverID) {
 			commands[file] = command;
 		} else {
 			console.log(`Ignoring file at ./../commands/${file} because it does not have either a data or an execute export.`);
+            console.log(`--Data--`)
+            console.log(command.data)
+            console.log(`--Execute--`)
+            console.log(command.execute);
 		}
 	}
 
