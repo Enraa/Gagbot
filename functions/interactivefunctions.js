@@ -808,7 +808,9 @@ async function handleMajorRestraint(serverID, user, target, type, restraint) {
 		}*/
 
         if (getCollar(serverID, target.id)) {
-            if ((getCollar(serverID, target.id).lock && (getBaseLock(getCollar(serverID, target.id).lock.locktype).canAccessLock({ uuid: getCollar(serverID, target.id).lock.uuid, userID: user.id }))) || !getCollar(serverID, target.id).keyholder_only) {
+            if ((getCollar(serverID, target.id).lock && (getBaseLock(getCollar(serverID, target.id).lock.locktype).canAccessLock({ uuid: getCollar(serverID, target.id).lock.uuid, userID: user.id })))
+                    || !getCollar(serverID, target.id).keyholder_only
+                    || (getCollar(serverID, target.id).headpatvulnerable && getCollar(serverID, target.id).headpatvulnerable >= Date.now())) {
                 let bondagetype = type;
                 if (type == "chastitybra") { bondagetype = "chastity" }
                 if (getCollar(serverID, target.id) && getCollar(serverID, target.id)[bondagetype]) {
