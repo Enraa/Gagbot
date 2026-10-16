@@ -6,6 +6,7 @@ const { getCollar } = require("./getters/collar/getCollar");
 const { getChastity } = require("./getters/chastity/getChastity");
 const { getChastityBra } = require("./getters/chastity/getChastityBra");
 const { traceFirstParam } = require("./other/TESTS/traceFirstParam");
+const { statsAddCounter } = require("./setters/config/statsAddCounter");
 
 // Load the game files! 
 function loadGames() {
@@ -234,6 +235,14 @@ async function gambaDeathrollHandle(interaction) {
         }
         else {
             let text2 = new TextDisplayBuilder().setContent(`-# <@${interaction.user.id}> has lost the Deathroll`);
+            let winner = ((`<@${interaction.user.id}>` == currentrolls[0].user) ? currentrolls[1].user : currentrolls[0].user).slice(2,-1)
+            try {
+                statsAddCounter(interaction.guildId, winner, "gambadeathroll_win")
+                statsAddCounter(interaction.guildId, interaction.user.id, "gambadeathroll_lose")
+            }
+            catch (err) {
+                console.log(err)
+            }
             interaction.update({ components: [text1comp, separator, text2], flags: MessageFlags.IsComponentsV2 })
         }
     }
