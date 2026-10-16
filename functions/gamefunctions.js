@@ -162,12 +162,7 @@ async function gambaDeathrollHandle(interaction) {
         return;
     }
     // This to determine whose turn it is, but we should just look at the text at the end probably
-    else if ((currentrolls[currentrolls.length-1].user != `<@${interaction.user.id}>`) && (currentrolls.length > 2)) {
-        interaction.reply({ content: `Its not your turn yet!`, flags: MessageFlags.Ephemeral })
-        return;
-    }
-    // Initial roll and the person didnt win! 
-    else if ((currentrolls.length == 2) && (`<@${interaction.user.id}>` != initialwinner)) {
+    else if ((currentrolls.length >= 2) && (interaction.message.components[2].search(`<@${interaction.user.id}>`) == -1)) {
         interaction.reply({ content: `Its not your turn yet!`, flags: MessageFlags.Ephemeral })
         return;
     }
@@ -192,7 +187,8 @@ async function gambaDeathrollHandle(interaction) {
             rollrandom = Math.floor(rollrandom * currentrolls[currentrolls.length-1].value) + 1
         }
 
-        let text1 = `${messagecontent}\n<@${interaction.user.id}> rolls ${initial ? `an initial` : `**1-${currentrolls[currentrolls.length-1].value}** and rolls a`} **${rollrandom}**`
+        let rolltext = initial ? `an initial` : `**1-${(currentrolls.length > 3) ? currentrolls[currentrolls.length-1].value : `1000`}** and rolls a`
+        let text1 = `${messagecontent}\n<@${interaction.user.id}> rolls ${rolltext} **${rollrandom}**`
         let text1comp = new TextDisplayBuilder().setContent(text1)
 
         let separator = new SeparatorBuilder().setDivider(true).setSpacing(SeparatorSpacingSize.Small);
