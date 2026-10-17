@@ -13,6 +13,7 @@ const { handleApplyLock } = require("../functions/lockfunctions");
 const { checkLockAwaiting } = require("../functions/getters/lock/checkLockAwaiting");
 const { getBaseLock } = require("../functions/getters/lock/getBaseLock");
 const { markForSave } = require("../functions/other/markForSave");
+const { removeLock } = require("../functions/setters/lock/removeLock");
 
 /***********
  * This is a fixed timelock that only operates for five minutes and then removes itself. It can be affixed to small locks.
@@ -46,15 +47,15 @@ exports.canUnlock = (data) => {
 // Timelock specific code
 exports.checkTimelock = function (data) {
     let restraintobject = getRestraintByUUID(data.uuid).restraint
-    if (!restraintobject || (typeof restraintobject.unlocktime != "number")) {
+    if (!restraintobject || ! restraintobject.lock || (typeof restraintobject.lock.unlocktime != "number")) {
         // The timelock somehow broke, get out of here. 
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
-        this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
+        removeLock(data.uuid, { id: restraintobject.lock.keyholderID }); // I keep this here in case it ever breaks we have somewhat of an alarm.
     }
-    if (Date.now() > restraintobject.unlocktime) {
+    if (Date.now() > restraintobject.lock.unlocktime) {
         // End of the timelock!
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
-        this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
+        removeLock(data.uuid, { id: restraintobject.lock.userID }); // This should prevent the "this should never happen message"
     };
 }
 
