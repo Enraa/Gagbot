@@ -13,6 +13,7 @@ const { handleApplyLock } = require("../functions/lockfunctions");
 const { checkLockAwaiting } = require("../functions/getters/lock/checkLockAwaiting");
 const { getBaseLock } = require("../functions/getters/lock/getBaseLock");
 const { markForSave } = require("../functions/other/markForSave");
+const { removeLock } = require("../functions/setters/lock/removeLock");
 
 /***********
  * This is a timed padlock that can be configured for any amount of time and keyed to a keyholder. 
@@ -89,15 +90,15 @@ exports.canRevokeSelfClone = (data) => {
 // Timelock specific code
 exports.checkTimelock = function (data) {
     let restraintobject = getRestraintByUUID(data.uuid).restraint
-    if (!restraintobject || (typeof restraintobject.unlocktime != "number")) {
+    if (!restraintobject || ! restraintobject.lock || (typeof restraintobject.lock.unlocktime != "number")) {
         // The timelock somehow broke, get out of here. 
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
-        this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
+        removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
     }
-    if (Date.now() > restraintobject.unlocktime) {
+    if (Date.now() > restraintobject.lock.unlocktime) {
         // End of the timelock!
         markForSave(getItemType(getRestraintByUUID(data.uuid)?.restraint))
-        this.removeLock(data.uuid, { id: restraintobject.lock.keyholderID });
+        removeLock(data.uuid, { id: restraintobject.lock.userID });
     };
 }
 
